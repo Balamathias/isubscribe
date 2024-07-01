@@ -9,8 +9,8 @@ const HistoryDetailPage = async ({ params }: { params: { id: string } }) => {
   const { data: history } = await getSingleHistory(parseInt(params.id))
   const eventData = JSON.parse(history?.meta_data?.toString()! ?? '{}') as TransactionEvent['eventData']
   return (
-    <WidthWrapper className='mt-16 !max-w-3xl'>
-        <div className='flex flex-col space-y-8'>
+    <WidthWrapper className='mt-16 !max-w-3xl w-full'>
+        <div className='flex flex-col space-y-8 w-full'>
 
             <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
                 {history?.status === 'PAID' && <LucideCheckCircle2 className='text-green-600' size={40} />}
@@ -19,7 +19,7 @@ const HistoryDetailPage = async ({ params }: { params: { id: string } }) => {
                 <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
             </Card>
 
-            <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col w-full gap-y-6'>
+            <Card className='shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>
                 <h2 className='text-base font-semibold tracking-tighter'>Transaction Details</h2>
 
                 <div className='flex items-start justify-between'>

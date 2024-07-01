@@ -4,7 +4,7 @@ import TransactionHistoryComponent from './TransactionHistoryComponent'
 
 const HistoryTabs = () => {
   return (
-    <div className='overflow-auto'>
+    <div className='w-full'>
       <Tabs defaultValue="transactions" className=" max-sm:w-[90vw] w-[600px] space-y-4 ">
 
         <TabsList className="grid w-full grid-cols-2 gap-4 rounded-xl shadow-none border-none p-2 h-fit bg-transparent">

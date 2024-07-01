@@ -11,7 +11,7 @@ import Link from 'next/link'
 const TransactionHistoryComponent = async () => {
     const { data: history } = await getTransactionHistory()
   return (
-    <Card className='py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col'>
+    <Card className='py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col w-full space-y-2'>
         {
             history?.map((transaction, index) => (
                 <TransactionHistoryItem key={index} transaction={transaction} type={transaction.type as keyof typeof EVENT_TYPE} />
@@ -29,7 +29,7 @@ const TransactionHistoryItem = ({ transaction, type }: {
 
     return (
     <Link href={'/dashboard/history/' + transaction?.id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
-        <div className='flex items-center flex-row space-x-2'>
+        <div className='flex items-center flex-row space-x-3'>
             <div className='flex items-center justify-center p-3 bg-violet-200 text-violet-950 rounded-full h-12 w-12'>
                 {
                     type === 'wallet_fund' ? (
