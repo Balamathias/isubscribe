@@ -1,10 +1,25 @@
 import WidthWrapper from '@/components/WidthWrapper'
-import React from 'react'
+import HistoryTabs from '@/components/dashboard/HistoryTabs'
+import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
+import { Metadata } from 'next'
+import React, { Suspense } from 'react'
+
+export const metadata: Metadata = {
+    title: 'History',
+    description: 'Your Transaction History'
+
+}
 
 const HistoryPage = () => {
   return (
-    <WidthWrapper className='max-w-3xl'>
-      <h2>History Page</h2>
+    <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
+      <div className='flex flex-col space-y-4'>
+        <h1 className='text-2xl font-bold'>Your Transaction History</h1>
+        
+        <Suspense fallback={<ActionBoxSkeleton />}>
+            <HistoryTabs />
+        </Suspense>
+      </div>
     </WidthWrapper>
   )
 }

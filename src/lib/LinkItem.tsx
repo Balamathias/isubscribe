@@ -3,10 +3,8 @@
 import { LinksProps } from '@/utils/sidebarLinks'
 import { CaretDownIcon } from '@radix-ui/react-icons'
 import React, { useState, useMemo } from 'react'
-import SubLinkItem from './SubLinkItem'
 import { usePathname, useRouter } from 'next/navigation'
 import clsx from 'clsx'
-import { Separator } from '../ui/separator'
 
 const LinkItem = ({link}: { link: LinksProps }) => {
     const [expanded, setExpanded] = useState(false)
@@ -41,21 +39,6 @@ const LinkItem = ({link}: { link: LinksProps }) => {
                 onClick={handleExpand}
             />)}
         </div>
-        {link?.subLinks?.length && expanded && (
-            <div className='flex gap-4'>
-                <Separator orientation='vertical' className='h-full ml-4 ' />
-                <div className={clsx('flex flex-col gap-1.5 relative', {
-                'slide-in-from-top-0 duration-500 transition-all': expanded,
-                'slide-out-to-top-0 duration-500 transition-all': !expanded
-                    })}>
-                        {
-                            link.subLinks.map((subLink, index) => (
-                                <SubLinkItem key={index} subLink={subLink} />
-                            ))
-                        }   
-                </div>
-            </div>
-        )}
     </div>
   )
 }
