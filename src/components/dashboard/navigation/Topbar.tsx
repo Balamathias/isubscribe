@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Tables } from '@/types/database'
 import { usePathname } from 'next/navigation'
 import { LucideBadgeHelp } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   const pathname = usePathname()
@@ -18,10 +19,11 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         <div className=' md:ml-[220px]'>
         {
           pathname === '/dashboard' ? (<>
-            <Link href={'#support'} className='text-primary flex items-center flex-row gap-x-1'>
+            <Link href={'#support'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
               <LucideBadgeHelp size={22} className='text-primary' />
               <span>Support?</span>
             </Link>
+            <Logo showLogoText={false} className='flex md:hidden' />
           </>) : <BackButton />
         }
         </div>
