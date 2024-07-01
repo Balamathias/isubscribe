@@ -22,7 +22,7 @@ const DashboardPage = async ({searchParams}: { searchParams: {[key: string]: str
     const step = sP.get('step')
 
   return (
-    <WidthWrapper className='flex flex-col space-y-4 max-w-3xl md:py-12 mt-16'>
+    <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
 
       <ActionBox />
       <QuickActions />

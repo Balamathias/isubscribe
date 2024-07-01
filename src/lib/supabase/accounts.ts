@@ -7,9 +7,10 @@ import { getCurrentUser } from "./user.actions";
 import { handleInvitation, upsertWallet } from "./wallets";
 import { getReservedAccount } from "../monnify/actions";
 
-export const getAccount = async (id: string) => {
+export const getAccount = async (id?: string) => {
+    const { data: { user } } = await getCurrentUser()
     const supabase = createClient()
-    const { data, error } = await supabase.from('account').select('*').eq('user', id).single()
+    const { data, error } = await supabase.from('account').select('*').eq('user', id ?? user?.id!).single()
 
     if (error) throw error
 

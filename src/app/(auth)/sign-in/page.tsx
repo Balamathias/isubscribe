@@ -1,6 +1,5 @@
 import WidthWrapper from '@/components/WidthWrapper'
 import SignInComponent from '@/components/auth/SignInComponent'
-import { service } from '@/lib/vtu'
 import { Metadata } from 'next'
 import React from 'react'
 
