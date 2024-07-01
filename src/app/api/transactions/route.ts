@@ -33,5 +33,7 @@ export const POST = async (req:Request, res:Response) => {
 
     // TODO: Send email with Nodemailer
 
+    console.log(data)
+
     return NextResponse.json({message: 'Wallet credited'}, {status: 200})
 }
