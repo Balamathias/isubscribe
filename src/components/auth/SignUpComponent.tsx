@@ -1,0 +1,120 @@
+"use client"
+
+import React from 'react'
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
+import {
+  Form
+} from "@/components/ui/form"
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SignUpSchema } from '@/utils/schema/userSchema'
+import InputField from './InputField'
+import { toast } from 'sonner'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { signUp } from '@/lib/supabase/user.actions'
+import Link from 'next/link'
+import { Card } from '../ui/card'
+import GoogleAuthButton from '../GoogleAuthButton'
+import { LucideLock, LucideMail, LucidePhone, UserCircle2 } from 'lucide-react'
+import Logo from '../Logo'
+import AuthSeparator from './AuthSeparator'
+import DynamicModal from '../DynamicModal'
+
+const SignInComponent = () => {
+    const [isPending, setIsPending] = React.useState(false)
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const urlParams = new URLSearchParams(searchParams.toString())
+    const status = urlParams.get('status')
+
+    const form = useForm<z.infer<typeof SignUpSchema>>({
+        resolver: zodResolver(SignUpSchema),
+        defaultValues: {
+          email: "",
+          password: "",
+          confirm_password: "",
+          full_name: "",
+          phone: "",
+        },
+      })
+  
+      async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+        if (values.password !== values.confirm_password) {
+            form.setError('confirm_password', { message: 'Passwords do not match' })
+            return
+        }
+        setIsPending(true)
+        try {
+            const {status} = await signUp({
+                email: values.email!,
+                password: values.password!,
+                metadata: {
+                    full_name: values.full_name!,
+                    phone: values.phone!
+                }
+            })
+            if (status === 200)
+              toast.success('Success!', { description: 'Verification Email sent to ' + values.email, duration: 5000 })
+            router.replace('?status=email-sent')
+            return
+        }
+        catch (error: any) {
+            console.error(error)
+            setIsPending(false)
+            return toast.error('Error!', { description: 'Sign up failed, please verify your inputs.' })
+        }
+        finally { setIsPending(false) }
+      }
+
+    return (
+        <Form {...form}>
+          <Card className='flex flex-col gap-2 shadow-none border-none w-full max-w-[450px]'>
+
+            <Logo />
+
+            <GoogleAuthButton />
+
+            <AuthSeparator />
+
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+
+              <InputField name="email" label="Email" placeholder='youremail@example.com' control={form.control} Icon={LucideMail}/>
+              <InputField name="password" label="Password" control={form.control} placeholder='password...' Icon={LucideLock} />
+              <InputField name="confirm_password" label="Confirm Password" control={form.control} placeholder='Confirm password...' Icon={LucideLock} />
+              <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
+              <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
+
+              <Button type="submit" disabled={isPending} className='mt-2 w-full bg-gradient-to-l from-pink-500 via-purple-600 to-violet-700 h-12 rounded-lg flex justify-center items-center'>{isPending ? 'Processing...' : 'Sign up'}</Button>
+            </form>
+            
+            <div className="flex flex-col space-y-2 text-xs">
+              <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline text-primary">Sign In</Link></p>
+            </div>
+
+            <DynamicModal 
+              open={status === 'email-sent'}
+            >
+              <div className='flex flex-col gap-y-4 py-2'>
+                <h1 className='text-xl font-semibold text-primary dark:text-primary/90'>Email Sent!</h1>
+                <p className='text-sm'>A verification email has been sent to your email address. Please verify your email to continue.</p>
+                <div className='flex flex-row gap-x-2 float-right justify-end md:-mb-4'>
+                  <Button 
+                    variant={'secondary'}
+                    className='bg-red-500 ring-2 ring-red-600/90 rounded-lg text-white hover:bg-red-400 focus:ring-0 focus-within:ring-0' 
+                    onClick={() => {
+                      urlParams.set('status', 'closed')
+                      router.replace('?' + urlParams.toString())
+                    }}
+                  >Close</Button>
+                </div>
+              </div>
+            </DynamicModal>
+
+          </Card>
+        </Form>
+      )
+}
+
+export default SignInComponent

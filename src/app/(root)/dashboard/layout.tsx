@@ -1,0 +1,39 @@
+import Bottombar from '@/components/dashboard/navigation/Bottombar'
+import Sidebar from '@/components/dashboard/navigation/Sidebar'
+import Topbar from '@/components/dashboard/navigation/Topbar'
+import { getUser } from '@/lib/supabase/accounts'
+import { getCurrentUser } from '@/lib/supabase/user.actions'
+import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import React, { PropsWithChildren } from 'react'
+
+export const metadata:Metadata = {
+    title: 'Welcome to iSubscribe Dashboard.',
+    description: 'Your home of affordable utility bills.',
+}
+
+const Layout = async ({ children }: PropsWithChildren) => {
+
+  const [
+    { data: profile }, 
+    { data }
+  ] = await Promise.all([
+    getUser(),
+    getCurrentUser()
+  ])
+
+  if (!data?.user) return redirect('/sign-up')
+
+  return (
+    <div className='bg-violet-50/90 dark:bg-background flex min-h-screen w-full overflow-hidden relative'>
+       <Sidebar />
+          <div className="flex flex-col w-full relative">
+              <Topbar profile={profile!} />
+              { children }
+          </div>
+        <Bottombar />
+    </div>
+  )
+}
+
+export default Layout

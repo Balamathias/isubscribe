@@ -1,0 +1,72 @@
+"use client"
+
+import { Button } from '@/components/ui/button'
+import { Tables } from '@/types/database'
+import { Asterisk, Eye, EyeOff } from 'lucide-react'
+import React, { useState } from 'react'
+
+const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
+    const [hideBalance, setHideBalance] = useState(false)
+    const [hideCashbackBalance, setHideCashbackBalance] = useState(false)
+
+    const handleToggleHideBalance  = () => {
+        setHideBalance(!hideBalance)
+    }
+    const handleToggleHideCashbackBalance  = () => {
+        setHideCashbackBalance(!hideCashbackBalance)
+    }
+
+    const walletBalance = wallet?.balance?.toFixed(2) || "0.00"
+    const cashbackBalance = wallet?.cashback_balance?.toFixed(2) || "0.00"
+
+  return (
+    <div className=' flex flex-col space-y-4 justify-start'>
+        {/* BALANCE */}
+        <RevealBalance
+            balance={walletBalance}
+            hide={hideBalance}
+            title='Wallet Balance'
+            toggleShow={handleToggleHideBalance}
+        />
+        {/* CASHBACK */}
+        <RevealBalance
+            balance={cashbackBalance}
+            hide={hideCashbackBalance}
+            title='Cashback Balance'
+            toggleShow={handleToggleHideCashbackBalance}
+        />
+    </div>
+  )
+}
+
+const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hide: boolean, toggleShow: () => void, title: string }) => {
+    return (
+        <div>
+            <p className='tracking-tighter text-white text-xs md:text-sm'>{title}</p>
+            <div className=' flex flex-row items-center justify-center'>
+            {
+                hide ? 
+                (
+                <div className='flex flex-row items-center justify-center'>
+                    {
+                        Array.from({length: 4}).map((_, idx) => (
+                            <Asterisk key={idx} size={18} className='text-white' />
+                        ))
+                    }
+                </div>
+                ) :
+                (
+                    <h1 className='md:text-lg text-lg font-semibold'>₦{" "}{balance}</h1>
+                )
+            }
+            <Button className={"p-1 h-8 bg-transparent hover:bg-transparent w-9 shadow-none drop-shadow-none border-none"} onClick={toggleShow}>
+                {
+                    hide ? <EyeOff size={18} /> : <Eye size={20} />
+                }
+            </Button>
+            </div>
+        </div>
+    )
+}
+
+export default WalletBalance
