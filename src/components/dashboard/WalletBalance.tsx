@@ -2,12 +2,18 @@
 
 import { Button } from '@/components/ui/button'
 import { Tables } from '@/types/database'
+import { createClient } from '@/utils/supabase/client'
 import { Asterisk, Eye, EyeOff } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { set } from 'zod'
 
 const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(false)
     const [hideCashbackBalance, setHideCashbackBalance] = useState(false)
+
+    const [walletBalance, setWalletBalance] = useState( wallet?.balance?.toFixed(2) || "0.00" )
+    const cashbackBalance = wallet?.cashback_balance?.toFixed(2) || "0.00"
 
     const handleToggleHideBalance  = () => {
         setHideBalance(!hideBalance)
@@ -16,8 +22,25 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
         setHideCashbackBalance(!hideCashbackBalance)
     }
 
-    const walletBalance = wallet?.balance?.toFixed(2) || "0.00"
-    const cashbackBalance = wallet?.cashback_balance?.toFixed(2) || "0.00"
+    useEffect(() => {
+        const supabase = createClient()
+
+        const walletChannel = supabase.channel('wallet-update-channel')
+        .on(
+            'postgres_changes',
+            { event: 'UPDATE', schema: 'public', table: 'wallet', filter: `user=eq.${wallet?.user}` },
+            (payload) => {
+                if (payload.new) {
+                    const response = payload?.new as Tables<'wallet'>
+                    setWalletBalance(response.balance?.toFixed(2)?.toString() || "0.00")
+                    toast.success('Wallet funded successfully.')
+                }
+            }
+        )
+        .subscribe()
+
+        return () => { supabase.removeChannel(walletChannel) }
+    }, [wallet?.user])
 
   return (
     <div className=' flex flex-col space-y-4 justify-start'>
