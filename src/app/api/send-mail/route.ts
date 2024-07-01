@@ -19,7 +19,7 @@ export const POST = async (req: Request) => {
         service: 'gmail',
         auth: {
             user: process.env.NEXT_GMAIL_USER,
-            pass: process.env.NEXT_GMAIL_PASS,
+            pass: process.env.NEXT_GMAIL_PASSWORD,
         },
     })
 
