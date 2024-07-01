@@ -22,12 +22,12 @@ const Layout = async ({ children }: PropsWithChildren) => {
     getCurrentUser()
   ])
 
-  if (!data?.user) return redirect('/sign-up')
+  if (!data?.user) return redirect('/sign-in')
 
   return (
     <div className='bg-violet-50/90 dark:bg-background flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
-          <div className="flex flex-col w-full relative">
+          <div className="flex flex-col w-full relative overflow-auto custom-scrollbar md:ml-[220px]">
               <Topbar profile={profile!} />
               { children }
           </div>

@@ -55,7 +55,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
 
       setPassPin({pin: (await hashPin(pin))}, {
         onSuccess: () => {
-            router.replace("/dashboard?step=welcome")
+            router.replace("/dashboard")
             toast.success('Transaction pin set successfully.')
             onClose?.()
         },
@@ -137,11 +137,11 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
               <LucideDelete className="w-6 h-6" />
             </button>
           </div>
-          <div className='self-center flex items-center gap-x-1'>
+          <div className='flex items-center gap-x-1 !w-full flex-row'>
             <BadgeCheckIcon className='text-primary' size={20}></BadgeCheckIcon>
-            <p className='text-muted-foreground'>Powered by:</p>
+            <p className='text-muted-foreground text-xs'>Powered by:</p>
             <Logo 
-                className={'w-fit block mx-0 justify-start items-center'}
+                className={'!w-fit block !mx-0 !justify-start !items-center'}
                 imageClassName='h-8 w-8'
                 textClassName='text-xs'
             />

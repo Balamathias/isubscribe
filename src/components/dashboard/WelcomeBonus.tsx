@@ -33,7 +33,7 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
 
     try {
       setLoading(true)
-      if (wallet?.bonus_claimed === true){
+      if (wallet?.bonus_claimed){
         toast.info("You have claimed your welcome Bonus already!")
         setLoading(false)
         return
@@ -66,7 +66,8 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     return (
         <DynamicModal
             open={claimed === false}
-            setOpen={setClaimed}
+            setOpen={setClaimed as any}
+            dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4'>
                 <h2 className='text-xl font-semibold'>Congratulations <span className="text-primary">{profile?.full_name}</span>!,</h2>
@@ -87,8 +88,9 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
 
     return (
         <DynamicModal
-            open={successful === true}
+            open={successful && claimed}
             setOpen={setSuccessful}
+            dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4'>
                 <div className='w-full mx-auto flex py-1 items-center justify-center'>

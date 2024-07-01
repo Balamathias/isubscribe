@@ -26,7 +26,14 @@ export const POST = async (req:Request, res:Response) => {
 
     if (data?.eventType === 'SUCCESSFUL_TRANSACTION') {
 
-        const walletBalance = user.wallet?.at(0)?.balance ?? 0
+        const { data: wallet, error: walletError } = await supabase.from('wallet')
+            .select('balance')
+            .eq('user', user?.id)
+            .single()
+
+        if (walletError) return NextResponse.json({message: 'Getting wallet failed'}, { status: 500})
+
+        const walletBalance = wallet?.balance ?? 0
 
         const { data: walletUpdate, error: updateWalletError } = await supabase
             .from('wallet')

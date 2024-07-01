@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const HistoryPage = () => {
   return (
-    <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
+    <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16 overflow-hidden'>
       <div className='flex flex-col space-y-4'>
         <h1 className='text-2xl font-bold'>Your Transaction History</h1>
         

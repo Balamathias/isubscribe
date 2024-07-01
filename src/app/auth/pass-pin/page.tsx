@@ -23,9 +23,13 @@ const Page = async () => {
 
   if (!currentUser?.user) return redirect('/sign-in')
 
-  await generateReservedAccount()
+  try {
+    await generateReservedAccount()
+  } catch (error) {
+    console.log(error)
+  }
 
-  if (user?.onboarded) return redirect('/dashboard?step=welcome')
+  if (user?.onboarded) return redirect('/dashboard')
     
   return (
     <WidthWrapper className='min-h-screen flex flex-col items-center justify-center'>

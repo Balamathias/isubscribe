@@ -43,7 +43,7 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
     }, [wallet?.user])
 
   return (
-    <div className=' flex flex-col space-y-4 justify-start'>
+    <div className=' flex flex-row justify-between w-full items-center'>
         {/* BALANCE */}
         <RevealBalance
             balance={walletBalance}
@@ -65,7 +65,7 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
 const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hide: boolean, toggleShow: () => void, title: string }) => {
     return (
         <div>
-            <p className='tracking-tighter text-white text-xs md:text-sm'>{title}</p>
+            <p className='tracking-tight text-white text-xs md:text-sm'>{title}</p>
             <div className=' flex flex-row items-center justify-center'>
             {
                 hide ? 
@@ -79,12 +79,12 @@ const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hi
                 </div>
                 ) :
                 (
-                    <h1 className='md:text-lg text-lg font-semibold'>₦{" "}{balance}</h1>
+                    <h1 className='md:text-lg text-base tracking-tight md:tracking-normal font-semibold'>₦{" "}{balance}</h1>
                 )
             }
             <Button className={"p-1 h-8 bg-transparent hover:bg-transparent w-9 shadow-none drop-shadow-none border-none"} onClick={toggleShow}>
                 {
-                    hide ? <EyeOff size={18} /> : <Eye size={20} />
+                    hide ? <EyeOff size={16} /> : <Eye size={17.5} />
                 }
             </Button>
             </div>

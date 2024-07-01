@@ -12,24 +12,24 @@ const FundWalletBox = async () => {
             <div className='flex flex-col space-y-2.5'>
                 <div className='flex-col space-y-0.5'>
                     <p className="text-xs sm:text-sm tracking-tighter text-violet-50">Your Account Number</p>
-                    <h2 className='tracking-wider text-xl md:text-2xl font-bold'>{account?.account_number}</h2>
+                    <h2 className='tracking-wider text-lg md:text-2xl font-bold'>{account?.account_number}</h2>
                 </div>
                 <div className='flex-col space-y-0.5'>
                     <p className="text-xs sm:text-sm tracking-tighter text-violet-50">Bank Name</p>
-                    <h2 className='tracking-wider text-xl md:text-2xl font-bold'>{account?.bank_name}</h2>
+                    <h2 className='tracking-wider text-lg md:text-2xl font-bold'>{account?.bank_name}</h2>
                 </div>
             </div>
 
-            <div className='flex flex-col space-y-6 justify-end'>
+            <div className='flex flex-col space-y-4 justify-end'>
 
-                <Link href={'#'} className='text-xs tracking-tight text-violet-950 flex items-center space-x-1 bg-white p-2.5 rounded-full px-5 w-fit hover:bg-violet-100 hover:transition-all'>
+                <Link href={'#'} className='text-xs tracking-tight text-violet-950 flex items-center space-x-1 bg-white md:p-2.5 p-1.5 rounded-full md:px-5 px-2.5 w-fit hover:bg-violet-100 hover:transition-all'>
                     <LucideCopy size={18} />
                     <span>Copy</span>
                 </Link>
 
                 <div className='flex-col space-y-0.5'>
                     <p className="text-xs sm:text-sm tracking-tighter text-violet-50">Account Name</p>
-                    <h2 className='tracking-wider text-xl md:text-2xl font-bold'>{account?.account_name}</h2>
+                    <h2 className='tracking-wider text-lg md:text-2xl font-bold'>{account?.account_name}</h2>
                 </div>
             </div>
         </Card>
