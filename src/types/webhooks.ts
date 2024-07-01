@@ -4,8 +4,11 @@ interface Product {
 }
 
 interface PaymentSourceInformation {
-    // Specify the type of the object(s) inside the array if possible
-    [key: string]: any;
+    bankCode: string,
+    amountPaid: number,
+    accountName: string,
+    sessionId: string,
+    accountNumber: string
 }
 
 interface DestinationAccountInformation {

@@ -12,7 +12,7 @@ const Logo = ({url, showLogoText=true, className, imageClassName, textClassName}
             alt="iSubscribe Logo"
             width={300}
             height={300}
-            className={cn("h-12 w-12", imageClassName)}
+            className={cn("h-10 w-10 md:h-12 md:w-12", imageClassName)}
             quality={100}
         />
         {showLogoText && <h2 className={cn("text-primary font-semibold text-xl", textClassName)}>iSubscribe</h2>}

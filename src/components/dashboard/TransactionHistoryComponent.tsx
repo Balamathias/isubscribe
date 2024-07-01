@@ -6,11 +6,12 @@ import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { ArrowUp, LucidePhone } from 'lucide-react'
 import { formatDateTime } from '@/funcs/formatDate'
 import { TransactionEvent } from '@/types/webhooks'
+import Link from 'next/link'
 
 const TransactionHistoryComponent = async () => {
     const { data: history } = await getTransactionHistory()
   return (
-    <Card className='py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col gap-y-2'>
+    <Card className='py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col'>
         {
             history?.map((transaction, index) => (
                 <TransactionHistoryItem key={index} transaction={transaction} type={transaction.type as keyof typeof EVENT_TYPE} />
@@ -25,36 +26,37 @@ const TransactionHistoryItem = ({ transaction, type }: {
     type: keyof typeof EVENT_TYPE 
 }) => {
     const eventData = (JSON.parse(transaction?.meta_data?.toString() || '{}')) as TransactionEvent['eventData']
-    console.log(transaction?.meta_data, eventData)
 
     return (
-    <div className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer'>
-        <div className='flex items-center justify-center p-3 bg-violet-200 text-violet-950 rounded-full h-12 w-12'>
-            {
-                type === 'wallet_fund' ? (
-                    <ArrowUp strokeWidth={2} className='text-primary' size={20} />
-                ) : (
-                    <LucidePhone size={24} />
-                )
-            }
+    <Link href={'/dashboard/history/' + transaction?.id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
+        <div className='flex items-center flex-row space-x-2'>
+            <div className='flex items-center justify-center p-3 bg-violet-200 text-violet-950 rounded-full h-12 w-12'>
+                {
+                    type === 'wallet_fund' ? (
+                        <ArrowUp strokeWidth={2} className='text-primary' size={18} />
+                    ) : (
+                        <LucidePhone size={24} />
+                    )
+                }
+            </div>
+
+            <div className='flex flex-col gap-y-1'>
+                <p className='text-md font-semibold text-muted-foreground'>{transaction.title}</p>
+                <p className='text-xs text-muted-foreground'>{formatDateTime(transaction.created_at)}</p>
+            </div>
         </div>
 
         <div className='flex flex-col gap-y-1'>
-            <p className='text-md font-semibold text-muted-foreground'>{transaction.title}</p>
-            <p className='text-xs text-muted-foreground'>{formatDateTime(transaction.created_at)}</p>
-        </div>
-
-        <div className='flex flex-col gap-y-1'>
-            <p className='text-md font-semibold text-muted-foreground'>N{eventData?.amountPaid}</p>
+            <p className='text-md font-semibold text-muted-foreground'>+N{eventData?.amountPaid}</p>
             {
                 transaction.status === 'PAID' ? (
-                    <span className="p-0.5 text-xs px-1 rounded-full bg-green-200 text-green-600">successful</span>
+                    <span className="p-0.5 text-xs px-2 rounded-full bg-green-200 text-green-600">successful</span>
                 ) : (
-                    <span className="p-0.5 text-xs px-1 rounded-full bg-red-200 text-red-600">failed</span>
+                    <span className="p-0.5 text-xs px-2 rounded-full bg-red-200 text-red-600">failed</span>
                 )
             }
         </div>
-    </div>
+    </Link>
     )
 }
 
