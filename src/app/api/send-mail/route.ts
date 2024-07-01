@@ -2,8 +2,6 @@ import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import { EmailTemplateProps, renderEmailHTML } from "@/email/Email";
 
-export const runtime = 'edge'
-
 const nodemailer = require('nodemailer');
 
 export const POST = async (req: Request) => {
