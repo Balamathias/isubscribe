@@ -2,13 +2,15 @@ import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import { EmailTemplateProps, renderEmailHTML } from "@/email/Email";
 
+export const runtime = 'edge'
+
 const nodemailer = require('nodemailer');
 
 export const POST = async (req: Request) => {
     const { email, subject, message, title, links, ...rest } = await req.json() as EmailTemplateProps;
 
     const mailOptions = {
-        from: 'matiecodes.tech',
+        from: 'iSubscribe',
         to: email,
         subject: subject,
         text: message,

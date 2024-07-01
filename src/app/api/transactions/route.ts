@@ -31,7 +31,8 @@ export const POST = async (req:Request, res:Response) => {
         const { data: walletUpdate, error: updateWalletError } = await supabase
             .from('wallet')
             .update({
-                balance: walletBalance + data.eventData.amountPaid
+                balance: walletBalance + data.eventData.amountPaid,
+                meta_data: JSON.stringify(data?.eventData),
             })
             .eq('user', user.id)
 
@@ -47,6 +48,7 @@ export const POST = async (req:Request, res:Response) => {
             status: data?.eventData?.paymentStatus,
             title: 'Wallet Fund',
             user: user?.id,
+            meta_data: JSON.stringify(data?.eventData),
         }).select()
 
         console.log(_historyError)
@@ -58,7 +60,7 @@ export const POST = async (req:Request, res:Response) => {
             subject: 'Transfer successful',
             message: 'Your wallet transfer to iSubscribe was successful. Thank you for choosing us.',
         })
-
+        
         return NextResponse.json({message: 'Wallet credited successfully.'}, {status: 200})
     } else {
         const { error: _historyError } = await  supabase.from('history')
@@ -68,6 +70,7 @@ export const POST = async (req:Request, res:Response) => {
             status: data?.eventData?.paymentStatus,
             title: 'Wallet Fund Failed',
             user: user?.id,
+            meta_data: JSON.stringify(data?.eventData),
         }).select()
         
         console.log(_historyError)
