@@ -49,9 +49,11 @@ export const POST = async (req:Request, res:Response) => {
             user: user?.id,
         }).select()
 
-        if (_historyError) return NextResponse.json({message: 'Saving History data failed'}, { status: 500 })
+        console.log(_historyError)
 
-        const {message} = await sendEmail({
+        if (_historyError) return NextResponse.json({message: 'Saving History data failed'}, { status: 500 })
+            
+            const {message} = await sendEmail({
             email: data?.eventData?.customer?.email,
             subject: 'Transfer successful',
             message: 'Your wallet transfer to iSubscribe was successful. Thank you for choosing us.',
@@ -67,8 +69,10 @@ export const POST = async (req:Request, res:Response) => {
             title: 'Wallet Fund Failed',
             user: user?.id,
         }).select()
+        
+        console.log(_historyError)
+        if (_historyError) return NextResponse.json({message: 'Saving History data failed'}, { status: 500 })
     }
-
 
     console.log(data)
 
