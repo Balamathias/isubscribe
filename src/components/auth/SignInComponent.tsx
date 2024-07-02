@@ -55,7 +55,7 @@ const SignInComponent = () => {
             console.error(error)
             setIsPending(false)
             setStatus(true)
-            setError(error.message === 'fetch failed' ? 'Make sure you are connected to the internet to continue.' : error?.message)
+            setError(error.message === 'fetch failed' ? 'Make sure you are connected to the internet to continue.' : 'Make sure the details yyou entered are correct. You may want to double-check your Password or Email.')
         }
         finally { setIsPending(false) }
       }
