@@ -9,12 +9,14 @@ import { getUser } from '@/lib/supabase/accounts'
 // Creating a handler to a GET request to route /auth/confirm
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
+  const token = searchParams.get('token')
   const token_hash = searchParams.get('token_hash')
+  console.log(token, token_hash)
   const type = searchParams.get('type') as EmailOtpType | null
   let next = '/auth/pass-pin'
   const { data: currentUser } = await getUser()
   if (currentUser?.onboarded) {
-    next = '/dashboard'
+    next = '/'
   }
 
   // Create redirect link without the secret token

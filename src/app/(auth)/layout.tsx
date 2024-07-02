@@ -8,7 +8,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   if (user) return redirect('/dashboard')
   return (
     <main className="flex md:justify-between justify-between flex-col-reverse md:flex-row gap-4 bg-violet-50/80 dark:bg-baxkground">
-        <div className="flex-1 px-4 py-6 bg-white dark:bg-background">
+        <div className="flex-1 md:px-4 py-6 md:bg-white dark:bg-background">
           {children}
         </div>
         <div className="flex-1 md:flex hidden">

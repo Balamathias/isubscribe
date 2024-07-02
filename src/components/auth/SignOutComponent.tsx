@@ -30,13 +30,14 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
     <div className='flex flex-col py-2 gap-y-2'>
       <DynamicModal
         trigger={
-            trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-xl' variant={'destructive'}>
+            trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-lg text-xs md:text-sm' variant={'destructive'}>
               <span>Log out</span>
               <LucideArrowRight size={18} />
             </Button>
         }
         open={open}
         setOpen={setOpen}
+        dialogOnly
       >
         <div className='flex flex-col gap-y-4 py-2'>
           <h1 className='text-xl font-semibold'>Logout?</h1>

@@ -27,7 +27,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   return (
     <div className='bg-violet-50/90 dark:bg-background flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
-          <div className="flex flex-col w-full relative overflow-auto custom-scrollbar md:ml-[220px]">
+          <div className="flex flex-col w-full relative overflow-auto custom-scrollbar md:ml-[180px]">
               <Topbar profile={profile!} />
               { children }
           </div>

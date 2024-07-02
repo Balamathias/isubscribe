@@ -8,7 +8,7 @@ const FundWalletBox = async () => {
     const { data: account } = await getAccount()
   return (
     <div className='flex flex-col space-y-4 md:space-y-8'>
-        <Card className='flex flex-row justify-between object-cover bg-no-repeat bg-center gap-4 md:gap-9 bg-gradient-to-r from-violet-700 via-violet-600 to-purple-800 md:min-w-[600px] text-white rounded-xl shadow-none drop-shadow-none border-none p-4 items-start'>
+        <Card className='flex flex-row justify-between object-cover bg-no-repeat bg-center gap-4 md:gap-9 bg-gradient-to-r from-violet-900 via-violet-800 to-purple-800 md:min-w-[600px] text-white rounded-xl shadow-none drop-shadow-none border-none p-4 items-start'>
             <div className='flex flex-col space-y-2.5'>
                 <div className='flex-col space-y-0.5'>
                     <p className="text-xs sm:text-sm tracking-tighter text-violet-50">Your Account Number</p>

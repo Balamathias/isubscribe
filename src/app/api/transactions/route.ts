@@ -6,7 +6,7 @@ import { NextResponse } from "next/server"
 
 export const runtime = 'edge'
 
-export const POST = async (req:Request, res:Response) => {
+export const POST = async (req: Request, res: Response) => {
     const supabase = createClient()
     const data = await req.json() as TransactionEvent
 

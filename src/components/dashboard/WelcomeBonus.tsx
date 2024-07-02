@@ -2,14 +2,10 @@
 
 import React, { useState } from 'react'
 
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Check, CheckCircle2 } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { getUser } from '@/lib/supabase/accounts'
-import { getWallet, updateWalletBalance } from '@/lib/supabase/wallets'
-import { Card } from '../ui/card'
-import { getCurrentUser } from '@/lib/supabase/user.actions'
+import { updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { Tables } from '@/types/database'
 import DynamicModal from '../DynamicModal'
 import { Button } from '../ui/button'
@@ -21,9 +17,9 @@ interface WelcomeBonusModalProps {
 }
 
 const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModalProps) => {
-    const [claimed, setClaimed] = useState(wallet?.bonus_claimed ?? false)
+    const [claimed, setClaimed] = useState(wallet?.bonus_claimed)
     
-    const reward = 200
+    const reward = 200.00
 
   const [loading, setLoading] = useState(false)
   const [successful, setSuccessful] = useState(false)
@@ -39,10 +35,13 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
         return
       }
 
-      const walletBalance = parseFloat(wallet?.balance?.toString()!) || 0.00;
+      const walletBalance = parseFloat(wallet?.balance?.toString() || '0.00') || 0.00;
       const balance = walletBalance + reward
+      console.log(balance, wallet?.id, profile?.id)
 
-      await updateWalletBalance(wallet?.id!, balance)
+      router.refresh()
+
+      await updateWalletBalanceByUser(profile?.id!, balance)
       setSuccessful(true)
 
       setClaimed(true)
@@ -65,13 +64,14 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
   if (!claimed) {
     return (
         <DynamicModal
-            open={claimed === false}
+            open={(!claimed && !successful)}
             setOpen={setClaimed as any}
+            closeModal={() => setClaimed(true)}
             dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4'>
-                <h2 className='text-xl font-semibold'>Congratulations <span className="text-primary">{profile?.full_name}</span>!,</h2>
-                <p className="text-base tracking-tighter">Your account has been verified successfully! <br />
+                <h2 className='text-xl font-semibold text-center'>Congratulations <span className="text-primary">{profile?.full_name}</span>!,</h2>
+                <p className="text-base tracking-tighter text-center">Your account has been verified successfully! <br />
                     You&apos;ve also been Awarded with <span className='text-primary font-extrabold'>₦200</span> Welcome Bonus for signing up to <span className="text-primary">iSubscribe</span>.
                 </p>
                 <Button 
@@ -96,8 +96,8 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
                 <div className='w-full mx-auto flex py-1 items-center justify-center'>
                     <CheckCircle2 strokeWidth={2} size={60} className='text-green-600' />
                 </div>
-                <h2 className='text-xl font-semibold'>Congratulations <span className="text-primary">{profile?.full_name} 🎉</span>!</h2>
-                <p className="text-base tracking-tighter">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button!
+                <h2 className='text-xl font-semibold text-center'>Congratulations <span className="text-primary">{profile?.full_name} 🎉</span>!</h2>
+                <p className="text-base tracking-tighter text-center">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button! What would you like to do from here?
                 </p>
                 <Button 
                     className='w-full rounded-xl mt-2' 

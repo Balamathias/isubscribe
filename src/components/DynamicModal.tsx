@@ -28,13 +28,26 @@ interface DynamicModalProps {
     drawerClassName?: ClassValue,
     dialogOnly?: boolean,
     drawerOnly?: boolean,
-    dismissible?: boolean
+    dismissible?: boolean,
+    closeModal?: (open?: boolean) => void
 }
-const DynamicModal = ({children, trigger, open, setOpen, dialogClassName, drawerClassName, showCloseButton, dialogOnly=false, drawerOnly=false, dismissible=true}: DynamicModalProps) => {
+const DynamicModal = ({
+  children, 
+  trigger, 
+  open, 
+  setOpen, 
+  dialogClassName, 
+  drawerClassName, 
+  showCloseButton, 
+  dialogOnly=false, 
+  drawerOnly=false, 
+  dismissible=true,
+  closeModal
+}: DynamicModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
-  if (isDesktop || dialogOnly) {
+  if ((isDesktop || dialogOnly) && !drawerOnly) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={closeModal ? closeModal : setOpen}>
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>

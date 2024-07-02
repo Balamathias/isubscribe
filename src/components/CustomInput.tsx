@@ -28,8 +28,8 @@ const CustomInput = ({
     required
 }: CustomInputProps) => {
   return (
-    <div className='flex-row gap-x-2 h-10 md:h-12 w-full flex justify-center items-center rounded-lg bg-secondary/70 px-2.5'>
-        {Icon ? <Icon className="text-muted-foreground" /> : <LucideUser2 className='text-muted-foreground h-5 w-5 md:h-8 md:w-8' />}
+    <div className='flex-row gap-x-2 h-12 w-full flex justify-center items-center rounded-lg bg-secondary/70 px-2.5'>
+        {Icon ? <Icon className="text-muted-foreground h-5 w-5 md:h-8 md:w-8" /> : <LucideUser2 className='text-muted-foreground h-5 w-5 md:h-8 md:w-8' />}
         <Input 
             placeholder={placeholder} 
             className='w-full h-full border-none focus:border-none outline-none focus:outline-none focus-visible:ring-none focus-visible:ring-0 focus:ring-0 p-0 focus-within:ring-none bg-inherit rounded-lg shadow-none px-1'

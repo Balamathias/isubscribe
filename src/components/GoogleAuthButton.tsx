@@ -29,13 +29,15 @@ const GoogleAuthButton = () => {
       pending && <LoadingOverlay isPending={pending} />
     }
       <Button 
-        className='flex items-center border-none shadow-none justify-center space-x-2 w-full my-4 py-4 h-10 md:h-12 rounded-lg'
+        className='flex items-center border-none shadow-none justify-center space-x-2 w-full my-4 py-4 h-12 rounded-lg'
         variant={'secondary'}
         onClick={handleSignIn}
+        size={'lg'}
       >
           {
             pending && <LoaderIcon className='animate-spin' />
           }
+          
           <Image 
             src={'/glass/icons/google-flat.png'}
             alt='Google'

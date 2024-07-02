@@ -9,12 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateAuthUser } from "@/lib/supabase/user.actions"
 import { useRouter } from "next/navigation"
 import { ChangeEvent, useState } from "react"
 import { toast } from "sonner"
+import CustomInput from "../CustomInput"
+import { LucideLock } from "lucide-react"
 
 export default function ResetPasswordComponent({ email }: { email: string }) {
   const [isPending, setIsPending] = useState(false)
@@ -50,7 +51,7 @@ export default function ResetPasswordComponent({ email }: { email: string }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className="w-full max-w-sm border-none shadow-lg drop-shadow-lg">
+      <Card className="max-w-sm border-none shadow-lg drop-shadow-lg w-full min-w-max md:w-[450px]">
         <CardHeader>
           <CardTitle className="text-2xl py-1 text-primary">Reset Password</CardTitle>
           <CardDescription>
@@ -60,27 +61,29 @@ export default function ResetPasswordComponent({ email }: { email: string }) {
         <CardContent className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
-            <Input 
+            <CustomInput 
                 id="password" 
                 type="password" 
                 onChange={(e) => setFields({ ...fields, password: e.target.value }) }
                 required 
                 placeholder="Password..."
+                Icon={LucideLock}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password2">Confirm Password</Label>
-            <Input 
+            <CustomInput 
                 id="password2" 
                 type="password" 
                 onChange={(e) => setFields({ ...fields, password2: e.target.value }) }
                 required 
                 placeholder="Confirm password"
+                Icon={LucideLock}
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
-          <Button className="w-full" disabled={isPending}>{isPending ? 'Processing...' : 'Reset'}</Button>
+          <Button className="w-full rounded-lg" size={'lg'} disabled={isPending}>{isPending ? 'Processing...' : 'Reset'}</Button>
         </CardFooter>
       </Card>
     </form>

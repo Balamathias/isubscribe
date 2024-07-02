@@ -64,6 +64,13 @@ export const updateWalletBalance = async (id: number, balance: number) => {
     return { data, error }
 }
 
+export const updateWalletBalanceByUser = async (userId: string, balance: number) => {
+    const supabase = createClient()
+    const { data, error } = await supabase.from('wallet').update({balance, bonus_claimed: true}).eq('user', userId).select()
+    if (error) throw error
+    return { data, error }
+}
+
 export const handleInvitation = async (invitationId: string, bonus=100) => {
     const supabase = createClient()
     const { data: user } = await getUser()

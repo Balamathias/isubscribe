@@ -1,7 +1,7 @@
 "use client"
 
-import React from 'react'
-import { z } from "zod"
+import React, { useState } from 'react'
+import { set, z } from "zod"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -27,7 +27,7 @@ const SignInComponent = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const urlParams = new URLSearchParams(searchParams.toString())
-    const status = urlParams.get('status')
+    const [status, setStatus] = useState(urlParams.get('status') === 'email-sent')
 
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
@@ -57,6 +57,7 @@ const SignInComponent = () => {
             })
             if (status === 200)
               toast.success('Success!', { description: 'Verification Email sent to ' + values.email, duration: 5000 })
+              form.reset()
             router.replace('?status=email-sent')
             return
         }
@@ -70,7 +71,7 @@ const SignInComponent = () => {
 
     return (
         <Form {...form}>
-          <Card className='flex flex-col gap-2 shadow-none border-none w-full max-w-[450px]'>
+          <Card className='flex flex-col gap-2 shadow-none border-none w-full max-w-[450px] py-4 px-3'>
 
             <Logo />
 
@@ -86,7 +87,7 @@ const SignInComponent = () => {
               <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
               <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
 
-              <Button type="submit" disabled={isPending} className='mt-2 w-full bg-gradient-to-l from-pink-500 via-purple-600 to-violet-700 h-12 rounded-lg flex justify-center items-center'>{isPending ? 'Processing...' : 'Sign up'}</Button>
+              <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Sign up'}</Button>
             </form>
             
             <div className="flex flex-col space-y-2 text-xs">
@@ -94,7 +95,9 @@ const SignInComponent = () => {
             </div>
 
             <DynamicModal 
-              open={status === 'email-sent'}
+              open={status}
+              setOpen={setStatus}
+              dialogOnly
             >
               <div className='flex flex-col gap-y-4 py-2'>
                 <h1 className='text-xl font-semibold text-primary dark:text-primary/90'>Email Sent!</h1>
