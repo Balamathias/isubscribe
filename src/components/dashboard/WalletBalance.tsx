@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/client'
 import { Asterisk, Eye, EyeOff } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { set } from 'zod'
 
 const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(false)
