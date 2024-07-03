@@ -3,6 +3,7 @@ import { Card } from '../ui/card'
 import Link from 'next/link'
 import { LucideCopy } from 'lucide-react'
 import { getAccount } from '@/lib/supabase/accounts'
+import CopyButton from '../CopyButton'
 
 const FundWalletBox = async () => {
     const { data: account } = await getAccount()
@@ -22,10 +23,7 @@ const FundWalletBox = async () => {
 
             <div className='flex flex-col space-y-4 justify-end'>
 
-                <Link href={'#'} className='text-xs tracking-tight text-violet-950 flex items-center space-x-1 bg-white md:p-2.5 p-1.5 rounded-full md:px-5 px-2.5 w-fit hover:bg-violet-100 hover:transition-all'>
-                    <LucideCopy size={18} />
-                    <span>Copy</span>
-                </Link>
+                <CopyButton content={account?.account_number!} />
 
                 <div className='flex-col space-y-0.5'>
                     <p className="text-xs sm:text-sm tracking-tighter text-violet-50">Account Name</p>

@@ -27,7 +27,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         {
           pathname === '/dashboard' ? (<>
             <Link href={'#support'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
-              <LucideBadgeHelp size={22} className='text-primary' />
+              <LucideBadgeHelp size={28} strokeWidth={2} className='text-primary' />
               <span>Support?</span>
             </Link>
             <Logo showLogoText={false} className='flex md:hidden' />

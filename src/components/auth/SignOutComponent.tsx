@@ -50,7 +50,7 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
       </DynamicModal>
 
       {
-        loading && <LoadingOverlay />
+        loading && <LoadingOverlay loader='2' isPending={loading} />
       }
     </div>
   )

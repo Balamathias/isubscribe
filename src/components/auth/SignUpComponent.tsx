@@ -21,6 +21,7 @@ import { LucideLock, LucideMail, LucidePhone, UserCircle2 } from 'lucide-react'
 import Logo from '../Logo'
 import AuthSeparator from './AuthSeparator'
 import DynamicModal from '../DynamicModal'
+import LoadingOverlay from '../loaders/LoadingOverlay'
 
 const SignInComponent = () => {
     const [isPending, setIsPending] = React.useState(false)
@@ -116,6 +117,10 @@ const SignInComponent = () => {
             </DynamicModal>
 
           </Card>
+
+          {
+            isPending && <LoadingOverlay loader='2' isPending={isPending} />
+          }
         </Form>
       )
 }
