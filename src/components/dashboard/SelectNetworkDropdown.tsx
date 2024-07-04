@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useNetwork } from "@/providers/data/sub-data-provider"
+import { Networks } from "@/types/networks"
+import { LucideCheck } from "lucide-react"
 import Image from "next/image"
 
 export const networkImages = {
@@ -19,79 +21,75 @@ export const networkImages = {
     '9mobile': '/images/networks/9mobile.png',
 }
 
+const dropDownNetworks = [
+    {
+        name: 'MTN',
+        value: 'mtn',
+        image: '/images/networks/mtn.png'
+    },
+    {
+        name: 'GLO',
+        value: 'glo',
+        image: '/images/networks/glo.png'
+    },
+    {
+        name: 'Airtel',
+        value: 'airtel',
+        image: '/images/networks/airtel.png'
+    },
+    {
+        name: '9MOBILE',
+        value: '9mobile',
+        image: '/images/networks/9mobile.png'
+    },
+
+]
+
 export default function SelectNetworkDropdown({}) {
     const { currentNetwork, setCurrentNetwork } = useNetwork()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="flex flex-col gap-y-1 cursor-pointer">
-        <div className="flex flex-col justify-center items-center w-10 h-10 md:w-16 md:h-16 rounded-full bg-white dark:bg-background cursor-pointer">
+        <div className="flex flex-col dark:bg-background cursor-pointer hover:opacity-80">
             <Image 
                 src={networkImages[currentNetwork]} 
                 width={50} 
                 height={50} 
                 quality={100}
                 alt={currentNetwork}
-                className='md:h-8 md:w-8 h-5 w-5 object-cover'
+                className='md:h-12 md:w-12 h-10 w-10 rounded-md object-cover'
             />
             {/* <span className="text-sm font-semibold text-violet-600">{currentNetwork}</span> */}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 shadow-none border-none drop-shadow-none rounded-xl">
+      <DropdownMenuContent className="w-56 shadow-none border-none drop-shadow-md rounded-xl">
         <DropdownMenuLabel>Select Network</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => setCurrentNetwork('mtn')}>
-            MTN
-            <DropdownMenuShortcut>
-                <Image 
-                    src='/images/networks/mtn.png' 
-                    width={20} 
-                    height={20} 
-                    quality={100}
-                    alt='mtn'
-                    className='rounded-md md:h-8 md:w-8 h-6 w-6'
+          {dropDownNetworks.map((network, index) => (
+            <DropdownMenuItem
+              key={index}
+              onClick={() => setCurrentNetwork(network.value as Networks)}
+              className="flex items-center justify-between"
+            >
+              <div className="flex items-center gap-x-2">
+                <Image
+                  src={network.image}
+                  width={30}
+                  height={30}
+                  quality={100}
+                  alt={network.name}
+                  className="h-8 w-8 rounded-md object-cover"
                 />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setCurrentNetwork('glo')}>
-            GLO
-            <DropdownMenuShortcut>
-                <Image 
-                    src='/images/networks/glo.png' 
-                    width={20} 
-                    height={20} 
-                    quality={100}
-                    alt='glo'
-                    className='rounded-md md:h-8 md:w-8 h-6 w-6'
-                />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setCurrentNetwork('airtel')}>
-            Airtel
-            <DropdownMenuShortcut>
-                <Image 
-                    src='/images/networks/airtel.png' 
-                    width={20} 
-                    height={20} 
-                    quality={100}
-                    alt='airtel'
-                    className='rounded-md md:h-8 md:w-8 h-6 w-6'
-                />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setCurrentNetwork('9mobile')}>
-            9MOBILE
-            <DropdownMenuShortcut>
-                <Image 
-                    src='/images/networks/9mobile.png' 
-                    width={20} 
-                    height={20} 
-                    quality={100}
-                    alt='9mobile'
-                    className='rounded-md md:h-8 md:w-8 h-6 w-6'
-                />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
+                <span className="text-sm font-semibold">{network.name}</span>
+              </div>
+              {currentNetwork === network.value && (
+                <DropdownMenuShortcut>
+                  <LucideCheck className="text-green-600" />
+                </DropdownMenuShortcut>
+              )}
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
