@@ -1,6 +1,6 @@
 'use client'
 
-import { Networks, SubDataProps } from "@/types/networks"
+import { Networks, PaymentMethod, SubDataProps } from "@/types/networks"
 import React from "react"
 
 interface SubDataProviderProps {
@@ -10,17 +10,22 @@ interface SubDataProviderProps {
 const SubDatContext = React.createContext<{
     currentNetwork: Networks,
     setCurrentNetwork: React.Dispatch<React.SetStateAction<Networks>>,
-    handleSubData?: (payload: SubDataProps) => void
+    handleSubData?: (payload: SubDataProps) => void,
+    mobileNumber: string,
+    setMobileNumber: React.Dispatch<React.SetStateAction<string>>
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
-    handleSubData: () => {}
+    handleSubData: () => {},
+    mobileNumber: '',
+    setMobileNumber: () => {}
 })
 
 const SubDataProvider = ({ children }: SubDataProviderProps) => {
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
+    const [mobileNumber, setMobileNumber] = React.useState<string>('' as string)
 
-    const handleSubData = async (payload: SubDataProps) => {
+    const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
         try {
             console.log(payload)
         } catch (error) {
@@ -32,7 +37,9 @@ const SubDataProvider = ({ children }: SubDataProviderProps) => {
         <SubDatContext.Provider value={{
             currentNetwork,
             setCurrentNetwork,
-            handleSubData
+            handleSubData,
+            mobileNumber,
+            setMobileNumber
         }}>
             { children }
         </SubDatContext.Provider>

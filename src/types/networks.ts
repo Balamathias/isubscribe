@@ -8,3 +8,5 @@ export interface SubDataProps {
     Duration: string;
     CashBack: string;
 }
+
+export type PaymentMethod = 'wallet' | 'cashback' | 'card'

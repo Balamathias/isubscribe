@@ -55,6 +55,7 @@ const tabs = [
 const DataTabs = () => {
 
     const [activeTabIndex, setActiveTabIndex] = React.useState(0)
+    const { mobileNumber, setMobileNumber } = useNetwork()
 
     const className = `w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background peer-hover:opacity-90 data-[state=active]:text-violet-800 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`
 
@@ -66,6 +67,8 @@ const DataTabs = () => {
                 <Input 
                     placeholder='Your Phone Number'
                     className='focus-within:outline h-12 bg-white items-center focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
                 />
             </div>
         </div>
