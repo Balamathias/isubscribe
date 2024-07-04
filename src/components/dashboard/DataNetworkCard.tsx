@@ -1,5 +1,7 @@
 import React from 'react'
 import { Card } from '../ui/card'
+import { airtel_data, etisalat_data, glo_data, mtn_data } from '@/utils/constants/data-plans';
+import { useNetwork } from '@/providers/data/sub-data-provider';
 
 interface DataNetworkCardProps {
     Plan_ID: number;
@@ -10,10 +12,19 @@ interface DataNetworkCardProps {
     CashBack: string;
 }
 
-const DataNetworkCard = ({ data }: { data: DataNetworkCardProps[] }) => {
+const DataNetworkCard = () => {
+    const { currentNetwork } = useNetwork()
+
+    const object = {
+        'mtn': mtn_data,
+        'glo': glo_data,
+        'airtel': airtel_data,
+        '9mobile': etisalat_data
+    }
+
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
-        {data?.map((d, idx) => (
+        {object[currentNetwork]?.map((d, idx) => (
             <Card
                 key={idx}
                 className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2"
@@ -22,7 +33,7 @@ const DataNetworkCard = ({ data }: { data: DataNetworkCardProps[] }) => {
                     <p className="font-semibold text-base">{d?.Data}</p>
                     <p>{d?.Duration}</p>
                     <p>{d?.Price}</p>
-                    <div className="flex flex-row items-center gap-1 text-violet-600 text-xs bg-violet-50 rounded-full px-2 p-1">
+                    <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
                         <span>{d?.CashBack.slice(0, 2)}</span>
                         <span>Cashback</span>
                     </div>

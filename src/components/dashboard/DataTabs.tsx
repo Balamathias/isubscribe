@@ -6,12 +6,14 @@ import Image from 'next/image'
 import { Input } from '../ui/input'
 import DataNetworkCard from './DataNetworkCard'
 import { mtn_data } from '@/utils/constants/data-plans'
+import { useNetwork } from '@/providers/data/sub-data-provider'
+import SelectNetworkDropdown from './SelectNetworkDropdown'
 
 const tabs = [
     {
         name: 'Subs',
         value: 'hot',
-        component: <DataNetworkCard data={mtn_data!} />
+        component: <DataNetworkCard />
     },
     {
         name: 'Daily',
@@ -60,14 +62,7 @@ const DataTabs = () => {
     <div className='flex-col gap-y-6 md:gap-y-10 max-sm:w-[90vw] w-[600px]'>
         <div className='flex flex-col gap-y-4 py-4'>
             <div className='flex flex-row gap-x-2 items-center'>
-                <Image 
-                    src='/images/networks/mtn.png' 
-                    width={50} 
-                    height={50} 
-                    quality={100}
-                    alt='mtn' 
-                    className='rounded-md md:h-16 md:w-16 h-12 w-12'
-                />
+                <SelectNetworkDropdown />
                 <Input 
                     placeholder='Your Phone Number'
                     className='focus-within:outline h-12 bg-white items-center focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'

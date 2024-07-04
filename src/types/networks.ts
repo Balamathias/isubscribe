@@ -1,0 +1,1 @@
+export type Networks = 'mtn' | 'glo' | 'airtel' | '9mobile'
