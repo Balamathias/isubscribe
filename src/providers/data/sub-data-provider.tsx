@@ -10,20 +10,25 @@ interface SubDataProviderProps {
 const SubDatContext = React.createContext<{
     currentNetwork: Networks,
     setCurrentNetwork: React.Dispatch<React.SetStateAction<Networks>>,
-    handleSubData?: (payload: SubDataProps) => void,
+    handleSubData?: (payload: SubDataProps & { method?: PaymentMethod }) => void,
     mobileNumber: string,
-    setMobileNumber: React.Dispatch<React.SetStateAction<string>>
+    setMobileNumber: React.Dispatch<React.SetStateAction<string>>,
+    pinPasses?: boolean,
+    setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
     handleSubData: () => {},
     mobileNumber: '',
-    setMobileNumber: () => {}
+    setMobileNumber: () => {},
+    pinPasses: false,
+    setPinPasses: () => {}
 })
 
 const SubDataProvider = ({ children }: SubDataProviderProps) => {
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>('' as string)
+    const [pinPasses, setPinPasses] = React.useState<boolean>(false)
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
         try {
@@ -39,7 +44,9 @@ const SubDataProvider = ({ children }: SubDataProviderProps) => {
             setCurrentNetwork,
             handleSubData,
             mobileNumber,
-            setMobileNumber
+            setMobileNumber,
+            pinPasses,
+            setPinPasses
         }}>
             { children }
         </SubDatContext.Provider>

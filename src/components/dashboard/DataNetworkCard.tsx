@@ -8,6 +8,11 @@ import { PaymentMethod, SubDataProps } from '@/types/networks';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
+import { useQuery } from '@tanstack/react-query';
+import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
+import LoadingOverlay from '../loaders/LoadingOverlay';
+import { formatNigerianNaira } from '@/funcs/formatCurrency';
+import ConfirmPin from './ConfirmPin';
 
 const object = {
     'mtn': mtn_data,
@@ -39,8 +44,13 @@ const DataNetworkCard = () => {
     const { currentNetwork, handleSubData, mobileNumber } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubDataProps | null>(null)
+    const {data: Wallet, isPending} = useGetWalletBalance()
+
+    const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
+
+    if (isPending) return <LoadingOverlay />
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
@@ -118,16 +128,41 @@ const DataNetworkCard = () => {
                         <ActivePaymentMethodButton 
                             active={paymentMethod === 'wallet'} 
                             handler={() => {setPaymentMethod('wallet')}} 
+                            method='wallet'
+                            balance={formatNigerianNaira(Wallet?.data?.balance! as number)}
                         />
                         <ActivePaymentMethodButton 
                             active={paymentMethod === 'cashback'} 
                             handler={() => {setPaymentMethod('cashback')}} 
                             method='cashback'
+                            balance={formatNigerianNaira(0.00)}
                         />
                     </div>
 
-                    <Button className='w-full rounded-xl' size={'lg'}>Proceed</Button>
+                    <Button 
+                        className='w-full rounded-xl' 
+                        size={'lg'}
+                        onClick={() => {
+                            // handleSubData?.({...selected!, method: paymentMethod})
+                            setProceed(true)
+                        }}
+                    >Proceed</Button>
                 </div>
+            </DynamicModal>
+        }
+
+        {
+            proceed && <DynamicModal
+                open={proceed}
+                setOpen={setProceed}
+                dismissible
+                dialogClassName={'sm:max-w-fit'}
+            >
+                <ConfirmPin className='rounded-none' func={() => {
+                    handleSubData?.({...selected!, method: paymentMethod})
+                    setOpen(false)
+                    setProceed(false)
+                }} />
             </DynamicModal>
         }
     </div>
