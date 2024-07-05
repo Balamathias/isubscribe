@@ -1,13 +1,13 @@
 'use client'
 
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import Image from 'next/image'
-import { Input } from '../ui/input'
-import DataNetworkCard from './DataNetworkCard'
-import { mtn_data } from '@/utils/constants/data-plans'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
+import { Input } from '../../ui/input'
 import { useNetwork } from '@/providers/data/sub-data-provider'
-import SelectNetworkDropdown from './SelectNetworkDropdown'
+import SelectNetworkDropdown from '../SelectNetworkDropdown'
+import LoadingOverlay from '../../loaders/LoadingOverlay'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
+import DataNetworkCard from './DataNetworkCard'
 
 const tabs = [
     {
@@ -56,8 +56,11 @@ const DataTabs = () => {
 
     const [activeTabIndex, setActiveTabIndex] = React.useState(0)
     const { mobileNumber, setMobileNumber } = useNetwork()
+    const { data: profile, isPending } = useGetProfile()
 
     const className = `w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background peer-hover:opacity-90 data-[state=active]:text-violet-800 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`
+
+    if (isPending) return <LoadingOverlay />
 
   return (
     <div className='flex-col gap-y-6 md:gap-y-10 max-sm:w-[90vw] w-[600px]'>
@@ -68,7 +71,9 @@ const DataTabs = () => {
                     placeholder='Your Phone Number'
                     className='focus-within:outline h-12 bg-white items-center focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'
                     value={mobileNumber}
+                    defaultValue={profile?.data?.phone || ''}
                     onChange={(e) => setMobileNumber(e.target.value)}
+                    name='phone'
                 />
             </div>
         </div>

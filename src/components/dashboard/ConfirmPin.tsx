@@ -66,7 +66,7 @@ const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?
     <div>
         <LoadingOverlay isPending={isPending} />
         <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-none drop-shadow-none", className)}>
-          <div className="md:text-2xl text-lg mb-6 text-center">
+          <div className="md:text-xl text-base mb-6 text-center">
             {isPending ? (
               <p>Checking...</p>
             ) : (
@@ -93,26 +93,26 @@ const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?
              </div>
             ))}
           </div>
-          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+          {error && <div className="text-red-500 text-center mb-4 text-xs md:text-sm">{error}</div>}
           <div className="grid grid-cols-3 gap-4 mb-4">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
               <button
                 key={num}
                 onClick={() => handleButtonClick(num.toString())}
-                className="bg-violet-50 text-gray-700 text-2xl max-md:p-5 p-3 rounded-xl hover:bg-violet-100 focus:outline-none"
+                className="bg-violet-50 text-gray-700 md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 focus:outline-none"
               >
                 {num}
               </button>
             ))}
             <button
               onClick={handleClear}
-              className="col-span-1 bg-violet-100 text-gray-700 dark:text-gray-200 text-2xl p-5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
+              className="col-span-1 bg-violet-100 text-gray-700 dark:text-gray-200 md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
             >
               <LucideX className="w-6 h-6" />
             </button>
             <button
               onClick={handleDelete}
-              className="col-span-1 bg-violet-50 text-violet-700 text-2xl p-5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
+              className="col-span-1 bg-violet-50 text-violet-700 md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
             >
               <LucideDelete className="w-6 h-6" />
             </button>

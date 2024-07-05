@@ -9,31 +9,35 @@ interface ActivePaymentMethodButtonProps {
     active?: boolean,
     handler: () => void,
     method?: PaymentMethod,
-    balance?: string | number
+    balance?: string | number,
+    disabled?: boolean
 }
 
-const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', balance='0.00' }: ActivePaymentMethodButtonProps) => {
+const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', balance='0.00', disabled }: ActivePaymentMethodButtonProps) => {
   return (
         <button className={cn('flex items-center justify-between py-3 px-2.5 rounded-lg focus:outline-none focus:border-none border-none bg-violet-100', {
-            'bg-green-200 dark:bg-secondary text-green-900': active
+            'bg-green-200 dark:bg-secondary text-green-900': active,
+            'opacity-80 bg-red-50 text-red-800': disabled
         })}
             onClick={handler}
+            disabled={disabled}
         >
-            <div className='flex flex-row gap-x-2 items-center'>
+            <div className='flex flex-row gap-x-2 items-center text-xs md:text-sm'>
                 <div className='flex flex-col'>
                     {
                         method === 'wallet' ? (
-                            <Zap className='text-violet-600' size={24} />
+                            <Zap className='' size={24} />
                         ) : (
-                            <Box className='text-violet-600' size={24} />
+                            <Box className='' size={24} />
                         )
                     }
                 </div>
-                <div className='flex flex-col gap-y-1.5 items-start justify-start'>
+                <div className='flex flex-col gap-y-0.5 items-start justify-start'>
                     <p className='font-semibold'>{
                             method === 'wallet' ? 'From Wallet' : 'From Cashback'
                         }</p>
                     <p className='text-base text-muted-foreground'>{balance}</p>
+                    {disabled && <p className='text-base text-red-600 text-[8px]'>Insufficient Funds</p>}
                 </div>
             </div>
 

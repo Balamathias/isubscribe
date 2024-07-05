@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import TransactionHistoryComponent from './TransactionHistoryComponent'
 
 const HistoryTabs = () => {

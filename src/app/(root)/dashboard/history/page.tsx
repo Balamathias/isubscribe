@@ -1,5 +1,5 @@
 import WidthWrapper from '@/components/WidthWrapper'
-import HistoryTabs from '@/components/dashboard/HistoryTabs'
+import HistoryTabs from '@/components/dashboard/history/HistoryTabs'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'

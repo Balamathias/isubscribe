@@ -1,18 +1,19 @@
-import React, { useState } from 'react'
-import { Card } from '../ui/card'
+import React, { useMemo, useState } from 'react'
+import { Card } from '../../ui/card'
 import { airtel_data, etisalat_data, glo_data, mtn_data } from '@/utils/constants/data-plans';
 import { useNetwork } from '@/providers/data/sub-data-provider';
-import DynamicModal from '../DynamicModal';
-import { Button } from '../ui/button';
+import DynamicModal from '../../DynamicModal';
+import { Button } from '../../ui/button';
 import { PaymentMethod, SubDataProps } from '@/types/networks';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { useQuery } from '@tanstack/react-query';
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
-import LoadingOverlay from '../loaders/LoadingOverlay';
+import LoadingOverlay from '../../loaders/LoadingOverlay';
 import { formatNigerianNaira } from '@/funcs/formatCurrency';
-import ConfirmPin from './ConfirmPin';
+import ConfirmPin from '../ConfirmPin';
+import { priceToInteger } from '@/funcs/priceToNumber';
+import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 
 const object = {
     'mtn': mtn_data,
@@ -44,7 +45,7 @@ const DataNetworkCard = () => {
     const { currentNetwork, handleSubData, mobileNumber } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubDataProps | null>(null)
-    const {data: Wallet, isPending} = useGetWalletBalance()
+    const {data: wallet, isPending} = useGetWalletBalance()
 
     const [proceed, setProceed] = React.useState(false)
 
@@ -83,11 +84,12 @@ const DataNetworkCard = () => {
                 open={open}
                 setOpen={setOpen}
                 dismissible
+                dialogClassName="md:w-[600px] lg:w-[800px] sm:min-w-max"
             >
                 <div className="flex flex-col gap-y-2.5">
-                    <h1 className="text-lg font-semibold text-violet-700">Data Plan Details</h1>
+                    <h1 className="md:text-lg text-base font-semibold text-violet-700">Data Plan Details</h1>
                     
-                    <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100'>
+                    <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                             <p className='font-semibold text-muted-foreground'>Product</p>
                             <p className='flex items-center flex-row gap-x-1'>{product[currentNetwork].name} | 
@@ -101,6 +103,11 @@ const DataNetworkCard = () => {
                                     className='h-7 w-7 rounded-full object-cover' 
                                 />
                             </p>
+                        </div>
+
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                            <p className='font-semibold text-muted-foreground'>Phone Number</p>
+                            <p>{mobileNumber}</p>
                         </div>
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>
@@ -129,21 +136,23 @@ const DataNetworkCard = () => {
                             active={paymentMethod === 'wallet'} 
                             handler={() => {setPaymentMethod('wallet')}} 
                             method='wallet'
-                            balance={formatNigerianNaira(Wallet?.data?.balance! as number)}
+                            balance={formatNigerianNaira(wallet?.data?.balance! as number)}
+                            disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
                         />
                         <ActivePaymentMethodButton 
                             active={paymentMethod === 'cashback'} 
                             handler={() => {setPaymentMethod('cashback')}} 
                             method='cashback'
                             balance={formatNigerianNaira(0.00)}
+                            disabled={true}
                         />
                     </div>
 
                     <Button 
                         className='w-full rounded-xl' 
                         size={'lg'}
+                        disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
                         onClick={() => {
-                            // handleSubData?.({...selected!, method: paymentMethod})
                             setProceed(true)
                         }}
                     >Proceed</Button>

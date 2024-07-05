@@ -1,8 +1,9 @@
 'use server'
 
-import { Payload } from "./types";
+import { Payload, ResponseData } from "./types";
 
 const baseURL = 'https://n3tdata.com/api'
+const TOKEN = process.env.NEXT_N3TDATA_TOKEN
 
 const username = process.env.NEXT_N3TDATA_USERNAME
 const password = process.env.NEXT_N3TDATA_PASSWORD
@@ -29,22 +30,19 @@ export async function getUserToken() {
     }
 }
   
-export const sendData = async (payload: Payload) => {
-    const token = (await getUserToken())?.data['AccessToken']
-    console.log(token)
+export const buyData = async (payload: Payload): Promise<{data: ResponseData | null, status: number, OK: boolean, error?: string}> => {
     const headers: HeadersInit = new Headers({
-        'Authorization': `Token ${token}`,
+        'Authorization': `Token ${TOKEN}`,
         'Content-Type': 'application/json',
     });
     
-    console.log(payload)
     try {
         const res = await fetch(baseURL + '/data', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload),
           })
-          console.log(res.statusText)
+          console.log(res.statusText, res)
           
           if (!res.ok) {
             console.error('Error fetching data')
