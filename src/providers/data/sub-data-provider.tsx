@@ -58,7 +58,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
     const [pinPasses, setPinPasses] = React.useState<boolean>(false)
     const [fundSufficient, setFundSufficient] = React.useState<boolean>(false)
     const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
-    const [dataAmount, setDataAmount] = React.useState('0.00GB') // @note: could be temporary. I hate too much useStates!
+    const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
@@ -82,7 +82,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             return
         }
 
-        if (balance < 0) return // @note: Edge case, balance cannot be negative!
+        if (balance < 0) return /* @note: Edge case, balance cannot be negative! */
 
         setPurchasing(true)
 
@@ -99,7 +99,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             phone: mobileNumber
         })
 
-        // if (error) return, @note: You could uncomment this only in edge cases
+        /* if (error) return, @note: You could uncomment this only in edge cases */
 
         if (OK) {
             
