@@ -143,8 +143,8 @@ const DataNetworkCard = () => {
                             active={paymentMethod === 'cashback'} 
                             handler={() => {setPaymentMethod('cashback')}} 
                             method='cashback'
-                            balance={formatNigerianNaira(0.00)}
-                            disabled={true}
+                            balance={formatNigerianNaira(wallet?.data?.balance! as number)}
+                            disabled={wallet?.data?.cashback_balance! < priceToInteger(selected?.Price || '0.00')}
                         />
                     </div>
 
