@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useNetwork } from "@/providers/data/sub-data-provider"
 import { Networks } from "@/types/networks"
+import { CaretDownIcon } from "@radix-ui/react-icons"
 import { LucideCheck } from "lucide-react"
 import Image from "next/image"
 
@@ -49,17 +50,17 @@ export default function SelectNetworkDropdown({}) {
     const { currentNetwork, setCurrentNetwork } = useNetwork()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="flex flex-col gap-y-1 cursor-pointer">
-        <div className="flex flex-col dark:bg-background cursor-pointer hover:opacity-80">
+      <DropdownMenuTrigger asChild className="flex flex-row items-start w-fit gap-y-1 cursor-pointer">
+        <div className="flex flex-row dark:bg-background cursor-pointer hover:opacity-80 items-center">
             <Image 
                 src={networkImages[currentNetwork]} 
                 width={50} 
                 height={50} 
                 quality={100}
                 alt={currentNetwork}
-                className='md:h-12 md:w-12 h-10 w-10 rounded-md object-cover'
+                className='w-12 h-12 rounded-full object-cover'
             />
-            {/* <span className="text-sm font-semibold text-violet-600">{currentNetwork}</span> */}
+            <CaretDownIcon className="text-primary h-10 w-10" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 shadow-none border-none drop-shadow-md rounded-xl">

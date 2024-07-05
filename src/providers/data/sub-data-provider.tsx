@@ -72,6 +72,8 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
         let balance = 0.00
         let deductableAmount = 0.00
 
+        const cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
+
         if (payload.method === 'wallet') {
             balance = wallet?.data?.balance ?? 0.00
             deductableAmount = price
@@ -104,11 +106,11 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
         if (OK) {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-                (balance - deductableAmount), wallet?.data?.cashback_balance! + cashbackPrice)
+                (balance - deductableAmount), cashbackBalance + cashbackPrice)
             if (_balanceError) return
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-                (balance - deductableAmount))
+                (cashbackBalance - deductableAmount))
 
             if (_balanceError || _cashbackBalanceError) return
 
