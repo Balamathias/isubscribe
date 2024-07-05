@@ -37,7 +37,7 @@ const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', bal
                             method === 'wallet' ? 'From Wallet' : 'From Cashback'
                         }</p>
                     <p className='text-base text-muted-foreground'>{balance}</p>
-                    {disabled && <p className='text-base text-red-600 text-[8px]'>Insufficient Funds</p>}
+                    {disabled && <p className='md:text-xs text-red-600 text-[8px]'>Insufficient Funds, Please fund Your wallet.</p>}
                 </div>
             </div>
 

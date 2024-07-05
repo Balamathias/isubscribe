@@ -63,9 +63,9 @@ const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?
     }, [pin])
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center">
         <LoadingOverlay isPending={isPending} />
-        <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-none drop-shadow-none", className)}>
+        <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-full self-center md:min-w-[500px] rounded-3xl shadow-none drop-shadow-none", className)}>
           <div className="md:text-xl text-base mb-6 text-center">
             {isPending ? (
               <p>Checking...</p>
