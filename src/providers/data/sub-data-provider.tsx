@@ -101,12 +101,6 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.')
             setPurchasing(false)
         }
-
-        try {
-            console.log(payload, price)
-        } catch (error) {
-            console.error(error)
-        }
     }
 
     if (isPending) return <LoadingOverlay />
@@ -125,7 +119,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
         }}>
             { children }
             {
-                purchasing && (<LoadingOverlay isPending={purchasing} loader="2" />)
+                purchasing && (<LoadingOverlay />)
             }
         </SubDatContext.Provider>
     )

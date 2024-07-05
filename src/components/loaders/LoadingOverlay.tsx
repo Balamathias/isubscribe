@@ -10,7 +10,7 @@ const LoadingOverlay = ({ isPending=true, loader="1" }: { isPending?: boolean, l
           loader === '1' ? <Loader2 className="w-7 h-7 animate-spin text-violet-600" /> : <Loader className="w-7 h-7 animate-spin text-violet-600" />
         }
       </div>
-      <div className={cn(`fixed top-0 left-0 w-full h-[5px]`, {
+      <div className={cn(`fixed top-0 left-0 w-full h-[5px] animate-progress bg-gradient-to-r from-violet-600 via-pink-600 to-fuchsia-600`, {
         'bg-gradient-to-r from-violet-600 via-pink-600 to-fuchsia-600': isPending
       })}></div>
     </div>

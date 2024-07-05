@@ -8,17 +8,19 @@ import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
-    const [hideBalance, setHideBalance] = useState(false)
-    const [hideCashbackBalance, setHideCashbackBalance] = useState(false)
+    const [hideBalance, setHideBalance] = useState(localStorage.getItem('hideBalance') === 'true' || false)
+    const [hideCashbackBalance, setHideCashbackBalance] = useState(localStorage.getItem('hideCashbackBalance') === 'true' || false)
 
     const [walletBalance, setWalletBalance] = useState( wallet?.balance?.toFixed(2) || "0.00" )
     const cashbackBalance = wallet?.cashback_balance?.toFixed(2) || "0.00"
 
     const handleToggleHideBalance  = () => {
         setHideBalance(!hideBalance)
+        localStorage.setItem('hideBalance', JSON.stringify(!hideBalance))
     }
     const handleToggleHideCashbackBalance  = () => {
         setHideCashbackBalance(!hideCashbackBalance)
+        localStorage.setItem('hideCashbackBalance', JSON.stringify(!hideCashbackBalance))
     }
 
     useEffect(() => {
@@ -62,6 +64,7 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
 }
 
 const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hide: boolean, toggleShow: () => void, title: string }) => {
+
     return (
         <div>
             <p className='tracking-tight text-white text-xs md:text-sm'>{title}</p>
