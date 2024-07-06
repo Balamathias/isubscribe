@@ -78,6 +78,7 @@ export const POST = async (req: Request, res: Response) => {
             title: 'Wallet Fund Failed',
             user: user?.id,
             meta_data: JSON.stringify(data?.eventData),
+            amount: data?.eventData?.amountPaid
         }).select()
         
         console.log(_historyError)

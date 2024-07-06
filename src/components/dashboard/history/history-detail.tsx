@@ -107,7 +107,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Amount</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{formatNigerianNaira(parseWithInterestPrice(dataMetadata.amount, 'nairaless'))}</p>
+                        <p>{formatNigerianNaira(parseWithInterestPrice(history?.amount?.toString()! || dataMetadata.amount, 'nairaless'))}</p>
                     </div>
                 </div>
 

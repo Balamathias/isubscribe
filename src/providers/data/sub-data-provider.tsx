@@ -110,6 +110,23 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
 
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
+        if (error) {
+            setPurchaseFailed(true)
+            const { data: insertHistory } = await insertTransactionHistory({
+                description: `Data subscription for ${mobileNumber} failed.`,
+                status: 'failed',
+                title: 'Data Subscription',
+                type: EVENT_TYPE.data_topup,
+                email: null,
+                meta_data: JSON.stringify(data),
+                updated_at: null,
+                user: profile?.id!,
+                amount: price,
+            })
+
+            router.refresh()
+        }
+
         if (OK) {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
@@ -129,7 +146,8 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
                 email: null,
                 meta_data: JSON.stringify(data),
                 updated_at: null,
-                user: profile?.id!
+                user: profile?.id!,
+                amount: price
             })
 
             router.refresh()
