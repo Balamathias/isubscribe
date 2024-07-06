@@ -1,6 +1,7 @@
 'use server'
 
-import { VTPassBalanceResponse, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY  } from '.'
+import axios from 'axios'
+import { VTPassBalanceResponse, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY, VTPassTransactionResponse, VTPassVariationServiceResponse, VTPassTransactionRequest, VTPassServiceName, VTPASS_API_KEY  } from '.'
 
 class VTPassError extends Error {
     constructor(message: string, public code: number) {
@@ -32,4 +33,23 @@ export const getVTPassBalance = async (): Promise<VTPassBalanceResponse | undefi
     const data = (await response.json()) as VTPassBalanceResponse
 
     return data
+}
+
+export const getServiceVariations = async (serviceID: VTPassServiceName): Promise<VTPassVariationServiceResponse | undefined> => {
+    const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+    return res.data
+}
+
+export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
+    const headers = {
+        'api-key': VTPASS_API_KEY!,
+        'secret-key': VTPASS_SECRET_KEY!,
+        'Content-Type': 'application/json'
+    }
+    const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
+    console.log(res.statusText)
+    if (res.status !== 200) {
+        throw new Error('Failed to buy data')
+    }
+    return res.data
 }

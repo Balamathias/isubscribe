@@ -1,4 +1,4 @@
-const gloData = {
+export const gloData = {
     cheap: [
         {
             variation_code: "glo-dg-50",
@@ -264,7 +264,7 @@ const gloData = {
 
 
 
-const mtnData = {
+export const mtnData = {
     daily: [
       {
         variation_code: "mtn-10mb-100",
@@ -580,7 +580,7 @@ const mtnData = {
 
 
 
-  const airtelData = {
+export const airtelData = {
     daily: [
       {
         variation_code: "airt-50",
@@ -811,7 +811,7 @@ const mtnData = {
 
 
 
-const etisalatData = {
+export const etisalatData = {
             cheap:[
                 {
                     variation_code: "9mobile-sme-data-500mb",

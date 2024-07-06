@@ -8,6 +8,7 @@ import SelectNetworkDropdown from '../SelectNetworkDropdown'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import DataNetworkCard from './DataNetworkCard'
+import DailyData from './DailyData'
 
 const tabs = [
     {
@@ -18,7 +19,7 @@ const tabs = [
     {
         name: 'Daily',
         value: 'daily',
-        component: <></>
+        component: <DailyData />
     },
     {
         name: 'Night',
