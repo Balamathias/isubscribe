@@ -3,10 +3,10 @@
 import React from "react"
 import LoadingOverlay from "@/components/loaders/LoadingOverlay"
 import { parseWithInterestPrice, priceToInteger } from "@/funcs/priceToNumber"
-import { buyData } from "@/lib/n3tdata"
+import { buyAirtime, buyData } from "@/lib/n3tdata"
 import { useGetWalletBalance } from "@/lib/react-query/funcs/wallet"
 import { Tables } from "@/types/database"
-import { Networks, PaymentMethod, SubDataProps } from "@/types/networks"
+import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps } from "@/types/networks"
 import { nanoid } from 'nanoid'
 import { toast } from "sonner"
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
@@ -20,13 +20,15 @@ import { cn } from "@/lib/utils"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
-    profile?: Tables<'profile'>
+    profile?: Tables<'profile'>,
+    action?: 'airtime' | 'data'
 }
 
 const SubDatContext = React.createContext<{
     currentNetwork: Networks,
     setCurrentNetwork: React.Dispatch<React.SetStateAction<Networks>>,
     handleSubData?: (payload: SubDataProps & { method?: PaymentMethod }) => void,
+    handleSubAirtime?: (payload: SubAirtimeProps & { method?: PaymentMethod }) => void,
     mobileNumber: string,
     setMobileNumber: React.Dispatch<React.SetStateAction<string>>,
     pinPasses?: boolean,
@@ -42,7 +44,8 @@ const SubDatContext = React.createContext<{
     pinPasses: false,
     setPinPasses: () => {},
     fundSufficient: false,
-    setFundSufficient: () => {}
+    setFundSufficient: () => {},
+    handleSubAirtime: () => {}
 })
 
 const networkIds = {
@@ -52,7 +55,7 @@ const networkIds = {
     '9mobile': 4
 }
 
-const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
+const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderProps) => {
     const { data: wallet, isPending } = useGetWalletBalance()
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
@@ -164,6 +167,106 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
         }
     }
 
+    const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
+        const price = priceToInteger(payload.Price)
+        const cashbackPrice = priceToInteger(payload.CashBack!)
+        const networkId = networkIds[currentNetwork]
+        // setDataAmount(payload.Data)
+
+        let balance = 0.00
+        let deductableAmount = 0.00
+
+        let cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
+
+        if (payload.method === 'wallet') {
+            balance = wallet?.data?.balance ?? 0.00
+            deductableAmount = price
+            cashbackBalance += cashbackPrice
+        } else if (payload.method === 'cashback') {
+            cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
+            deductableAmount = price
+            cashbackBalance -= deductableAmount
+            cashbackBalance += cashbackPrice
+
+            if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
+        } else {
+            return
+        }
+
+        if (balance < 0) return /** @example: Edge case, balance cannot be negative! */
+
+        setPurchasing(true)
+
+        if (balance < price) {
+            setPurchasing(false)
+            return
+        }
+
+        const { OK, data, status, error } = await buyAirtime({
+            "request-id": `Airtime_${nanoid(24)}`,
+            bypass: false,
+            network: networkId,
+            phone: mobileNumber,
+            amount: price,
+            plan_type: 'VTU'
+        })
+
+        /** if (error) return, @example: You could uncomment this only in edge cases */
+
+        if (error) {
+            setPurchaseFailed(true)
+            const { data: insertHistory } = await insertTransactionHistory({
+                description: `Airtime subscription for ${mobileNumber} failed.`,
+                status: 'failed',
+                title: 'Airtime Subscription',
+                type: EVENT_TYPE.airtime_topup,
+                email: null,
+                meta_data: JSON.stringify(data),
+                updated_at: null,
+                user: profile?.id!,
+                amount: price,
+            })
+
+            router.refresh()
+        }
+
+        if (OK) {
+            
+            const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
+                (balance - deductableAmount))
+            if (_balanceError) return
+
+            const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
+                (cashbackBalance))
+
+            if (_balanceError || _cashbackBalanceError) return
+
+            const { data: insertHistory } = await insertTransactionHistory({
+                description: `Airtime subscription for ${mobileNumber}`,
+                status: 'success',
+                title: 'Airtime Subscription',
+                type: EVENT_TYPE.airtime_topup,
+                email: null,
+                meta_data: JSON.stringify(data),
+                updated_at: null,
+                user: profile?.id!,
+                amount: price
+            })
+
+            router.refresh()
+
+            setPurchaseSuccess(true)
+            /** @example: toast.success(`Congratulations!`, {
+                description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
+            })*/
+            setPurchasing(false)
+        } else {
+            /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+            setPurchasing(false)
+            setPurchaseFailed(true)
+        }
+    }
+
     if (isPending) return <LoadingOverlay />
 
     return (
@@ -171,6 +274,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             currentNetwork,
             setCurrentNetwork,
             handleSubData,
+            handleSubAirtime,
             mobileNumber,
             setMobileNumber,
             pinPasses,
@@ -189,6 +293,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
                 fullName={profile?.full_name!}
                 open={purchaseSuccess}
                 phoneNumber={mobileNumber}
+                action={action}
             />
 
             <DataPurchaseStatusPopup
@@ -198,6 +303,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
                 open={purchaseFailed}
                 phoneNumber={mobileNumber}
                 failed
+                action={action}
             />
         </SubDatContext.Provider>
     )
@@ -209,13 +315,15 @@ export const useNetwork = () => {
     return React.useContext(SubDatContext)
 }
 
-const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneNumber, failed}: {
+const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneNumber, failed, action='data', airtimeAmount}: {
     dataAmount: string,
     phoneNumber: string,
     fullName: string,
     open: boolean,
     closeModal: () => void,
-    failed?: boolean
+    failed?: boolean,
+    action?: 'data' | 'airtime',
+    airtimeAmount?: string | number
 }) => {
     return (
         <DynamicModal
@@ -230,11 +338,11 @@ const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneN
                 {
                     failed ? (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                            Sorry {fullName}!, Your attempt to top up {dataAmount} for {phoneNumber} has failed. Please try again.
+                            Sorry {fullName}!, Your attempt to top up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber} has failed. Please try again.
                         </p>
                     ) : (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                            Congratulations {fullName}!, You have successfully topped up {dataAmount} for {phoneNumber}. Thank you for choosing iSubscribe.
+                            Congratulations {fullName}!, You have successfully topped up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber}. Thank you for choosing iSubscribe.
                         </p>
                     )
                 }

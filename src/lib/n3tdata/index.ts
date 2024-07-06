@@ -1,6 +1,6 @@
 'use server'
 
-import { Payload, ResponseData } from "./types";
+import { AirtimeResponse, Payload, ResponseData } from "./types";
 
 const baseURL = 'https://n3tdata.com/api'
 const TOKEN = process.env.NEXT_N3TDATA_TOKEN
@@ -46,7 +46,7 @@ export const buyData = async (payload: Payload): Promise<{data: ResponseData | n
           
           if (!res.ok) {
             console.error('Error fetching data')
-            return {data: null, status: res.status, OK: false}
+            return {data: null, status: res.status, OK: false, error: res.statusText}
         }
         const data = await res.json()
         console.log(data)
@@ -57,10 +57,9 @@ export const buyData = async (payload: Payload): Promise<{data: ResponseData | n
     }
 }
   
-export const sendAirtime = async (payload: Pick<Payload, 'bypass' | 'network' | 'phone' | 'request-id'> & {plan_type: string | 'VTU', amount: number}) => {
-    const token = (await getUserToken())?.data['AccessToken']
+export const buyAirtime = async (payload: Pick<Payload, 'bypass' | 'network' | 'phone' | 'request-id'> & {plan_type: string | 'VTU', amount: number}): Promise<{ data: AirtimeResponse | null, status: number, OK: boolean, error?: Error | string}> => {
     const headers: HeadersInit = new Headers({
-        'Authorization': 'Token ' + token,
+        'Authorization': 'Token ' + TOKEN,
         'Content-Type': 'application/json',
     });
   
@@ -73,13 +72,14 @@ export const sendAirtime = async (payload: Pick<Payload, 'bypass' | 'network' | 
           
           if (!res.ok) {
             console.error('Error fetching data')
-            throw Error
+            return {data: null, status: res.status, OK: false, error: res.statusText }
         }
         const data = await res.json()
-        return { data, status: res.status }
+        return { data, status: res.status, OK: true }
     } catch (error: any) {
         console.error(error)
-        throw new Error(error)
+        const _error = new Error(error)
+        return {data: null, status: 500, error: _error.message, OK: false}
     }
 }
 

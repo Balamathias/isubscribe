@@ -24,3 +24,20 @@ export interface ResponseData {
   wallet_vending: 'wallet' | 'bonus' | 'cashback',
   response: string,
 }
+
+export interface AirtimeResponse {
+  network: string
+  'request-id': string
+  amount: string,
+  discount: number,
+  status: 'success' | 'failed',
+  transid?: string,
+  message: string,
+  phone_number: string,
+  oldbal: number,
+  newbal: number,
+  system: string,
+  plan_type: 'VTU',
+  wallet_vending: 'wallet' | 'bonus' | 'cashback',
+  response?: string,
+}
