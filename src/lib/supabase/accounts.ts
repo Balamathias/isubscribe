@@ -41,7 +41,7 @@ export const generateReservedAccount = async () => {
             account_number: body?.accountNumber,
             bank_name: body?.bankName,
             bank_code: body?.bankCode,
-            user: user?.id,
+            user: user?.id!,
             reference: body?.accountReference,
             status: body?.status,
             updated_at: new Date().toISOString(),
