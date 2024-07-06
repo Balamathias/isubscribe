@@ -1,5 +1,6 @@
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { formatDateTime } from '@/funcs/formatDate'
+import { parseWithInterestPrice } from '@/funcs/priceToNumber'
 import { ResponseData } from '@/lib/n3tdata/types'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
@@ -66,7 +67,7 @@ const Data = ({id,...transaction}: Tables<'history'> & { amount: string }) => {
         </div>
 
         <div className='flex flex-col gap-y-1'>
-            <p className='text-md font-semibold text-muted-foreground'>{formatNigerianNaira(parseFloat(transaction.amount?.toString()))}</p>
+            <p className='text-md font-semibold text-muted-foreground'>{formatNigerianNaira(parseWithInterestPrice(transaction.amount?.toString(), 'nairaless'))}</p>
             {
                 transaction.status === 'success' ? (
                     <span className="p-0.5 text-xs px-2 rounded-full bg-green-200 text-green-600">successful</span>

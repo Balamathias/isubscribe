@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { parseWithInterestPrice } from '@/funcs/priceToNumber'
 import { ResponseData } from '@/lib/n3tdata/types'
 import { getSingleHistory } from '@/lib/supabase/history'
 import { Tables } from '@/types/database'
@@ -79,7 +80,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
 
             <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
                 {history?.status === 'success' && <LucideCheckCircle2 className='text-green-600' size={40} />}
-                <h2 className='text-lg font-semibold'>{formatNigerianNaira(parseFloat(dataMetadata?.amount!) as number)}</h2>
+                <h2 className='text-lg font-semibold'>{formatNigerianNaira(parseWithInterestPrice(dataMetadata.amount, 'nairaless') as number)}</h2>
                 <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                 <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
             </Card>
@@ -106,7 +107,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Amount</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{formatNigerianNaira(parseFloat(dataMetadata.amount))}</p>
+                        <p>{formatNigerianNaira(parseWithInterestPrice(dataMetadata.amount, 'nairaless'))}</p>
                     </div>
                 </div>
 

@@ -10,8 +10,13 @@ export const priceToFloat = (price: string) => {
     return parseFloat(price.replace(/\D/g, ''))
 }
 
-export const parseWithInterestPrice = (price: string, rate?: number) => {
-    const parsedPrice = priceToInteger(price)
+export const parseWithInterestPrice = (price: string, type?: 'naira' | 'nairaless', rate?: number) => {
+    let parsedPrice = 0.00
+    if (type === 'nairaless') {
+        parsedPrice = parseFloat(price)
+    } else {
+        parsedPrice = priceToInteger(price)
+    }
     const priceWithInterest = parseFloat(Math.floor((parsedPrice * (rate || RATE)) + parsedPrice).toString())
     return priceWithInterest
 }
