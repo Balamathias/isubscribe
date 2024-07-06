@@ -12,7 +12,7 @@ import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
 import LoadingOverlay from '../../loaders/LoadingOverlay';
 import { formatNigerianNaira } from '@/funcs/formatCurrency';
 import ConfirmPin from '../ConfirmPin';
-import { priceToInteger } from '@/funcs/priceToNumber';
+import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 
 const object = {
@@ -70,7 +70,7 @@ const DataNetworkCard = () => {
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
                     <p className="font-semibold text-base">{d?.Data}</p>
                     <p>{d?.Duration}</p>
-                    <p>{d?.Price}</p>
+                    <p>{formatNigerianNaira(parseWithInterestPrice(d?.Price!))}</p>
                     <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
                         <span>{d?.CashBack.slice(0, 2)}</span>
                         <span>Cashback</span>
@@ -112,7 +112,7 @@ const DataNetworkCard = () => {
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                             <p className='font-semibold text-muted-foreground'>Price</p>
-                            <p>{selected?.Price}</p>
+                            <p>{formatNigerianNaira(parseWithInterestPrice(selected?.Price!))}</p>
                         </div>
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>

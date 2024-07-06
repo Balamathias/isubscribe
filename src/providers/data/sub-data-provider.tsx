@@ -2,7 +2,7 @@
 
 import React from "react"
 import LoadingOverlay from "@/components/loaders/LoadingOverlay"
-import { priceToInteger } from "@/funcs/priceToNumber"
+import { parseWithInterestPrice, priceToInteger } from "@/funcs/priceToNumber"
 import { buyData } from "@/lib/n3tdata"
 import { useGetWalletBalance } from "@/lib/react-query/funcs/wallet"
 import { Tables } from "@/types/database"
@@ -15,7 +15,8 @@ import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { useRouter } from "next/navigation"
 import DynamicModal from "@/components/DynamicModal"
 import { Button } from "@/components/ui/button"
-import { LucideCheckCircle2 } from "lucide-react"
+import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -58,14 +59,15 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
     const [pinPasses, setPinPasses] = React.useState<boolean>(false)
     const [fundSufficient, setFundSufficient] = React.useState<boolean>(false)
     const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
+    const [purchaseFailed, setPurchaseFailed] = React.useState(false)
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
-        const price = priceToInteger(payload.Price)
-        const cashbackPrice = priceToInteger(payload.CashBack!)
+        const price = parseWithInterestPrice(payload.Price)
+        const cashbackPrice = parseWithInterestPrice(payload.CashBack!)
         const networkId = networkIds[currentNetwork]
         setDataAmount(payload.Data)
 
@@ -106,7 +108,7 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             phone: mobileNumber
         })
 
-        /* if (error) return, @note: You could uncomment this only in edge cases */
+        /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (OK) {
             
@@ -133,13 +135,14 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
             router.refresh()
 
             setPurchaseSuccess(true)
-            toast.success(`Congratulations!`, {
+            /** @example: toast.success(`Congratulations!`, {
                 description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-            })
+            })*/
             setPurchasing(false)
         } else {
-            toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.')
+            /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
             setPurchasing(false)
+            setPurchaseFailed(true)
         }
     }
 
@@ -162,12 +165,21 @@ const SubDataProvider = ({ children, profile }: SubDataProviderProps) => {
                 purchasing && (<LoadingOverlay />)
             }
 
-            <DataPurchaseSuccessPopup
+            <DataPurchaseStatusPopup
                 closeModal={() => setPurchaseSuccess(false)}
                 dataAmount={dataAmount}
                 fullName={profile?.full_name!}
                 open={purchaseSuccess}
                 phoneNumber={mobileNumber}
+            />
+
+            <DataPurchaseStatusPopup
+                closeModal={() => setPurchaseFailed(false)}
+                dataAmount={dataAmount}
+                fullName={profile?.full_name!}
+                open={purchaseFailed}
+                phoneNumber={mobileNumber}
+                failed
             />
         </SubDatContext.Provider>
     )
@@ -179,12 +191,13 @@ export const useNetwork = () => {
     return React.useContext(SubDatContext)
 }
 
-const DataPurchaseSuccessPopup = ({closeModal, dataAmount, fullName, open, phoneNumber}: {
+const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneNumber, failed}: {
     dataAmount: string,
     phoneNumber: string,
     fullName: string,
     open: boolean,
-    closeModal: () => void
+    closeModal: () => void,
+    failed?: boolean
 }) => {
     return (
         <DynamicModal
@@ -192,13 +205,23 @@ const DataPurchaseSuccessPopup = ({closeModal, dataAmount, fullName, open, phone
             closeModal={closeModal}
         >
             <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
-                <LucideCheckCircle2 size={38} className="text-green-600 mb-1" />
-                <h2 className="text-green-600 md:text-lg text-base">Success!</h2>
-                <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                    Congratulations {fullName}!, You have successfully topped up {dataAmount} for {phoneNumber}. Thank you for choosing iSubscribe.
-                </p>
+                {
+                    failed ? (<LucideXCircle className="text-red-600 mb-1" />) : (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
+                }
+                <h2 className={cn("text-green-600 md:text-lg text-base", {'text-red-600': failed})}>{failed ? 'Purchase Failed' : 'Success'}!</h2>
+                {
+                    failed ? (
+                        <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
+                            Sorry {fullName}!, Your attempt to top up {dataAmount} for {phoneNumber} has failed. Please try again.
+                        </p>
+                    ) : (
+                        <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
+                            Congratulations {fullName}!, You have successfully topped up {dataAmount} for {phoneNumber}. Thank you for choosing iSubscribe.
+                        </p>
+                    )
+                }
 
-                <Button className="w-full my-2 rounded-lg" size={'lg'} onClick={() => closeModal()}>Close</Button>
+                <Button className="w-full my-2 rounded-full" size={'lg'} variant={failed ? 'destructive' : 'default'} onClick={() => closeModal()}>Close</Button>
             </div>
         </DynamicModal>
     )

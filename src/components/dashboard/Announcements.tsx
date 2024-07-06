@@ -11,8 +11,8 @@ const Announcements = () => {
                 pauseOnClick 
                 speed={50}
                 direction="left" 
-                className={'text-violet-950 bg-gradient-to-r from-purple-50 via-fuchsia-100 to-purple-100 p-1 py-1 px-2 rounded-full dark:bg-secondary'} 
-            >Good to know, Cashback Now Available for Every Transaction Completed!</Marquee>
+                className={'text-violet-950 bg-gradient-to-r from-purple-50 via-fuchsia-100 to-purple-100 p-1 py-1 px-2 rounded-full dark:bg-secondary text-xs tracking-tighter md:text-sm'} 
+            >Good to know, Cashback is Now Available for Every Transaction Completed!</Marquee>
         </div>
     </div>
   )
