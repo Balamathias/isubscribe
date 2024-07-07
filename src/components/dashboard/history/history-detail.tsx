@@ -1,8 +1,12 @@
+'use client'
+
+import Logo from '@/components/Logo'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import usePrint from '@/hooks/usePrint'
+import useScreenshot from '@/hooks/useScreenshot'
 import { ResponseData } from '@/lib/n3tdata/types'
-import { getSingleHistory } from '@/lib/supabase/history'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
@@ -10,18 +14,22 @@ import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
 import React from 'react'
 
 interface HistoryDetailProps {
-    historyId: string
+    history: Tables<'history'>
 }
 
-const HistoryDetail = async ({ historyId }: HistoryDetailProps) => {
-  const { data: history } = await getSingleHistory(parseInt(historyId))
+const HistoryDetail = ({ history }: HistoryDetailProps) => {
+    const [action, setAction] = React.useState<'download' | 'print'>('download')
+    const { ref, takeScreenshot } = useScreenshot()
+    const { ref: printRef, printDiv } = usePrint()
+
   const type = history.type as keyof typeof EVENT_TYPE
 
   const eventData = JSON.parse(history?.meta_data?.toString()! ?? '{}') as TransactionEvent['eventData']
   const dataMetadata = JSON.parse(history?.meta_data?.toString()! ?? '{}') as ResponseData
 
   return (
-    <div className='flex flex-col space-y-4'>
+    <div className='flex flex-col space-y-4 rounded-lg pb-4' ref={ action === 'download' ? ref : printRef }>
+        <Logo />
       {type === 'airtime_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
       {type === 'data_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
       {type === 'wallet_fund' && <WalletHistory eventData={eventData} history={history} />}
@@ -31,12 +39,20 @@ const HistoryDetail = async ({ historyId }: HistoryDetailProps) => {
             variant={'destructive'}
             className='text-xs md:text-sm rounded-full'
             size={'lg'}
-        >Download</Button>
+            onClick={() => {
+                    setAction('download')
+                    takeScreenshot()
+                }}
+                >Download</Button>
 
         <Button
             variant={'default'}
             className='text-xs md:text-sm rounded-full'
             size={'lg'}
+            onClick={() => {
+                setAction('print')
+                printDiv()
+            }}
         >Print</Button>
       </Card>
     </div>
