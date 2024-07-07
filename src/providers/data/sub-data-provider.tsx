@@ -227,7 +227,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 user: profile?.id!,
                 amount: price,
             })
-            setPurchasing(true)
+            setPurchasing(false)
 
             router.refresh()
             return
