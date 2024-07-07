@@ -13,6 +13,7 @@ export const getTransactionHistory = async () => {
     .select('*')
     .eq('user', user?.id!)
     .order('created_at', { ascending: false })
+    .limit(25)
 
     if (error) {
         throw error

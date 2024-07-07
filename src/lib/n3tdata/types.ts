@@ -13,7 +13,7 @@ export interface ResponseData {
   'request-id': string
   amount: string,
   dataplan: string,
-  status: 'success' | 'failed',
+  status: 'success' | 'fail',
   transid: string,
   message: string,
   phone_number: string,

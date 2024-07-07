@@ -63,6 +63,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     const [fundSufficient, setFundSufficient] = React.useState<boolean>(false)
     const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
     const [purchaseFailed, setPurchaseFailed] = React.useState(false)
+    const [errorMessage, setErrorMessage] = React.useState<string>('')
+    const [successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const router = useRouter()
 
@@ -83,6 +85,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             balance = wallet?.data?.balance ?? 0.00
             deductableAmount = price
             cashbackBalance += cashbackPrice
+            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
         } else if (payload.method === 'cashback') {
             cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
             deductableAmount = price
@@ -94,14 +97,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             return
         }
 
-        if (balance < 0) return /** @example: Edge case, balance cannot be negative! */
-
         setPurchasing(true)
-
-        if (balance < price) {
-            setPurchasing(false)
-            return
-        }
 
         const { OK, data, status, error } = await buyData({
             "request-id": `Data_${nanoid(24)}`,
@@ -113,9 +109,9 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
-        if (error) {
+        if (error || (data?.status === 'fail')) {
             setPurchaseFailed(true)
-            const { data: insertHistory } = await insertTransactionHistory({
+            const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber} failed.`,
                 status: 'failed',
                 title: 'Data Subscription',
@@ -126,22 +122,29 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 user: profile?.id!,
                 amount: price,
             })
+            setPurchasing(false)
+            setErrorMessage(data?.message ?? 'Data subscription failed. Please try again.')
 
             router.refresh()
+            return
         }
 
-        if (OK) {
+        if (data?.status === 'success') {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
-            if (_balanceError) return
+            if (_balanceError) {
+                await updateWalletBalanceByUser(profile?.id!, 
+                    (balance - deductableAmount))
+                return
+            }
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
 
             if (_balanceError || _cashbackBalanceError) return
 
-            const { data: insertHistory } = await insertTransactionHistory({
+            const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber}`,
                 status: 'success',
                 title: 'Data Subscription',
@@ -152,16 +155,19 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 user: profile?.id!,
                 amount: price
             })
+            setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
 
             router.refresh()
 
             setPurchaseSuccess(true)
-            /** @example: toast.success(`Congratulations!`, {
+            /** 
+             * @example: toast.success(`Congratulations!`, {
                 description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-            })*/
+            })
+            */
             setPurchasing(false)
         } else {
-            /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+            /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
             setPurchasing(false)
             setPurchaseFailed(true)
         }
@@ -338,7 +344,7 @@ const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneN
                 {
                     failed ? (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                            Sorry {fullName}!, Your attempt to top up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber} has failed. Please try again.
+                            Sorry {fullName}!, Your attempt to top up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber} has failed. Please check the details and try again.
                         </p>
                     ) : (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">

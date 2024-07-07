@@ -67,7 +67,7 @@ const Data = ({id,...transaction}: Tables<'history'> & { amount_: string }) => {
         </div>
 
         <div className='flex flex-col gap-y-1'>
-            <p className='text-md font-semibold text-muted-foreground'>{formatNigerianNaira(parseWithInterestPrice(transaction.amount_?.toString(), 'nairaless'))}</p>
+            <p className='text-md font-semibold text-muted-foreground'>{formatNigerianNaira(transaction.amount ?? 0)}</p>
             {
                 transaction?.status === 'success' ? (
                     <span className="p-0.5 text-xs px-2 rounded-full bg-green-200 text-green-600">successful</span>

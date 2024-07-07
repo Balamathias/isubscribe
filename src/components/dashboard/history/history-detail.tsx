@@ -6,7 +6,7 @@ import { getSingleHistory } from '@/lib/supabase/history'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { LucideCheckCircle2 } from 'lucide-react'
+import { LucideCheckCircle2, LucideX, LucideXCircle } from 'lucide-react'
 import React from 'react'
 
 interface HistoryDetailProps {
@@ -79,8 +79,8 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
         <div className='flex flex-col space-y-8 w-full'>
 
             <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
-                {history?.status === 'success' && <LucideCheckCircle2 className='text-green-600' size={40} />}
-                <h2 className='text-lg font-semibold'>{formatNigerianNaira(parseWithInterestPrice(dataMetadata.amount, 'nairaless') as number)}</h2>
+                {history?.status === 'success' ? <LucideCheckCircle2 className='text-green-600' size={40} /> :<LucideXCircle className='text-red-600' size={40} /> }
+                <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                 <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                 <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
             </Card>
@@ -91,30 +91,30 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Carrier Details</p>
                     <div className='flex flex-row space-x-1 items-center basis-1/3'>
-                        <p>{dataMetadata.network}</p>
+                        <p>{dataMetadata?.network}</p>
                         <span>|</span>
-                        <p>{dataMetadata.dataplan}</p>
+                        <p>{dataMetadata?.dataplan}</p>
                     </div>
                 </div>
 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Phone Number</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{dataMetadata.phone_number}</p>
+                        <p>{dataMetadata?.phone_number}</p>
                     </div>
                 </div>
 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Amount</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{formatNigerianNaira(parseWithInterestPrice(history?.amount?.toString()! || dataMetadata.amount, 'nairaless'))}</p>
+                        <p>{formatNigerianNaira(history?.amount ?? 0)}</p>
                     </div>
                 </div>
 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Transaction ID</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{dataMetadata.transid}</p>
+                        <p>{dataMetadata?.transid}</p>
                     </div>
                 </div>
 
