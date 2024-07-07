@@ -1,33 +1,33 @@
-import React, { useMemo, useState } from 'react'
-import { Card } from '../../ui/card'
-import { airtel_data, etisalat_data, glo_data, mtn_data } from '@/utils/constants/data-plans';
-import { useNetwork } from '@/providers/data/sub-data-provider';
-import DynamicModal from '../../DynamicModal';
-import { Button } from '../../ui/button';
-import { PaymentMethod, SubDataProps } from '@/types/networks';
-import Image from 'next/image';
-import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
-import LoadingOverlay from '../../loaders/LoadingOverlay';
-import { formatNigerianNaira } from '@/funcs/formatCurrency';
-import ConfirmPin from '../ConfirmPin';
-import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber';
-import ActivePaymentMethodButton from './ActivePaymentMethodButton';
-import { product } from '@/utils/constants/product';
+'use client'
+
+import DynamicModal from '@/components/DynamicModal'
+import LoadingOverlay from '@/components/loaders/LoadingOverlay'
+import { Card } from '@/components/ui/card'
+import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { priceToInteger } from '@/funcs/priceToNumber'
+import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
+import { useNetwork } from '@/providers/data/sub-data-provider'
+import { PaymentMethod, SubAirtimeProps } from '@/types/networks'
+import { airtel_airtime, etisalat_airtime, glo_airtime, mtn_airtime } from '@/utils/constants/airtime-plans'
+import { product } from '@/utils/constants/product'
+import Image from 'next/image'
+import React, { useState } from 'react'
+import { toast } from 'sonner'
+import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
+import { Button } from '@/components/ui/button'
+import ConfirmPin from '../ConfirmPin'
 
 const object = {
-    'mtn': mtn_data,
-    'glo': glo_data,
-    'airtel': airtel_data,
-    '9mobile': etisalat_data
+    'mtn': mtn_airtime,
+    'glo': glo_airtime,
+    'airtel': airtel_airtime,
+    '9mobile': etisalat_airtime
 }
 
-
-const DataNetworkCard = () => {
-    const { currentNetwork, handleSubData, mobileNumber } = useNetwork()
+const AirtimeCards = () => {
+    const { currentNetwork, handleSubAirtime, mobileNumber } = useNetwork()
     const [open, setOpen] = React.useState(false)
-    const [selected, setSelected] = useState<SubDataProps | null>(null)
+    const [selected, setSelected] = useState<SubAirtimeProps | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
 
     const [proceed, setProceed] = React.useState(false)
@@ -35,9 +35,8 @@ const DataNetworkCard = () => {
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
     if (isPending) return <LoadingOverlay />
-
   return (
-    <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
+    <div className='rounded-xl bg-white dark:bg-background md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>
         {object[currentNetwork]?.map((d, idx) => (
             <Card
                 key={idx}
@@ -51,9 +50,8 @@ const DataNetworkCard = () => {
                 }}
             >
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
-                    <p className="font-semibold text-base">{d?.Data}</p>
-                    <p>{d?.Duration}</p>
-                    <p>{formatNigerianNaira(parseWithInterestPrice(d?.Price!))}</p>
+                    <p className="font-semibold text-base">{formatNigerianNaira(priceToInteger(d?.Price!))}</p>
+                    <p className='tracking-tighter'>Pay N{priceToInteger(d?.Price!)}</p>
                     <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
                         <span>{d?.CashBack.slice(0, 2)}</span>
                         <span>Cashback</span>
@@ -62,7 +60,7 @@ const DataNetworkCard = () => {
             </Card>
         ))}
 
-        {
+{
             open && <DynamicModal
                 open={open}
                 setOpen={setOpen}
@@ -70,7 +68,7 @@ const DataNetworkCard = () => {
                 dialogClassName="md:w-[600px] lg:w-[800px] sm:min-w-max"
             >
                 <div className="flex flex-col gap-y-2.5">
-                    <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">Data Plan Details</h1>
+                    <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">Airtime Plan Details</h1>
                     
                     <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
                         <div className='flex flex-row justify-between items-center gap-x-2'>
@@ -95,17 +93,12 @@ const DataNetworkCard = () => {
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                             <p className='font-semibold text-muted-foreground'>Price</p>
-                            <p>{formatNigerianNaira(parseWithInterestPrice(selected?.Price!))}</p>
+                            <p>{formatNigerianNaira(priceToInteger(selected?.Price!))}</p>
                         </div>
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                             <p className='font-semibold text-muted-foreground'>Amount</p>
-                            <p>{selected?.Data}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Duration</p>
-                            <p>{selected?.Duration}</p>
+                            <p>{selected?.Price}</p>
                         </div>
 
                         <div className='flex flex-row justify-between items-center gap-x-2'>
@@ -151,7 +144,7 @@ const DataNetworkCard = () => {
                 dialogClassName={'sm:max-w-fit'}
             >
                 <ConfirmPin className='rounded-none' func={() => {
-                    handleSubData?.({...selected!, method: paymentMethod})
+                    handleSubAirtime?.({...selected!, method: paymentMethod})
                     setOpen(false)
                     setProceed(false)
                 }} />
@@ -161,4 +154,4 @@ const DataNetworkCard = () => {
   )
 }
 
-export default DataNetworkCard
+export default AirtimeCards

@@ -66,6 +66,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     const [errorMessage, setErrorMessage] = React.useState<string>('')
     const [successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
+    const [airtimeAmount, setAirtimeAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
@@ -177,7 +178,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         const price = priceToInteger(payload.Price)
         const cashbackPrice = priceToInteger(payload.CashBack!)
         const networkId = networkIds[currentNetwork]
-        // setDataAmount(payload.Data)
+        setAirtimeAmount(payload.Price)
 
         let balance = 0.00
         let deductableAmount = 0.00
@@ -188,6 +189,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             balance = wallet?.data?.balance ?? 0.00
             deductableAmount = price
             cashbackBalance += cashbackPrice
+            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
         } else if (payload.method === 'cashback') {
             cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
             deductableAmount = price
@@ -199,14 +201,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             return
         }
 
-        if (balance < 0) return /** @example: Edge case, balance cannot be negative! */
-
         setPurchasing(true)
-
-        if (balance < price) {
-            setPurchasing(false)
-            return
-        }
 
         const { OK, data, status, error } = await buyAirtime({
             "request-id": `Airtime_${nanoid(24)}`,
@@ -219,7 +214,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
-        if (error) {
+        if (error || data?.status === 'fail') {
             setPurchaseFailed(true)
             const { data: insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription for ${mobileNumber} failed.`,
@@ -232,22 +227,28 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 user: profile?.id!,
                 amount: price,
             })
+            setPurchasing(true)
 
             router.refresh()
+            return
         }
 
-        if (OK) {
+        if (data?.status === 'success') {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
-            if (_balanceError) return
+            if (_balanceError) {
+                await updateWalletBalanceByUser(profile?.id!, 
+                    (balance - deductableAmount))
+                return
+            }
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
 
             if (_balanceError || _cashbackBalanceError) return
 
-            const { data: insertHistory } = await insertTransactionHistory({
+            const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription for ${mobileNumber}`,
                 status: 'success',
                 title: 'Airtime Subscription',
@@ -262,9 +263,11 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             router.refresh()
 
             setPurchaseSuccess(true)
-            /** @example: toast.success(`Congratulations!`, {
+            /** 
+             * @example: toast.success(`Congratulations!`, {
                 description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-            })*/
+            })
+            */
             setPurchasing(false)
         } else {
             /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
@@ -293,16 +296,17 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 purchasing && (<LoadingOverlay />)
             }
 
-            <DataPurchaseStatusPopup
+            <SubPurchaseStatus
                 closeModal={() => setPurchaseSuccess(false)}
                 dataAmount={dataAmount}
                 fullName={profile?.full_name!}
                 open={purchaseSuccess}
                 phoneNumber={mobileNumber}
                 action={action}
+                airtimeAmount={airtimeAmount}
             />
 
-            <DataPurchaseStatusPopup
+            <SubPurchaseStatus
                 closeModal={() => setPurchaseFailed(false)}
                 dataAmount={dataAmount}
                 fullName={profile?.full_name!}
@@ -310,6 +314,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 phoneNumber={mobileNumber}
                 failed
                 action={action}
+                airtimeAmount={airtimeAmount}
             />
         </SubDatContext.Provider>
     )
@@ -321,7 +326,7 @@ export const useNetwork = () => {
     return React.useContext(SubDatContext)
 }
 
-const DataPurchaseStatusPopup = ({closeModal, dataAmount, fullName, open, phoneNumber, failed, action='data', airtimeAmount}: {
+const SubPurchaseStatus = ({closeModal, dataAmount, fullName, open, phoneNumber, failed, action='data', airtimeAmount}: {
     dataAmount: string,
     phoneNumber: string,
     fullName: string,

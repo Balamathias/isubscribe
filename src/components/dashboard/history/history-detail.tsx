@@ -1,12 +1,12 @@
+import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
-import { parseWithInterestPrice } from '@/funcs/priceToNumber'
 import { ResponseData } from '@/lib/n3tdata/types'
 import { getSingleHistory } from '@/lib/supabase/history'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { LucideCheckCircle2, LucideX, LucideXCircle } from 'lucide-react'
+import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
 import React from 'react'
 
 interface HistoryDetailProps {
@@ -20,13 +20,25 @@ const HistoryDetail = async ({ historyId }: HistoryDetailProps) => {
   const eventData = JSON.parse(history?.meta_data?.toString()! ?? '{}') as TransactionEvent['eventData']
   const dataMetadata = JSON.parse(history?.meta_data?.toString()! ?? '{}') as ResponseData
 
-
-  if (type === 'wallet_fund') return <WalletHistory eventData={eventData} history={history} />
-  if (type === 'data_topup') return <DataHistory history={history} dataMetadata={dataMetadata} />
-
   return (
-    <div>
-      
+    <div className='flex flex-col space-y-4'>
+      {type === 'airtime_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
+      {type === 'data_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
+      {type === 'wallet_fund' && <WalletHistory eventData={eventData} history={history} />}
+
+      <Card className='rounded-xl shadow-none py-6 px-2 md:px-5 border-none drop-shadow-none flex items-center justify-between flex-row'>
+        <Button
+            variant={'destructive'}
+            className='text-xs md:text-sm rounded-full'
+            size={'lg'}
+        >Download</Button>
+
+        <Button
+            variant={'default'}
+            className='text-xs md:text-sm rounded-full'
+            size={'lg'}
+        >Print</Button>
+      </Card>
     </div>
   )
 }
@@ -93,7 +105,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                     <div className='flex flex-row space-x-1 items-center basis-1/3'>
                         <p>{dataMetadata?.network}</p>
                         <span>|</span>
-                        <p>{dataMetadata?.dataplan}</p>
+                        <p>{dataMetadata?.dataplan ?? formatNigerianNaira(history?.amount ?? 0)}</p>
                     </div>
                 </div>
 

@@ -2,10 +2,11 @@ import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { formatDateTime } from '@/funcs/formatDate'
 import { parseWithInterestPrice } from '@/funcs/priceToNumber'
 import { ResponseData } from '@/lib/n3tdata/types'
+import { cn } from '@/lib/utils'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { ArrowUp, LucidePhone, Phone } from 'lucide-react'
+import { ArrowUp, LucidePhone, Phone, Wifi } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -17,8 +18,8 @@ const TransactionHistoryItem = ({ transaction, type }: {
     const dataMetadata = (JSON.parse(transaction?.meta_data?.toString() || '{}')) as ResponseData
 
     if (type === 'wallet_fund') return <Wallet {...transaction} amount_={eventData?.amountPaid?.toString()!} />
-    if (type === 'data_topup') return <Data {...transaction} amount_={dataMetadata?.amount!} />
-    if (type === 'airtime_topup') return <Data {...transaction} amount_={dataMetadata?.amount!} />
+    if (type === 'data_topup') return <DataAirtime action='data' {...transaction} amount_={dataMetadata?.amount!} />
+    if (type === 'airtime_topup') return <DataAirtime action='airtime' {...transaction} amount_={dataMetadata?.amount!} />
     return (
     <></>
     )
@@ -52,12 +53,18 @@ const Wallet = ({id,...transaction}: Tables<'history'> & { amount_: string | num
     )
 }
 
-const Data = ({id,...transaction}: Tables<'history'> & { amount_: string }) => {
+const DataAirtime = ({id, action="data",...transaction}: Tables<'history'> & { amount_: string, action?: 'data' | 'airtime' }) => {
     return (
         <Link href={'/dashboard/history/' + id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
         <div className='flex items-center flex-row space-x-3'>
-            <div className='flex items-center justify-center p-3 bg-red-200 text-violet-950 rounded-full h-12 w-12'>
-                <Phone strokeWidth={2} className='text-red-600' size={18} />
+            <div className={cn('flex items-center justify-center p-3 bg-red-200 text-violet-950 rounded-full h-12 w-12', {
+                'bg-green-200': action === 'data',
+            })}>
+                {
+                    action === 'airtime' ? (<Phone strokeWidth={2} className='text-red-600' size={18} />): (
+                        <Wifi strokeWidth={2} className='text-green-700' size={18} />
+                    )
+                }
             </div>
 
             <div className='flex flex-col gap-y-1'>

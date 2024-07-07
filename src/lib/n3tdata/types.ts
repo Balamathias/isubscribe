@@ -30,7 +30,7 @@ export interface AirtimeResponse {
   'request-id': string
   amount: string,
   discount: number,
-  status: 'success' | 'failed',
+  status: 'success' | 'fail',
   transid?: string,
   message: string,
   phone_number: string,
