@@ -1,3 +1,4 @@
+import AuthTestimonial from '@/components/auth/AuthTestimonials'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
@@ -12,14 +13,15 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
           {children}
         </div>
         <div className="flex-1 md:flex hidden">
-          <Image
+          <AuthTestimonial />
+          {/* <Image
             src='/auth/auth.svg'
             alt={'Sign In | Up'}
             quality={100}
             width={500}
             height={500}
             className='w-full h-96 md:h-full object-contain'
-          />
+          /> */}
         </div>
     </main>
   )
