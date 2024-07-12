@@ -50,6 +50,9 @@ const OverviewTab = () => {
           </Link>
         </div>
       </div>
+      <div className='text-muted-foreground text-xs sm:text-sm itali text-center underline'>
+        <p>Terms and Conditions</p>
+      </div>
     </>
   )
 }
