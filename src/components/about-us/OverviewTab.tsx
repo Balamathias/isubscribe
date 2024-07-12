@@ -3,8 +3,9 @@ import React from 'react'
 import AuthTestimonial from '../auth/AuthTestimonials'
 
 const OverviewTab = () => {
-  return (
-    <>
+    return (
+        <>
+      <Image src={"/images/p5.png"} height={1000} width={1000} alt='Hello' className=' rounded-md' />
       <ul className='flex flex-col space-y-3 justify-end list-decimal px-4 marker:text-violet-600 marker:font-bold'>
             <li className='text-muted-foreground text-xs sm:text-sm'>
             Isubscribe is a Bill Payment Platform with the Vision to steamline a faster, secure and liable utility payments processing.
@@ -23,6 +24,7 @@ const OverviewTab = () => {
               <li  className='text-muted-foreground text-xs sm:text-sm'>WAEC/JAMB/NECO pins with Massive Cashbacks</li>
             </ul>
         </ul>
+        <p  className='text-gray-900 italic text-xs sm:text-sm'>Explore isubscribe network today and I bet, you will chew the bone too.</p>
         <Image src={"/images/p4.jpg"} height={1000} width={1000} alt='Hello' className=' rounded-md' />
         <AuthTestimonial sheetOpen />
     </>
