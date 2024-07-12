@@ -19,11 +19,11 @@ const OverviewTab = () => {
             Pay your utility bills with just a single click. We currently offer the following services:
             </li>
             <ul className='flex flex-col space-y-3 justify-end list-decimal px-4 marker:text-violet-600 marker:font-bold'>
-              <li  className='text-muted-foreground text-xs sm:text-sm'>Cheap Data Subscriptions with Massive Cashbacks</li>
-              <li  className='text-muted-foreground text-xs sm:text-sm'> Airtime top up with Massive Cashbacks</li>
-              <li  className='text-muted-foreground text-xs sm:text-sm'> Electricity top up with Massive Cashbacks</li>
-              <li  className='text-muted-foreground text-xs sm:text-sm'> TV Cable Subscriptions with Massive Cashbacks</li>
-              <li  className='text-muted-foreground text-xs sm:text-sm'>WAEC/JAMB/NECO pins with Massive Cashbacks</li>
+              <li  className='text-muted-foreground text-xs sm:text-sm italic'>Cheap Data Subscriptions with Massive Cashbacks</li>
+              <li  className='text-muted-foreground text-xs sm:text-sm italic'> Airtime top up with Massive Cashbacks</li>
+              <li  className='text-muted-foreground text-xs sm:text-sm italic'> Electricity top up with Massive Cashbacks</li>
+              <li  className='text-muted-foreground text-xs sm:text-sm italic'> TV Cable Subscriptions with Massive Cashbacks</li>
+              <li  className='text-muted-foreground text-xs sm:text-sm italic'>WAEC/JAMB/NECO pins with Massive Cashbacks</li>
             </ul>
         </ul>
         <p  className='text-gray-900 italic text-xs sm:text-sm'>Explore isubscribe network today and I bet, you will chew the bone too.</p>
