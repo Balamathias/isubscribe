@@ -29,7 +29,9 @@ const OverviewTab = () => {
         <p  className='text-gray-900 italic text-xs sm:text-sm'>Explore isubscribe network today and I bet, you will chew the bone too.</p>
         <Image src={"/images/p4.jpg"} height={1000} width={1000} alt='Hello' className=' rounded-md' />
         <p  className='text-gray-900 italic text-xs sm:text-sm'>We Cherish and Honor our Customers, We demonstrate this through Data and Airtime Giveaways Every Weekends. With Us, You can always stay connected with your Loved ones.</p>
-        <AuthTestimonial sheetOpen />
+        <div className=' lg:hidden'>
+         <AuthTestimonial sheetOpen />
+        </div>
 
         <div className="mt-6 text-center">
         <h3 className="text-gray-700 font-semibold mb-2">Connect with Us on Social Networks:</h3>
