@@ -26,11 +26,11 @@ const tabs = [
   },
 ]
 
-const AboutUs = () => {
+const AboutUs = ({isDashboard}:{isDashboard?:boolean}) => {
   return (
     <>
      <DynamicSheet 
-       trigger={ <button className=' absolute rounded-full flex p-2 py-1 items-center top-2 right-8 justify-center bg-violet-100 border-[3px] border-dashed'>About us</button>}
+       trigger={ <button className={`${!isDashboard && "absolute"} rounded-full flex p-2 py-1 items-center top-2 right-8 justify-center bg-violet-100 border-[3px] border-dashed`}>About us</button>}
        className={" md:min-w-[460px] w-full"}
        >
         <div className=''>
