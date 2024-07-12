@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import Link from 'next/link';
 
 const ContactTab = () => {
   return (
@@ -60,18 +61,18 @@ const ContactTab = () => {
       <div className="mt-6 text-center">
         <h3 className="text-gray-800 font-semibold mb-2">Follow Us</h3>
         <div className="flex justify-center space-x-4">
-          <a href="#" className="text-gray-600 hover:text-violet-500 transition-colors duration-300">
+          <Link href="#" className="text-gray-600 hover:text-violet-500 transition-colors duration-300">
             <Facebook className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-gray-600 hover:text-violet-400 transition-colors duration-300">
+          </Link>
+          <Link href="#" className="text-gray-600 hover:text-violet-400 transition-colors duration-300">
             <Twitter className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-gray-600 hover:text-pink-500 transition-colors duration-300">
+          </Link>
+          <Link href="#" className="text-gray-600 hover:text-pink-500 transition-colors duration-300">
             <Instagram className="w-6 h-6" />
-          </a>
-          <a href="#" className="text-gray-600 hover:text-violet-700 transition-colors duration-300">
+          </Link>
+          <Link href="#" className="text-gray-600 hover:text-violet-700 transition-colors duration-300">
             <Linkedin className="w-6 h-6" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
