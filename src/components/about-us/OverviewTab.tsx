@@ -3,6 +3,8 @@ import React from 'react'
 import AuthTestimonial from '../auth/AuthTestimonials'
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react'
 import Link from 'next/link'
+import DynamicSheet from '../DynamicSheet'
+import PrivacyPolicy from './PrivacyPolicy'
 
 const OverviewTab = () => {
     return (
@@ -50,9 +52,7 @@ const OverviewTab = () => {
           </Link>
         </div>
       </div>
-      <div className='text-muted-foreground text-xs sm:text-sm itali text-center underline'>
-        <p>Terms and Conditions</p>
-      </div>
+      <PrivacyPolicy />
     </>
   )
 }
