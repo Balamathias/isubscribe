@@ -11,8 +11,8 @@ const PrivacyPolicy = () => {
     </div>}
     className={" md:min-w-[460px] w-full"}
      >
-    <div className=' flex flex-col gap-6'>
-     <h2 className='text-muted-foreground text-[14px] font-semibold text-nowrap'>Privacy Policy.</h2>
+    <div className=' flex flex-col gap-2'>
+     <h2 className='text-muted-foreground text-[14px] font-semibold text-nowrap text-center'>Our Privacy Policy.</h2>
      <ul className='flex flex-col space-y-3 justify-end list-decimal px-4 marker:text-violet-600 marker:font-bold'>
         <li className='text-muted-foreground text-xs sm:text-sm'>
             At iSubscribe Network (https://isubscribe.ng), your privacy is paramount to us. We are committed to respecting your privacy and complying with any applicable law and regulation regarding any personal information we may collect about you, across our website and other sites we own and operate.
