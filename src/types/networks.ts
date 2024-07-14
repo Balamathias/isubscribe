@@ -16,3 +16,17 @@ export interface SubAirtimeProps {
     Price: string;
     CashBack: string;
 }
+
+export interface VTPassDataPayload {
+    serviceID: string,
+    variation_code: string,
+    amount?: number,
+    phone?: string | number,
+    cashback?: string,
+    detail?: {
+        network: string;
+        dataAmount: string;
+        duration: string;
+        dataQty: string;
+    }
+}

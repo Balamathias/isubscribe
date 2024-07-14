@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { Inter, Montserrat, Poppins } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 const montserrat = Montserrat({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
+const poppins = Poppins({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
 
 export const metadata: Metadata = {
   title: "Isubscribe",
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('antialised', montserrat.className)}>
+      <body className={cn('antialised', poppins.className, 'md:' + inter.className)}>
         <Providers>
           {children}
         </Providers>

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/drawer"
 import clsx, { ClassValue } from 'clsx'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 
 interface DynamicModalProps {
     children: React.ReactNode,
@@ -51,7 +52,7 @@ const DynamicModal = ({
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className={clsx("sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none", dialogClassName)}>
+        <DialogContent className={cn("sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none", dialogClassName)}>
           <div className="flex flex-col gap-3 p-2.5">
             {children}
           </div>

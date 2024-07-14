@@ -31,3 +31,17 @@ export const networks: {
         activeClassName: 'text-white bg-gradient-to-tr from-lime-600 to-lime-400'
     },
 ]
+
+export const networkIds = {
+    mtn: 1,
+    airtel: 2,
+    glo: 3,
+    '9mobile': 4
+}
+
+export const VTPassServiceIds = {
+    'mtn': 'mtn-data',
+    'glo': 'glo-data',
+    'airtel': 'airtel-data',
+    '9mobile': '9mobile-data'
+}

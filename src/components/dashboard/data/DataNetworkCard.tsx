@@ -67,9 +67,9 @@ const DataNetworkCard = () => {
                 open={open}
                 setOpen={setOpen}
                 dismissible
-                dialogClassName="md:w-[600px] lg:w-[800px] sm:min-w-max"
+                dialogClassName="sm:max-w-[640px]"
             >
-                <div className="flex flex-col gap-y-2.5">
+                <div className="flex flex-col gap-y-2.5 w-full">
                     <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">Data Plan Details</h1>
                     
                     <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>

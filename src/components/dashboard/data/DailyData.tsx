@@ -3,14 +3,17 @@
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import generateRequestId from '@/funcs/generateRequestId'
 import { parseDataName } from '@/funcs/parse-data-name'
 import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { airtelData, etisalatData, gloData, mtnData } from '@/lib/vtpass/data'
 import { useNetwork } from '@/providers/data/sub-data-provider'
-import { PaymentMethod, SubDataProps } from '@/types/networks'
+import { PaymentMethod, SubDataProps, VTPassDataPayload } from '@/types/networks'
+import { VTPassServiceIds } from '@/utils/networks'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
+import ConfirmDataPurchaseModal from './ConfirmDataPurchaseModal'
 
 const object = {
   'mtn': mtnData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'mtn')})),
@@ -19,29 +22,10 @@ const object = {
   '9mobile': etisalatData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, '9mobile')}))
 }
 
-const product = {
-  'mtn': {
-      name: 'MTN',
-      image: '/images/networks/mtn.png'
-  },
-  'glo': {
-      name: 'GLO',
-      image: '/images/networks/glo.png'
-  },
-  'airtel': {
-      name: 'AIRTEL',
-      image: '/images/networks/airtel.png'
-  },
-  '9mobile': {
-      name: '9MOBILE',
-      image: '/images/networks/9mobile.png'
-  }
-}
-
 const DailyData = () => {
-  const { currentNetwork, handleSubData, mobileNumber } = useNetwork()
+  const { currentNetwork, mobileNumber } = useNetwork()
     const [open, setOpen] = React.useState(false)
-    const [selected, setSelected] = useState<{} | null>(null)
+    const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
 
     const [proceed, setProceed] = React.useState(false)
@@ -60,7 +44,14 @@ const DailyData = () => {
                     if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
                     if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
-                    setSelected({})
+                    setSelected({
+                        phone: mobileNumber,
+                        serviceID: VTPassServiceIds[currentNetwork],
+                        variation_code: d.variation_code,
+                        amount: parseInt(d.variation_amount),
+                        cashback: d.cashback,
+                        detail
+                    })
                     setOpen(true)
                 }}
             >
@@ -75,6 +66,18 @@ const DailyData = () => {
                 </div>
             </Card>
         ))}
+
+        {
+            open && <ConfirmDataPurchaseModal 
+                open={open}
+                paymentMethod={paymentMethod}
+                selected={selected!}
+                setOpen={setOpen}
+                setPaymentMethod={setPaymentMethod}
+                setProceed={setProceed}
+                title='Data Purchase Details (Confirm Details)'
+            />
+        }
     </div>
   )
 }

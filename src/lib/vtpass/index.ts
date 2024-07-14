@@ -1,7 +1,7 @@
-export const VTPASS_SECRET_KEY = process.env.NEXT_VTPASS_SECRET_KEY
-export const VTPASS_API_KEY = process.env.NEXT_VTPASS_API_KEY
-export const VTPASS_PUBLIC_KEY = process.env.NEXT_VTPASS_PUBLIC_KEY
-export const VTPASS_BASE_URL = process.env.NEXT_VTPASS_TEST_BASE_URL ?? 'https://sandbox.vtpass.com/api/pay'
+export const VTPASS_SECRET_KEY = process.env.NEXT_VT_SECRET_KEY
+export const VTPASS_API_KEY = process.env.NEXT_VT_API_KEY
+export const VTPASS_PUBLIC_KEY = process.env.NEXT_VT_PUBLIC_KEY
+export const VTPASS_BASE_URL = process.env.NEXT_VT_TEST_BASE_URL ?? 'https://sandbox.vtpass.com/api/pay'
 
 export declare interface VTPassBalanceResponse {
     code: number,
@@ -35,7 +35,7 @@ export declare interface VTPassTransactionRequest {
     billersCode: string;
     variation_code: string; 
     amount?: number;
-    phone: number;
+    phone: number | string;
 }
 
 export declare interface Transaction {

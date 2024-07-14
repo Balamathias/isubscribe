@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
 import { Button } from '@/components/ui/button'
 import ConfirmPin from '../ConfirmPin'
+import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 
 const object = {
     'mtn': mtn_airtime,
@@ -52,8 +53,8 @@ const AirtimeCards = () => {
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
                     <p className="font-semibold text-base">{formatNigerianNaira(priceToInteger(d?.Price!))}</p>
                     <p className='tracking-tighter'>Pay N{priceToInteger(d?.Price!)}</p>
-                    <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
-                        <span>{d?.CashBack.slice(0, 2)}</span>
+                    <div className="flex flex-row items-center justify-center flex-wrap gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
+                        <span>{d?.CashBack}</span>
                         <span>Cashback</span>
                     </div>
                 </div>
@@ -61,79 +62,16 @@ const AirtimeCards = () => {
         ))}
 
 {
-            open && <DynamicModal
+            open && <ConfirmPurchaseModal 
                 open={open}
+                paymentMethod={paymentMethod}
+                selected={selected!}
                 setOpen={setOpen}
-                dismissible
-                dialogClassName="md:w-[600px] lg:w-[800px] sm:min-w-max"
-            >
-                <div className="flex flex-col gap-y-2.5">
-                    <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">Airtime Plan Details</h1>
-                    
-                    <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Product</p>
-                            <p className='flex items-center flex-row gap-x-1'>{product[currentNetwork].name} | 
-
-                                <Image
-                                    src={product[currentNetwork].image}
-                                    width={20}
-                                    height={20}
-                                    quality={100}
-                                    alt={currentNetwork}
-                                    className='h-7 w-7 rounded-full object-cover' 
-                                />
-                            </p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Phone Number</p>
-                            <p>{mobileNumber}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Price</p>
-                            <p>{formatNigerianNaira(priceToInteger(selected?.Price!))}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Amount</p>
-                            <p>{selected?.Price}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Cashback</p>
-                            <p className='px-2 py-1 rounded-full bg-violet-200 text-violet-800'>+{selected?.CashBack}</p>
-                        </div>
-                    </div>
-
-                    <div className='flex flex-col w-full gap-y-2.5'>
-                        <ActivePaymentMethodButton 
-                            active={paymentMethod === 'wallet'} 
-                            handler={() => {setPaymentMethod('wallet')}} 
-                            method='wallet'
-                            balance={formatNigerianNaira(wallet?.data?.balance! as number)}
-                            disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
-                        />
-                        <ActivePaymentMethodButton 
-                            active={paymentMethod === 'cashback'} 
-                            handler={() => {setPaymentMethod('cashback')}} 
-                            method='cashback'
-                            balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
-                            disabled={wallet?.data?.cashback_balance! < priceToInteger(selected?.Price || '0.00')}
-                        />
-                    </div>
-
-                    <Button 
-                        className='w-full rounded-xl' 
-                        size={'lg'}
-                        disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
-                        onClick={() => {
-                            setProceed(true)
-                        }}
-                    >Proceed</Button>
-                </div>
-            </DynamicModal>
+                setPaymentMethod={setPaymentMethod}
+                setProceed={setProceed}
+                key={'airtime'}
+                title='Airtime Purchase details...'
+            />
         }
 
         {

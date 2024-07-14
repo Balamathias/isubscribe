@@ -1,0 +1,38 @@
+import { networkIds } from "@/utils/networks"
+import { parseWithInterestPrice } from "./priceToNumber"
+import { PaymentMethod, SubAirtimeProps, SubDataProps } from "@/types/networks"
+import { Tables } from "@/types/database"
+
+export const computeTransaction = ({
+    payload,
+    wallet,
+}: {
+    payload: (SubDataProps | SubAirtimeProps) & { method?: PaymentMethod },
+    wallet: Tables<'wallet'>
+}) => {
+        const price = parseWithInterestPrice(payload.Price)
+        const cashbackPrice = parseWithInterestPrice(payload.CashBack!)
+        
+        let balance = 0.00
+        let deductableAmount = 0.00
+        
+        let cashbackBalance = wallet?.cashback_balance ?? 0.00
+        
+        if (payload?.method === 'wallet') {
+            balance = wallet?.balance ?? 0.00
+            deductableAmount = price
+            cashbackBalance += cashbackPrice
+            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
+        } else if (payload?.method === 'cashback') {
+            cashbackBalance = wallet?.cashback_balance ?? 0.00
+            deductableAmount = price
+            cashbackBalance -= deductableAmount
+            cashbackBalance += cashbackPrice
+            
+            if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
+        } else {
+            return
+        }
+    
+        return { balance, cashbackBalance, cashbackPrice, deductableAmount, price }
+}

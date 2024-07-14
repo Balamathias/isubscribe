@@ -6,7 +6,7 @@ import { parseWithInterestPrice, priceToInteger } from "@/funcs/priceToNumber"
 import { buyAirtime, buyData } from "@/lib/n3tdata"
 import { useGetWalletBalance } from "@/lib/react-query/funcs/wallet"
 import { Tables } from "@/types/database"
-import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps } from "@/types/networks"
+import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassDataPayload } from "@/types/networks"
 import { nanoid } from 'nanoid'
 import { toast } from "sonner"
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
@@ -17,6 +17,11 @@ import DynamicModal from "@/components/DynamicModal"
 import { Button } from "@/components/ui/button"
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { networkIds } from "@/utils/networks"
+import { computeTransaction } from "@/funcs/computeTransaction"
+
+import { buyData as buyVTPassData } from "@/lib/vtpass/services"
+import generateRequestId from "@/funcs/generateRequestId"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -48,12 +53,6 @@ const SubDatContext = React.createContext<{
     handleSubAirtime: () => {}
 })
 
-const networkIds = {
-    mtn: 1,
-    airtel: 2,
-    glo: 3,
-    '9mobile': 4
-}
 
 const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderProps) => {
     const { data: wallet, isPending } = useGetWalletBalance()
@@ -72,35 +71,19 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     const [purchasing, setPurchasing] = React.useState(false)
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
-        const price = parseWithInterestPrice(payload.Price)
-        const cashbackPrice = parseWithInterestPrice(payload.CashBack!)
+        const values = computeTransaction({
+            payload: payload!,
+            wallet: wallet?.data!
+        })
+        if (!values) return
+
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+
         const networkId = networkIds[currentNetwork]
         setDataAmount(payload.Data)
-
-        let balance = 0.00
-        let deductableAmount = 0.00
-
-        let cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
-
-        if (payload.method === 'wallet') {
-            balance = wallet?.data?.balance ?? 0.00
-            deductableAmount = price
-            cashbackBalance += cashbackPrice
-            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
-        } else if (payload.method === 'cashback') {
-            cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
-            deductableAmount = price
-            cashbackBalance -= deductableAmount
-            cashbackBalance += cashbackPrice
-
-            if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
-        } else {
-            return
-        }
-
         setPurchasing(true)
 
-        const { OK, data, status, error } = await buyData({
+        const { data, error } = await buyData({
             "request-id": `Data_${nanoid(24)}`,
             bypass: false,
             data_plan: payload.Plan_ID,
@@ -175,35 +158,19 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     }
 
     const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
-        const price = priceToInteger(payload.Price)
-        const cashbackPrice = priceToInteger(payload.CashBack!)
+        const values = computeTransaction({
+            payload: payload!,
+            wallet: wallet?.data!
+        })
+        if (!values) return
+
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        
         const networkId = networkIds[currentNetwork]
         setAirtimeAmount(payload.Price)
-
-        let balance = 0.00
-        let deductableAmount = 0.00
-
-        let cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
-
-        if (payload.method === 'wallet') {
-            balance = wallet?.data?.balance ?? 0.00
-            deductableAmount = price
-            cashbackBalance += cashbackPrice
-            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
-        } else if (payload.method === 'cashback') {
-            cashbackBalance = wallet?.data?.cashback_balance ?? 0.00
-            deductableAmount = price
-            cashbackBalance -= deductableAmount
-            cashbackBalance += cashbackPrice
-
-            if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
-        } else {
-            return
-        }
-
         setPurchasing(true)
 
-        const { OK, data, status, error } = await buyAirtime({
+        const { data, error } = await buyAirtime({
             "request-id": `Airtime_${nanoid(24)}`,
             bypass: false,
             network: networkId,
@@ -274,6 +241,26 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setPurchasing(false)
             setPurchaseFailed(true)
         }
+    }
+
+    const handleVTPassAirtime = async (method: PaymentMethod, payload: VTPassDataPayload) => {
+        const values = computeTransaction({
+            payload: {...payload, method} as any,
+            wallet: wallet?.data!
+        })
+        if (!values) return
+
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+
+        const res = await buyVTPassData({
+            ...payload,
+            request_id: generateRequestId(),
+            billersCode: '08011111111',
+            phone: mobileNumber,
+        })
+
+        if (!res) return toast.error('Transaction attempt failed!')
+        const {} = res
     }
 
     if (isPending) return <LoadingOverlay />
