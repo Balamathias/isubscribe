@@ -32,7 +32,7 @@ const PrivacyPolicy = () => {
             Log Data
             <ul className='flex flex-col space-y-3 justify-end list-decimal px-4 marker:text-violet-600 marker:font-bold'>
                 <li className='text-muted-foreground text-xs sm:text-sm'>
-                    When you visit our website (https://isubscribe.com), our servers may log standard data provided by your web browser. This data may include your device's Internet Protocol (IP) address, browser type and version, the pages you visit, the time and date of your visit, and other details about your visit. While this information may not identify you personally by itself, it could be combined with other data to do so.
+                    When you visit our website (https://isubscribe.com), our servers may log standard data provided by your web browser. This data may include your {"device's"} Internet Protocol (IP) address, browser type and version, the pages you visit, the time and date of your visit, and other details about your visit. While this information may not identify you personally by itself, it could be combined with other data to do so.
                 </li>
             </ul>
         </li>
@@ -152,7 +152,7 @@ const PrivacyPolicy = () => {
             Use of Cookies
             <ul className='flex flex-col space-y-3 justify-end list-decimal px-4 marker:text-violet-600 marker:font-bold'>
                 <li className='text-muted-foreground text-xs sm:text-sm'>
-                    We use "cookies" to collect information about you and your activity across our site. A cookie is a small piece of data that our website stores on your computer and retrieves each time you visit, helping us understand how you use our site and serving content based on your preferences.
+                    We use {"\"cookies\""} to collect information about you and your activity across our site. A cookie is a small piece of data that our website stores on your computer and retrieves each time you visit, helping us understand how you use our site and serving content based on your preferences.
                 </li>
             </ul>
         </li>
