@@ -150,7 +150,7 @@ export const mtnData = {
         },
         {
             planId: "mtn-25gb-sme-10000",
-            dataQty: "25GB SME Mobile Data",
+            dataQty: "25GB",
             duration: "1 Month",
             unitPrice: 10000,
             unitCashback: 4,
@@ -271,7 +271,7 @@ export const mtnData = {
         },
         {
             planId: "mtn-165gb-sme-50000",
-            dataQty: "165GB SME Mobile Data",
+            dataQty: "165GB",
             duration: "2 Months",
             unitPrice: 50000,
             unitCashback: 4,
@@ -280,7 +280,7 @@ export const mtnData = {
         },
         {
             planId: "mtn-360gb-sme-100000",
-            dataQty: "360GB SME Mobile Data",
+            dataQty: "360GB",
             duration: "3 Months",
             unitPrice: 100000,
             unitCashback: 4,
@@ -298,7 +298,7 @@ export const mtnData = {
         },
         {
             planId: "mtn-1tb-350000",
-            dataQty: "1TB SME Data",
+            dataQty: "1TB",
             duration: "365 days",
             unitPrice: 350000,
             unitCashback: 4,
@@ -315,6 +315,9 @@ export const mtnData = {
             interest: 0.4
         }
     ],
+    night: [],
+    weekend: [],
+    special: []
 }
 
 export const gloData = {
@@ -646,7 +649,9 @@ export const gloData = {
             network: "glo",
             interest: 0.4
         }
-    ]
+    ],
+    youtube: [],
+    special: []
 };
 
 export const airtelData = {
@@ -936,7 +941,11 @@ export const airtelData = {
             network: "airtel",
             interest: 0.4
         }
-    ]
+    ],
+    night: [],
+    youtube: [],
+    mega: [],
+    weekend: [],
 };
 
 export const etisalatData = {
@@ -1031,5 +1040,297 @@ export const etisalatData = {
         network: "9mobile",
         interest: 0.4
       }
-    ]
+    ],
+    daily: [
+      {
+        planId: "eti-100",
+        dataQty: "200MB",
+        duration: "1 day",
+        unitPrice: 100,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-200",
+        dataQty: "650MB",
+        duration: "1 day",
+        unitPrice: 200,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-50",
+        dataQty: "50MB",
+        duration: "1 day",
+        unitPrice: 50,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-300",
+        dataQty: "1GB + 100MB",
+        duration: "1 day",
+        unitPrice: 300,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-500",
+        dataQty: "2GB + 100MB",
+        duration: "3 days",
+        unitPrice: 500,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      }
+    ],
+    weekly: [],
+    monthly: [
+      {
+        planId: "eti-4000",
+        dataQty: "18.5GB (15GB + 3.5GB Night)",
+        duration: "30 days",
+        unitPrice: 4000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-2000",
+        dataQty: "9.5GB (5.5GB + 4GB Night)",
+        duration: "30 days",
+        unitPrice: 2000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-5000",
+        dataQty: "22GB",
+        duration: "30 days",
+        unitPrice: 5000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-10000",
+        dataQty: "50GB",
+        duration: "30 days",
+        unitPrice: 10000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-15000",
+        dataQty: "80GB",
+        duration: "30 days",
+        unitPrice: 15000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-3000",
+        dataQty: "15GB",
+        duration: "30 days",
+        unitPrice: 3000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-1200",
+        dataQty: "6.2GB (2.2GB + 4GB Night)",
+        duration: "30 days",
+        unitPrice: 1200,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-2500",
+        dataQty: "11GB (7GB + 4GB Night)",
+        duration: "30 days",
+        unitPrice: 2500,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-7000",
+        dataQty: "35GB",
+        duration: "30 days",
+        unitPrice: 7000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-20000",
+        dataQty: "125GB",
+        duration: "30 days",
+        unitPrice: 20000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "eti-1000",
+        dataQty: "4GB (2GB + 2GB Night)",
+        duration: "30 days",
+        unitPrice: 1000,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      }
+    ],
+    mega: [
+      {
+        planId: "9mobile-sme-data-500mb",
+        dataQty: "500MB",
+        duration: "SME plan",
+        unitPrice: 70,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "9mobile-sme-data-1gb",
+        dataQty: "1GB",
+        duration: "SME plan",
+        unitPrice: 140,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "9mobile-sme-data-2gb",
+        dataQty: "2GB",
+        duration: "SME plan",
+        unitPrice: 280,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "9mobile-sme-data-3gb",
+        dataQty: "3GB",
+        duration: "SME plan",
+        unitPrice: 420,
+        unitCashback: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+      {
+        planId: "9mobile-sme-data-4gb",
+        dataQty: "4GB",
+        duration: "SME plan",
+        unitPrice: 560,
+        unitCashBack: 4,
+        network: "9mobile",
+        interest: 0.4
+      },
+
+        {
+          planId: "9mobile-sme-data-500mb",
+          dataQty: "500MB",
+          duration: "SME plan",
+          unitPrice: 70,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+        },
+        {
+          planId: "9mobile-sme-data-1gb",
+          dataQty: "1GB",
+          duration: "SME plan",
+          unitPrice: 140,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+        },
+        {
+          planId: "9mobile-sme-data-2gb",
+          dataQty: "2GB",
+          duration: "SME plan",
+          unitPrice: 280,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+        },
+        {
+          planId: "9mobile-sme-data-3gb",
+          dataQty: "3GB",
+          duration: "SME plan",
+          unitPrice: 420,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+        },
+        {
+          planId: "9mobile-sme-data-4gb",
+          dataQty: "4GB",
+          duration: "SME plan",
+          unitPrice: 560,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+        },
+        {
+          planId: "9mobile-sme-data-5gb",
+          dataQty: "5GB",
+          duration: "SME plan",
+          unitPrice: 700,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+      },
+      {
+          planId: "9mobile-sme-data-10gb",
+          dataQty: "10GB",
+          duration: "SME plan",
+          unitPrice: 1400,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+      },
+      {
+          planId: "9mobile-sme-data-15gb",
+          dataQty: "15GB",
+          duration: "SME plan",
+          unitPrice: 2100,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+      },
+      {
+          planId: "9mobile-sme-data-20gb",
+          dataQty: "20GB",
+          duration: "SME plan",
+          unitPrice: 2800,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+      },
+      {
+          planId: "9mobile-sme-data-25gb",
+          dataQty: "25GB",
+          duration: "SME plan",
+          unitPrice: 3500,
+          unitCashback: 4,
+          network: "9mobile",
+          interest: 0.4
+      }      
+
+    ],
+    night: [],
+    youtube: [],
+    weekend: [],
+    special: []
 }  

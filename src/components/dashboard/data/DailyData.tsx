@@ -7,28 +7,30 @@ import generateRequestId from '@/funcs/generateRequestId'
 import { parseDataName } from '@/funcs/parse-data-name'
 import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
-import { airtelData, etisalatData, gloData, mtnData } from '@/lib/vtpass/data'
+import { airtelData, etisalatData, gloData, mtnData } from '@/utils/constants/vtp/data-plans'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import { PaymentMethod, SubDataProps, VTPassDataPayload } from '@/types/networks'
 import { VTPassServiceIds } from '@/utils/networks'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import ConfirmDataPurchaseModal from './ConfirmDataPurchaseModal'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
+import PlaceHolder from '@/components/place-holder-component'
+    
+const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
+        
+    const object = useMemo(() => {
+        return {
+            'mtn': mtnData?.[type],
+            'glo': gloData?.[type],
+            'airtel': airtelData?.[type],
+            '9mobile': etisalatData?.[type]
+        }
+    }, [type])
 
-const object = {
-  'mtn': mtnData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'mtn')})),
-  'glo': gloData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'glo')})),
-  'airtel': airtelData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'airtel')})),
-  '9mobile': etisalatData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, '9mobile')}))
-}
-
-const DailyData = () => {
-
-
-  const { currentNetwork, mobileNumber } = useNetwork()
+  const { currentNetwork, mobileNumber, handleVTPassData } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
@@ -40,9 +42,18 @@ const DailyData = () => {
 
     if (isPending || profilePending) return <LoadingOverlay />
 
+    if (!object[currentNetwork] || !object[currentNetwork]?.length) {
+        return (
+            <PlaceHolder 
+                title={`No ${type} data plans available for ${currentNetwork} network`}
+                description='There are no data plans available for this network'
+            />
+        )
+    }
+
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
-        {object[currentNetwork]?.map(({detail, ...d}, idx) => (
+        {object[currentNetwork]?.map((d, idx) => (
             <Card
                 key={idx}
                 className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2"
@@ -53,20 +64,25 @@ const DailyData = () => {
                     setSelected({
                         phone: mobileNumber,
                         serviceID: VTPassServiceIds[currentNetwork],
-                        variation_code: d.variation_code,
-                        amount: parseInt(d.variation_amount),
-                        cashback: d.cashback,
-                        detail
+                        variation_code: d.planId,
+                        amount: d.unitPrice,
+                        cashback: d.unitCashback,
+                        detail: {
+                            dataAmount: d.unitPrice,
+                            dataQty: d.dataQty,
+                            duration: d.duration,
+                            network: d.network
+                        }
                     })
                     setOpen(true)
                 }}
             >
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
-                    <p className="font-semibold text-base">{detail.dataQty}</p>
-                    <p>{detail.duration.replaceAll('(', '').replaceAll(')', '')}</p>
-                    <p>{formatNigerianNaira(priceToInteger(d?.variation_amount!))}</p>
+                    <h2 className="font-semibold text-sm md:text-base text-muted-foreground text-center">{d.dataQty}</h2>
+                    <p>{d.duration}</p>
+                    <p>{formatNigerianNaira(d.unitPrice)}</p>
                     <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
-                        <span>{formatNigerianNaira(parseFloat(d?.cashback!))}</span>
+                        <span>{formatNigerianNaira(d.unitCashback!)}</span>
                         <span>Cashback</span>
                     </div>
                 </div>
@@ -92,7 +108,7 @@ const DailyData = () => {
             <ConfirmPin 
                 className='rounded-none' 
                 func={() => {
-                    // handleSubData?.({...selected!, method: paymentMethod})
+                    handleVTPassData(paymentMethod, selected!)
                     setOpen(false)
                     setProceed(false)
                 }} 
@@ -104,3 +120,5 @@ const DailyData = () => {
 }
 
 export default DailyData
+
+// https://gb0wpg0l-3000.euw.devtunnels.ms/

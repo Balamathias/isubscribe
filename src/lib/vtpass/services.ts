@@ -46,10 +46,15 @@ export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTra
         'secret-key': VTPASS_SECRET_KEY!,
         'Content-Type': 'application/json'
     }
-    const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
-    console.log(res.statusText)
-    if (res.status !== 200) {
-        throw new Error('Failed to buy data')
+    try {
+        const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
+        console.log(res.statusText)
+        if (res.status !== 200) {
+            throw new Error('Failed to buy data')
+        }
+        return res.data
+    } catch (error) {
+        console.log(error)
+        return
     }
-    return res.data
 }

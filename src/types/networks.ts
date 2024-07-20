@@ -22,10 +22,10 @@ export interface VTPassDataPayload {
     variation_code: string,
     amount?: number,
     phone?: string | number,
-    cashback?: string,
+    cashback?: string | number,
     detail?: {
         network: string;
-        dataAmount: string;
+        dataAmount?: string | number;
         duration: string;
         dataQty: string;
     }

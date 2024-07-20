@@ -40,6 +40,7 @@ const SubDatContext = React.createContext<{
     setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
     fundSufficient: boolean,
     setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
+    handleVTPassData: (method: PaymentMethod, payload: VTPassDataPayload) => void
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
@@ -50,7 +51,8 @@ const SubDatContext = React.createContext<{
     setPinPasses: () => {},
     fundSufficient: false,
     setFundSufficient: () => {},
-    handleSubAirtime: () => {}
+    handleSubAirtime: () => {},
+    handleVTPassData: () => {}
 })
 
 
@@ -72,7 +74,11 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
         const values = computeTransaction({
-            payload: payload!,
+            payload: {
+                price: parseInt(payload.Price),
+                cashback: parseInt(payload.CashBack),
+                method: payload.method
+            },
             wallet: wallet?.data!
         })
         if (!values) return
@@ -162,7 +168,11 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
     const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
         const values = computeTransaction({
-            payload: payload!,
+            payload: {
+                price: parseInt(payload.Price),
+                cashback: parseInt(payload.CashBack),
+                method: payload.method
+            },
             wallet: wallet?.data!
         })
         if (!values) return
@@ -246,15 +256,21 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         }
     }
 
-    const handleVTPassAirtime = async (method: PaymentMethod, payload: VTPassDataPayload) => {
+    const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
+        setDataAmount(payload.detail?.dataQty!)
         const values = computeTransaction({
-            payload: {...payload, method} as any,
+            payload: {
+                price: (payload.amount as number),
+                cashback: (payload.cashback as number),
+                method
+            },
             wallet: wallet?.data!
         })
-        if (!values) return
+        if (!values) return toast.info('Please verify all inputs.')
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
 
+        setPurchasing(true)
         const res = await buyVTPassData({
             ...payload,
             request_id: generateRequestId(),
@@ -262,8 +278,46 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             phone: mobileNumber,
         })
 
-        if (!res) return toast.error('Transaction attempt failed!')
-        const {} = res
+        if (!res) {
+            setPurchasing(false)
+            setPurchaseFailed(true)
+            return
+        }
+        
+            const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
+                (balance - deductableAmount))
+            if (_balanceError) {
+                await updateWalletBalanceByUser(profile?.id!, 
+                    (balance - deductableAmount))
+                    setPurchasing(false)
+                return
+            }
+
+            const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
+                (cashbackBalance))
+
+            if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
+
+            const { data: _insertHistory } = await insertTransactionHistory({
+                description: `Data subscription for ${mobileNumber}`,
+                status: 'success',
+                title: 'Data Subscription',
+                type: EVENT_TYPE.data_topup,
+                email: null,
+                meta_data: JSON.stringify({...res,
+                    transactionId: generateRequestId(),
+                    time: new Date().toISOString(),
+                }),
+                updated_at: null,
+                user: profile?.id!,
+                amount: price
+            })
+            setSuccessMessage(res?.response_description ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+
+            router.refresh()
+
+            setPurchaseSuccess(true)
+            setPurchasing(false)
     }
 
     if (isPending) return <LoadingOverlay />
@@ -279,7 +333,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             pinPasses,
             setPinPasses,
             fundSufficient,
-            setFundSufficient
+            setFundSufficient,
+            handleVTPassData,
         }}>
             { children }
             {

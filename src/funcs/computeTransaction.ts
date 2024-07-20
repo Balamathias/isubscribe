@@ -7,11 +7,11 @@ export const computeTransaction = ({
     payload,
     wallet,
 }: {
-    payload: (SubDataProps | SubAirtimeProps) & { method?: PaymentMethod },
+    payload: { method?: PaymentMethod, price: number, cashback: number },
     wallet: Tables<'wallet'>
 }) => {
-        const price = parseWithInterestPrice(payload.Price)
-        const cashbackPrice = parseWithInterestPrice(payload.CashBack!)
+        const price = (payload.price)
+        const cashbackPrice = (payload.cashback!)
         
         let balance = 0.00
         let deductableAmount = 0.00

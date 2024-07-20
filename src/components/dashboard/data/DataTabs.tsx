@@ -27,32 +27,32 @@ const tabs = [
     {
         name: 'Night',
         value: 'night',
-        component: <></>
+        component: <DailyData type='night' />
     },
     {
         name: 'Weekend',
         value: 'weekend',
-        component: <></>
+        component: <DailyData type='weekend' />
     },
     {
         name: 'Weekly',
         value: 'weekly',
-        component: <></>
+        component: <DailyData type='weekly' />
     },
     {
         name: 'Monthly',
         value: 'monthly',
-        component: <></>
+        component: <DailyData type='monthly' />
     },
     {
         name: 'Social',
         value: 'social',
-        component: <></>
+        component: <DailyData type={'social' as any} />
     },
     {
         name: 'Special',
         value: 'special',
-        component: <></>
+        component: <DailyData type='special' />
     },
 ]
 
@@ -65,7 +65,7 @@ const DataTabs = () => {
     const debouncedNumber = useDebounce(mobileNumber, 4000)
 
     const handleVerifyNumber = async () => {
-        if (mobileNumber.length > 10) {
+        if (mobileNumber.length === 11) {
             const res = await verifyNumber(mobileNumber)
             if (!res) return
             setCurrentNetwork(res)
@@ -88,9 +88,10 @@ const DataTabs = () => {
                     defaultValue={profile?.data?.phone || ''}
                     onChange={ async (e) => {
                         setMobileNumber(e.target.value)
+                    }}
+                    onKeyDown={async (e) => {
                         await handleVerifyNumber()
                     }}
-                    onBlur={handleVerifyNumber}
                     name='phone'
                 />
             </div>
@@ -104,6 +105,7 @@ const DataTabs = () => {
                     value={tab.value} 
                     className={className} 
                     onClick={() => setActiveTabIndex(index)}
+                    hidden={tab.name === 'Special'}
                 >
                 {tab.name}
                 </TabsTrigger>
