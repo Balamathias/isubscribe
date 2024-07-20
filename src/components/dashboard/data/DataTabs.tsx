@@ -72,7 +72,7 @@ const DataTabs = () => {
         }
     }
 
-    const className = `w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background peer-hover:opacity-90 data-[state=active]:text-violet-800 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`
+    const className = `w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-500/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/90 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`
 
     if (isPending) return <LoadingOverlay />
 
@@ -83,7 +83,7 @@ const DataTabs = () => {
                 <SelectNetworkDropdown />
                 <Input 
                     placeholder='Your Phone Number'
-                    className='focus-within:outline h-12 bg-white items-center focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'
+                    className='focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg'
                     value={mobileNumber}
                     defaultValue={profile?.data?.phone || ''}
                     onChange={ async (e) => {
@@ -112,7 +112,7 @@ const DataTabs = () => {
             ))}
         </TabsList>
 
-        <TabsContent key={tabs[activeTabIndex].value} value={tabs[activeTabIndex].value} className="p-4 bg-white rounded-xl flex flex-col gap-y-2.5 shadow-none">
+        <TabsContent key={tabs[activeTabIndex].value} value={tabs[activeTabIndex].value} className="p-4 bg-white dark:bg-card/80 rounded-xl flex flex-col gap-y-2.5 shadow-none">
             <h2 className='text-muted-foreground text-lg font-semibold'>{tabs[activeTabIndex].name}</h2>
             {tabs[activeTabIndex].component}
         </TabsContent>

@@ -9,8 +9,8 @@ const FTabs = () => {
       <Tabs defaultValue="wallet" className=" max-sm:w-[90vw] w-[600px] space-y-4 ">
 
         <TabsList className="grid w-full grid-cols-2 gap-4 rounded-xl shadow-none border-none p-2 h-fit bg-transparent">
-            <TabsTrigger value="wallet" className={` w-full h-9 max-md:rounded-md rounded-md data-[state=active]:bg-background data-[state=active]:text-violet-800 md:text-lg data-[state=active]:shadow-none peer bg-gray-50/80 text-sm`}>Wallet</TabsTrigger>
-            <TabsTrigger value="other" className={` w-full h-9 md:text-lg text-sm max-md:rounded-md rounded-md data-[state=active]:bg-background peer-hover:opacity-90 data-[state=active]:text-violet-800 data-[state=active]:shadow-none bg-gray-50/80`}>Others</TabsTrigger>
+            <TabsTrigger value="wallet" className={` w-full h-9 max-md:rounded-md rounded-md data-[state=active]:bg-background  data-[state=active]:text-violet-800 dark:data-[state=active]:text-violet-600/80 md:text-lg data-[state=active]:shadow-none peer bg-gray-50/80 dark:bg-card/90 text-sm`}>Wallet</TabsTrigger>
+            <TabsTrigger value="other" className={` w-full h-9 md:text-lg text-sm max-md:rounded-md rounded-md data-[state=active]:bg-background peer-hover:opacity-90  data-[state=active]:text-violet-800 dark:data-[state=active]:text-violet-600/80 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/90`}>Others</TabsTrigger>
         </TabsList>
 
         <TabsContent value="wallet">

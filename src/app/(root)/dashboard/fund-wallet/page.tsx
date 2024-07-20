@@ -15,7 +15,7 @@ const FundWalletPage = () => {
   return (
     <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
       <div className='flex flex-col space-y-4'>
-        <h1 className='text-2xl font-semibold tracking-tight'>Add money</h1>
+        <h1 className='text-2xl font-semibold tracking-tight text-muted-foreground'>Add money</h1>
         
         <Suspense fallback={<ActionBoxSkeleton />}>
             <FTabs />

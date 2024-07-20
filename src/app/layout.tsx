@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('antialised', poppins.className, 'md:' + inter.className)}>
+      <body className={cn('antialised', poppins.className,)}>
         <Providers>
           {children}
         </Providers>

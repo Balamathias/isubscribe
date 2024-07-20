@@ -18,6 +18,7 @@ import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
+import NetworkCardItem from './NetworkCardItem'
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
         
@@ -54,39 +55,34 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
         {object[currentNetwork]?.map((d, idx) => (
-            <Card
+            <NetworkCardItem 
                 key={idx}
-                className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2"
-                onClick={() => {
-                    if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
-                    if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
-
-                    setSelected({
-                        phone: mobileNumber,
-                        serviceID: VTPassServiceIds[currentNetwork],
-                        variation_code: d.planId,
-                        amount: d.unitPrice,
-                        cashback: d.unitCashback,
-                        detail: {
-                            dataAmount: d.unitPrice,
-                            dataQty: d.dataQty,
-                            duration: d.duration,
-                            network: d.network
-                        }
-                    })
-                    setOpen(true)
-                }}
-            >
-                <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
-                    <h2 className="font-semibold text-sm md:text-base text-muted-foreground text-center">{d.dataQty}</h2>
-                    <p>{d.duration}</p>
-                    <p>{formatNigerianNaira(d.unitPrice)}</p>
-                    <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
-                        <span>{formatNigerianNaira(d.unitCashback!)}</span>
-                        <span>Cashback</span>
-                    </div>
-                </div>
-            </Card>
+                dataCashBack={d.unitCashback ?? 0}
+                dataQty={d.dataQty}
+                dataDuration={d.duration}
+                dataPrice={d.unitPrice}
+                handler={
+                    () => {
+                        if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
+                        if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
+    
+                        setSelected({
+                            phone: mobileNumber,
+                            serviceID: VTPassServiceIds[currentNetwork],
+                            variation_code: d.planId,
+                            amount: d.unitPrice,
+                            cashback: d.unitCashback,
+                            detail: {
+                                dataAmount: d.unitPrice,
+                                dataQty: d.dataQty,
+                                duration: d.duration,
+                                network: d.network
+                            }
+                        })
+                        setOpen(true)
+                    }
+                }
+            />
         ))}
 
         <ConfirmDataPurchaseModal 

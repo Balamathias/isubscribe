@@ -13,7 +13,7 @@ interface DynamicSheetProps {
     trigger: React.ReactNode,
     children: React.ReactNode,
     open?: boolean,
-    className?: ClassValue,
+className?: string,
     onClose?: () => void,
     setOpen?: (open: boolean) => void,
 }

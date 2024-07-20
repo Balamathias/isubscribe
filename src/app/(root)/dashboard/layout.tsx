@@ -25,7 +25,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   if (!data?.user) return redirect('/sign-in')
 
   return (
-    <div className='bg-violet-50/90 dark:bg-background flex min-h-screen w-full overflow-hidden relative'>
+    <div className='bg-violet-50/90 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
           <div className="flex flex-col w-full relative overflow-auto custom-scrollbar ml-2 md:ml-[180px]">
               <Topbar profile={profile!} />

@@ -15,7 +15,7 @@ import {
   DrawerFooter,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import clsx, { ClassValue } from 'clsx'
+import clsx from 'clsx'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/utils'
 
@@ -25,8 +25,8 @@ interface DynamicModalProps {
     open?: boolean,
     setOpen?: React.Dispatch<React.SetStateAction<boolean>>,
     showCloseButton?: boolean,
-    dialogClassName?: ClassValue,
-    drawerClassName?: ClassValue,
+    dialogClassName?: string,
+    drawerClassName?: string,
     dialogOnly?: boolean,
     drawerOnly?: boolean,
     dismissible?: boolean,
@@ -52,7 +52,7 @@ const DynamicModal = ({
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className={cn("sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none", dialogClassName)}>
+        <DialogContent className={cn("sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", dialogClassName)}>
           <div className="flex flex-col gap-3 p-2.5">
             {children}
           </div>
@@ -66,7 +66,7 @@ const DynamicModal = ({
       <DrawerTrigger asChild>
         { trigger }
       </DrawerTrigger>
-      <DrawerContent className={clsx('flex flex-col flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none', drawerClassName)}>
+      <DrawerContent className={clsx('flex flex-col flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
         <div className="flex flex-col gap-3">
             {children}
         </div>

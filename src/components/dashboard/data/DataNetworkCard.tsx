@@ -16,6 +16,8 @@ import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { product } from '@/utils/constants/product';
 import { useGetProfile } from '@/lib/react-query/funcs/user';
+import NetworkCardItem from './NetworkCardItem';
+import ConfirmProductInfo from './confirm-product-info';
 
 const object = {
     'mtn': mtn_data,
@@ -41,27 +43,20 @@ const DataNetworkCard = () => {
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
         {object[currentNetwork]?.map((d, idx) => (
-            <Card
-                key={idx}
-                className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2"
-                onClick={() => {
+            <NetworkCardItem 
+                key={idx} 
+                handler={() => {
                     if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
                     if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
                     setSelected(d)
                     setOpen(true)
                 }}
-            >
-                <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
-                    <p className="font-semibold text-base">{d?.Data}</p>
-                    <p>{d?.Duration}</p>
-                    <p>{formatNigerianNaira(parseWithInterestPrice(d?.Price!))}</p>
-                    <div className="flex flex-row items-center gap-1 text-violet-600 text-[9px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
-                        <span>{d?.CashBack.slice(0, 2)}</span>
-                        <span>Cashback</span>
-                    </div>
-                </div>
-            </Card>
+                dataCashBack={priceToInteger(d.CashBack)}
+                dataQty={d.Data}
+                dataDuration={d.Duration}
+                dataPrice={priceToInteger(d.Price)}
+            />
         ))}
 
         {
@@ -72,49 +67,16 @@ const DataNetworkCard = () => {
                 dialogClassName="sm:max-w-[640px]"
             >
                 <div className="flex flex-col gap-y-2.5 w-full">
-                    <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">Data Plan Details</h1>
                     
-                    <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Product</p>
-                            <p className='flex items-center flex-row gap-x-1'>{product[currentNetwork].name} | 
-
-                                <Image
-                                    src={product[currentNetwork].image}
-                                    width={20}
-                                    height={20}
-                                    quality={100}
-                                    alt={currentNetwork}
-                                    className='h-7 w-7 rounded-full object-cover' 
-                                />
-                            </p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Phone Number</p>
-                            <p>{mobileNumber}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Price</p>
-                            <p>{formatNigerianNaira(parseWithInterestPrice(selected?.Price!))}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Amount</p>
-                            <p>{selected?.Data}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Duration</p>
-                            <p>{selected?.Duration}</p>
-                        </div>
-
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                            <p className='font-semibold text-muted-foreground'>Cashback</p>
-                            <p className='px-2 py-1 rounded-full bg-violet-200 text-violet-800'>+{selected?.CashBack}</p>
-                        </div>
-                    </div>
+                    <ConfirmProductInfo 
+                        cashBack={priceToInteger(selected?.CashBack || '0.00')}
+                        currentNetwork={currentNetwork}
+                        dataDuration={selected?.Duration || ''}
+                        dataQty={selected?.Data || ''}
+                        image={product[currentNetwork].image}
+                        mobileNumber={mobileNumber}
+                        price={priceToInteger(selected?.Price || '0.00')}
+                    />
 
                     <div className='flex flex-col w-full gap-y-2.5'>
                         <ActivePaymentMethodButton 
@@ -150,7 +112,8 @@ const DataNetworkCard = () => {
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
-                dialogClassName={'sm:max-w-fit'}
+                dialogClassName={'sm:max-w-fit dark:bg-card'}
+                drawerClassName="dark:bg-card"
             >
                 <ConfirmPin 
                     className='rounded-none' 

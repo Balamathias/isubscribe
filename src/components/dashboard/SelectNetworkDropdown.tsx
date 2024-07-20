@@ -50,8 +50,8 @@ export default function SelectNetworkDropdown({}) {
     const { currentNetwork, setCurrentNetwork } = useNetwork()
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="flex flex-row items-start w-fit gap-y-1 cursor-pointer">
-        <div className="flex flex-row dark:bg-background cursor-pointer hover:opacity-80 items-center">
+      <DropdownMenuTrigger asChild className="flex flex-row items-start w-fit gap-y-1 cursor-pointer dark:bg-transparent">
+        <div className="flex flex-row dark:bg-transparent cursor-pointer hover:opacity-80 items-center">
             <Image 
                 src={networkImages[currentNetwork]} 
                 width={50} 

@@ -27,7 +27,7 @@ const TransactionHistoryItem = ({ transaction, type }: {
 
 const Wallet = ({id,...transaction}: Tables<'history'> & { amount_: string | number }) => {
     return (
-        <Link href={'/dashboard/history/' + id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
+        <Link href={'/dashboard/history/' + id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 dark:hover:bg-secondary/90 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
         <div className='flex items-center flex-row space-x-3'>
             <div className='flex items-center justify-center p-3 bg-violet-200 text-violet-950 rounded-full h-12 w-12'>
                 <ArrowUp strokeWidth={2} className='text-primary' size={18} />
@@ -55,7 +55,7 @@ const Wallet = ({id,...transaction}: Tables<'history'> & { amount_: string | num
 
 const DataAirtime = ({id, action="data",...transaction}: Tables<'history'> & { amount_: string, action?: 'data' | 'airtime' }) => {
     return (
-        <Link href={'/dashboard/history/' + id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
+        <Link href={'/dashboard/history/' + id} className='flex flex-row gap-x-2 items-center shadow-none border-none rounded-none last:border-none border-muted p-2 py-3 first:border-none hover:bg-violet-100 dark:hover:bg-secondary/90 hover:transition-all hover:duration-300 w-full cursor-pointer justify-between border-b border'>
         <div className='flex items-center flex-row space-x-3'>
             <div className={cn('flex items-center justify-center p-3 bg-red-200 text-violet-950 rounded-full h-12 w-12', {
                 'bg-green-200': action === 'data',

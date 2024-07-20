@@ -18,7 +18,7 @@ const LinkItem = ({ link }: { link: {href: string, icon: LucideIcon, tooltip: st
 
   return (
     <Link className='flex gap-3 flex-col space-y-1 py-1.5 cursor-pointer transition-all' href={link.href}>
-        <div className={clsx('flex items-center gap-1.5 justify-between dark:hover:bg-gray-900 hover:bg-violet-100 hover:text-violet-950 p-2.5 rounded-lg', {'bg-violet-800 text-violet-50': isActive})}>
+        <div className={clsx('flex items-center gap-1.5 justify-between dark:hover:bg-gray-900/90 hover:bg-violet-100 hover:text-violet-950 dark:hover:text-muted-foreground p-2.5 rounded-lg', {'bg-violet-800 text-violet-50': isActive})}>
             <div className='flex items-center gap-1.5' role='link'>
                 <link.icon size={18} className='' />
                 <span className='truncate'>{link.tooltip}</span>
