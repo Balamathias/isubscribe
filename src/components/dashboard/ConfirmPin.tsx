@@ -10,12 +10,11 @@ import { Card } from '../ui/card';
 import { cn } from '@/lib/utils';
 import { LucideDelete, LucideX } from 'lucide-react';
 import Link from 'next/link';
-import { useGetProfile } from '@/lib/react-query/funcs/user';
+import { Tables } from '@/types/database';
 
-const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?: () => void }) => {
+const ConfirmPin = ({ className, func: closeModal, profile }: { className?: string, func?: () => void, profile: Tables<'profile'> }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
-    const { data: profile, isPending: _isPending } = useGetProfile()
 
     const { setPinPasses } = useNetwork()
     const [isPending, setIsPending] = useState(false)
@@ -31,24 +30,30 @@ const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?
     
     const handleCheckPin = async () => {
       
-      setIsPending(true)
+        try {
+          setIsPending(true)
       
-        const pinPasses = await unhashPin(pin, profile?.data?.pin!)
+          const pinPasses = await unhashPin(pin, profile?.pin!)
 
-        setPinPasses?.(pinPasses)
-        
-        setIsPending(false)
-        if (pinPasses) {
+          setPinPasses?.(pinPasses)
+          
+          if (pinPasses) {
             setError('')
             setPin('')
-            toast.success('Pin Verified Successfully')
-            closeModal?.()
-        }
-        else {
-            setError('Invalid pin, Please Try Again.')
-            toast.error('Invalid pin, please try again.')
-            setPin('')
-        }
+              toast.success('Pin Verified Successfully')
+              closeModal?.()
+            }
+            else {
+              setError('Invalid pin, Please Try Again.')
+              toast.error('Invalid pin, please try again.')
+              setPin('')
+            }
+            setIsPending(false)
+        } catch (error: any) {
+          setIsPending(false)
+          setError(error?.message)
+          console.log(error)
+        } finally { setIsPending(false) }
     };
     
     const handleButtonClick = async (value: string) => {

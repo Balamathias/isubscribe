@@ -15,6 +15,7 @@ import ConfirmPin from '../ConfirmPin';
 import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { product } from '@/utils/constants/product';
+import { useGetProfile } from '@/lib/react-query/funcs/user';
 
 const object = {
     'mtn': mtn_data,
@@ -29,12 +30,13 @@ const DataNetworkCard = () => {
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubDataProps | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
+    const { data: profile, isPending: profilePending } = useGetProfile()
 
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending) return <LoadingOverlay />
+    if (isPending || profilePending) return <LoadingOverlay />
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
@@ -150,11 +152,15 @@ const DataNetworkCard = () => {
                 dismissible
                 dialogClassName={'sm:max-w-fit'}
             >
-                <ConfirmPin className='rounded-none' func={() => {
-                    handleSubData?.({...selected!, method: paymentMethod})
-                    setOpen(false)
-                    setProceed(false)
-                }} />
+                <ConfirmPin 
+                    className='rounded-none' 
+                    func={() => {
+                        handleSubData?.({...selected!, method: paymentMethod})
+                        setOpen(false)
+                        setProceed(false)
+                    }} 
+                    profile={profile?.data!}
+                />
             </DynamicModal>
         }
     </div>

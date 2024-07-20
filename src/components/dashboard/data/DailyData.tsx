@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import ConfirmDataPurchaseModal from './ConfirmDataPurchaseModal'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
 
 const object = {
   'mtn': mtnData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'mtn')})),
@@ -31,12 +32,13 @@ const DailyData = () => {
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
+    const { data: profile, isPending: profilePending } = useGetProfile()
 
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending) return <LoadingOverlay />
+    if (isPending || profilePending) return <LoadingOverlay />
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
@@ -87,12 +89,14 @@ const DailyData = () => {
             dismissible
             dialogClassName={'sm:max-w-fit'}
         >
-            <ConfirmPin className='rounded-none' 
+            <ConfirmPin 
+                className='rounded-none' 
                 func={() => {
                     // handleSubData?.({...selected!, method: paymentMethod})
                     setOpen(false)
                     setProceed(false)
                 }} 
+                profile={profile?.data!}
             />
         </DynamicModal>
     </div>

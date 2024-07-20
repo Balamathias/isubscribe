@@ -17,6 +17,7 @@ import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
 import { Button } from '@/components/ui/button'
 import ConfirmPin from '../ConfirmPin'
 import ConfirmPurchaseModal from './ConfirmPurchaseModal'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
 
 const object = {
     'mtn': mtn_airtime,
@@ -30,12 +31,13 @@ const AirtimeCards = () => {
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubAirtimeProps | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
+    const { data: profile, isPending: profilePending } = useGetProfile()
 
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending) return <LoadingOverlay />
+    if (isPending || profilePending) return <LoadingOverlay />
   return (
     <div className='rounded-xl bg-white dark:bg-background md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>
         {object[currentNetwork]?.map((d, idx) => (
@@ -81,11 +83,15 @@ const AirtimeCards = () => {
                 dismissible
                 dialogClassName={'sm:max-w-fit'}
             >
-                <ConfirmPin className='rounded-none' func={() => {
-                    handleSubAirtime?.({...selected!, method: paymentMethod})
-                    setOpen(false)
-                    setProceed(false)
-                }} />
+                <ConfirmPin 
+                    className='rounded-none' 
+                    func={() => {
+                        handleSubAirtime?.({...selected!, method: paymentMethod})
+                        setOpen(false)
+                        setProceed(false)
+                    }} 
+                    profile={profile?.data!}
+                />
             </DynamicModal>
         }
     </div>
