@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import TransactionHistoryComponent from './TransactionHistoryComponent'
+import PlaceHolder from '@/components/place-holder-component'
 
 const HistoryTabs = () => {
   return (
@@ -17,7 +18,7 @@ const HistoryTabs = () => {
         </TabsContent>
 
         <TabsContent value="statistics">
-            {/* <Statistics data={"Statistics"} /> */}
+            <PlaceHolder />
         </TabsContent>
 
       </Tabs>

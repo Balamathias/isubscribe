@@ -1,3 +1,5 @@
+'use client'
+
 import { unhashPin } from '@/funcs/bcrypt';
 import { getUser } from '@/lib/supabase/accounts';
 import { useNetwork } from '@/providers/data/sub-data-provider';
@@ -8,10 +10,12 @@ import { Card } from '../ui/card';
 import { cn } from '@/lib/utils';
 import { LucideDelete, LucideX } from 'lucide-react';
 import Link from 'next/link';
+import { useGetProfile } from '@/lib/react-query/funcs/user';
 
 const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?: () => void }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
+    const { data: profile, isPending: _isPending } = useGetProfile()
 
     const { setPinPasses } = useNetwork()
     const [isPending, setIsPending] = useState(false)
@@ -26,15 +30,14 @@ const ConfirmPin = ({ className, func: closeModal }: { className?: string, func?
     };
     
     const handleCheckPin = async () => {
-        setIsPending(true)
-
-        const { data: user } = await getUser()
-
-        const pinPasses = await unhashPin(pin, user?.pin!)
+      
+      setIsPending(true)
+      
+        const pinPasses = await unhashPin(pin, profile?.data?.pin!)
 
         setPinPasses?.(pinPasses)
+        
         setIsPending(false)
-
         if (pinPasses) {
             setError('')
             setPin('')

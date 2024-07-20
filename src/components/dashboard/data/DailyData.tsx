@@ -14,6 +14,8 @@ import { VTPassServiceIds } from '@/utils/networks'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
 import ConfirmDataPurchaseModal from './ConfirmDataPurchaseModal'
+import DynamicModal from '@/components/DynamicModal'
+import ConfirmPin from '../ConfirmPin'
 
 const object = {
   'mtn': mtnData.daily.map(plan => ({...plan, detail: parseDataName(plan.name, 'mtn')})),
@@ -23,6 +25,8 @@ const object = {
 }
 
 const DailyData = () => {
+
+
   const { currentNetwork, mobileNumber } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
@@ -67,17 +71,30 @@ const DailyData = () => {
             </Card>
         ))}
 
-        {
-            open && <ConfirmDataPurchaseModal 
-                open={open}
-                paymentMethod={paymentMethod}
-                selected={selected!}
-                setOpen={setOpen}
-                setPaymentMethod={setPaymentMethod}
-                setProceed={setProceed}
-                title='Data Purchase Details (Confirm Details)'
+        <ConfirmDataPurchaseModal 
+            open={open}
+            paymentMethod={paymentMethod}
+            selected={selected!}
+            setOpen={setOpen}
+            setPaymentMethod={setPaymentMethod}
+            setProceed={setProceed}
+            title='Data Purchase Details (Confirm Details)'
+        />
+
+        <DynamicModal
+            open={proceed}
+            setOpen={setProceed}
+            dismissible
+            dialogClassName={'sm:max-w-fit'}
+        >
+            <ConfirmPin className='rounded-none' 
+                func={() => {
+                    // handleSubData?.({...selected!, method: paymentMethod})
+                    setOpen(false)
+                    setProceed(false)
+                }} 
             />
-        }
+        </DynamicModal>
     </div>
   )
 }

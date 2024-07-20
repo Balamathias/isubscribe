@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import DynamicModal from '../../DynamicModal'
 import Image from 'next/image'

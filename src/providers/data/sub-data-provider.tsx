@@ -113,6 +113,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             return
         }
 
+        setPurchasing(false)
+
         if (data?.status === 'success') {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
@@ -120,13 +122,14 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             if (_balanceError) {
                 await updateWalletBalanceByUser(profile?.id!, 
                     (balance - deductableAmount))
+                    setPurchasing(false)
                 return
             }
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
 
-            if (_balanceError || _cashbackBalanceError) return
+            if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
 
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber}`,
