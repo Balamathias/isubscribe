@@ -25,7 +25,7 @@ const VtPassTest = () => {
     };
 
     const res = await buyData(payload)
-    console.log(res)
+    console.log("ressssssssss",res)
   
     // setLoading(true);
     // try {

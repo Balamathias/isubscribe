@@ -22,7 +22,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
     getCurrentUser()
   ])
 
-  if (!data?.user) return redirect('/sign-in')
+  // if (!data?.user) return redirect('/sign-in')
 
   return (
     <div className='bg-violet-50/90 dark:bg-background flex min-h-screen w-full overflow-hidden relative'>

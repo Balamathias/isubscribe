@@ -1,7 +1,7 @@
 'use server'
 
 import axios from 'axios'
-import { VTPassBalanceResponse, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY, VTPassTransactionResponse, VTPassVariationServiceResponse, VTPassTransactionRequest, VTPassServiceName, VTPASS_API_KEY  } from '.'
+import { VTPassBalanceResponse, VTPassTransactionResponse, VTPassVariationServiceResponse, VTPassTransactionRequest, VTPassServiceName, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY, VTPASS_API_KEY,   } from '.'
 
 class VTPassError extends Error {
     constructor(message: string, public code: number) {
@@ -48,6 +48,23 @@ export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTra
     }
     const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
     console.log(res.statusText)
+    if (res.status !== 200) {
+        throw new Error('Failed to buy data')
+    }
+    return res.data
+}
+
+
+
+export const buyTvCable = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
+    const headers = {
+        'api-key': VTPASS_API_KEY!,
+        'secret-key': VTPASS_SECRET_KEY!,
+        'Content-Type': 'application/json'
+    }
+    const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
+    console.log(res.statusText)
+    console.log("RESSSSS", res)
     if (res.status !== 200) {
         throw new Error('Failed to buy data')
     }
