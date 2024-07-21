@@ -4,6 +4,7 @@ import Announcements from '@/components/dashboard/Announcements'
 import QuickActions from '@/components/dashboard/QuickActions'
 import WelcomeBonusModal from '@/components/dashboard/WelcomeBonus'
 import WelcomeModal from '@/components/dashboard/WelcomeModal'
+import RecentTransactions from '@/components/dashboard/recent-transactions'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import { getUser } from '@/lib/supabase/accounts'
 import { getWallet } from '@/lib/supabase/wallets'
@@ -19,6 +20,10 @@ const DashboardPage = async ({searchParams}: { searchParams: {[key: string]: str
       <ActionBox />
       <QuickActions />
       <Announcements />
+
+      <Suspense fallback={<ActionBoxSkeleton />}>
+        <RecentTransactions />
+      </Suspense>
 
       <Suspense fallback={<ActionBoxSkeleton />}>
         <WelcomeBonusModal profile={profile!} wallet={wallet!} />
