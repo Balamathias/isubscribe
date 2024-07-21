@@ -44,7 +44,7 @@ const RecentTransactions = async () => {
                                 <div className="flex flex-col space-y-1">
                                     <h2 className='text-sm md:text-base tracking-tighter'>{item.title}</h2>
                                     <span className={cn("text-xs text-gray-500 dark:text-gray-400", {
-                                        'line-through text-red-500 dark:text-red-4': item.status === 'failed',
+                                        'text-red-500 dark:text-red-4': item.status === 'failed',
                                         'dark:text-green-400 text--green-500': item.status === 'success'
                                     })}>{item.description}</span>
                                 </div>
