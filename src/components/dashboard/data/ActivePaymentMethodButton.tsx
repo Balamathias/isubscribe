@@ -15,7 +15,7 @@ interface ActivePaymentMethodButtonProps {
 
 const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', balance='0.00', disabled }: ActivePaymentMethodButtonProps) => {
   return (
-        <button className={cn('flex items-center justify-between py-3 px-2.5 rounded-lg focus:outline-none focus:border-none border-none bg-violet-100 dark:bg-secondary', {
+        <button className={cn('flex items-center justify-between py-3 px-2.5 rounded-lg focus:outline-none focus:border-none border-none bg-violet-100 dark:bg-secondary relative', {
             'bg-green-200 text-green-900 dark:bg-green-300/[0.8] dark:text-green-700': active,
             'opacity-80 bg-red-50 text-red-800 dark:bg-red-300/[0.8] dark:text-red-700': disabled
         })}
@@ -40,6 +40,7 @@ const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', bal
                     {disabled && <p className='md:text-xs text-muted-foreground dark:text-white text-[8px]'>Insufficient Funds, Please fund Your wallet.</p>}
                 </div>
             </div>
+            <span className='absolute bg-white inset-0 mix-blend-overlay opacity-30 pointer-events-none' />
 
             {!active ? <ArrowRightCircle className='text-violet-500 dark:text-violet-800' size={20} /> : <CheckCircle2 className='text-green-600 dark:text-green-700' size={20} />}
         </button>

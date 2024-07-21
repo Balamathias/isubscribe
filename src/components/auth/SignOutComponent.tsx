@@ -33,6 +33,7 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
             trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-lg text-xs md:text-sm' variant={'destructive'}>
               <span>Log out</span>
               <LucideArrowRight size={18} />
+              <span className='absolute bg-white inset-0 mix-blend-overlay opacity-30 pointer-events-none' />
             </Button>
         }
         open={open}

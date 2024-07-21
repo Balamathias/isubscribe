@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 import { ThemeProvider } from './theme-provider'
 import QueryProvider from './query-provider'
 import AppStateProvider from './app-state-provider'
-import { Toaster } from 'sonner'
+import { Toaster } from '@/components/ui/sonner'
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (

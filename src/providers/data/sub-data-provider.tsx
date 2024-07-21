@@ -19,6 +19,7 @@ import { buyData as buyVTPassData } from "@/lib/vtpass/services"
 import generateRequestId from "@/funcs/generateRequestId"
 import SubPurchaseStatus from "@/components/dashboard/sub-purchase-status"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
+import { formatNigerianNaira } from "@/funcs/formatCurrency"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -169,6 +170,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
 
             router.refresh()
+            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
 
             setPurchaseSuccess(true)
             /** 
@@ -285,6 +287,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             })
 
             router.refresh()
+            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
 
             setPurchaseSuccess(true)
             /** 
@@ -363,6 +366,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setSuccessMessage(res?.response_description ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
 
             router.refresh()
+            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
 
             setPurchaseSuccess(true)
             setPurchasing(false)
