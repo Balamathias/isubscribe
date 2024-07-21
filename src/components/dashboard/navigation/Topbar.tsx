@@ -50,12 +50,19 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
           className={'w-[300px] md:w-[320px] h-screen'}
         >
           <div className='flex flex-col gap-y-2 h-full justify-between md:p-3 md:py-1 py-1 p-1.5'>
-            <h2 className='pb-2 tracking-tighter font-semibold text-muted-foreground text-lg underline md:text-xl'>Quick Actions</h2>
-            <div className="flex flex-col space-y-3">
-              <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
-                <LucideUser2 size={24} strokeWidth={1.5} className='' />
-                <Link href={'#'}>Profile</Link>
+            <Link passHref href={'#profile'} 
+              className='cursor-pointer hover:opacity-80 flex items-center gap-x-1 pb-4 py-2'>
+              <Avatar title={data?.full_name ?? ''}>
+                <AvatarImage src={data?.avatar!}/>
+                <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
+              </Avatar>
+              <div className='flex flex-col space-y-1'>
+                <p className='text-muted-foreground text-sm'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></p>
+                <p className='text-muted-foreground text-xs'>What do you wish to do today?</p>
               </div>
+            </Link>
+
+            <div className="flex flex-col space-y-3 mt-8">
 
               <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
                 <LucideSettings2 size={24} strokeWidth={1.5} className='' />
