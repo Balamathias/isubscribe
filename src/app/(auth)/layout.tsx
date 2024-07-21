@@ -8,11 +8,11 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   const { data: { user } } = await getCurrentUser()
   if (user) return redirect('/dashboard')
   return (
-    <main className="flex md:justify-between justify-between flex-col-reverse md:flex-row gap-4 bg-violet-50/80 dark:bg-baxkground">
+    <main className="flex md:justify-between justify-between flex-col-reverse md:flex-row bg-violet-50/80 dark:bg-baxkground">
         <div className="flex-1 md:px-4 py-6 md:bg-white dark:bg-background">
           {children}
         </div>
-        <div className="flex-1 md:flex hidden">
+        <div className="flex-1 md:flex hidden dark:bg-secondary">
           <AuthTestimonial />
           {/* <Image
             src='/auth/auth.svg'

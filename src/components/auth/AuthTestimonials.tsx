@@ -10,44 +10,44 @@ const testimonials = [
   {
     content:
       "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "John Doe",
-    image: "/images/welcome-1.jpeg",
+    name: "Musah Abram",
+    image: "/users/user-1.png",
   },
   {
     content:
       "Amazing experience using this app. I can't think of a more amazing platform for I can't think of a more amazing platform for paying my bills with so much ease. paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "James Smith",
-    image: "/images/welcome-2.png",
+    name: "Chioma Nwosu",
+    image: "/users/user-2.png",
+  },
+  {
+    content:
+      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
+    name: "Lily John",
+    image: "/users/user-3.png",
+  },
+  {
+    content:
+      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
+    name: "Lily John",
+    image: "/users/user-3.png",
+  },
+  {
+    content:
+      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
+    name: "Chioma Nwosu",
+    image: "/users/user-2.png",
   },
   {
     content:
       "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
     name: "Musa Abram",
-    image: "/images/welcome-3.png",
+    image: "/users/user-1.png",
   },
   {
     content:
       "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "Musa Abram",
-    image: "/images/welcome-3.png",
-  },
-  {
-    content:
-      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "Musa Abram",
-    image: "/images/welcome-3.png",
-  },
-  {
-    content:
-      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "Musa Abram",
-    image: "/images/welcome-3.png",
-  },
-  {
-    content:
-      "Amazing experience using this app. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease. I can't think of a more amazing platform for paying my bills with so much ease.",
-    name: "Musa Abram",
-    image: "/images/welcome-3.png",
+    name: "Lily John",
+    image: "/users/user-3.png",
   },
 ];
 
@@ -72,7 +72,7 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
       <div className="max-md:flex max-md:gap-5 max-md:flex-col-reverse self-center items-center gap-4 w-full">
         {/*  Testimonial Content */}
         <div className={`flex flex-col justify-center w-full gap-4 items-center ${sheetOpen ? " p-1" : "p-10"}`}>
-          <div className="overflow-auto relative self-center w-full shadow-inner p-6 min-h-[300px] border-dashed border-[3px] rounded-tl-[3rem] rounded-br-[3rem]">
+          <div className="overflow-auto relative self-center w-full shadow-inner p-6 min-h-[300px] border-dashed dark:border-muted border-[3px] rounded-tl-[3rem] rounded-br-[3rem]">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
@@ -82,7 +82,6 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
               >
                 <AuthSeparator separatorText="Testimonials" seperatorWrapperClassName="" />
                    
-
                 <p className="text-lg mb-4">{testimonial.content}</p>
                 <div className="flex items-center">
                   <Image
