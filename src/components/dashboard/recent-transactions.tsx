@@ -19,7 +19,6 @@ const RecentTransactions = async () => {
 
     const { data } = await supabase.from('history')
         .select('*')
-        .neq('type', EVENT_TYPE.wallet_fund)
         .eq('user', user?.user?.id!)
         .order('created_at', { ascending: false })
         .limit(3)
