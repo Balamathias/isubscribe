@@ -22,7 +22,7 @@ const TransactionHistoryComponent = async () => {
     }
 
   return (
-    <Card className='py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col w-full space-y-2'>
+    <Card className='dark:bg-card/80 py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col w-full space-y-2'>
         {
             history?.map((transaction, index) => (
                 <TransactionHistoryItem key={index} transaction={transaction} type={transaction.type as keyof typeof EVENT_TYPE} />

@@ -7,6 +7,7 @@ import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import usePrint from '@/hooks/usePrint'
 import useScreenshot from '@/hooks/useScreenshot'
 import { ResponseData } from '@/lib/n3tdata/types'
+import { AirtimeDataMetadata } from '@/types/airtime-data'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
@@ -25,7 +26,7 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
   const type = history.type as keyof typeof EVENT_TYPE
 
   const eventData = JSON.parse(history?.meta_data?.toString()! ?? '{}') as TransactionEvent['eventData']
-  const dataMetadata = JSON.parse(history?.meta_data?.toString()! ?? '{}') as ResponseData
+  const dataMetadata = JSON.parse(history?.meta_data?.toString()! ?? '{}') as AirtimeDataMetadata
 
   return (
     <div className='flex flex-col space-y-4 rounded-lg pb-4' ref={ action === 'download' ? ref : printRef }>
@@ -34,7 +35,7 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
       {type === 'data_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
       {type === 'wallet_fund' && <WalletHistory eventData={eventData} history={history} />}
 
-      <Card className='rounded-xl shadow-none py-6 px-2 md:px-5 border-none drop-shadow-none flex items-center justify-between flex-row'>
+      <Card className='rounded-xl shadow-none py-6 px-2 md:px-5 border-none drop-shadow-none flex items-center justify-between flex-row dark:bg-card/80'>
         <Button
             variant={'destructive'}
             className='text-xs md:text-sm rounded-full'
@@ -63,14 +64,14 @@ const WalletHistory = ({ history, eventData }: { history: Tables<'history'>} & {
     return (
         <div className='flex flex-col space-y-8 w-full'>
 
-            <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
+            <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
                 {history?.status === 'PAID' && <LucideCheckCircle2 className='text-green-600' size={40} />}
                 <h2 className='text-lg font-semibold'>{formatNigerianNaira(eventData.amountPaid as number)}</h2>
                 <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                 <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
             </Card>
 
-            <Card className='shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>
+            <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>
                 <h2 className='text-base font-semibold tracking-tighter'>Transaction Details</h2>
 
                 <div className='flex items-start justify-between'>
@@ -102,18 +103,18 @@ const WalletHistory = ({ history, eventData }: { history: Tables<'history'>} & {
 }
 
 
-const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & { dataMetadata: ResponseData }) => {
+const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & { dataMetadata: AirtimeDataMetadata }) => {
     return (
         <div className='flex flex-col space-y-8 w-full'>
 
-            <Card className='shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
+            <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
                 {history?.status === 'success' ? <LucideCheckCircle2 className='text-green-600' size={40} /> :<LucideXCircle className='text-red-600' size={40} /> }
                 <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                 <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                 <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
             </Card>
 
-            <Card className='shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>
+            <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>
                 <h2 className='text-base font-semibold tracking-tighter'>Transaction Details</h2>
 
                 <div className='flex items-start justify-between'>
@@ -121,14 +122,14 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                     <div className='flex flex-row space-x-1 items-center basis-1/3'>
                         <p>{dataMetadata?.network}</p>
                         <span>|</span>
-                        <p>{dataMetadata?.dataplan ?? formatNigerianNaira(history?.amount ?? 0)}</p>
+                        <p>{formatNigerianNaira(history?.amount ?? 0)}</p>
                     </div>
                 </div>
 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Phone Number</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{dataMetadata?.phone_number}</p>
+                        <p>{dataMetadata?.phone}</p>
                     </div>
                 </div>
 
@@ -142,7 +143,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Transaction ID</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{dataMetadata?.transid}</p>
+                        <p>{dataMetadata?.transId}</p>
                     </div>
                 </div>
 
@@ -150,7 +151,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                     <p className='text-muted-foreground basis-2/3'>Status</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
                         {
-                            dataMetadata?.status === 'success' ? <p className='py-1 px-2 rounded-full bg-green-200 text-green-700 w-fit'>successful</p> : (
+                            history?.status === 'success' ? <p className='py-1 px-2 rounded-full bg-green-200 text-green-700 w-fit'>successful</p> : (
                                 <p className='py-1 px-2 rounded-full bg-red-200 text-red-700 w-fit'>failed</p>
                             )
                         }
@@ -160,7 +161,7 @@ const DataHistory = ({ history, dataMetadata }: { history: Tables<'history'>} & 
                 <div className='flex items-start justify-between'>
                     <p className='text-muted-foreground basis-2/3'>Plan Type</p>
                     <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                        <p>{dataMetadata?.plan_type}</p>
+                        <p>{dataMetadata?.planType}</p>
                     </div>
                 </div>
             </Card>

@@ -18,6 +18,7 @@ import { computeTransaction } from "@/funcs/computeTransaction"
 import { buyData as buyVTPassData } from "@/lib/vtpass/services"
 import generateRequestId from "@/funcs/generateRequestId"
 import SubPurchaseStatus from "@/components/dashboard/sub-purchase-status"
+import { AirtimeDataMetadata } from "@/types/airtime-data"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -97,13 +98,27 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         if (error || (data?.status === 'fail')) {
             setPurchaseFailed(true)
+
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: dataAmount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type!,
+                phone: mobileNumber,
+                status: 'failed'
+            }
+
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber} failed.`,
                 status: 'failed',
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
                 email: null,
-                meta_data: JSON.stringify(data),
+                meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price,
@@ -121,17 +136,24 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
-            if (_balanceError) {
-                await updateWalletBalanceByUser(profile?.id!, 
-                    (balance - deductableAmount))
-                    setPurchasing(false)
-                return
-            }
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
 
             if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
+
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: dataAmount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type,
+                phone: mobileNumber,
+                status: 'success'
+            }
 
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber}`,
@@ -139,7 +161,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
                 email: null,
-                meta_data: JSON.stringify(data),
+                meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price
@@ -192,13 +214,26 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         if (error || data?.status === 'fail') {
             setPurchaseFailed(true)
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: dataAmount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type!,
+                phone: mobileNumber,
+                status: 'failed'
+            }
+
             const { data: insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription for ${mobileNumber} failed.`,
                 status: 'failed',
                 title: 'Airtime Subscription',
                 type: EVENT_TYPE.airtime_topup,
                 email: null,
-                meta_data: JSON.stringify(data),
+                meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price,
@@ -224,13 +259,26 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
             if (_balanceError || _cashbackBalanceError) return
 
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: dataAmount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type!,
+                phone: mobileNumber,
+                status: 'success'
+            }
+
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription for ${mobileNumber}`,
                 status: 'success',
                 title: 'Airtime Subscription',
                 type: EVENT_TYPE.airtime_topup,
                 email: null,
-                meta_data: JSON.stringify(data),
+                meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price
@@ -282,17 +330,24 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
-            if (_balanceError) {
-                await updateWalletBalanceByUser(profile?.id!, 
-                    (balance - deductableAmount))
-                    setPurchasing(false)
-                return
-            }
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
 
             if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
+
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: dataAmount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: res?.requestId ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: res?.response_description,
+                planType: null,
+                phone: mobileNumber,
+                status: 'success'
+            }
 
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber}`,
@@ -300,10 +355,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
                 email: null,
-                meta_data: JSON.stringify({...res,
-                    transactionId: generateRequestId(),
-                    time: new Date().toISOString(),
-                }),
+                meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price

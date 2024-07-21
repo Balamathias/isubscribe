@@ -79,7 +79,7 @@ const ConfirmPurchaseModal = ({
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
+                disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00') && (wallet?.data?.cashback_balance! ) <  priceToInteger(selected?.Price || '0.00')}
                 onClick={() => {
                     setProceed(true)
                 }}

@@ -99,7 +99,8 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
             open={proceed}
             setOpen={setProceed}
             dismissible
-            dialogClassName={'sm:max-w-fit'}
+            dialogClassName={'sm:max-w-fit dark:bg-card'}
+            drawerClassName='dark:bg-card'
         >
             <ConfirmPin 
                 className='rounded-none' 

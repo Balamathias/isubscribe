@@ -65,7 +65,7 @@ const ConfirmProductInfo = ({
 
             <div className='flex flex-row justify-between items-center gap-x-2'>
                 <p className='font-semibold text-muted-foreground'>Cashback</p>
-                <p className='px-2 py-1 rounded-full bg-violet-200 dark:bg-violet-800 dark:text-violet-200 text-violet-800'>+{cashBack}</p>
+                <p className='px-2 py-1 rounded-full bg-violet-200 dark:bg-violet-800 dark:text-violet-200 text-violet-800'>+{formatNigerianNaira(cashBack)}</p>
             </div>
         </div>
     </div>
