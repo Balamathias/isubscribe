@@ -10,62 +10,40 @@ import { LucideCheck, LucideX } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import HistoryItem from './history-item'
+import Empty from '../Empty'
 
 const RecentTransactions = async () => {
     const supabase = createClient()
+    const { data: user } = await supabase.auth.getUser()
+
     const { data } = await supabase.from('history')
         .select('*')
         .neq('type', EVENT_TYPE.wallet_fund)
+        .eq('user', user?.user?.id!)
         .order('created_at', { ascending: false })
         .limit(3)
 
   return (
     <>
         <div className=' flex flex-col gap-2'>
-            <h1 className=' text-lg text-gray-950 dark:text-violet-100 font-semibold'>Recent Transactions</h1>
+            <div className='flex flex-row items-center justify-between'>
+                <h1 className=' md:text-lg text-base text-gray-950 dark:text-violet-100 font-semibold peer'>Recent Transactions</h1>
+                <Link href={'/dashboard/history'} className='md:text-base text-sm text-amber-500 dark:text-amber-400 hover:underline hover:transition-all hover:duration-500 peer-hover:opacity-65'>
+                    See All
+                </Link>
+            </div>
             <div className=' self-center w-full flex flex-col gap-y-3'>
                 {
-                    data?.map(item => (
-                        <Link href={'/dashboard/history/' + item.id} key={item?.id} className='flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300'>
-                            <div className='flex flex-row gap-x-2.5'>
-                                <div className='md:w-10 md:h-10 w-8 h-8'>
-                                    <Image 
-                                        src={
-                                            product[(JSON.parse(
-                                                item.meta_data?.toString() ?? '{}'
-                                            ) as AirtimeDataMetadata)?.network as Networks].image
-                                        }
-                                        alt={item?.title!}
-                                        width={500}
-                                        height={500}
-                                        className='w-full h-full object-cover rounded-full'
-                                    />
-                                </div>
-                                <div className="flex flex-col space-y-1">
-                                    <h2 className='text-sm md:text-base tracking-tighter'>{item.title}</h2>
-                                    <span className={cn("text-xs text-gray-500 dark:text-gray-400", {
-                                        'text-red-500 dark:text-red-4': item.status === 'failed',
-                                        'dark:text-green-400 text--green-500': item.status === 'success'
-                                    })}>{item.description}</span>
-                                </div>
-                            </div>
-                            <div className='flex flex-col space-y-1 justify-end items-end'>
-                                {
-                                    item.status === 'success' ? (
-                                        <LucideCheck 
-                                            className='text-green-500 dark:text-green-400'
-                                            size={18}
-                                        />
-                                    ) : (
-                                        <LucideX 
-                                            className='text-red-500 dark:text-red-400' 
-                                            size={18}
-                                        />
-                                    )
-                                }
-                                {/* <span className='text-xs text-gray-500 dark:text-gray-400'>{formatDateTime(item.created_at)}</span> */}
-                            </div>
-                        </Link>
+                    data?.length === 0 ? (
+                    <Empty 
+                        title='No recent Transactions.'
+                        content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by buying Airtime or Data bundle(s),'}
+                    />) : data?.map(item => (
+                        <HistoryItem 
+                            key={item.id}
+                            item={item}
+                        />
                     ))
                 }
             </div>

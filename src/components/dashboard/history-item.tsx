@@ -1,0 +1,59 @@
+import { formatDateTime } from '@/funcs/formatDate'
+import { cn } from '@/lib/utils'
+import { AirtimeDataMetadata } from '@/types/airtime-data'
+import { Tables } from '@/types/database'
+import { Networks } from '@/types/networks'
+import { product } from '@/utils/constants/product'
+import { LucideCheck, LucideX } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+import { EVENT_TYPE } from '@/utils/constants/EVENTS'
+import { formatNigerianNaira } from '@/funcs/formatCurrency'
+
+const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: string}) => {
+  return (
+    <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
+        <div className='flex flex-row gap-x-2.5'>
+            <div className='md:w-10 md:h-10 w-8 h-8'>
+                <Image 
+                    src={
+                        item?.type === EVENT_TYPE.wallet_fund ? product[EVENT_TYPE.wallet_fund].image : product[(JSON.parse(
+                            item.meta_data?.toString() ?? '{}'
+                        ) as AirtimeDataMetadata)?.network as Networks].image
+                    }
+                    alt={item?.title!}
+                    width={500}
+                    height={500}
+                    className='w-full h-full object-cover rounded-full'
+                />
+            </div>
+            <div className="flex flex-col space-y-1">
+                <h2 className='text-sm md:text-base tracking-tighter'>{item.title}</h2>
+                <span className={cn("text-xs text-gray-500 dark:text-gray-400", {
+                    'text-red-500 dark:text-red-4': item.status === 'failed',
+                    'dark:text-green-400 text-green-500': item.status === 'success'
+                })}>{item.description}</span>
+            </div>
+        </div>
+        <div className='flex flex-col space-y-1 justify-end items-end'>
+            {
+                item.status === 'success' ? (
+                    <LucideCheck 
+                        className='text-green-500 dark:text-green-400'
+                        size={18}
+                    />
+                ) : (
+                    <LucideX 
+                        className='text-red-500 dark:text-red-400' 
+                        size={18}
+                    />
+                )
+            }
+            <span className='text-xs text-gray-500 dark:text-gray-400'>{formatNigerianNaira(item?.amount!)}</span>
+        </div>
+    </Link>
+  )
+}
+
+export default HistoryItem

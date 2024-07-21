@@ -20,6 +20,7 @@ import generateRequestId from "@/funcs/generateRequestId"
 import SubPurchaseStatus from "@/components/dashboard/sub-purchase-status"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
 import { formatNigerianNaira } from "@/funcs/formatCurrency"
+import { priceToInteger } from "@/funcs/priceToNumber"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -238,7 +239,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
-                amount: price,
+                amount: priceToInteger(payload?.Price),
             })
             setPurchasing(false)
 

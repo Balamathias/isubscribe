@@ -9,6 +9,7 @@ import { TransactionEvent } from '@/types/webhooks'
 import Link from 'next/link'
 import Empty from '../../Empty'
 import TransactionHistoryItem from './TransactionHistoryItem'
+import HistoryItem from '../history-item'
 
 const TransactionHistoryComponent = async () => {
     const { data: history } = await getTransactionHistory()
@@ -22,13 +23,16 @@ const TransactionHistoryComponent = async () => {
     }
 
   return (
-    <Card className='dark:bg-card/80 py-3 rounded-xl shadow-none drop-shadow-none border-none flex flex-col w-full space-y-2'>
+    <div className=' self-center w-full flex flex-col gap-y-3'>
         {
-            history?.map((transaction, index) => (
-                <TransactionHistoryItem key={index} transaction={transaction} type={transaction.type as keyof typeof EVENT_TYPE} />
+            history?.map(item => (
+                <HistoryItem 
+                    key={item.id}
+                    item={item}
+                />
             ))
         }
-    </Card>
+    </div>
   )
 }
 

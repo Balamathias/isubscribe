@@ -1,3 +1,5 @@
+import { EVENT_TYPE } from "./EVENTS";
+
 export const product = {
     'mtn': {
         name: 'MTN',
@@ -14,5 +16,9 @@ export const product = {
     '9mobile': {
         name: '9MOBILE',
         image: '/images/networks/9mobile.png'
+    },
+    [EVENT_TYPE.wallet_fund]: {
+        name: 'WALLET FUND',
+        image: '/glass/icons/Viber.png'
     }
 }

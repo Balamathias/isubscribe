@@ -1,11 +1,11 @@
 import { Card } from '@/components/ui/card'
 import clsx from 'clsx';
 import { BarChart } from 'lucide-react'
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 declare interface EmptyProps {
     icon?: React.ReactNode;
-    content?: string;
+    content?: string | ReactNode;
     color?: 'red' | 'green' | 'blue' | 'yellow' | 'indigo' | 'purple' | 'pink' | 'gray',
     className?: string;
     title?: string;
@@ -20,7 +20,7 @@ const Empty = ({color, content, icon, className, title}: EmptyProps) => {
             </div>
             {title && <p className="text-lg font-semibold text-muted-foreground text-center">{title}</p>}
             {
-                content ? <p className="text-muted-foreground text-sm text-center md:text-base">{content}</p> :
+                content ? <div className="text-muted-foreground text-sm text-center md:text-base">{content}</div> :
                 <p className="text-muted-foreground text-center text-sm md:text-base">There is nothing here right now.</p>
             }
         </Card>
