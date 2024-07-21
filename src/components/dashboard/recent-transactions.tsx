@@ -8,6 +8,7 @@ import { product } from '@/utils/constants/product'
 import { createClient } from '@/utils/supabase/server'
 import { LucideCheck, LucideX } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 const RecentTransactions = async () => {
@@ -25,7 +26,7 @@ const RecentTransactions = async () => {
             <div className=' self-center w-full flex flex-col gap-y-3'>
                 {
                     data?.map(item => (
-                        <Card key={item?.id} className='flex flex-row justify-between items-center space-y-3 dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300'>
+                        <Link href={'/dashboard/history/' + item.id} key={item?.id} className='flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300'>
                             <div className='flex flex-row gap-x-2.5'>
                                 <div className='w-10 h-10'>
                                     <Image 
@@ -64,7 +65,7 @@ const RecentTransactions = async () => {
                                 }
                                 <span className='text-xs text-gray-500 dark:text-gray-400'>{formatDateTime(item.created_at)}</span>
                             </div>
-                        </Card>
+                        </Link>
                     ))
                 }
             </div>

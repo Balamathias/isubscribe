@@ -19,12 +19,13 @@ const DashboardPage = async ({searchParams}: { searchParams: {[key: string]: str
 
       <ActionBox />
       <QuickActions />
-      <Announcements />
 
       <Suspense fallback={<ActionBoxSkeleton />}>
         <RecentTransactions />
       </Suspense>
 
+      <Announcements />
+      
       <Suspense fallback={<ActionBoxSkeleton />}>
         <WelcomeBonusModal profile={profile!} wallet={wallet!} />
       </Suspense>
