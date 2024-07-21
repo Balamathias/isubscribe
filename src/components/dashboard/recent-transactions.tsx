@@ -28,7 +28,7 @@ const RecentTransactions = async () => {
                     data?.map(item => (
                         <Link href={'/dashboard/history/' + item.id} key={item?.id} className='flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300'>
                             <div className='flex flex-row gap-x-2.5'>
-                                <div className='w-10 h-10'>
+                                <div className='md:w-10 md:h-10 w-8 h-8'>
                                     <Image 
                                         src={
                                             product[(JSON.parse(
@@ -63,7 +63,7 @@ const RecentTransactions = async () => {
                                         />
                                     )
                                 }
-                                <span className='text-xs text-gray-500 dark:text-gray-400'>{formatDateTime(item.created_at)}</span>
+                                {/* <span className='text-xs text-gray-500 dark:text-gray-400'>{formatDateTime(item.created_at)}</span> */}
                             </div>
                         </Link>
                     ))
