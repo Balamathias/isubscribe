@@ -35,8 +35,8 @@ const TvCards = () => {
 
     const { currentProvider, smartcardNumber, mobileNumber, setMobileNumber, handleBuyTvCable} = useTvCable()
 
-    console.log("SELEC", selected)
-    console.log("Smaaa", smartcardNumber)
+    // console.log("SELEC", selected)
+    // console.log("Smaaa", smartcardNumber)
 
     // if(openMobileNumber === true)  toast.warning("Heyyyyyyyyyyyyyyyyyyyy")
 
@@ -51,7 +51,7 @@ const TvCards = () => {
                 onClick={() => {
                     if (!smartcardNumber) return toast.warning('Please enter your decoder number, it can\'t be empty!')
                     if ((smartcardNumber.length < 10) || (smartcardNumber.length > 10)) return toast.warning('Please enter a valid 10-digit decorder number')
-                    if ((mobileNumber.length < 12) || (mobileNumber.length > 12)) return toast.warning('Please enter a valid 11-digit phone number')
+                    if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
                     // if ((mobileNumber.length < 12) || (mobileNumber.length > 12)) return setOpenMobileNumber(true)
 
                     setSelected(d as any)

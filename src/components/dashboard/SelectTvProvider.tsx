@@ -1,16 +1,17 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import Image from 'next/image'
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider'
 import { Card } from '../ui/card'
-import { Tv, User } from 'lucide-react'
+import { Check, CheckCircle, Loader, Loader2, Tv, User, X } from 'lucide-react'
 import { Input } from '../ui/input'
 import { dstv_subscription, gotv_subscription, showmax_subscription, startimes_subscription } from '@/utils/constants/tv-plans'
 import { TvCables } from '@/types/tv-cable'
 import { Button } from '../ui/button'
 import TvCards from './tv-cable/tv-cards'
+import { verifySmartcardNumber } from '@/lib/vtpass/services'
 
 export const tvImages = {
     'dstv': '/images/tv-cables/ds-tv-logo.jpg',
@@ -45,8 +46,53 @@ const tvTabs = [
 ]
 
 const SelectTvProvider = () => {
-    const { currentProvider, mobileNumber, setMobileNumber, setCurrentProvider, setSmartcardNumber } = useTvCable()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [data, setData] = useState(null)
 
+    const { currentProvider, mobileNumber, setMobileNumber, setCurrentProvider, smartcardNumber, setSmartcardNumber } = useTvCable()
+    const payload = {
+      serviceID:currentProvider,
+      billersCode:smartcardNumber
+    }
+
+    const handleSmartcardNumberChange = (e:any) => {
+      const value = e.target.value;
+      if (/^\d{0,10}$/.test(value)) {
+        setSmartcardNumber(value);
+      }
+    };
+
+    const isSmartCardNumberNotLessThanOne = smartcardNumber?.length !== 0
+
+   
+
+    const handleVerifySmartCard = async () => {
+      setLoading(true)
+      setSuccess(false)
+      setError(false)
+      const res = await verifySmartcardNumber(payload)
+      setData(res?.content)
+      if(res?.content?.Customer_Name){
+        setSuccess(true)
+        setError(false)
+        setLoading(false)
+      }
+      if(res?.content?.error){
+        setError(true)
+        setSuccess(false)
+        setLoading(false)
+      }
+      console.log("22222", res)
+      setLoading(false)
+    }
+
+    useEffect(() => {
+      if (smartcardNumber?.length === 10 ) {
+        handleVerifySmartCard()
+      }
+    }, [smartcardNumber]);
 
   return (
     <Tabs defaultValue="dstv" className="max-sm:w-[90vw] w-[600px] space-y-4">
@@ -64,15 +110,54 @@ const SelectTvProvider = () => {
       ))}
     </TabsList>
 
-    <Card className="bg-white p-4 flex flex-row gap-2  justify-center w-full">
-        <span className="text-white p- rounded-full bg-violet-500 p-1 md:p-2">
-        <Tv />
-        </span>
-        <Input 
-        onChange={(e) => setSmartcardNumber(e.target.value)}  
-        type="tel" 
-        placeholder="Enter Decoder Number here..."
-            />
+    <Card className="bg-white p-4 flex flex-col gap-3  justify-cente w-full">
+       <div className='flex flex-row gap-2  justify-center'>
+          <span className="text-white p- rounded-full bg-violet-500 p-1 md:p-2">
+          <Tv />
+          </span>
+          <Input 
+          onChange={handleSmartcardNumberChange}  
+          value={smartcardNumber}
+          type="tel" 
+          placeholder="Enter Decoder Number here..."
+              />
+       </div>
+
+       {
+        loading &&
+         (
+          <div className='flex flex-row gap-2  justify-cente items-center'>
+          <span className="text-violet-600 p- rounded-full bg-white p-1 md:p-2">
+          <Loader2 className=' animate-spin' />
+          </span>
+          <span className=' h-8 w-full bg-gray-300 rounded-sm animate-pulse'></span>
+         </div>
+        ) 
+      }
+        
+      { success && isSmartCardNumberNotLessThanOne &&
+        (
+          <div className='flex flex-row gap-2  justify-cente items-center'>
+          <span className="text-violet-600 p- rounded-full bg-green-100 p-1 md:p-1">
+          <Check className=' text-green-500' />
+          </span>
+          <span className=' '> {data?.Customer_Name}</span>
+         </div>
+
+        )
+       }
+      { error && isSmartCardNumberNotLessThanOne &&
+        (
+          <div className='flex flex-row gap-2  justify-cente items-center'>
+          <span className="text-violet-600 p- rounded-full bg-red-100 p-1 md:p-1">
+          <X className=' text-red-500' />
+          </span>
+          <span className=' '> {data?.error}</span>
+         </div>
+
+        )
+       }
+      
     </Card>
     <Card className="bg-white p-4 flex flex-row gap-2  justify-center w-full">
         <span className="text-white p- rounded-full bg-violet-500 p-1 md:p-2">
