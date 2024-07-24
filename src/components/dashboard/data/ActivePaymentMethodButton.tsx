@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import { PaymentMethod } from '@/types/networks'
-import { ArrowRightCircle, Box, CheckCircle2, Zap } from 'lucide-react'
+import { ArrowRight, ArrowRightCircle, Box, Check, CheckCircle2, Zap } from 'lucide-react'
 import React from 'react'
 
 interface ActivePaymentMethodButtonProps {
@@ -16,8 +16,8 @@ interface ActivePaymentMethodButtonProps {
 const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', balance='0.00', disabled }: ActivePaymentMethodButtonProps) => {
   return (
         <button className={cn('flex items-center justify-between py-3 px-2.5 rounded-lg focus:outline-none focus:border-none border-none bg-violet-100 dark:bg-secondary relative', {
-            'bg-green-200 text-green-900 dark:bg-green-300/[0.8] dark:text-green-700': active,
-            'opacity-80 bg-red-50 text-red-800 dark:bg-red-300/[0.8] dark:text-red-700': disabled
+            'bg-green-200 text-green-900 dark:text-green-400': active,
+            'opacity-80 bg-red-50 text-red-800 dark:text-red-400': disabled
         })}
             onClick={handler}
             disabled={disabled}
@@ -36,13 +36,12 @@ const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', bal
                     <p className='font-semibold'>{
                             method === 'wallet' ? 'From Wallet' : 'From Cashback'
                         }</p>
-                    <p className='text-base text-muted-foreground dark:text-gray-800'>{balance}</p>
+                    <p className='text-base text-muted-foreground'>{balance}</p>
                     {disabled && <p className='md:text-xs text-muted-foreground dark:text-white text-[8px]'>Insufficient Funds, Please fund Your wallet.</p>}
                 </div>
             </div>
-            <span className='absolute bg-white inset-0 mix-blend-overlay opacity-30 pointer-events-none' />
 
-            {!active ? <ArrowRightCircle className='text-violet-500 dark:text-violet-800' size={20} /> : <CheckCircle2 className='text-green-600 dark:text-green-700' size={20} />}
+            {!active ? <ArrowRight className='text-violet-500 dark:text-violet-400' size={20} /> : <Check className='text-green-600 dark:text-green-400' size={20} />}
         </button>
   )
 }
