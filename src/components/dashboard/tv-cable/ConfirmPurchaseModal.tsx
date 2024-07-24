@@ -54,6 +54,11 @@ const ConfirmPurchaseModal = ({
     const { mobileNumber, currentProvider, smartcardNumber } = useTvCable()
     const { data: wallet, isPending } = useGetWalletBalance()
 
+    // console.log("bb", wallet?.data?.balance)
+    // console.log("bc", wallet?.data?.cashback_balance)
+    // console.log("sa",  priceToInteger(selected?.variation_amount))
+    // console.log("sc", priceToInteger(selected?.cashBack!))
+
     if (isPending) return <LoadingOverlay />
   return (
     <DynamicModal
@@ -112,18 +117,18 @@ const ConfirmPurchaseModal = ({
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
                     balance={formatNigerianNaira(wallet?.data?.balance! as number)}
-                    disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount) as any || '0.00'}
+                    disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00')  }
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
                     balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
-                    disabled={wallet?.data?.cashback_balance! < priceToInteger(selected?.variation_amount) as any || '0.00'}
+                    disabled={wallet?.data?.cashback_balance! < priceToInteger(selected?.variation_amount || '0.00') }
                 />
             </div>
             
-            {wallet?.data?.balance! < priceToInteger(selected?.variation_amount) as any || '0.00' ? 
+            {wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00')  ? 
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
@@ -136,7 +141,7 @@ const ConfirmPurchaseModal = ({
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount) as any || '0.00'}
+                disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00') }
                 onClick={() => {
                     setProceed(true)
                 }}
