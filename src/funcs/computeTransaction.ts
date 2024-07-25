@@ -13,7 +13,7 @@ export const computeTransaction = ({
         const price = (payload.price)
         const cashbackPrice = (payload.cashback!)
         
-        let balance = 0.00
+        let balance = wallet?.balance ?? 0.00
         let deductableAmount = 0.00
         
         let cashbackBalance = wallet?.cashback_balance ?? 0.00
