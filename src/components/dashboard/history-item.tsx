@@ -18,9 +18,13 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
             <div className='md:w-10 md:h-10 w-8 h-8'>
                 <Image 
                     src={
-                        item?.type === EVENT_TYPE.wallet_fund ? product[EVENT_TYPE.wallet_fund].image : product[(JSON.parse(
-                            item.meta_data?.toString() ?? '{}'
-                        ) as AirtimeDataMetadata)?.network as Networks].image
+                        item?.type === EVENT_TYPE.wallet_fund ? 
+                            product[EVENT_TYPE.wallet_fund].image :
+                            item?.type === EVENT_TYPE.tv_topup ? 
+                            product[EVENT_TYPE.tv_topup].image :
+                                product[(JSON.parse(
+                                item.meta_data?.toString() ?? '{}'
+                            ) as AirtimeDataMetadata)?.network as Networks]?.image
                     }
                     alt={item?.title!}
                     width={500}

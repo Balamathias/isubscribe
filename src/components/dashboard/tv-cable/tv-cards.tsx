@@ -13,6 +13,8 @@ import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { Tv, User } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
+import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 
 const object = {
     'dstv': dstv_subscription,
@@ -24,6 +26,7 @@ const object = {
 const TvCards = () => {
     const [open, setOpen] = React.useState(false)
     const [openMobileNumber, setOpenMobileNumber] = React.useState(false)
+    const { data: profile, isPending: profilePending } = useGetProfile()
 
     const [selected, setSelected] = useState<SubTvPayload | null>(null)
 
@@ -41,6 +44,7 @@ const TvCards = () => {
     // if(openMobileNumber === true)  toast.warning("Heyyyyyyyyyyyyyyyyyyyy")
 
 
+    if (isPending || profilePending) return <LoadingOverlay />
 
   return (
     <div className='rounded-xl bg-white md:min-h-[300px] dark:bg-background md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>
@@ -91,11 +95,14 @@ const TvCards = () => {
                 dismissible
                 dialogClassName={'sm:max-w-fit'}
             >
-                <ConfirmPin className='rounded-none' func={() => {
-                    handleBuyTvCable?.({...selected!, method: paymentMethod})
-                    setOpen(false)
-                    setProceed(false)
-                }} />
+                <ConfirmPin className='rounded-none' 
+                    func={() => {
+                        handleBuyTvCable?.({...selected!, method: paymentMethod})
+                        setOpen(false)
+                        setProceed(false)
+                    }} 
+                    profile={profile?.data!}
+                />
             </DynamicModal>
         }
         {

@@ -19,6 +19,10 @@ export const product = {
     },
     [EVENT_TYPE.wallet_fund]: {
         name: 'WALLET FUND',
-        image: '/glass/icons/Viber.png'
+        image: '/images/networks/transfer.png'
+    },
+    [EVENT_TYPE.tv_topup]: {
+        name: 'TV Cable',
+        image: '/images/networks/tv.png'
     }
 }
