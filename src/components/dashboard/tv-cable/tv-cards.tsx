@@ -47,11 +47,11 @@ const TvCards = () => {
     if (isPending || profilePending) return <LoadingOverlay />
 
   return (
-    <div className='rounded-xl bg-white md:min-h-[300px] dark:bg-background md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>
+    <div className='grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4 bg-card p-4 rounded-xl dark:bg-card/60'>
         {object[currentProvider]?.map((d, idx) => (
             <Card
                 key={idx}
-                className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 h-fit"
+                className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
                 onClick={() => {
                     if (!smartcardNumber) return toast.warning('Please enter your decoder number, it can\'t be empty!')
                     if ((smartcardNumber.length < 10) || (smartcardNumber.length > 10)) return toast.warning('Please enter a valid 10-digit decorder number')
@@ -65,7 +65,7 @@ const TvCards = () => {
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
                     <p className="font-semibold text-base">{formatNigerianNaira(priceToInteger(d.variation_amount))}</p>
                     <p className='tracking-tighter'>Pay N{priceToInteger(d?.variation_amount)}</p>
-                    <div className="flex flex-row items-center justify-center flex-wrap gap-1 text-violet-600 text-[5px] md:text-xs bg-violet-50 rounded-full px-2 p-1">
+                    <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
                         <span>{d?.cashBack}</span>
                         <span>Cashback</span>
                     </div>
@@ -93,7 +93,8 @@ const TvCards = () => {
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
-                dialogClassName={'sm:max-w-fit'}
+                dialogClassName={'sm:max-w-fit dark:bg-card'}
+                drawerClassName={'sm:max-w-fit dark:bg-card'}
             >
                 <ConfirmPin className='rounded-none' 
                     func={() => {

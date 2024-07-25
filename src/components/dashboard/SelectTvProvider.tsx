@@ -110,24 +110,25 @@ const SelectTvProvider = () => {
       ))}
     </TabsList>
 
-    <Card className="bg-white p-4 flex flex-col gap-3  justify-cente w-full">
-       <div className='flex flex-row gap-2  justify-center'>
-          <span className="text-white p- rounded-full bg-violet-500 p-1 md:p-2">
+    <Card className="flex flex-col justify-between space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300">
+       <div className='flex flex-row gap-2  items-center'>
+          <span className="text-white rounded-full bg-violet-500 h-10 w-10 flex items-center justify-center">
           <Tv />
           </span>
           <Input 
-          onChange={handleSmartcardNumberChange}  
-          value={smartcardNumber}
-          type="tel" 
-          placeholder="Enter Decoder Number here..."
-              />
+            onChange={handleSmartcardNumberChange}  
+            value={smartcardNumber}
+            type="tel" 
+            className="focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg"
+            placeholder="Enter Decoder Number here..."
+          />
        </div>
 
        {
         loading &&
          (
           <div className='flex flex-row gap-2  justify-cente items-center'>
-          <span className="text-violet-600 p- rounded-full bg-white p-1 md:p-2">
+          <span className="text-violet-600 p- rounded-full bg-white dark:bg-secondary h-10 w-10 flex items-center justify-center">
           <Loader2 className=' animate-spin' />
           </span>
           <span className=' h-8 w-full bg-gray-300 rounded-sm animate-pulse'></span>
@@ -138,7 +139,7 @@ const SelectTvProvider = () => {
       { success && isSmartCardNumberNotLessThanOne &&
         (
           <div className='flex flex-row gap-2  justify-cente items-center'>
-          <span className="text-violet-600 p- rounded-full bg-green-100 p-1 md:p-1">
+          <span className="text-violet-600 p- rounded-full bg-green-100 dark:bg-secondary p-1 md:p-1">
           <Check className=' text-green-500' />
           </span>
           <span className=' '> {data?.Customer_Name}</span>
@@ -149,7 +150,7 @@ const SelectTvProvider = () => {
       { error && isSmartCardNumberNotLessThanOne &&
         (
           <div className='flex flex-row gap-2  justify-cente items-center'>
-          <span className="text-violet-600 p- rounded-full bg-red-100 p-1 md:p-1">
+          <span className="text-violet-600 p- rounded-full bg-red-100 dark:bg-secondary p-1 md:p-1">
           <X className=' text-red-500' />
           </span>
           <span className=' '> {data?.error}</span>
@@ -159,16 +160,19 @@ const SelectTvProvider = () => {
        }
       
     </Card>
-    <Card className="bg-white p-4 flex flex-row gap-2  justify-center w-full">
-        <span className="text-white p- rounded-full bg-violet-500 p-1 md:p-2">
-        <User />
-        </span>
-        <Input 
-        onChange={(e) => setMobileNumber(e.target.value)}  
-        type="tel" 
-        defaultValue={mobileNumber}
-        placeholder="Enter Phone Number here..."
-            />
+    <Card className="flex flex-col justify-between space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300">
+        <div className='flex flex-row space-x-1.5 items-center'>
+          <span className="text-white p- rounded-full bg-violet-500 h-10 w-10 flex items-center justify-center">
+            <User />
+          </span>
+          <Input 
+            onChange={(e) => setMobileNumber(e.target.value)}  
+            type="tel" 
+            defaultValue={mobileNumber}
+            placeholder="Enter Phone Number here..."
+            className="focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg"
+          />
+        </div>
     </Card>
 
     <TvCards />

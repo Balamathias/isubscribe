@@ -70,7 +70,7 @@ const ConfirmPurchaseModal = ({
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Airtime Plan Details'}</h1>
             
-            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
+            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-secondary text-xs md:text-sm'>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Product</p>
                     <p className='flex items-center flex-row gap-x-1'>{tvProducts[currentProvider].name} | 
@@ -102,7 +102,7 @@ const ConfirmPurchaseModal = ({
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Amount</p>
-                    <p>{priceToInteger(selected?.variation_amount)}</p>
+                    <p>{formatNigerianNaira(priceToInteger(selected?.variation_amount))}</p>
                 </div>
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
