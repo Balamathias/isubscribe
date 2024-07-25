@@ -25,8 +25,7 @@ export const computeTransaction = ({
             if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
         } else if (payload?.method === 'cashback') {
             cashbackBalance = wallet?.cashback_balance ?? 0.00
-            deductableAmount = price
-            cashbackBalance -= deductableAmount
+            cashbackBalance -= price
             cashbackBalance += cashbackPrice
             
             if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */

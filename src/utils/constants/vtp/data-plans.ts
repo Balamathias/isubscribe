@@ -513,7 +513,7 @@ export const gloData = {
             dataQty: "50GB",
             duration: "30 days",
             unitPrice: 10000,
-            unitCashback: 4,
+            unitCashback: 400,
             network: "glo",
             interest: 0.4
         },
