@@ -26,7 +26,7 @@ const SmartcardAndMobileInput = () => {
 
   const handleMeterNumberChange = (e:any) => {
     const value = e.target.value;
-    if (/^\d{0,15}$/.test(value)) {
+    if (/^\d{0,13}$/.test(value)) {
       setMeterNumber(value);
     }
   };
@@ -52,7 +52,7 @@ const SmartcardAndMobileInput = () => {
   };
 
   useEffect(() => {
-    if (meterNumber?.length >= 13) {
+    if (meterNumber?.length === 13) {
       handleVerifyMeter();
     }
   }, [meterNumber]);
