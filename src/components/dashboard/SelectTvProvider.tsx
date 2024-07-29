@@ -49,7 +49,7 @@ const SelectTvProvider = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
-    const [data, setData] = useState(null)
+    const [data, setData] = useState<any>(null)
 
     const { currentProvider, mobileNumber, setMobileNumber, setCurrentProvider, smartcardNumber, setSmartcardNumber } = useTvCable()
     const payload = {
