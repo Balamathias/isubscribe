@@ -1,15 +1,13 @@
 "use client"
 
-import { electricServices } from '@/utils/constants/electricity-plans';
 import React, { useState } from 'react';
 import ElectricityProviderSelector from './electricity/ElectricityProviderSelector';
 import SmartcardAndMobileInput from './electricity/SmartcardAndMobileInput';
-import { useElectricity } from '@/providers/electricity/electricity-provider';
 
 const SelectElectricityProvider = () => {
 
   return (
-    <div className="max-sm:w-[90vw] w-[600px] space-y-4">
+    <div className="max-sm:w-[90vw] w-[600px] space-y-4 rounded-xl">
       <ElectricityProviderSelector />
       <SmartcardAndMobileInput 
       />

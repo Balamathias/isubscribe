@@ -20,7 +20,9 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                     src={
                         item?.type === EVENT_TYPE.wallet_fund ? 
                             product[EVENT_TYPE.wallet_fund].image :
-                            item?.type === EVENT_TYPE.tv_topup ? 
+                            item?.type === EVENT_TYPE.meter_topup ? 
+                                product[EVENT_TYPE.meter_topup].image :
+                                item?.type === EVENT_TYPE.tv_topup ? 
                             product[EVENT_TYPE.tv_topup].image :
                                 product[(JSON.parse(
                                 item.meta_data?.toString() ?? '{}'

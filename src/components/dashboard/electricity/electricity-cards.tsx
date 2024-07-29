@@ -11,15 +11,19 @@ import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { toast } from 'sonner'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
+import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 
 const ElectricityCards = () => {
     const [open, setOpen] = React.useState(false)
-
+    
     const [proceed, setProceed] = React.useState(false)
-
+    
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
     const { powerAmount, meterNumber, mobileNumber, currentProvider, isPrepaid, setPowerAmount, handleBuyElectricity } = useElectricity()
 
+    const { data: profile, isPending: profilePending } = useGetProfile()
+    
     const selected ={
       billersCode: meterNumber,
       phone: mobileNumber,
@@ -29,34 +33,38 @@ const ElectricityCards = () => {
       cashBack:"0.00"
     }
 
+    const handleProceed = () => {
+      if (!meterNumber) return toast.warning('Please enter a valid meter number, it can\'t be empty!')
+        if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
+        if (!powerAmount) return toast.warning('Please enter Amount, it can\'t be empty!')
+        if (parseInt(powerAmount) < 500) return toast.warning('Amount cannot be Less than ₦500')
+      setOpen(true)
+    }
 
+    if (profilePending) return <LoadingOverlay loader='2' />
 
   return (
-    <div className='rounded-xl space-y-6 max-md:space-y-2 bg-white md:min-h-[200px] dark:bg-background md:p-5 p-2 '>
-         <Card className="bg-white p-4 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
+    <Card className='rounded-xl space-y-6 border-none shadow-none max-md:space-y-2 md:min-h-[200px] md:p-5 p-2 dark:bg-card/70  '>
+        <div className="p-4 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
         {/* <span className="text-green-600 rounded-full bg-green-200 p-1 md:p-2">
           <Coins />
         </span> */}
         <Input
           onChange={(e) => setPowerAmount(e.target.value)}
-          type="tel"
+          type="number"
+          required
+          aria-required
           value={powerAmount}
           placeholder="₦ Enter Amount here..."
-          className=' p-8 rounded-none max-md:p-6 text-lg md:w-1/2 self-center text-center'
+          className=' p-8 rounded-md shadow-none max-md:p-6 text-lg md:w-1/2 self-center text-center'
         />
-       </Card>
+       </div>
 
           <Button
                 className='w-full rounded-xl shadow-sm' 
                 size={'lg'}
                 
-                onClick={() => {
-                    if (!meterNumber) return toast.warning('Please enter a valid meter number, it can\'t be empty!')
-                      if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
-                      if (!powerAmount) return toast.warning('Please enter Amount, it can\'t be empty!')
-                      if (parseInt(powerAmount) < 500) return toast.warning('Amount cannot be Less than ₦500')
-                    setOpen(true)
-                }}
+                onClick={handleProceed}
             >Continue</Button>
 
 
@@ -82,17 +90,22 @@ const ElectricityCards = () => {
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
-                dialogClassName={'sm:max-w-fit'}
+                dialogClassName={'sm:max-w-fit dark:bg-card'}
+                drawerClassName='dark:bg-card'
             >
-                <ConfirmPin className='rounded-none' func={() => {
-                    handleBuyElectricity?.({...selected!, method: paymentMethod})
-                    setOpen(false)
-                    setProceed(false)
-                }} />
+                <ConfirmPin 
+                  className='rounded-none' 
+                  func={() => {
+                      handleBuyElectricity?.({...selected!, method: paymentMethod})
+                      setOpen(false)
+                      setProceed(false)
+                  }} 
+                  profile={profile?.data!}
+                />
             </DynamicModal>
         }
 
-    </div>
+    </Card>
   )
 }
 

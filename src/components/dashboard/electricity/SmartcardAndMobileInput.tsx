@@ -10,7 +10,7 @@ const SmartcardAndMobileInput = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
 
   const { currentProvider, mobileNumber, setMobileNumber, isPrepaid, setIsPrepaid, meterNumber, setMeterNumber  } = useElectricity();
 
@@ -59,27 +59,28 @@ const SmartcardAndMobileInput = () => {
 
   return (
     <div className="space-y-4">
-      <Card className="bg-whit p- flex flex-row gap-2 max-sm:justify-end justify-end items-center w-full border-none outline-none shadow-none">
-        <div className='flex bg-white flex-row items-center p-3 gap-2 rounded-sm'>
+      <Card className="dark:bg-card/60 flex flex-row gap-2 max-sm:justify-end justify-end items-center w-full border-none outline-none shadow-none rounded-lg">
+        <div className='flex bg-white dark:bg-card/60 flex-row items-center p-3 gap-2 rounded'>
           <span>Prepaid</span>
-          <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid(true)} />
+          <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid?.(true)} />
         </div>
-        <div className='flex flex-row items-center p-3 gap-2 rounded-sm bg-white'>
+        <div className='flex flex-row items-center p-3 gap-2 rounded-lg'>
           <span>Postpaid</span>
-          <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid(false)} />
+          <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid?.(false)} />
         </div>
       </Card>
 
-      <Card className="bg-white p-4 flex flex-col gap-3 justify-center w-full rounded-sm">
+      <Card className="p-4 flex flex-col gap-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
         <div className='flex flex-row gap-2 justify-center'>
-          <span className="text-red-600 rounded-full bg-red-200 p-1 md:p-2">
-            <Calculator />
+          <span className="text-red-600 bg-red-200 h-10 w-10 aspect-square rounded-full flex items-center justify-center">
+            <Calculator size={16}/>
           </span>
           <Input
             onChange={handleMeterNumberChange}
             value={meterNumber}
             type="tel"
             placeholder="Enter Meter Number here..."
+            className='focus-within:outline h-12 bg-white dark:bg-secondary dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg'
           />
         </div>
 
@@ -94,32 +95,33 @@ const SmartcardAndMobileInput = () => {
 
         {success && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 justify-center self-start items-center'>
-            <span className="text-violet-600 rounded-full bg-green-100 p-1 md:p-1">
-              <Check className='text-green-500' />
+            <span className="text-violet-600 bg-green-100 h-10 w-10 rounded-full flex items-center justify-center">
+              <Check className='text-green-500' size={16} />
             </span>
-            <span>{data?.Customer_Name}</span>
+            <span className='text-sm tracking-tighter'>{data?.Customer_Name}</span>
           </div>
         )}
 
         {error && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 self-start justify-center items-center'>
-            <span className="text-violet-600 rounded-full bg-red-100 p-1 md:p-1">
-              <X className='text-red-500' />
+            <span className="text-violet-600 bg-red-100 h-10 w-10 rounded-full flex items-center justify-center">
+              <X className='text-red-500' size={16} />
             </span>
-            <span>{data?.error}</span>
+            <span className='text-sm tracking-tighter'>{data?.error}</span>
           </div>
         )}
       </Card>
 
       <Card className="bg-white p-4 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
-        <span className="text-white rounded-full bg-violet-500 p-1 md:p-2">
-          <User />
+        <span className="text-white bg-violet-500 h-10 w-10 rounded-full flex items-center justify-center aspect-square">
+          <User size={16}/>
         </span>
         <Input
           onChange={(e) => setMobileNumber(e.target.value)}
           type="tel"
           value={mobileNumber}
           placeholder="Enter Phone Number here..."
+          className='focus-within:outline h-12 bg-white dark:bg-secondary dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-0 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg'
         />
       </Card>
 

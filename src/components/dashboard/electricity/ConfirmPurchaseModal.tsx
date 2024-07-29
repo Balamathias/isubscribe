@@ -54,25 +54,23 @@ const ConfirmPurchaseModal = ({
     setProceed
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName } = useElectricity()
+    
     const { data: wallet, isPending } = useGetWalletBalance()
-
-    // console.log("bb", wallet?.data?.balance)
-    // console.log("bc", wallet?.data?.cashback_balance)
-    // console.log("sa",  priceToInteger(selected?.variation_amount))
-    // console.log("sc", priceToInteger(selected?.cashBack!))
-
+    
     if (isPending) return <LoadingOverlay />
+
   return (
     <DynamicModal
         open={open}
         setOpen={setOpen}
         dismissible
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
+        drawerClassName=''
     >
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Electricity Plan Details'}</h1>
             
-            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm'>
+            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-secondary text-xs md:text-sm'>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Product</p>
                     <p className='flex items-center flex-row gap-x-1'>{providerName}
@@ -119,14 +117,14 @@ const ConfirmPurchaseModal = ({
                     active={paymentMethod === 'wallet'} 
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
-                    balance={formatNigerianNaira(wallet?.data?.balance! as number)}
+                    balance={formatNigerianNaira(wallet?.data?.balance! as number ?? 0)}
                     disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00')  }
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
-                    balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
+                    balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number ?? 0)}
                     disabled={wallet?.data?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
                 />
             </div>

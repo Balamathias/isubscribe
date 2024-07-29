@@ -5,6 +5,7 @@ import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Button } from '@/components/ui/button'
 import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
+import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { insertTransactionHistory } from '@/lib/supabase/history'
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from '@/lib/supabase/wallets'
@@ -113,7 +114,11 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
     }
 
     const values = computeTransaction({
-        payload: {...billerPayload} as any,
+        payload: {
+            cashback: 0,
+            price: priceToInteger(billerPayload.Price),
+            method: billerPayload.method
+        },
         wallet: wallet?.data!
     })
     if (!values) return
@@ -152,7 +157,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
           description: `Meter subscription for ${meterNumber} failed.`,
           status: 'failed',
           title: 'Meter Subscription',
-          type: EVENT_TYPE.tv_topup,
+          type: EVENT_TYPE.meter_topup,
           email: null,
           meta_data: JSON.stringify(transRes),
           updated_at: null,

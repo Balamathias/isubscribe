@@ -24,5 +24,9 @@ export const product = {
     [EVENT_TYPE.tv_topup]: {
         name: 'TV Cable',
         image: '/images/networks/tv.png'
-    }
+    },
+    [EVENT_TYPE.meter_topup]: {
+        name: 'METER',
+        image: '/images/networks/electricity.png'
+    },
 }

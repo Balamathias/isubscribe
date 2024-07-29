@@ -2,6 +2,7 @@ import { networkIds } from "@/utils/networks"
 import { parseWithInterestPrice } from "./priceToNumber"
 import { PaymentMethod, SubAirtimeProps, SubDataProps } from "@/types/networks"
 import { Tables } from "@/types/database"
+import { toast } from "sonner"
 
 export const computeTransaction = ({
     payload,
@@ -12,6 +13,8 @@ export const computeTransaction = ({
 }) => {
         const price = (payload.price)
         const cashbackPrice = (payload.cashback!)
+
+        if (!wallet?.balance) return 
         
         let balance = wallet?.balance ?? 0.00
         let deductableAmount = 0.00

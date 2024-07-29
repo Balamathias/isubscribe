@@ -5,6 +5,7 @@ import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Button } from '@/components/ui/button'
 import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
+import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { insertTransactionHistory } from '@/lib/supabase/history'
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from '@/lib/supabase/wallets'
@@ -90,7 +91,11 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     }
 
     const values = computeTransaction({
-        payload: {...billerPayload} as any,
+        payload: {
+            cashback: 0,
+            price: priceToInteger(billerPayload.Price),
+            method: billerPayload.method
+        },
         wallet: wallet?.data!
     })
     if (!values) return
@@ -124,7 +129,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     if ( res?.response_description === "TRANSACTION FAILED" || transRes?.status === 'failed') {
       setPurchaseFailed(true)
       const { data: insertHistory } = await insertTransactionHistory({
-          description: `Tv Cable subscription for ${setSmartcardNumber} failed.`,
+          description: `Tv Cable subscription for ${smartcardNumber} failed.`,
           status: 'failed',
           title: 'Tv Subscription',
           type: EVENT_TYPE.tv_topup,

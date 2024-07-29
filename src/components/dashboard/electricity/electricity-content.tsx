@@ -4,7 +4,7 @@ import ElectricityCards from './electricity-cards'
 
 const ElectricityContent = () => {
   return (
-    <div className=' flex flex-col gap-y-2 md:gap-y-2 max-sm:w-[90vw] w-[600px] '>
+    <div className=' flex flex-col gap-y-2 md:gap-y-2 max-sm:w-[90vw] w-[600px] rounded-xl'>
         <SelectElectricityProvider />
         <ElectricityCards />
     </div>
