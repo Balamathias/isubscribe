@@ -71,9 +71,9 @@ const SmartcardAndMobileInput = () => {
         </div>
       </Card>
 
-      <Card className="p-4 flex flex-col gap-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
-        <div className='flex flex-row gap-x-2 items-center justify-between'>
-          <p className="text-red-600 bg-red-200 md:h-10 h-8 md:w-10 w-8 aspect-square rounded-full flex items-center justify-center">
+      <Card className="p-4 px-1.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
+        <div className='flex flex-row gap-x-2 items-center justify-between w-full'>
+          <p className="text-red-600 bg-red-200 h-10 w-10 aspect-square rounded-full flex items-center justify-center">
             <Calculator size={16}/>
           </p>
           <CustomInput
@@ -81,6 +81,7 @@ const SmartcardAndMobileInput = () => {
             value={meterNumber}
             type="tel"
             placeholder="Enter Meter Number here..."
+            className='w-[92%]'
           />
         </div>
 
@@ -95,7 +96,7 @@ const SmartcardAndMobileInput = () => {
 
         {success && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 justify-center self-start items-center'>
-            <p className="text-violet-600 bg-green-100 md:h-10 h-8 md:w-10 w-8 rounded-full flex items-center justify-center">
+            <p className="text-violet-600 bg-green-100 h-10 w-10 rounded-full flex items-center justify-center">
               <Check className='text-green-500' size={16} />
             </p>
             <span className='text-sm tracking-tighter'>{data?.Customer_Name}</span>
@@ -104,7 +105,7 @@ const SmartcardAndMobileInput = () => {
 
         {error && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 self-start justify-center items-center'>
-            <p className="text-violet-600 bg-red-100 md:h-10 h-8 md:w-10 w-8 rounded-full flex items-center justify-center">
+            <p className="text-violet-600 bg-red-100 h-10 w-10 rounded-full flex items-center justify-center">
               <X className='text-red-500' size={16} />
             </p>
             <span className='text-sm tracking-tighter'>{data?.error}</span>
@@ -112,8 +113,8 @@ const SmartcardAndMobileInput = () => {
         )}
       </Card>
 
-      <Card className="bg-white p-4 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
-        <p className="text-white bg-violet-500 md:h-10 h-8 md:w-10 w-8 rounded-full flex items-center justify-center aspect-square">
+      <Card className="bg-white p-4 px-1.5 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
+        <p className="text-white bg-violet-500 h-10 w-10 rounded-full flex items-center justify-center aspect-square">
           <User size={16}/>
         </p>
         <CustomInput
@@ -121,6 +122,7 @@ const SmartcardAndMobileInput = () => {
           type="tel"
           value={mobileNumber}
           placeholder="Enter Phone Number here..."
+          className='w-[92%]'
         />
       </Card>
 

@@ -13,6 +13,7 @@ import ConfirmPin from '../ConfirmPin'
 import { toast } from 'sonner'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
+import CustomInput from '../CustomInput'
 
 const ElectricityCards = () => {
     const [open, setOpen] = React.useState(false)
@@ -49,11 +50,11 @@ const ElectricityCards = () => {
         {/* <span className="text-green-600 rounded-full bg-green-200 p-1 md:p-2">
           <Coins />
         </span> */}
-        <Input
+        <CustomInput
           onChange={(e) => setPowerAmount(e.target.value)}
           type="number"
-          required
-          aria-required
+          // required
+          // aria-required
           value={powerAmount}
           placeholder="₦ Enter Amount here..."
           className=' p-8 rounded-md shadow-none max-md:p-6 text-lg md:w-1/2 self-center text-center'
