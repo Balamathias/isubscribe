@@ -81,7 +81,7 @@ const SmartcardAndMobileInput = () => {
             value={meterNumber}
             type="tel"
             placeholder="Enter Meter Number here..."
-            className='w-[92%]'
+            className='w-[92%] max-sm:w-[85%]'
           />
         </div>
 
@@ -122,7 +122,7 @@ const SmartcardAndMobileInput = () => {
           type="tel"
           value={mobileNumber}
           placeholder="Enter Phone Number here..."
-          className='w-[92%]'
+          className='w-[92%] max-sm:w-[85%]'
         />
       </Card>
 

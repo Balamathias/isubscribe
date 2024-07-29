@@ -12,6 +12,7 @@ import { TvCables } from '@/types/tv-cable'
 import { Button } from '../ui/button'
 import TvCards from './tv-cable/tv-cards'
 import { verifySmartcardNumber } from '@/lib/vtpass/services'
+import CustomInput from './CustomInput'
 
 export const tvImages = {
     'dstv': '/images/tv-cables/ds-tv-logo.jpg',
@@ -102,7 +103,7 @@ const SelectTvProvider = () => {
           key={value}
           value={value}
           onClick={() => setCurrentProvider(value as TvCables)}
-          className={`h-[70px] w-[70px] md:w-[120px] md:h-[120px] hover:opacity-90 bg-violet-100 text-gray-700
+          className={`h-[70px] w-[70px] md:w-[120px] md:h-[120px] hover:opacity-90 data-[state=active]:bg-card
             `}
         >
           <Image src={image} height={1000} width={1000} alt={name} className='rounded-full shadow-2xl ' />
@@ -113,13 +114,13 @@ const SelectTvProvider = () => {
     <Card className="flex flex-col justify-between space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300">
        <div className='flex flex-row gap-2  items-center'>
           <span className="text-white rounded-full bg-violet-500 h-10 w-10 flex items-center justify-center">
-          <Tv />
+          <Tv size={16} />
           </span>
-          <Input 
+          <CustomInput 
             onChange={handleSmartcardNumberChange}  
             value={smartcardNumber}
             type="tel" 
-            className="focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg"
+            className="w-[92%] max-sm:w-[85%]"
             placeholder="Enter Decoder Number here..."
           />
        </div>
@@ -140,7 +141,7 @@ const SelectTvProvider = () => {
         (
           <div className='flex flex-row gap-2  justify-cente items-center'>
           <span className="text-violet-600 p- rounded-full bg-green-100 dark:bg-secondary p-1 md:p-1">
-          <Check className=' text-green-500' />
+          <Check className=' text-green-500' size={16} />
           </span>
           <span className=' '> {data?.Customer_Name}</span>
          </div>
@@ -151,7 +152,7 @@ const SelectTvProvider = () => {
         (
           <div className='flex flex-row gap-2  justify-cente items-center'>
           <span className="text-violet-600 p- rounded-full bg-red-100 dark:bg-secondary p-1 md:p-1">
-          <X className=' text-red-500' />
+          <X className=' text-red-500' size={16} />
           </span>
           <span className=' '> {data?.error}</span>
          </div>
@@ -163,14 +164,14 @@ const SelectTvProvider = () => {
     <Card className="flex flex-col justify-between space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300">
         <div className='flex flex-row space-x-1.5 items-center'>
           <span className="text-white p- rounded-full bg-violet-500 h-10 w-10 flex items-center justify-center">
-            <User />
+            <User size={16}/>
           </span>
-          <Input 
+          <CustomInput 
             onChange={(e) => setMobileNumber(e.target.value)}  
             type="tel" 
             defaultValue={mobileNumber}
             placeholder="Enter Phone Number here..."
-            className="focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg"
+            className="w-[92%] max-sm:w-[85%]"
           />
         </div>
     </Card>
