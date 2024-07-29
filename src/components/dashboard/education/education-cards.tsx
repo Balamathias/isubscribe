@@ -28,8 +28,8 @@ const EducationCard = () => {
     const selected ={
       billersCode: profileCode,
       phone: mobileNumber,
-      serviceID:currentProvider === "waec" || "gce" ? "waec" : "jamb",
-      variation_code:currentProvider === "waec" || "gce" ? "waecdirect" : isUTME ? "utme" : "de",
+      serviceID:currentProvider === "jamb" ? "jamb" : "waec",
+      variation_code:currentProvider === "jamb" ? isUTME ? "utme" : "de" : "waecdirect",
       variation_amount:educationAmount,
       cashBack:"0.00"
     }

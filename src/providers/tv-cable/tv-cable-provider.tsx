@@ -182,11 +182,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     })
     */
     setPurchasing(false)
-} else {
-    /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
-    setPurchasing(false)
-    setPurchasePending(true)
-}
+} 
 
 
 

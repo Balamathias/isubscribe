@@ -101,7 +101,7 @@ const ConfirmPurchaseModal = ({
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Exam Type</p>
-                    <p>{currentProvider === "waec" || "gce" ? "WAEC" : "Jamb"}</p>
+                    <p>{currentProvider === "jamb" ? "JAMB" : "WAEC"}</p>
                 </div>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Phone Number</p>

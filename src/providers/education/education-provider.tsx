@@ -108,10 +108,13 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     const requestPayload = {
       billersCode: profileCode,
       phone: mobileNumber,
-      serviceID:currentProvider === "waec" || "gce" ? "waec" : "jamb",
-      variation_code:currentProvider === "waec" || "gce" ? "waecdirect" : isUTME ? "utme" : "de",
+      serviceID:currentProvider === "jamb" ? "jamb" : "waec",
+      variation_code:currentProvider === "jamb" ? isUTME ? "utme" : "de" : "waecdirect",
       amount:educationAmount,
     }
+
+    console.log("CCPPPP", currentProvider)
+    console.log("REQQQPPPP", requestPayload)
 
     const values = computeTransaction({
         payload: {
@@ -373,8 +376,17 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, profileCode
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
                           Congratulations {fullName}!, You have successfully topped up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode}. Thank you for choosing iSubscribe.
                       </p>
-                       <p> <strong>Pin:</strong> {resData?.cards[0]?.Pin}</p>
-                       <p> <strong>Serial:</strong> {resData?.cards[0]?.Serial}</p>
+                      { resData?.cards ?
+                       (
+                           resData?.cards?.map((item:any, idx:number) => (
+                               <div key={idx}>
+                                   <p> <strong>Pin:</strong> {item?.Pin}</p>
+                                   <p> <strong>Serial:</strong> {item?.Serial}</p>
+                               </div>
+                           ))
+                       ) :
+                       <p> <strong>Pin:</strong> {resData?.Pin}</p>
+                      }
                        <p> <strong>Phone:</strong> {resData?.content?.transactions?.phone}</p>
                        <p> <strong>Amount:</strong> {resData?.amount}</p>
                        <p> <strong>Request ID:</strong> {resData?.requestId}</p>
