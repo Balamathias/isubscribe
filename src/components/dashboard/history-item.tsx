@@ -15,7 +15,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
   return (
     <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
         <div className='flex flex-row gap-x-2.5'>
-            <div className='md:w-10 md:h-10 w-8 h-8'>
+            <div className=''>
                 <Image 
                     src={
                         item?.type === EVENT_TYPE.wallet_fund ? 
@@ -31,18 +31,18 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                     alt={item?.title!}
                     width={500}
                     height={500}
-                    className='w-full h-full object-cover rounded-full'
+                    className='object-cover rounded-full md:w-10 md:h-10 w-8 h-8'
                 />
             </div>
-            <div className="flex flex-col space-y-1">
-                <h2 className='text-sm md:text-base tracking-tighter'>{item.title}</h2>
-                <span className={cn("text-xs text-gray-500 dark:text-gray-400", {
+            <div className="flex flex-col space-y-1 basis-[80%]">
+                <h2 className='text-xs md:text-base tracking-tighter'>{item.title}</h2>
+                <span className={cn("text-[10px] md:text-xs text-gray-500 dark:text-gray-400", {
                     'text-red-500 dark:text-red-4': item.status === 'failed',
                     'dark:text-green-400 text-green-500': item.status === 'success'
                 })}>{item.description}</span>
             </div>
         </div>
-        <div className='flex flex-col space-y-1 justify-end items-end'>
+        <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
             {
                 item.status === 'success' ? (
                     <LucideCheck 
