@@ -91,6 +91,27 @@ export const buyElectricity = async (data: VTPassTransactionRequest): Promise<VT
     }
     return res.data
 }
+
+
+
+export const buyEducation = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
+    const headers = {
+        'api-key': VTPASS_API_KEY!,
+        'secret-key': VTPASS_SECRET_KEY!,
+        'Content-Type': 'application/json'
+    }
+    const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
+    console.log(res.statusText)
+    console.log("RESSSSS", res)
+    if (res.status !== 200) {
+        throw new Error('Failed to buy exam pin')
+    }
+    return res.data
+}
+
+
+
+
 export const verifySmartcardNumber = async (data: any) => {
     const headers = {
         'api-key': VTPASS_API_KEY!,

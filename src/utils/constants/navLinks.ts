@@ -1,4 +1,4 @@
-import { Asterisk, GraduationCap, HandCoins, History, LayoutDashboardIcon, Lightbulb, MoreHorizontal, PhoneCall, Power, Printer, Settings, Tv, User, Wifi } from "lucide-react";
+import { Asterisk, Book, GraduationCap, HandCoins, History, LayoutDashboardIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Power, Printer, Settings, Tv, User, Wifi } from "lucide-react";
 
 export const navLinks = [
     {
@@ -50,17 +50,17 @@ export const quickActionsLinks = [
     {
         href: "/dashboard/education",
         icon: GraduationCap,
-        label: "Education",
+        label: "WAEC Pin",
       },
     {
-        href: "/dashboard/print-recharge-card",
-        icon: Printer,
-        label: "Print ",
+        href: "/dashboard/education",
+        icon: Pen,
+        label: "GCE Pin ",
       },
     {
-        href: "/dashboard/print-data-card",
-        icon: Asterisk,
-        label: "Print",
+        href: "/dashboard/education",
+        icon: Book,
+        label: "JAMB Pin",
       },
     {
         href: "/dashboard/subs",

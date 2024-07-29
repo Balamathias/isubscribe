@@ -4,6 +4,7 @@ export const EVENT_TYPE = {
     airtime_topup: 'airtime_topup',
     tv_topup: 'tv_topup',
     meter_topup: 'meter_topup',
+    education_topup: 'education_topup',
     debit_funds: 'debit_funds',
     wallet_fund_failed: 'wallet_fund_failed'
 }
