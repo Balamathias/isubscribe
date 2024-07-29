@@ -33,7 +33,7 @@ const ElectricityProviderSelector = () => {
         onClick={() => setOpen(true)}
         className='bg-gray-200 hover:bg-gray-300 dark:bg-card/60 text-foreground hover:opacity-85 hover:transition-all p-2 rounded-lg cursor-pointer py-3.5'
       >
-        <div className='flex flex-row justify-between items-center space-y-3 border-none shadow-none outline-none'>
+        <div className='flex flex-row justify-between items-center border-none shadow-none outline-none'>
           <div className="flex flex-row space-x-3 items-center">
             <Image src={selected?.image} height={1000} width={1000} alt={selected?.name} className="h-10 w-10 rounded-full object-cover" />
             <span className="text-xs text-muted-foreground">{selected?.fullName} Distribution Company</span>
