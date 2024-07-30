@@ -10,16 +10,15 @@ import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { insertTransactionHistory } from '@/lib/supabase/history'
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { cn } from '@/lib/utils'
-import { buyTvCable } from '@/lib/vtpass/services'
+import { buyEducation, buyElectricity, buyTvCable } from '@/lib/vtpass/services'
 import { Tables } from '@/types/database'
 import { PaymentMethod } from '@/types/networks'
 import { SubTvPayload, TvCables } from '@/types/tv-cable'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
-import { any } from 'zod'
 
 interface SubTvProviderProps {
   children?: React.ReactNode,
@@ -28,38 +27,62 @@ interface SubTvProviderProps {
 }
 
 const SubTvContext = React.createContext<{
-  currentProvider: TvCables,
-  setCurrentProvider: React.Dispatch<React.SetStateAction<TvCables>>,
+  currentProvider: string,
+  setCurrentProvider: React.Dispatch<React.SetStateAction<string>>,
   smartcardNumber: string,
   setSmartcardNumber: React.Dispatch<React.SetStateAction<string>>,
+  profileCode: string,
+  setProfileCode: React.Dispatch<React.SetStateAction<string>>,
+  providerName:string,
+  setProviderName:React.Dispatch<React.SetStateAction<string>>,
+  providerImage:string,
+  setProviderImage:React.Dispatch<React.SetStateAction<string>>,
+  educationAmount: string,
+  setEducationAmount: React.Dispatch<React.SetStateAction<string>>,
   mobileNumber: string,
   setMobileNumber: React.Dispatch<React.SetStateAction<string>>,
   pinPasses?: boolean,
   setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
+  isUTME?: boolean,
+  setIsUTME?: React.Dispatch<React.SetStateAction<boolean>>,
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
-  handleBuyTvCable?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
+  handleBuyEducation?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
 
 }>({
-  currentProvider: 'dstv',
+  currentProvider: '',
   setCurrentProvider: () => {},
   smartcardNumber: '',
   setSmartcardNumber: () => {},
+  providerName:'',
+  setProviderName:() => {},
+  providerImage:'',
+  setProviderImage:() => {},
+  profileCode:'',
+  setProfileCode:() => {},
+  isUTME:true,
+  setIsUTME:() => {},
+  educationAmount:"",
+  setEducationAmount:() => {},
   mobileNumber: '',
   setMobileNumber: () => {},
   pinPasses: false,
   setPinPasses: () => {},
   fundSufficient: false,
   setFundSufficient: () => {},
-  handleBuyTvCable: () => {},
+  handleBuyEducation: () => {},
 })
 
-const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProviderProps) => {
+const EducationProvider = ({ children, profile, action='education' }: SubTvProviderProps) => {
   const { data: wallet, isPending } = useGetWalletBalance()
-  const [currentProvider, setCurrentProvider] = React.useState<TvCables>('dstv')
+  const [currentProvider, setCurrentProvider] = React.useState('waec')
+  const [providerName, setProviderName] = React.useState('WASSCE/GCE Result Checker PIN')
+  const [providerImage, setProviderImage] = React.useState('/images/electricity/ikeja.jpeg')
   const [smartcardNumber, setSmartcardNumber] = React.useState<string>('')
+  const [profileCode, setProfileCode] = React.useState<string>('')
   const [mobileNumber, setMobileNumber] = React.useState<string>('')
   const [pinPasses, setPinPasses] = React.useState<boolean>(false)
+  const [isUTME, setIsUTME] = React.useState<boolean>(true);
   const [fundSufficient, setFundSufficient] = React.useState<boolean>(false)
   const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
   const [purchaseFailed, setPurchaseFailed] = React.useState(false)
@@ -67,28 +90,31 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
   const [errorMessage, setErrorMessage] = React.useState<string>('')
   const [successMessage, setSuccessMessage] = React.useState<string>('')
   const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
-  const [powerAmount, setPowerAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
+  const [educationAmount, setEducationAmount] = React.useState('3500.00') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
+  const [resData, setResData] = useState(null)
   const router = useRouter()
 
 
 
-  const handleBuyTvCable = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
-    // console.log("PPPPPPP", payload)
+  const handleBuyEducation = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
+    // console.log("PPPPPPP", "₦" + payload?.variation_amount + ".00")
     const billerPayload = {
       CashBack:payload?.cashBack,
-      Price:payload?.variation_amount,
+      Price:"₦" + payload?.variation_amount,
       method:payload?.method
     }
 
     const requestPayload = {
-      billersCode: smartcardNumber,
+      billersCode: profileCode,
       phone: mobileNumber,
-      subscription_type:"Renew",
-      serviceID:currentProvider,
-      variation_code:payload?.variation_code,
-      amount:payload?.variation_amount,
+      serviceID:currentProvider === "jamb" ? "jamb" : "waec",
+      variation_code:currentProvider === "jamb" ? isUTME ? "utme" : "de" : "waecdirect",
+      amount:educationAmount,
     }
+
+    console.log("CCPPPP", currentProvider)
+    console.log("REQQQPPPP", requestPayload)
 
     const values = computeTransaction({
         payload: {
@@ -111,28 +137,30 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     setCableAmount(payload?.variation_amount)
     setPurchasing(true)
 
-    const res = await buyTvCable({
+    const res = await buyEducation({
         ...requestPayload as any,
         request_id: generateRequestId()
     })
 
     if (!res) return toast.error('Transaction attempt failed!')
     // const {} = res
+    setResData(res as any)
 
-    console.log("TVCABLE", res)
+    console.log("Eduuuuuu", resData)
+    
 
 
     /** if (error) return, @example: You could uncomment this only in edge cases */
 
     const transRes = res?.content?.transactions
 
-    if ( res?.response_description === "TRANSACTION FAILED" || transRes?.status === 'failed') {
+    if ( res?.response_description === "TRANSACTION FAILED"  || transRes?.status === 'failed') {
       setPurchaseFailed(true)
       const { data: insertHistory } = await insertTransactionHistory({
-          description: `Tv Cable subscription for ${smartcardNumber} failed.`,
+          description: `Education subscription for ${profileCode} failed.`,
           status: 'failed',
-          title: 'Tv Subscription',
-          type: EVENT_TYPE.tv_topup,
+          title: 'Education Subscription',
+          type: EVENT_TYPE.education_topup,
           email: null,
           meta_data: JSON.stringify(transRes),
           updated_at: null,
@@ -162,10 +190,10 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     if (_balanceError || _cashbackBalanceError) return
 
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Tv subscription for ${smartcardNumber}`,
+        description: `Education subscription for ${profileCode}`,
         status: 'pending',
-        title: 'Tv Subscription',
-        type: EVENT_TYPE.tv_topup,
+        title: 'Education Subscription',
+        type: EVENT_TYPE.education_topup,
         email: null,
         meta_data: JSON.stringify(transRes),
         updated_at: null,
@@ -182,7 +210,8 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     })
     */
     setPurchasing(false)
-} 
+}
+
 
 
 
@@ -202,10 +231,10 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     if (_balanceError || _cashbackBalanceError) return
 
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Tv subscription for ${smartcardNumber}`,
+        description: `Education subscription for ${profileCode}`,
         status: 'success',
-        title: 'Tv Subscription',
-        type: EVENT_TYPE.tv_topup,
+        title: 'Education Subscription',
+        type: EVENT_TYPE.education_topup,
         email: null,
         meta_data: JSON.stringify(transRes),
         updated_at: null,
@@ -243,7 +272,18 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
         setPinPasses,
         fundSufficient,
         setFundSufficient,
-        handleBuyTvCable,
+        handleBuyEducation,
+        profileCode,
+        setProfileCode,
+        isUTME,
+        setIsUTME,
+        educationAmount,
+        setEducationAmount,
+        providerImage,
+        setProviderImage,
+        providerName,
+        setProviderName
+       
       }}
     >
        {children}
@@ -251,41 +291,43 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
 
            <SubPurchaseStatus
                 closeModal={() => setPurchaseSuccess(false)}
-                tvAmount={cableAmount}
+                educationAmount={educationAmount}
                 fullName={profile?.full_name!}
                 open={purchaseSuccess}
                 phoneNumber={mobileNumber}
                 action={action}
-                smartcardNumber={smartcardNumber}
+                profileCode={profileCode}
+                resData={resData}
             /> 
             <SubPurchaseStatus
                 closeModal={() => setPurchaseFailed(false)}
-                tvAmount={cableAmount}
+                educationAmount={educationAmount}
                 fullName={profile?.full_name!}
                 open={purchaseFailed}
                 phoneNumber={mobileNumber}
                 failed
                 action={action}
-                smartcardNumber={smartcardNumber}
+                profileCode={profileCode}
+
             />
 
             <SubPurchaseStatus
                 closeModal={() => setPurchasePending(false)}
-                tvAmount={cableAmount}
+                educationAmount={educationAmount}
                 fullName={profile?.full_name!}
                 open={purchasePending}
                 phoneNumber={mobileNumber}
                 pending
                 action={action}
-                smartcardNumber={smartcardNumber}
+                profileCode={profileCode}
             />
     </SubTvContext.Provider>
   )
 }
 
 
-export const useTvCable = () => {
-  if (!React.useContext(SubTvContext)) throw new Error('useTvCable must be used within a SubDataProvider')
+export const useEducation = () => {
+  if (!React.useContext(SubTvContext)) throw new Error('useEducation must be used within a SubDataProvider')
 
   return React.useContext(SubTvContext)
 }
@@ -294,16 +336,17 @@ export const useTvCable = () => {
 
 
 
-const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNumber, failed, pending, action='tv-cable', tvAmount}: {
+const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, profileCode, failed, pending, action='electricity', educationAmount, resData}: {
   phoneNumber: string,
-  smartcardNumber:string,
+  profileCode:string,
   fullName: string,
   open: boolean,
+  resData?:any,
   closeModal: () => void,
   failed?: boolean,
   pending?: boolean,
   action?: 'tv-cable' | 'electricity' | "education",
-  tvAmount?: string | number
+  educationAmount?: string | number
 }) => {
   return (
       <DynamicModal
@@ -321,17 +364,35 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNu
               {
                   failed ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Sorry {fullName}!, Your attempt to top up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber} has failed. Please check the details and try again.
+                          Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode} has failed. Please check the details and try again.
                       </p>
                   ) :  pending ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                           Sorry {fullName}!, Your attempt to top up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber} is pending. Kindly go to transaction history page and query the status.
+                           Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode} is pending. Kindly go to transaction history page and query the status.
                       </p>
                   )
                    : (
+                      <div className=' flex flex-col space-y-1'>
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Congratulations {fullName}!, You have successfully topped up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber}. Thank you for choosing iSubscribe.
+                          Congratulations {fullName}!, You have successfully topped up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode}. Thank you for choosing iSubscribe.
                       </p>
+                      { resData?.cards ?
+                       (
+                           resData?.cards?.map((item:any, idx:number) => (
+                               <div key={idx}>
+                                   <p> <strong>Pin:</strong> {item?.Pin}</p>
+                                   <p> <strong>Serial:</strong> {item?.Serial}</p>
+                               </div>
+                           ))
+                       ) :
+                       <p> <strong>Pin:</strong> {resData?.Pin}</p>
+                      }
+                       <p> <strong>Phone:</strong> {resData?.content?.transactions?.phone}</p>
+                       <p> <strong>Amount:</strong> {resData?.amount}</p>
+                       <p> <strong>Request ID:</strong> {resData?.requestId}</p>
+                       <p> <strong>Transaction ID:</strong> {resData?.content?.transactions?.transactionId
+                       }</p>
+                      </div>
                   )
               }
 
@@ -341,4 +402,4 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNu
   )
 }
 
-export default TvCableProvider
+export default EducationProvider
