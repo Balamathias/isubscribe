@@ -12,22 +12,30 @@ import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 
 const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: string}) => {
+
+    const getItemImage = (type: keyof typeof EVENT_TYPE) => {
+        switch (type) {
+            case EVENT_TYPE.wallet_fund:
+                return product[EVENT_TYPE.wallet_fund].image
+            case EVENT_TYPE.meter_topup:
+                return product[EVENT_TYPE.meter_topup].image
+            case EVENT_TYPE.education_topup:
+                return product[EVENT_TYPE.education_topup].image
+            case EVENT_TYPE.tv_topup:
+                return product[EVENT_TYPE.tv_topup].image
+            default:
+                return product[(JSON.parse(
+                    item.meta_data?.toString() ?? '{}'
+                ) as AirtimeDataMetadata)?.network as Networks]?.image
+        }
+    }
+
   return (
     <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
         <div className='flex flex-row gap-x-2.5'>
             <div className=''>
                 <Image 
-                    src={
-                        item?.type === EVENT_TYPE.wallet_fund ? 
-                            product[EVENT_TYPE.wallet_fund].image :
-                            item?.type === EVENT_TYPE.meter_topup ? 
-                                product[EVENT_TYPE.meter_topup].image :
-                                item?.type === EVENT_TYPE.tv_topup ? 
-                            product[EVENT_TYPE.tv_topup].image :
-                                product[(JSON.parse(
-                                item.meta_data?.toString() ?? '{}'
-                            ) as AirtimeDataMetadata)?.network as Networks]?.image
-                    }
+                    src={getItemImage(item.type as keyof typeof EVENT_TYPE)}
                     alt={item?.title!}
                     width={500}
                     height={500}

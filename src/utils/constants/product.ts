@@ -29,4 +29,8 @@ export const product = {
         name: 'METER',
         image: '/images/networks/electricity.png'
     },
+    [EVENT_TYPE.education_topup]: {
+        name: 'Education',
+        image: '/images/education/waec.png'
+    },
 }
