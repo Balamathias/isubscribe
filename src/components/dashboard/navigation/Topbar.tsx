@@ -1,22 +1,26 @@
 'use client'
 
-import React from 'react'
+import React, { useActionState, useEffect, useState } from 'react'
 import BackButton from '@/components/BackButton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
 import { Tables } from '@/types/database'
 import { usePathname } from 'next/navigation'
-import { LucideBadgeHelp, LucideSettings2, LucideShare2, LucideUser2 } from 'lucide-react'
+import { LucideBadgeHelp, LucideHeadphones, LucideSettings2, LucideShare2, LucideUser2 } from 'lucide-react'
 import Logo from '@/components/Logo'
-import ProfileDropdown from '../ProfileDropdown'
 import SignOutComponent from '@/components/auth/SignOutComponent'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import DynamicSheet from '@/components/DynamicSheet'
+import DynamicModal from '@/components/DynamicModal'
+import Support from '../support'
 
 const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   const pathname = usePathname()
   const { data: profile, isPending } = useGetProfile()
+  const [openSupport, setOpenSupport] = useState(false)
+
+  useEffect(() => {setOpenSupport(false)}, [pathname])
 
   if (isPending) return <LoadingOverlay />
 
@@ -27,13 +31,19 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         <div className=' md:ml-[220px]'>
         {
           pathname === '/dashboard' ? (<>
-            <Link href={'#support'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
+            <Link onClick={() => setOpenSupport(true)} href={'#support'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
               <LucideBadgeHelp size={28} strokeWidth={2} className='text-primary  ' />
               <span>Support?</span>
             </Link>
             <Logo showLogoText={false} className='flex md:hidden' />
           </>) : <BackButton />
         }
+        </div>
+
+        <div className="md:hidden">
+          <button onClick={() => setOpenSupport(true)} className='bg-transparent border-none focus:outline-none'>
+            <LucideHeadphones className='text-violet-500'/>
+          </button>
         </div>
 
         <DynamicSheet
@@ -82,6 +92,14 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
           </div>
         </DynamicSheet>
       </div>
+
+      <DynamicModal
+        open={openSupport}
+        setOpen={setOpenSupport}
+        dialogClassName='rounded-2xl'
+      >
+        <Support />
+      </DynamicModal>
     </div>
   )
 }
