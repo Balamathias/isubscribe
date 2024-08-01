@@ -31,7 +31,7 @@ const services = [
         label: 'Electricity',
         icon: <LucideLamp />,
         className: 'text-amber-600 bg-amber-600/10',
-        url: '/dashboard/electricty'
+        url: '/dashboard/electricity'
     },
     {
         service: 'education',

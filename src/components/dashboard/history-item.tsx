@@ -10,6 +10,8 @@ import Link from 'next/link'
 import React from 'react'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import Status from '../status'
+import { Status as StatusType } from '@/types/constants'
 
 const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: string}) => {
 
@@ -51,7 +53,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
             </div>
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
-            {
+            {/* {
                 item.status === 'success' ? (
                     <LucideCheck 
                         className='text-green-500 dark:text-green-400'
@@ -63,7 +65,8 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                         size={18}
                     />
                 )
-            }
+            } */}
+            <Status status={item.status as StatusType} />
             <span className='text-xs text-gray-500 dark:text-gray-400'>{formatNigerianNaira(item?.amount!)}</span>
         </div>
     </Link>

@@ -1,6 +1,8 @@
+import Status from "@/components/status"
 import { Card } from "@/components/ui/card"
 import { formatNigerianNaira } from "@/funcs/formatCurrency"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
+import type { Status as StatusType } from "@/types/constants"
 import { Tables } from "@/types/database"
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
 
@@ -56,11 +58,7 @@ export default function DataTopup ({data, history}: DataTopupProps) {
                     <div className='flex items-start justify-between'>
                         <p className='text-muted-foreground basis-2/3'>Status</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                            {
-                                history?.status === 'success' ? <p className='py-1 px-3 rounded-full bg-green-600/10 text-green-500 w-fit'>successful</p> : (
-                                    <p className='py-1 px-3 rounded-full bg-red-600/10 text-red-500 w-fit'>failed</p>
-                                )
-                            }
+                            <Status status={history.status as StatusType} />
                         </div>
                     </div>
 
