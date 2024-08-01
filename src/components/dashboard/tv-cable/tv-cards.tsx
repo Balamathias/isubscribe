@@ -36,7 +36,7 @@ const TvCards = () => {
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    const { currentProvider, smartcardNumber, mobileNumber, setMobileNumber, handleBuyTvCable} = useTvCable()
+    const { currentProvider, smartcardNumber, mobileNumber, setMobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, handleBuyTvCable} = useTvCable()
 
     // console.log("SELEC", selected)
     // console.log("Smaaa", smartcardNumber)
@@ -59,7 +59,7 @@ const TvCards = () => {
                     // if ((mobileNumber.length < 12) || (mobileNumber.length > 12)) return setOpenMobileNumber(true)
 
                     setSelected(d as any)
-                    setOpen(true)
+                    setOpenConfirmPurchaseModal?.(true)
                 }}
             >
                 <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
@@ -76,11 +76,11 @@ const TvCards = () => {
 
 
        {
-            open && <ConfirmPurchaseModal 
-                open={open}
+            openConfirmPurchaseModal && <ConfirmPurchaseModal 
+                open={openConfirmPurchaseModal}
                 paymentMethod={paymentMethod}
                 selected={selected as any}
-                setOpen={setOpen}
+                setOpen={setOpenConfirmPurchaseModal}
                 setPaymentMethod={setPaymentMethod}
                 setProceed={setProceed}
                 key={'tv-cable'}
@@ -99,7 +99,7 @@ const TvCards = () => {
                 <ConfirmPin className='rounded-none' 
                     func={() => {
                         handleBuyTvCable?.({...selected!, method: paymentMethod})
-                        setOpen(false)
+                        // setOpen(false)
                         setProceed(false)
                     }} 
                     profile={profile?.data!}

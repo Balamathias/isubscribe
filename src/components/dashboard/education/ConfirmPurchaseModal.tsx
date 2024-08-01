@@ -13,6 +13,7 @@ import { SubTvPayload } from '@/types/tv-cable'
 import { useElectricity } from '@/providers/electricity/electricity-provider'
 import { electricServices } from '@/utils/constants/electricity-plans'
 import { useEducation } from '@/providers/education/education-provider'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 
 export const tvProducts = {
     'dstv': {
@@ -54,7 +55,7 @@ const ConfirmPurchaseModal = ({
     title,
     setProceed
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentProvider, smartcardNumber, profileCode, isUTME, providerImage, providerName } = useEducation()
+    const { mobileNumber, currentProvider, smartcardNumber, profileCode, isUTME, providerImage, providerName, purchasing } = useEducation()
     
     const { data: wallet, isPending } = useGetWalletBalance()
 
@@ -69,7 +70,10 @@ const ConfirmPurchaseModal = ({
         dismissible
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
-    >
+    >   
+        {purchasing && 
+        <LoadingSpinner isPending={purchasing} />
+        }
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Electricity Plan Details'}</h1>
             
@@ -101,7 +105,7 @@ const ConfirmPurchaseModal = ({
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Exam Type</p>
-                    <p>{currentProvider === "jamb" ? "JAMB" : "WAEC"}</p>
+                    <p>{currentProvider === "jamb" ? "JAMB" : "WAEC"}/{isUTME ? "UTME" : "DE"}</p>
                 </div>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Phone Number</p>

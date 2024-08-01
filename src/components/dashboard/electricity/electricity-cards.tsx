@@ -21,7 +21,7 @@ const ElectricityCards = () => {
     const [proceed, setProceed] = React.useState(false)
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
-    const { powerAmount, meterNumber, mobileNumber, currentProvider, isPrepaid, setPowerAmount, handleBuyElectricity } = useElectricity()
+    const { powerAmount, meterNumber, mobileNumber, currentProvider, isPrepaid, setPowerAmount, handleBuyElectricity, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useElectricity()
 
     const { data: profile, isPending: profilePending } = useGetProfile()
     
@@ -39,7 +39,7 @@ const ElectricityCards = () => {
         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
         if (!powerAmount) return toast.warning('Please enter Amount, it can\'t be empty!')
         if (parseInt(powerAmount) < 500) return toast.warning('Amount cannot be Less than ₦500')
-      setOpen(true)
+          setOpenConfirmPurchaseModal?.(true)
     }
 
     if (profilePending) return <LoadingOverlay loader='2' />
@@ -71,10 +71,10 @@ const ElectricityCards = () => {
 
 
        {
-            open && <ConfirmPurchaseModal 
-                open={open}
+            openConfirmPurchaseModal && <ConfirmPurchaseModal 
+                open={openConfirmPurchaseModal}
                 paymentMethod={paymentMethod}
-                setOpen={setOpen}
+                setOpen={setOpenConfirmPurchaseModal}
                 selected={selected}
                 setPaymentMethod={setPaymentMethod}
                 setProceed={setProceed}
@@ -98,7 +98,7 @@ const ElectricityCards = () => {
                   className='rounded-none' 
                   func={() => {
                       handleBuyElectricity?.({...selected!, method: paymentMethod})
-                      setOpen(false)
+                      // setOpen(false)
                       setProceed(false)
                   }} 
                   profile={profile?.data!}

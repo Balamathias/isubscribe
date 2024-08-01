@@ -10,6 +10,7 @@ import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider'
 import { SubTvPayload } from '@/types/tv-cable'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 
 export const tvProducts = {
     'dstv': {
@@ -51,7 +52,7 @@ const ConfirmPurchaseModal = ({
     title,
     setProceed
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentProvider, smartcardNumber } = useTvCable()
+    const { mobileNumber, currentProvider, smartcardNumber, purchasing } = useTvCable()
     const { data: wallet, isPending } = useGetWalletBalance()
 
     // console.log("bb", wallet?.data?.balance)
@@ -66,7 +67,10 @@ const ConfirmPurchaseModal = ({
         setOpen={setOpen}
         dismissible
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
-    >
+    >  
+        {purchasing && 
+            <LoadingSpinner isPending={purchasing} />
+            }
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Airtime Plan Details'}</h1>
             

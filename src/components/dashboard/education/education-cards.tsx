@@ -16,12 +16,12 @@ import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 import { useEducation } from '@/providers/education/education-provider'
 
 const EducationCard = () => {
-    const [open, setOpen] = React.useState(false)
+    // const [open, setOpen] = React.useState(false)
     
     const [proceed, setProceed] = React.useState(false)
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
-    const { educationAmount, profileCode, mobileNumber, currentProvider, isUTME, handleBuyEducation } = useEducation()
+    const { educationAmount, profileCode, mobileNumber, currentProvider, isUTME, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, handleBuyEducation } = useEducation()
 
     const { data: profile, isPending: profilePending } = useGetProfile()
     
@@ -39,7 +39,7 @@ const EducationCard = () => {
         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
         // if (!educationAmount) return toast.warning('Please enter Amount, it can\'t be empty!')
         // if (parseInt(educationAmount) < 500) return toast.warning('Amount cannot be Less than ₦500')
-      setOpen(true)
+       setOpenConfirmPurchaseModal?.(true)
     }
 
     if (profilePending) return <LoadingOverlay loader='2' />
@@ -68,10 +68,10 @@ const EducationCard = () => {
 
 
        {
-            open && <ConfirmPurchaseModal
-                open={open}
+            openConfirmPurchaseModal && <ConfirmPurchaseModal
+                open={openConfirmPurchaseModal}
                 paymentMethod={paymentMethod}
-                setOpen={setOpen}
+                setOpen={setOpenConfirmPurchaseModal}
                 selected={selected}
                 setPaymentMethod={setPaymentMethod}
                 setProceed={setProceed}
@@ -95,7 +95,7 @@ const EducationCard = () => {
                   className='rounded-none' 
                   func={() => {
                       handleBuyEducation?.({...selected!, method: paymentMethod})
-                      setOpen(false)
+                      // setOpen(false)
                       setProceed(false)
                   }} 
                   profile={profile?.data!}

@@ -45,6 +45,9 @@ const SubTvContext = React.createContext<{
   setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
   isPrepaid?: boolean,
   setIsPrepaid?: React.Dispatch<React.SetStateAction<boolean>>,
+  purchasing?:boolean,
+  openConfirmPurchaseModal?: boolean,
+  setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyElectricity?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
@@ -62,6 +65,9 @@ const SubTvContext = React.createContext<{
   setMeterNumber:() => {},
   isPrepaid:true,
   setIsPrepaid:() => {},
+  purchasing:false,
+  openConfirmPurchaseModal: false,
+  setOpenConfirmPurchaseModal: () => {},
   powerAmount:"",
   setPowerAmount:() => {},
   mobileNumber: '',
@@ -92,6 +98,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
   const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [powerAmount, setPowerAmount] = React.useState('') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
+  const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState(false)
   const [resData, setResData] = useState(null)
   const router = useRouter()
 
@@ -165,6 +172,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
           amount: price,
       })
       setPurchasing(false)
+      setOpenConfirmPurchaseModal(false)
 
       router.refresh()
       return
@@ -207,6 +215,8 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
     })
     */
     setPurchasing(false)
+    setOpenConfirmPurchaseModal(false)
+
 }
 
 
@@ -249,12 +259,9 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
     })
     */
     setPurchasing(false)
-} else {
-    /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
-    setPurchasing(false)
-    // setPurchasePending(false)
-    setPurchaseFailed(true)
-}
+    setOpenConfirmPurchaseModal(false)
+
+} 
 }
 
   return (
@@ -279,12 +286,15 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         providerImage,
         setProviderImage,
         providerName,
-        setProviderName
+        setProviderName,
+        purchasing,
+        openConfirmPurchaseModal,
+        setOpenConfirmPurchaseModal
        
       }}
     >
        {children}
-      {purchasing && (<LoadingOverlay />)}
+      {/* {purchasing && (<LoadingOverlay />)} */}
 
            <SubPurchaseStatus
                 closeModal={() => setPurchaseSuccess(false)}
@@ -295,6 +305,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
                 action={action}
                 meterNumber={meterNumber}
                 resData={resData}
+                currentProvider={currentProvider}
             /> 
             <SubPurchaseStatus
                 closeModal={() => setPurchaseFailed(false)}
@@ -305,6 +316,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
                 failed
                 action={action}
                 meterNumber={meterNumber}
+                currentProvider={currentProvider}
 
             />
 
@@ -317,6 +329,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
                 pending
                 action={action}
                 meterNumber={meterNumber}
+                currentProvider={currentProvider}
             />
     </SubTvContext.Provider>
   )
@@ -333,10 +346,11 @@ export const useElectricity = () => {
 
 
 
-const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, meterNumber, failed, pending, action='electricity', powerAmount, resData}: {
+const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNumber, meterNumber, failed, pending, action='electricity', powerAmount, resData}: {
   phoneNumber: string,
   meterNumber:string,
   fullName: string,
+  currentProvider: string,
   open: boolean,
   resData?:any,
   closeModal: () => void,
@@ -349,6 +363,8 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, meterNumber
       <DynamicModal
           open={open}
           closeModal={closeModal}
+          dialogClassName="sm:max-w-[640px] md:max-w-[500px] "
+          drawerClassName=''
       >
           <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
               {
@@ -357,29 +373,49 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, meterNumber
                   (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
               }
              
-              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Success'}!</h2>
+              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
               {
                   failed ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? powerAmount : powerAmount} for {meterNumber} has failed. Please check the details and try again.
+                          Sorry {fullName}!, Your attempt to purchase <strong> ₦{powerAmount}</strong> Power for <strong>{meterNumber}</strong> has failed. Please check the details and try again.
                       </p>
                   ) :  pending ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                           Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? powerAmount : powerAmount} for {meterNumber} is pending. Kindly go to transaction history page and query the status.
+                           Sorry {fullName}!, Your attempt to purchase <strong> ₦{powerAmount}</strong> Power for <strong>{meterNumber}</strong> is pending. Kindly go to transaction history page and query the status.
                       </p>
                   )
                    : (
                       <div className=' flex flex-col space-y-1'>
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Congratulations {fullName}!, You have successfully topped up {action === 'electricity' ? powerAmount : powerAmount} for {meterNumber}. Thank you for choosing iSubscribe.
+                          Congratulations {fullName}!, You have successfully purchased <strong> ₦{powerAmount}</strong> Power for <strong>{meterNumber}</strong>. <br /> Thank you for choosing iSubscribe.
                       </p>
-                       <p> <strong>Meter Token:</strong> {resData?.token || resData?.Token || resData?.mainToken}</p>
-                       <p> <strong>Name:</strong> {resData?.customerName || resData?.CustomerName}</p>
-                       <p> <strong>Address:</strong> {resData?.customerAddress || resData?.address || resData?.CustomerAddress}</p>
-                       <p> <strong>Amount:</strong> {resData?.amount}</p>
-                       <p> <strong>Request ID:</strong> {resData?.requestId}</p>
-                       <p> <strong>Transaction ID:</strong> {resData?.content?.transactions?.transactionId
-                       }</p>
+
+                      <div className='bg-violet-100 dark:bg-secondary flex flex-col space-y-1 p-2 rounded-sm'>
+                       <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Meter Token:</p>
+                        <p> {resData?.token || resData?.Token || resData?.mainToken}</p>
+                       </div>
+                       <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Name:</p>
+                        <p> {resData?.customerName || resData?.CustomerName}</p>
+                       </div>
+                       <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Address:</p>
+                        <p>{resData?.customerAddress || resData?.address || resData?.CustomerAddress}</p>
+                       </div>
+                       <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Amount:</p>
+                        <p>{resData?.amount}</p>
+                       </div>
+                       <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Request ID:</p>
+                        <p>{resData?.requestId}</p>
+                       </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Transaction ID:</p>
+                        <p>{resData?.content?.transactions?.transactionId}</p>
+                       </div>
+                      </div>
                       </div>
                   )
               }
