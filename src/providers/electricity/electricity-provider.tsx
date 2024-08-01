@@ -45,6 +45,8 @@ const SubTvContext = React.createContext<{
   setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
   isPrepaid?: boolean,
   setIsPrepaid?: React.Dispatch<React.SetStateAction<boolean>>,
+  openConfirmPurchaseModal?: boolean,
+  setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyElectricity?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
@@ -62,6 +64,8 @@ const SubTvContext = React.createContext<{
   setMeterNumber:() => {},
   isPrepaid:true,
   setIsPrepaid:() => {},
+  openConfirmPurchaseModal: false,
+  setOpenConfirmPurchaseModal: () => {},
   powerAmount:"",
   setPowerAmount:() => {},
   mobileNumber: '',
@@ -92,6 +96,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
   const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [powerAmount, setPowerAmount] = React.useState('') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
+  const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState(false)
   const [resData, setResData] = useState(null)
   const router = useRouter()
 
@@ -279,7 +284,9 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         providerImage,
         setProviderImage,
         providerName,
-        setProviderName
+        setProviderName,
+        openConfirmPurchaseModal,
+        setOpenConfirmPurchaseModal
        
       }}
     >

@@ -2,6 +2,7 @@
 
 import DynamicModal from '@/components/DynamicModal'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
@@ -45,6 +46,9 @@ const SubTvContext = React.createContext<{
   setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
   isUTME?: boolean,
   setIsUTME?: React.Dispatch<React.SetStateAction<boolean>>,
+  purchasing?:boolean,
+  openConfirmPurchaseModal?: boolean,
+  setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyEducation?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
@@ -62,6 +66,9 @@ const SubTvContext = React.createContext<{
   setProfileCode:() => {},
   isUTME:true,
   setIsUTME:() => {},
+  purchasing:false,
+  openConfirmPurchaseModal: false,
+  setOpenConfirmPurchaseModal: () => {},
   educationAmount:"",
   setEducationAmount:() => {},
   mobileNumber: '',
@@ -93,6 +100,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
   const [educationAmount, setEducationAmount] = React.useState('3500.00') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
   const [resData, setResData] = useState(null)
+  const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
   const router = useRouter()
 
 
@@ -128,13 +136,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
 
     const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
 
-    // console.log("mb", balance)
-    // console.log("cb", cashbackBalance)
-    // console.log("cp", cashbackPrice)
-    // console.log("dA", deductableAmount)
-    // console.log("p", price)
 
-    setCableAmount(payload?.variation_amount)
     setPurchasing(true)
 
     const res = await buyEducation({
@@ -143,10 +145,9 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     })
 
     if (!res) return toast.error('Transaction attempt failed!')
-    // const {} = res
     setResData(res as any)
 
-    console.log("Eduuuuuu", resData)
+    // console.log("Eduuuuuu", resData)
     
 
 
@@ -168,6 +169,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
           amount: price,
       })
       setPurchasing(false)
+      setOpenConfirmPurchaseModal(false)
 
       router.refresh()
       return
@@ -203,13 +205,14 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
 
     router.refresh()
 
-    setPurchasePending(true)
+    // setPurchasePending(true)
     /** 
      * @example: toast.success(`Congratulations!`, {
         description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
     })
     */
     setPurchasing(false)
+    setOpenConfirmPurchaseModal(false)
 }
 
 
@@ -252,6 +255,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     })
     */
     setPurchasing(false)
+    setOpenConfirmPurchaseModal(false)
 } else {
     /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
     setPurchasing(false)
@@ -277,17 +281,20 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
         setProfileCode,
         isUTME,
         setIsUTME,
+        purchasing,
         educationAmount,
         setEducationAmount,
         providerImage,
         setProviderImage,
         providerName,
-        setProviderName
+        setProviderName,
+        openConfirmPurchaseModal,
+        setOpenConfirmPurchaseModal,
+        
        
       }}
     >
        {children}
-      {purchasing && (<LoadingOverlay />)}
 
            <SubPurchaseStatus
                 closeModal={() => setPurchaseSuccess(false)}
@@ -298,6 +305,8 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
                 action={action}
                 profileCode={profileCode}
                 resData={resData}
+                currentProvider={currentProvider}
+                isUTME={isUTME}
             /> 
             <SubPurchaseStatus
                 closeModal={() => setPurchaseFailed(false)}
@@ -308,6 +317,9 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
                 failed
                 action={action}
                 profileCode={profileCode}
+                currentProvider={currentProvider}
+                isUTME={isUTME}
+
 
             />
 
@@ -320,6 +332,8 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
                 pending
                 action={action}
                 profileCode={profileCode}
+                currentProvider={currentProvider}
+                isUTME={isUTME}
             />
     </SubTvContext.Provider>
   )
@@ -336,15 +350,17 @@ export const useEducation = () => {
 
 
 
-const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, profileCode, failed, pending, action='electricity', educationAmount, resData}: {
+const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProvider, isUTME, profileCode, failed, pending, action='electricity', educationAmount, resData}: {
   phoneNumber: string,
   profileCode:string,
   fullName: string,
+  currentProvider?:string,
   open: boolean,
   resData?:any,
   closeModal: () => void,
   failed?: boolean,
   pending?: boolean,
+  isUTME?:boolean,
   action?: 'tv-cable' | 'electricity' | "education",
   educationAmount?: string | number
 }) => {
@@ -352,6 +368,9 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, profileCode
       <DynamicModal
           open={open}
           closeModal={closeModal}
+          dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
+          drawerClassName=''
+          
       >
           <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
               {
@@ -360,38 +379,64 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, profileCode
                   (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
               }
              
-              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Success'}!</h2>
+              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
               {
                   failed ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode} has failed. Please check the details and try again.
+                          Sorry {fullName}!, Your attempt to purchased {currentProvider === "jamb" ? "JAMB PIN" : "WAEC PIN"}. has failed. Please check the details and try again.
                       </p>
                   ) :  pending ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                           Sorry {fullName}!, Your attempt to top up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode} is pending. Kindly go to transaction history page and query the status.
+                           Sorry {fullName}!, Your attempt to purchased {currentProvider === "jamb" ? "JAMB PIN" : "WAEC PIN"} is pending. Kindly go to transaction history page and query the status.
                       </p>
                   )
                    : (
                       <div className=' flex flex-col space-y-1'>
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Congratulations {fullName}!, You have successfully topped up {action === 'electricity' ? educationAmount : educationAmount} for {profileCode}. Thank you for choosing iSubscribe.
+                          Congratulations {fullName}!, You have successfully purchased {currentProvider === "jamb" ? "JAMB PIN" : "WAEC PIN"}. <br /> Thank you for choosing iSubscribe.
                       </p>
                       { resData?.cards ?
                        (
                            resData?.cards?.map((item:any, idx:number) => (
-                               <div key={idx}>
-                                   <p> <strong>Pin:</strong> {item?.Pin}</p>
-                                   <p> <strong>Serial:</strong> {item?.Serial}</p>
+                               <div key={idx} className=' flex flex-col gap-1'>
+                                    <div className='flex flex-row justify-between items-center gap-x-2'>
+                                    <p className='font-semibold text-muted-foreground'>Pin:</p>
+                                    <p>{item?.Pin}</p>
+                                    </div>
+                                    <div className='flex flex-row justify-between items-center gap-x-2'>
+                                    <p className='font-semibold text-muted-foreground'>Serial:</p>
+                                    <p>{item?.Serial}</p>
+                                    </div>
                                </div>
                            ))
                        ) :
-                       <p> <strong>Pin:</strong> {resData?.Pin}</p>
+                       <div className=' space-y-1'>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Pin:</p>
+                        <p>{resData?.Pin}</p>
+                       </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Profile Code:</p>
+                        <p>{profileCode}</p>
+                        </div>
+                       </div>
                       }
-                       <p> <strong>Phone:</strong> {resData?.content?.transactions?.phone}</p>
-                       <p> <strong>Amount:</strong> {resData?.amount}</p>
-                       <p> <strong>Request ID:</strong> {resData?.requestId}</p>
-                       <p> <strong>Transaction ID:</strong> {resData?.content?.transactions?.transactionId
-                       }</p>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Phone Number:</p>
+                        <p>{resData?.content?.transactions?.phone}</p>
+                       </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Amount:</p>
+                        <p>{resData?.amount}</p>
+                       </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Request ID:</p>
+                        <p>{resData?.requestId}</p>
+                       </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Transaction ID:</p>
+                        <p>{resData?.content?.transactions?.transactionId}</p>
+                       </div>
                       </div>
                   )
               }
