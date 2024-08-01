@@ -57,8 +57,8 @@ export default function AirtimeTopup ({data, history}: AirtimeTopupProps) {
                         <p className='text-muted-foreground basis-2/3'>Status</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
                             {
-                                history?.status === 'success' ? <p className='py-1 px-2 rounded-full bg-green-200 text-green-700 w-fit'>successful</p> : (
-                                    <p className='py-1 px-2 rounded-full bg-red-200 text-red-700 w-fit'>failed</p>
+                                history?.status === 'success' ? <p className='py-1 px-3 rounded-full bg-green-600/10 text-green-500 w-fit'>successful</p> : (
+                                    <p className='py-1 px-3 rounded-full bg-red-600/10 text-red-500 w-fit'>failed</p>
                                 )
                             }
                         </div>

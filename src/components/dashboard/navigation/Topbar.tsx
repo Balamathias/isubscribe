@@ -41,7 +41,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         </div>
 
         <div className="md:hidden">
-          <button onClick={() => setOpenSupport(true)} className='bg-transparent border-none focus:outline-none'>
+          <button onClick={() => setOpenSupport(prev => !prev)} className='bg-transparent border-none focus:outline-none'>
             <LucideHeadphones className='text-violet-500'/>
           </button>
         </div>

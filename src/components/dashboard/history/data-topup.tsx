@@ -14,7 +14,7 @@ export default function DataTopup ({data, history}: DataTopupProps) {
         <div className="flex flex-col gap-y-3">
             <div className='flex flex-col space-y-8 w-full'>
                 <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
-                    {history?.status === 'success' ? <LucideCheckCircle2 className='text-green-600' size={40} /> :<LucideXCircle className='text-red-600' size={40} /> }
+                    {history?.status === 'success' ? <LucideCheckCircle2 className='text-green-500' size={40} /> :<LucideXCircle className='text-red-500' size={40} /> }
                     <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                     <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                     <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>
@@ -57,8 +57,8 @@ export default function DataTopup ({data, history}: DataTopupProps) {
                         <p className='text-muted-foreground basis-2/3'>Status</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
                             {
-                                history?.status === 'success' ? <p className='py-1 px-2 rounded-full bg-green-200 text-green-700 w-fit'>successful</p> : (
-                                    <p className='py-1 px-2 rounded-full bg-red-200 text-red-700 w-fit'>failed</p>
+                                history?.status === 'success' ? <p className='py-1 px-3 rounded-full bg-green-600/10 text-green-500 w-fit'>successful</p> : (
+                                    <p className='py-1 px-3 rounded-full bg-red-600/10 text-red-500 w-fit'>failed</p>
                                 )
                             }
                         </div>
