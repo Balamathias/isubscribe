@@ -11,6 +11,7 @@ const DataPage = async () => {
 
   return (
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 mt-16'>
+      <title>Buy Data</title>
       <SubDataProvider profile={profile!}>
         <DataTabs />
       </SubDataProvider>
