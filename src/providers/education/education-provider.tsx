@@ -147,7 +147,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     if (!res) return toast.error('Transaction attempt failed!')
     setResData(res as any)
 
-    // console.log("Eduuuuuu", resData)
+    console.log("Eduuuuuu", resData)
     
 
 
@@ -168,10 +168,10 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
           user: profile?.id!,
           amount: price,
       })
+      router.refresh()
       setPurchasing(false)
       setOpenConfirmPurchaseModal(false)
 
-      router.refresh()
       return
   }
 
@@ -205,7 +205,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
 
     router.refresh()
 
-    // setPurchasePending(true)
+    setPurchasePending(true)
     /** 
      * @example: toast.success(`Congratulations!`, {
         description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
@@ -256,12 +256,8 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     */
     setPurchasing(false)
     setOpenConfirmPurchaseModal(false)
-} else {
-    /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
-    setPurchasing(false)
-    // setPurchasePending(false)
-    setPurchaseFailed(true)
-}
+} 
+
 }
 
   return (
@@ -368,7 +364,7 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProv
       <DynamicModal
           open={open}
           closeModal={closeModal}
-          dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
+          dialogClassName="sm:max-w-[640px] md:max-w-[500px] "
           drawerClassName=''
           
       >
@@ -395,6 +391,8 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProv
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
                           Congratulations {fullName}!, You have successfully purchased {currentProvider === "jamb" ? "JAMB PIN" : "WAEC PIN"}. <br /> Thank you for choosing iSubscribe.
                       </p>
+
+                      <div className='bg-violet-100 dark:bg-secondary flex flex-col space-y-1 p-2 rounded-sm'>
                       { resData?.cards ?
                        (
                            resData?.cards?.map((item:any, idx:number) => (
@@ -409,8 +407,8 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProv
                                     </div>
                                </div>
                            ))
-                       ) :
-                       <div className=' space-y-1'>
+                        ) :
+                        <div className=' space-y-1'>
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                         <p className='font-semibold text-muted-foreground'>Pin:</p>
                         <p>{resData?.Pin}</p>
@@ -437,6 +435,7 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProv
                         <p className='font-semibold text-muted-foreground'>Transaction ID:</p>
                         <p>{resData?.content?.transactions?.transactionId}</p>
                        </div>
+                      </div>
                       </div>
                   )
               }

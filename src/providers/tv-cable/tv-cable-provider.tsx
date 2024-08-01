@@ -17,7 +17,7 @@ import { SubTvPayload, TvCables } from '@/types/tv-cable'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { toast } from 'sonner'
 import { any } from 'zod'
 
@@ -38,6 +38,9 @@ const SubTvContext = React.createContext<{
   setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
+  purchasing?:boolean,
+  openConfirmPurchaseModal?: boolean,
+  setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyTvCable?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
 
 }>({
@@ -51,6 +54,9 @@ const SubTvContext = React.createContext<{
   setPinPasses: () => {},
   fundSufficient: false,
   setFundSufficient: () => {},
+  purchasing:false,
+  openConfirmPurchaseModal: false,
+  setOpenConfirmPurchaseModal: () => {},
   handleBuyTvCable: () => {},
 })
 
@@ -69,6 +75,9 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
   const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [powerAmount, setPowerAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
+  const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
+  const [resData, setResData] = useState(null)
+
   const router = useRouter()
 
 
@@ -118,8 +127,9 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
 
     if (!res) return toast.error('Transaction attempt failed!')
     // const {} = res
+    setResData(res as any)
 
-    console.log("TVCABLE", res)
+    console.log("TVCABLE", resData)
 
 
     /** if (error) return, @example: You could uncomment this only in edge cases */
@@ -142,6 +152,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
       setPurchasing(false)
 
       router.refresh()
+      setOpenConfirmPurchaseModal(false)
       return
   }
 
@@ -174,6 +185,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     })
 
     router.refresh()
+    setOpenConfirmPurchaseModal(false)
 
     setPurchasePending(true)
     /** 
@@ -223,12 +235,9 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
     })
     */
     setPurchasing(false)
-} else {
-    /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
-    setPurchasing(false)
-    // setPurchasePending(false)
-    setPurchaseFailed(true)
-}
+    setOpenConfirmPurchaseModal(false)
+} 
+
 }
 
   return (
@@ -244,10 +253,13 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
         fundSufficient,
         setFundSufficient,
         handleBuyTvCable,
+        purchasing,
+        openConfirmPurchaseModal,
+        setOpenConfirmPurchaseModal,
       }}
     >
        {children}
-      {purchasing && (<LoadingOverlay />)}
+      {/* {purchasing && (<LoadingOverlay />)} */}
 
            <SubPurchaseStatus
                 closeModal={() => setPurchaseSuccess(false)}
@@ -257,6 +269,8 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
                 phoneNumber={mobileNumber}
                 action={action}
                 smartcardNumber={smartcardNumber}
+                currentProvider={currentProvider}
+                resData={resData}
             /> 
             <SubPurchaseStatus
                 closeModal={() => setPurchaseFailed(false)}
@@ -267,6 +281,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
                 failed
                 action={action}
                 smartcardNumber={smartcardNumber}
+                currentProvider={currentProvider}
             />
 
             <SubPurchaseStatus
@@ -278,6 +293,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
                 pending
                 action={action}
                 smartcardNumber={smartcardNumber}
+                currentProvider={currentProvider}
             />
     </SubTvContext.Provider>
   )
@@ -294,9 +310,11 @@ export const useTvCable = () => {
 
 
 
-const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNumber, failed, pending, action='tv-cable', tvAmount}: {
+const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber,currentProvider, resData, smartcardNumber, failed, pending, action='tv-cable', tvAmount}: {
   phoneNumber: string,
+  currentProvider:string,
   smartcardNumber:string,
+  resData?:any,
   fullName: string,
   open: boolean,
   closeModal: () => void,
@@ -309,6 +327,8 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNu
       <DynamicModal
           open={open}
           closeModal={closeModal}
+           dialogClassName="sm:max-w-[640px] md:max-w-[500px] "
+           drawerClassName=''
       >
           <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
               {
@@ -317,21 +337,42 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, smartcardNu
                   (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
               }
              
-              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Success'}!</h2>
+              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
               {
                   failed ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Sorry {fullName}!, Your attempt to top up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber} has failed. Please check the details and try again.
+                          Sorry {fullName}!, Your attempt to purchase <strong> ₦{tvAmount}</strong> Cable for <strong>{smartcardNumber}</strong> has failed. Please check the details and try again.
                       </p>
                   ) :  pending ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                           Sorry {fullName}!, Your attempt to top up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber} is pending. Kindly go to transaction history page and query the status.
+                           Sorry {fullName}!, Your attempt  to purchase <strong> ₦{tvAmount}</strong> Cable for <strong>{smartcardNumber}</strong> is pending. Kindly go to transaction history page and query the status.
                       </p>
                   )
                    : (
-                      <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Congratulations {fullName}!, You have successfully topped up {action === 'tv-cable' ? tvAmount : tvAmount} for {smartcardNumber}. Thank you for choosing iSubscribe.
-                      </p>
+                      <div className=' flex flex-col space-y-1'>
+                        <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
+                            Congratulations {fullName}!, You have successfully subscribe <strong> ₦{tvAmount}</strong> Cable for <strong>{smartcardNumber}</strong>.  <br /> Thank you for choosing iSubscribe.
+                        </p>
+                        <div className='bg-violet-100 dark:bg-secondary flex flex-col space-y-1 p-2 rounded-sm'>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Product Name:</p>
+                        <p>{resData?.content?.transactions?.product_name}</p>
+                        </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Amount:</p>
+                        <p>{resData?.amount}</p>
+                        </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Request ID:</p>
+                        <p>{resData?.requestId}</p>
+                        </div>
+                        <div className='flex flex-row justify-between items-center gap-x-2'>
+                        <p className='font-semibold text-muted-foreground'>Transaction ID:</p>
+                        <p>{resData?.content?.transactions?.transactionId}</p>
+                        </div>
+                        </div>
+
+                      </div>
                   )
               }
 

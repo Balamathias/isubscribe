@@ -143,6 +143,8 @@ const SelectTvProvider = () => {
           <Check className=' text-green-500' />
           </span>
           <span className=' '> {data?.Customer_Name}</span>
+          <span className=' max-sm:hidden'><strong className=' mr-2'>.</strong>{data?.Current_Bouquet}</span>
+          <span className=' max-sm:hidden'><strong className=' mr-2'>.</strong>{data?.Due_Date}</span>
          </div>
 
         )
