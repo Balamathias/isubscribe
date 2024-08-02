@@ -1,19 +1,12 @@
 import { cn } from '@/lib/utils'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { Input } from '../ui/input'
 
 interface CustomInputProps {
-    placeholder?: string,
     className?: string,
-    value?: string | number,
-    defaultValue?: string | number,
-    onChange?: (e?: any) => any,
-    onKeyDown?: () => void,
-    name?: string,
-    type?: 'text' | 'number' | 'email' | 'tel'
 }
 
-const CustomInput = ({className, ...props}: CustomInputProps) => {
+const CustomInput = ({className, ...props}: CustomInputProps & ComponentProps<'input'>) => {
   return (
     <Input 
         {...props}

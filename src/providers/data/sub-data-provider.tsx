@@ -217,6 +217,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         if (error || data?.status === 'fail') {
             setPurchaseFailed(true)
+            toast.error(error as string)
             let meta_data: AirtimeDataMetadata = {
                 dataQty: dataAmount ?? 0,
                 duration: null,
