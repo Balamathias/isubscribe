@@ -110,7 +110,7 @@ const AirtimeCards = () => {
                 id='amount'
                 type='number'
             />
-            {amount && <button 
+            {amount ? <button 
                 className='focus:outline-none border-none bg-green-700/15 text-green-600 py-2 px-3 rounded-lg hover:opacity-70 flex items-center justify-center mt-6 font-semibold'
                 onClick={
                     () => {
@@ -125,7 +125,7 @@ const AirtimeCards = () => {
                 }
             >
                 {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
-            </button>}
+            </button> : <></>}
         </div>
     </div>
   )
