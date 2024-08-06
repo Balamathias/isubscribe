@@ -31,7 +31,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         <div className=' md:ml-[220px]'>
         {
           pathname === '/dashboard' ? (<>
-            <Link onClick={() => setOpenSupport(true)} href={'#support'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
+            <Link onClick={() => setOpenSupport(true)} href={'#'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
               <LucideBadgeHelp size={28} strokeWidth={2} className='text-primary  ' />
               <span>Support?</span>
             </Link>
@@ -48,7 +48,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
 
         <DynamicSheet
           trigger = {
-            <Link passHref href={'#profile'} 
+            <Link passHref href={'#'} 
               className='cursor-pointer hover:opacity-80 flex items-center gap-x-1'>
               <span className='text-muted-foreground text-xs'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></span>
               <Avatar title={data?.full_name ?? ''}>
@@ -60,7 +60,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
           className={'w-[300px] md:w-[320px] h-screen'}
         >
           <div className='flex flex-col gap-y-2 h-full justify-between md:p-3 md:py-1 py-1 p-1.5'>
-            <Link passHref href={'#profile'} 
+            <Link passHref href={'#'} 
               className='cursor-pointer hover:opacity-80 flex items-center gap-x-1 pb-4 py-2'>
               <Avatar title={data?.full_name ?? ''}>
                 <AvatarImage src={data?.avatar!}/>

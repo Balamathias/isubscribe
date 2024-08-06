@@ -4,7 +4,6 @@ import { formatNigerianNaira } from "@/funcs/formatCurrency"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
 import type { Status as StatusType } from "@/types/constants"
 import { Tables } from "@/types/database"
-import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
 
 interface AirtimeTopupProps {
     data: AirtimeDataMetadata
@@ -16,7 +15,7 @@ export default function AirtimeTopup ({data, history}: AirtimeTopupProps) {
         <div className="flex flex-col gap-y-3">
             <div className='flex flex-col space-y-8 w-full'>
                 <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
-                    {history?.status === 'success' ? <LucideCheckCircle2 className='text-green-600' size={40} /> :<LucideXCircle className='text-red-600' size={40} /> }
+                    <Status type="image" status={history.status as StatusType} />
                     <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                     <h2 className='text-xl text-muted-foreground font-semibold'>{history.title}</h2>
                     <p className='text-muted-foreground text-xs md:text-sm'>{history?.description}</p>

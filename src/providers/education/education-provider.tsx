@@ -96,10 +96,10 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
   const [purchasePending, setPurchasePending] = React.useState(false)
   const [errorMessage, setErrorMessage] = React.useState<string>('')
   const [successMessage, setSuccessMessage] = React.useState<string>('')
-  const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
+  const [smount, setAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [educationAmount, setEducationAmount] = React.useState('3500.00') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
-  const [resData, setResData] = useState(null)
+  const [resData, setResData] = useState<any>(null)
   const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
   const router = useRouter()
 
@@ -112,6 +112,8 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
       Price:"₦" + payload?.variation_amount,
       method:payload?.method
     }
+
+    setAmount(payload?.amount?.toString()!)
 
     const requestPayload = {
       billersCode: profileCode,
@@ -139,7 +141,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
 
     setPurchasing(true)
 
-    const res = await buyEducation({
+    const res: any = await buyEducation({
         ...requestPayload as any,
         request_id: generateRequestId()
     })
@@ -147,13 +149,13 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     if (!res) return toast.error('Transaction attempt failed!')
     setResData(res as any)
 
-    console.log("Eduuuuuu", resData)
+    console.log("Eduuuuuu", res)
     
 
 
     /** if (error) return, @example: You could uncomment this only in edge cases */
 
-    const transRes = res?.content?.transactions
+    const transRes = {...res?.content?.transactions, pin: res?.cards?.[0]?.Pin, serial: res?.cards?.[0]?.Serial, profile_code: profileCode}
 
     if ( res?.response_description === "TRANSACTION FAILED"  || transRes?.status === 'failed') {
       setPurchaseFailed(true)
@@ -192,7 +194,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     if (_balanceError || _cashbackBalanceError) return
 
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Education subscription for ${profileCode}`,
+        description: `Education subscription for profile cod: ${profileCode} failed.`,
         status: 'pending',
         title: 'Education Subscription',
         type: EVENT_TYPE.education_topup,
@@ -234,7 +236,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
     if (_balanceError || _cashbackBalanceError) return
 
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Education subscription for ${profileCode}`,
+        description: `Education subscription for profile code: ${profileCode} was successful`,
         status: 'success',
         title: 'Education Subscription',
         type: EVENT_TYPE.education_topup,
@@ -242,7 +244,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
         meta_data: JSON.stringify(transRes),
         updated_at: null,
         user: profile?.id!,
-        amount: price
+        amount: price,
     })
 
     router.refresh()
@@ -425,7 +427,7 @@ const SubPurchaseStatus = ({closeModal, fullName, open, phoneNumber, currentProv
                        </div>
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                         <p className='font-semibold text-muted-foreground'>Amount:</p>
-                        <p>{resData?.amount}</p>
+                        <p>{educationAmount}</p>
                        </div>
                         <div className='flex flex-row justify-between items-center gap-x-2'>
                         <p className='font-semibold text-muted-foreground'>Request ID:</p>

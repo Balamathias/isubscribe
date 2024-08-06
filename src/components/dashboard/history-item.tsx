@@ -25,6 +25,8 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                 return product[EVENT_TYPE.education_topup].image
             case EVENT_TYPE.tv_topup:
                 return product[EVENT_TYPE.tv_topup].image
+            case EVENT_TYPE.cashback:
+                return product[EVENT_TYPE.cashback].image
             default:
                 return product[(JSON.parse(
                     item.meta_data?.toString() ?? '{}'
@@ -47,25 +49,12 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
             <div className="flex flex-col space-y-1 basis-[80%]">
                 <h2 className='text-xs md:text-base tracking-tighter'>{item.title}</h2>
                 <span className={cn("text-[10px] md:text-xs text-gray-500 dark:text-gray-400", {
-                    'text-red-500 dark:text-red-4': item.status === 'failed',
-                    'dark:text-green-400 text-green-500': item.status === 'success'
+                    'text-muted-foreground/70': item.status === 'failed',
+                    'text-muted-foreground': item.status === 'success'
                 })}>{item.description}</span>
             </div>
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
-            {/* {
-                item.status === 'success' ? (
-                    <LucideCheck 
-                        className='text-green-500 dark:text-green-400'
-                        size={18}
-                    />
-                ) : (
-                    <LucideX 
-                        className='text-red-500 dark:text-red-400' 
-                        size={18}
-                    />
-                )
-            } */}
             <Status status={item.status as StatusType} />
             <span className='text-xs text-gray-500 dark:text-gray-400'>{formatNigerianNaira(item?.amount!)}</span>
         </div>
