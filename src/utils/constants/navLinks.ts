@@ -48,17 +48,17 @@ export const quickActionsLinks = [
         label: "Electricity",
       },
     {
-        href: "/dashboard/education",
+        href: "/dashboard/education?type=waec",
         icon: GraduationCap,
         label: "WAEC Pin",
       },
     {
-        href: "/dashboard/education",
+        href: "/dashboard/education?type=gce",
         icon: Pen,
         label: "GCE Pin ",
       },
     {
-        href: "/dashboard/education",
+        href: "/dashboard/education?type=jamb",
         icon: Book,
         label: "JAMB Pin",
       },

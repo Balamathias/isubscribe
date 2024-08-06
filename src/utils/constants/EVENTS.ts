@@ -6,5 +6,6 @@ export const EVENT_TYPE = {
     meter_topup: 'meter_topup',
     education_topup: 'education_topup',
     debit_funds: 'debit_funds',
-    wallet_fund_failed: 'wallet_fund_failed'
+    wallet_fund_failed: 'wallet_fund_failed',
+    cashback: 'cashback'
 }

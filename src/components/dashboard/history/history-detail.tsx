@@ -12,6 +12,7 @@ import DataTopup from './data-topup'
 import AirtimeTopup from './airtime-topup'
 import TVTopup from './tv-topup'
 import MeterTopup from './meter-topup'
+import Education from './education'
 
 interface HistoryDetailProps {
     history: Tables<'history'>
@@ -53,6 +54,11 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
 
     case 'meter_topup':
         return <MeterTopup />
+
+    case 'education_topup':
+        return <Education
+            history={history}
+        />
 
     case 'debit_funds':
         return <></>

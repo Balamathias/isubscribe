@@ -3,7 +3,17 @@ import { Button } from "../ui/button"
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
 import DynamicModal from "../DynamicModal"
 
-const SubPurchaseStatus = ({closeModal, dataAmount, fullName, open, phoneNumber, failed, action='data', airtimeAmount}: {
+const SubPurchaseStatus = ({
+    closeModal, 
+    dataAmount, 
+    fullName, 
+    open, 
+    phoneNumber, 
+    failed, 
+    action='data', 
+    airtimeAmount,
+    errorMessage
+}: {
     dataAmount: string,
     phoneNumber: string,
     fullName: string,
@@ -11,14 +21,14 @@ const SubPurchaseStatus = ({closeModal, dataAmount, fullName, open, phoneNumber,
     closeModal: () => void,
     failed?: boolean,
     action?: 'data' | 'airtime',
-    airtimeAmount?: string | number
+    airtimeAmount?: string | number,
+    errorMessage?: string,
+    successMessage?: string,
 }) => {
     return (
         <DynamicModal
             open={open}
             closeModal={closeModal}
-            // dialogClassName="dark:bg-card"
-            // drawerClassName="dark:bg-card"
         >
             <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
                 {
@@ -28,7 +38,7 @@ const SubPurchaseStatus = ({closeModal, dataAmount, fullName, open, phoneNumber,
                 {
                     failed ? (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                            Sorry {fullName}!, Your attempt to top up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber} has failed. Please check the details and try again.
+                            {errorMessage}
                         </p>
                     ) : (
                         <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">

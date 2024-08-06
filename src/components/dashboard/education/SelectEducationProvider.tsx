@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { ChevronDown, LucideArrowDown } from 'lucide-react';
@@ -9,15 +9,17 @@ import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useEducation } from '@/providers/education/education-provider';
 import { educationServices } from '@/utils/constants/education-plans';
+import { useSearchParams } from 'next/navigation';
 
 
 const SelectEducationProvider = () => {
+  const params = useSearchParams()
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(educationServices[0]);
+  const type = params.get('type')
+  const [selected, setSelected] = useState(educationServices?.find(_s => _s.serviceID === type) || educationServices[0]);
   const {setCurrentProvider, currentProvider, setProviderName, setProviderImage, setEducationAmount} = useEducation()
 
   // console.log("CCCCCCCCCPPPPPPPPPPP",currentProvider)
-
 
   const handleCardClick = (item:any) => {
     setSelected(item);
@@ -29,6 +31,13 @@ const SelectEducationProvider = () => {
       setOpen(false); // Close the modal
     }, 500);
   };
+
+
+  useEffect(() => {
+    if(type){
+      handleCardClick(selected)
+    }
+  }, [type, selected])
 
   return (
     <div className="max-sm:w-[90vw] w-[600px] space-y-4 rounded-xl">

@@ -33,4 +33,8 @@ export const product = {
         name: 'Education',
         image: '/images/education/waec.png'
     },
+    [EVENT_TYPE.cashback]: {
+        name: 'Cashback',
+        image: '/images/giftbox.png'
+    },
 }
