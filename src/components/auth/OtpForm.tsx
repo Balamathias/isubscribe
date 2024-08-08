@@ -4,23 +4,23 @@ import {
     InputOTP,
     InputOTPGroup,
     InputOTPSlot,
-  } from "@/components/ui/input-otp"
+} from "@/components/ui/input-otp"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { resendOtp, verifyOtp} from '@/lib/supabase/verify-otp';
+import { resendOtp, verifyOtp } from '@/lib/supabase/verify-otp';
 import { toast } from 'sonner';
 
 const OtpForm = () => {
     const user = JSON.parse(localStorage?.getItem("userReg") || "{}");
-    // console.log("userDataInLocalStorage", user)
 
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [loading, setLoading] = useState(false);
     const [resending, setResending] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [focusedIndex, setFocusedIndex] = useState(null); // State to track focused input
 
-    const router = useRouter()
+    const router = useRouter();
 
     const payload = {
         email: user?.email,
@@ -38,8 +38,7 @@ const OtpForm = () => {
                 setError(error || "An error occurred");
             } else {
                 setSuccess(true);
-                router?.push("/auth/pass-pin")
-                // console.log("TOKKK", data);
+                router?.push("/auth/pass-pin");
             }
         } catch (err) {
             setError("An unexpected error occurred, verify your details");
@@ -47,7 +46,6 @@ const OtpForm = () => {
             setLoading(false);
         }
     };
-
 
     const handleResendOtp = async () => {
         setResending(true);
@@ -57,9 +55,8 @@ const OtpForm = () => {
             const { data, error } = await resendOtp(payload);
             if (error) {
                 setError(error || "An error occurred");
-            } 
-            toast.success("OTP has been Resent To your Email!")
-               
+            }
+            toast.success("OTP has been Resent To your Email!");
         } catch (err) {
             setError("An unexpected error occurred, verify your details");
         } finally {
@@ -67,7 +64,7 @@ const OtpForm = () => {
         }
     };
 
-    const handleChange = (index:any, value:any) => {
+    const handleChange = (index, value) => {
         if (isNaN(value)) return;
 
         const newOtp = [...otp];
@@ -81,7 +78,7 @@ const OtpForm = () => {
         }
     };
 
-    const handleKeyDown = (e:any, index:any) => {
+    const handleKeyDown = (e, index) => {
         if (e.key === "Backspace") {
             const newOtp = [...otp];
             newOtp[index] = "";
@@ -95,7 +92,7 @@ const OtpForm = () => {
         }
     };
 
-    const handleKeypadClick = (value:any) => {
+    const handleKeypadClick = (value) => {
         const nextIndex = otp.findIndex(digit => digit === "");
         if (nextIndex !== -1) {
             handleChange(nextIndex, value);
@@ -112,9 +109,20 @@ const OtpForm = () => {
         setSuccess(false);
     };
 
+    const handlePaste = (e) => {
+        const paste = e.clipboardData.getData('text');
+        const newOtp = [...otp];
+        paste.split('').forEach((char, index) => {
+            if (index < 6) {
+                newOtp[index] = char;
+            }
+        });
+        setOtp(newOtp);
+    };
+
     return (
-        <div className='flex flex-col gap-3 max-sm:w-[96vw] md:w-[400px]  shadow-md p-3 rounded-md  '>
-            <h1 className=' text-center text-l font-[600px]'>Enter the OTP sent to your email below</h1>
+        <div className='flex flex-col gap-3 max-sm:w-[96vw] md:w-[400px] shadow-md p-3 rounded-md'>
+            <h1 className='text-center text-l font-[600px]'>Enter the OTP sent to your email below</h1>
             <div className="flex justify-center mb-3 space-x-2">
                 {otp.map((data, index) => (
                     <input
@@ -126,8 +134,10 @@ const OtpForm = () => {
                         value={data}
                         onChange={e => handleChange(index, e.target.value)}
                         onKeyDown={e => handleKeyDown(e, index)}
-                        onFocus={e => e.target.select()}
-                        className="w-9 h-9 text-center text-2xl p-2 border-2 border-gray-300 rounded-lg focus:outline-none"
+                        onFocus={() => setFocusedIndex(index)} // Set focused index
+                        onBlur={() => setFocusedIndex(null)} // Clear focused index on blur
+                        onPaste={index === 0 ? handlePaste : undefined}
+                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-lg focus:outline-none ${focusedIndex === index ? 'border-violet-500' : 'border-gray-300'}`}
                         style={{ color: 'transparent', textShadow: '0 0 0 violet' }}
                     />
                 ))}
@@ -144,12 +154,6 @@ const OtpForm = () => {
                         {number}
                     </button>
                 ))}
-                {/* <button
-                    onClick={handleClear}
-                    className="col-span-2 w-full h-12 text-2xl p-2 border-2 border-gray-300 rounded-lg focus:outline-none bg-red-100 hover:bg-red-200"
-                >
-                    Clear
-                </button> */}
                 <button
                     onClick={handleClear}
                     className="col-span-2 w-full h-12 text-2xl p-2 border-2 border-gray-300 rounded-lg focus:outline-none bg-gray-100 hover:bg-gray-200"
@@ -160,10 +164,9 @@ const OtpForm = () => {
             <Button onClick={handleVerifyOtp} disabled={loading}>
                 {loading ? 'Verifying...' : 'Verify'}
             </Button>
-            <Button onClick={handleResendOtp} disabled={resending} className=' bg-red-500 hover:bg-red-600'>
+            <Button onClick={handleResendOtp} disabled={resending} className='bg-red-500 hover:bg-red-600'>
                 {resending ? 'Resending..' : 'Resend OTP'}
             </Button>
-           
         </div>
     );
 };

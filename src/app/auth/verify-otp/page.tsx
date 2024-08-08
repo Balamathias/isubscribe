@@ -26,7 +26,7 @@ const Page = async () => {
 
   
 
-  if (user?.onboarded) return redirect('/dashboard')
+  // if (user?.onboarded) return redirect('/dashboard')
     
   return (
     <WidthWrapper className='min-h-screen flex flex-col items-center justify-center'>
