@@ -56,7 +56,7 @@ const OtpForm = () => {
             if (error) {
                 setError(error || "An error occurred");
             }
-            toast.success("OTP has been Resent To your Email!");
+            toast.success(`OTP has been Resent To your Email, ${user?.email}`);
         } catch (err) {
             setError("An unexpected error occurred, verify your details");
         } finally {
