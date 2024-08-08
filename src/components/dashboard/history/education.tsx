@@ -12,8 +12,8 @@ const Education = ({ history }: { history: Tables<'history'> }) => {
     <div className="flex flex-col gap-y-3 py-3">
       <div className='flex flex-col bg-card/70 rounded-xl justify-center items-center gap-y-1 p-4'>
         <Status status={history?.status as StatusType} type={'image'} />
-        <h2 className='text-base md:text-lg tracking-tighter font-semibold'>{history?.title}</h2>
-        <p className='text-sm md:text-base tracking-tighter text-muted-foreground'>{history?.description}</p>
+        <h2 className='text-xl text-muted-foreground font-semibold text-center'>{history.title}</h2>
+        <p className='text-muted-foreground text-xs md:text-sm text-center'>{history?.description}</p>
       </div>
 
       <div className='flex flex-col bg-card/70 rounded-xl justify-center items-center gap-y-1 p-4'>

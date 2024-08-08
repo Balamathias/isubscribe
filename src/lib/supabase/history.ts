@@ -55,7 +55,7 @@ export const insertTransactionHistory = async ({...rest}: Omit<Tables<'history'>
 
 export const saveDataErrorHistory = async (msg: string, data: Record<string, any>) => {
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Data subscription for ${data?.mobile} failed. ${msg}`,
+        description: `Data subscription for ${data?.mobile} failed.\n${msg}`,
         status: 'failed',
         title: 'Data Subscription Failed.',
         type: EVENT_TYPE.data_topup,

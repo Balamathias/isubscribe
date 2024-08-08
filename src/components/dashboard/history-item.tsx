@@ -51,7 +51,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                 <span className={cn("text-[10px] md:text-xs text-gray-500 dark:text-gray-400", {
                     'text-muted-foreground/70': item.status === 'failed',
                     'text-muted-foreground': item.status === 'success'
-                })}>{item.description}</span>
+                })}>{item?.description?.split?.('\n')?.[0]}</span>
             </div>
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
