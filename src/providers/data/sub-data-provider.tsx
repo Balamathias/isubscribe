@@ -97,6 +97,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             phone: mobileNumber
         })
 
+     
+
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || (data?.status === 'fail')) {
@@ -345,7 +347,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             phone: '08011111111',
         })
 
-        // console.log(res)
+        console.log(res)
         if (!res) {
             setPurchasing(false)
             setPurchaseFailed(true)
