@@ -8,7 +8,7 @@ import { redirect } from "next/navigation"
 export const signUp = async ({ email, password, metadata={} }: { email: string, password: string, metadata?: Record<string, string> }) => {
     const supabase = createClient()
 
-    const { error } = await supabase.auth.signUp({
+    const {data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -17,7 +17,7 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
     })
     if (error) throw error
     revalidatePath('/', 'layout')
-    return { message: 'Account created successfully.', status: 200, statusText: 'OK'}
+    return { message: 'Account created successfully.', status: 200, statusText: 'OK', data:data}
 }
 
 export const signIn = async ({ email, password }: { email: string, password: string }) => {
