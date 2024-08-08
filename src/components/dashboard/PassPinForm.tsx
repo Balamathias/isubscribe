@@ -11,6 +11,7 @@ import { useSetPassPin } from '@/lib/react-query/funcs/user';
 import { Card } from '../ui/card';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: string }) => {
     const [pin, setPin] = useState('');
@@ -116,26 +117,32 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
           <div className="grid grid-cols-3 gap-4 mb-4">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0].map((num) => (
-              <button
+              <Button
                 key={num}
                 onClick={() => handleButtonClick(num.toString())}
-                className="bg-violet-50 text-gray-700 text-2xl max-md:p-5 p-3 rounded-xl hover:bg-violet-100 focus:outline-none"
+                className="rounded-lg"
+                variant={'secondary'}
+                size={'lg'}
               >
                 {num}
-              </button>
+              </Button>
             ))}
-            <button
+            <Button
               onClick={handleClear}
-              className="col-span-1 bg-violet-100 text-gray-700 dark:text-gray-200 text-2xl p-5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
+              className="col-span-1 bg-rose-600/15 text-rose-700 rounded-lg"
+              variant={'secondary'}
+              size={'lg'}
             >
               <LucideX className="w-6 h-6" />
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleDelete}
-              className="col-span-1 bg-violet-50 text-violet-700 text-2xl p-5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center"
+              className="col-span-1 bg-red-600/15 text-red-700 rounded-lg"
+              variant={'secondary'}
+              size={'lg'}
             >
               <LucideDelete className="w-6 h-6" />
-            </button>
+            </Button>
           </div>
           <div className='flex items-center gap-x-1 !w-full flex-row'>
             <BadgeCheckIcon className='text-primary' size={20}></BadgeCheckIcon>

@@ -11,10 +11,12 @@ import { cn } from '@/lib/utils';
 import { LucideDelete, LucideX } from 'lucide-react';
 import Link from 'next/link';
 import { Tables } from '@/types/database';
+import { useRouter } from 'next/navigation';
 
 const ConfirmPin = ({ className, func: closeModal, profile }: { className?: string, func?: () => void, profile: Tables<'profile'> }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
+    const router = useRouter()
 
     const { setPinPasses } = useNetwork()
     const [isPending, setIsPending] = useState(false)
@@ -32,7 +34,11 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
       
         try {
           setIsPending(true)
-      
+          if (profile?.pin === null) return toast.warning("Pin Error", {
+            description: "Please set your transaction Pin to continue",
+            action: <Link href={'/dashboard/settings'} >Set My PIN</Link>,
+            duration: 15000,
+          })
           const pinPasses = await unhashPin(pin, profile?.pin!)
 
           setPinPasses?.(pinPasses)

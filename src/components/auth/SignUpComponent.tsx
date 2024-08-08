@@ -61,7 +61,7 @@ const SignInComponent = () => {
              localStorage?.setItem("userReg", JSON.stringify(data?.user?.user_metadata))
               toast.success('Success!', { description: 'Verification OTP sent to ' + values.email, duration: 5000 })
               form.reset()
-            router.push('/auth/verify-otp')
+            router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
             // return
         }
         catch (error: any) {

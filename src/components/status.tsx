@@ -7,10 +7,11 @@ import React from 'react'
 interface StatusProps {
     className?: string,
     status: Status,
-    type?: 'text' | 'icon' | 'image'
+    type?: 'text' | 'icon' | 'image',
+    message?: string
 }
 
-const Status = ({ className, status, type = 'text' }: StatusProps) => {
+const Status = ({ className, status, type = 'text', message=status }: StatusProps) => {
   return type === 'text' ? (
     <span 
         aria-label={status} 
@@ -21,11 +22,12 @@ const Status = ({ className, status, type = 'text' }: StatusProps) => {
                     'bg-yellow-600/10 text-yellow-600': status === 'pending',
                     'bg-green-600/10 text-green-600': status === 'success',
                     'bg-red-600/10 text-red-600': status === 'failed',
+                    'py-2': message && message !== ''
                 }, 
                 className,
             )
             }>
-        {status}
+        {message || status}
     </span>
   ): type === 'image' ? (
     <span 

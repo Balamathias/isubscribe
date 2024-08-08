@@ -11,26 +11,22 @@ export const metadata: Metadata = {
   description: 'Verify Your OTP.'
 }
 
-const Page = async () => {
-
+const Page = async ({ searchParams }: { searchParams: Record<string, string> }) => {
+  const params = new URLSearchParams(searchParams)
+  const email = params.get('email')
   const [
     { data: user },
     { data: currentUser },
   ] = await Promise.all([
     getUser(),
     getCurrentUser(),
-  ])
-
-    console.log("CurrentUser", currentUser)
-    console.log("User", user)
-
-  
+  ]) 
 
   if (user?.onboarded) return redirect('/dashboard')
     
   return (
     <WidthWrapper className='min-h-screen flex flex-col items-center justify-center'>
-      <OtpForm user={currentUser?.user_metadata}  />
+      <OtpForm />
     </WidthWrapper>
   )
 }
