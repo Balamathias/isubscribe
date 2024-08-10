@@ -29,7 +29,7 @@ const object = {
 }
 
 const AirtimeCards = () => {
-    const { currentNetwork, handleSubAirtime, mobileNumber } = useNetwork()
+    const { currentNetwork, handleSubAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubAirtimeProps | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
@@ -53,7 +53,7 @@ const AirtimeCards = () => {
                         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
                         setSelected(d)
-                        setOpen(true)
+                        setOpenConfirmPurchaseModal?.(true)
                     }}
                 >
                     <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
@@ -68,10 +68,10 @@ const AirtimeCards = () => {
             ))}
 
             <ConfirmPurchaseModal 
-                open={open}
+                open={openConfirmPurchaseModal!}
                 paymentMethod={paymentMethod}
                 selected={selected!}
-                setOpen={setOpen}
+                setOpen={setOpenConfirmPurchaseModal}
                 setPaymentMethod={setPaymentMethod}
                 setProceed={setProceed}
                 key={'airtime'}
@@ -89,7 +89,7 @@ const AirtimeCards = () => {
                     className='rounded-none' 
                     func={() => {
                         handleSubAirtime?.({...selected!, method: paymentMethod})
-                        setOpen(false)
+                        // setOpen(false)
                         setProceed(false)
                     }} 
                     profile={profile?.data!}
@@ -120,7 +120,7 @@ const AirtimeCards = () => {
                             plan_type: 'VTU',
                             Price: (amount!)?.toString()! + '.00'
                         })
-                        setOpen(true)
+                        setOpenConfirmPurchaseModal?.(true)
                     }
                 }
             >

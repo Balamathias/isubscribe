@@ -18,6 +18,7 @@ import { product } from '@/utils/constants/product';
 import { useGetProfile } from '@/lib/react-query/funcs/user';
 import NetworkCardItem from './NetworkCardItem';
 import ConfirmProductInfo from './confirm-product-info';
+import LoadingSpinner from '@/components/loaders/LoadingSpinner';
 
 const object = {
     'mtn': mtn_data,
@@ -28,8 +29,7 @@ const object = {
 
 
 const DataNetworkCard = () => {
-    const { currentNetwork, handleSubData, mobileNumber } = useNetwork()
-    const [open, setOpen] = React.useState(false)
+    const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing } = useNetwork()
     const [selected, setSelected] = useState<SubDataProps | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
     const { data: profile, isPending: profilePending } = useGetProfile()
@@ -50,7 +50,7 @@ const DataNetworkCard = () => {
                     if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
                     setSelected(d)
-                    setOpen(true)
+                    setOpenConfirmPurchaseModal?.(true)
                 }}
                 dataCashBack={priceToInteger(d.CashBack)}
                 dataQty={d.Data}
@@ -60,12 +60,16 @@ const DataNetworkCard = () => {
         ))}
 
         {
-            open && <DynamicModal
-                open={open}
-                setOpen={setOpen}
+            
+            <DynamicModal
+                open={openConfirmPurchaseModal}
+                setOpen={setOpenConfirmPurchaseModal}
                 dismissible
-                dialogClassName="sm:max-w-[640px]"
+                dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
             >
+                 {purchasing && 
+                    <LoadingSpinner isPending={purchasing} />
+                    }
                 <div className="flex flex-col gap-y-2.5 w-full">
                     
                     <ConfirmProductInfo 
@@ -108,7 +112,7 @@ const DataNetworkCard = () => {
         }
 
         {
-            proceed && <DynamicModal
+            <DynamicModal
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
@@ -119,7 +123,6 @@ const DataNetworkCard = () => {
                     className='rounded-none' 
                     func={() => {
                         handleSubData?.({...selected!, method: paymentMethod})
-                        setOpen(false)
                         setProceed(false)
                     }} 
                     profile={profile?.data!}

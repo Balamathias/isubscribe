@@ -68,9 +68,8 @@ const ConfirmPurchaseModal = ({
         dismissible
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
     >  
-        {purchasing && 
-            <LoadingSpinner isPending={purchasing} />
-            }
+       
+        <LoadingSpinner isPending={purchasing} />
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Airtime Plan Details'}</h1>
             

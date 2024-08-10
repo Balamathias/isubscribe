@@ -71,8 +71,8 @@ const ElectricityCards = () => {
 
 
        {
-            openConfirmPurchaseModal && <ConfirmPurchaseModal 
-                open={openConfirmPurchaseModal}
+             <ConfirmPurchaseModal 
+                open={openConfirmPurchaseModal!}
                 paymentMethod={paymentMethod}
                 setOpen={setOpenConfirmPurchaseModal}
                 selected={selected}
@@ -87,11 +87,11 @@ const ElectricityCards = () => {
 
 
        {
-            proceed && <DynamicModal
+            <DynamicModal
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
-                dialogClassName={'sm:max-w-fit dark:bg-card'}
+                dialogClassName={'sm:max-w-fit dark:bg-card '}
                 drawerClassName='dark:bg-card'
             >
                 <ConfirmPin 

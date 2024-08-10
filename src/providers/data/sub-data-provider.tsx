@@ -40,7 +40,10 @@ const SubDatContext = React.createContext<{
     setPinPasses?: React.Dispatch<React.SetStateAction<boolean>>,
     fundSufficient: boolean,
     setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
-    handleVTPassData: (method: PaymentMethod, payload: VTPassDataPayload) => void
+    handleVTPassData: (method: PaymentMethod, payload: VTPassDataPayload) => void,
+    purchasing?:boolean,
+    openConfirmPurchaseModal?: boolean,
+    setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
@@ -52,7 +55,10 @@ const SubDatContext = React.createContext<{
     fundSufficient: false,
     setFundSufficient: () => {},
     handleSubAirtime: () => {},
-    handleVTPassData: () => {}
+    handleVTPassData: () => {},
+    purchasing:false,
+    openConfirmPurchaseModal: false,
+    setOpenConfirmPurchaseModal: () => {},
 })
 
 
@@ -71,6 +77,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
+    const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
+
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
         const values = computeTransaction({
@@ -102,8 +110,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || (data?.status === 'fail')) {
-            setPurchaseFailed(true)
-
+            
             let meta_data: AirtimeDataMetadata = {
                 dataQty: dataAmount ?? 0,
                 duration: null,
@@ -116,7 +123,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 phone: mobileNumber,
                 status: 'failed'
             }
-
+            
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription for ${mobileNumber} failed.`,
                 status: 'failed',
@@ -129,6 +136,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 amount: price,
             })
             setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
             setErrorMessage(data?.message ?? 'Data subscription failed. Please try again.')
 
             router.refresh()
@@ -177,16 +186,18 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
             await saveCashbackHistory({amount: cashbackPrice})
 
-            setPurchaseSuccess(true)
             /** 
              * @example: toast.success(`Congratulations!`, {
-                description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
+            description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
             })
             */
-            setPurchasing(false)
+           setPurchasing(false)
+           setOpenConfirmPurchaseModal(false)
+           setPurchaseSuccess(true)
         } else {
             /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
             setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
         }
     }
@@ -220,7 +231,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || data?.status === 'fail') {
-            setPurchaseFailed(true)
             toast.error(error as string)
             let meta_data: AirtimeDataMetadata = {
                 dataQty: dataAmount ?? 0,
@@ -247,6 +257,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 amount: priceToInteger(payload?.Price),
             })
             setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
 
             router.refresh()
             return
@@ -296,16 +308,18 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
             await saveCashbackHistory({amount: cashbackPrice})
 
-            setPurchaseSuccess(true)
             /** 
              * @example: toast.success(`Congratulations!`, {
-                description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
+            description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
             })
             */
-            setPurchasing(false)
+           setPurchasing(false)
+           setOpenConfirmPurchaseModal(false)
+           setPurchaseSuccess(true)
         } else {
             /** @tutorial: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
             setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
         }
     }
@@ -349,32 +363,36 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
         console.log(res)
         if (!res) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
             setErrorMessage('An unknown error has occured, please try again.')
             await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
             return
         }
 
         else if (res?.code === RESPONSE_CODES.TIME_NOT_CORRECT.code) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
             setErrorMessage(RESPONSE_CODES.TIME_NOT_CORRECT.message)
             await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: mobileNumber})
+            setPurchasing(false)
+            setPurchaseFailed(true)
+            setOpenConfirmPurchaseModal(false)
             return
         }
 
         else if (res?.code === RESPONSE_CODES.TRANSACTION_FAILED.code) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
             setErrorMessage(RESPONSE_CODES.TRANSACTION_FAILED.message)
             await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: mobileNumber})
+            setPurchasing(false)
+            setPurchaseFailed(true)
+            setOpenConfirmPurchaseModal(false)
             return
         }
 
         else if (res?.code === RESPONSE_CODES.NO_PRODUCT_VARIATION.code) {
             setPurchasing(false)
             setPurchaseFailed(true)
+            setOpenConfirmPurchaseModal(false)
             setErrorMessage(RESPONSE_CODES.NO_PRODUCT_VARIATION.message)
             await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: mobileNumber})
             return
@@ -408,18 +426,20 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
             setPurchaseSuccess(true)
             setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
         }
 
         else {
-            setPurchasing(false)
-            setPurchaseFailed(true)
             setErrorMessage('An unknown error has occured, please try again.')
             await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
+            setPurchasing(false)
+            setPurchaseFailed(true)
+            setOpenConfirmPurchaseModal(false)
             return
         }
     }
 
-    if (isPending) return <LoadingOverlay />
+    // if (isPending) return <LoadingOverlay />
 
     return (
         <SubDatContext.Provider value={{
@@ -434,11 +454,14 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             fundSufficient,
             setFundSufficient,
             handleVTPassData,
+            purchasing,
+            openConfirmPurchaseModal,
+            setOpenConfirmPurchaseModal,
         }}>
             { children }
-            {
+            {/* {
                 purchasing && (<LoadingOverlay />)
-            }
+            } */}
 
             <SubPurchaseStatus
                 closeModal={() => {

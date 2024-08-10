@@ -13,6 +13,7 @@ import { PaymentMethod, SubAirtimeProps, SubDataProps } from '@/types/networks'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import ConfirmProductInfo from '../data/confirm-product-info'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 
 
 interface ConfirmPurchaseModal {
@@ -34,7 +35,7 @@ const ConfirmPurchaseModal = ({
     title,
     setProceed
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentNetwork } = useNetwork()
+    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
     const { data: wallet, isPending } = useGetWalletBalance()
 
     if (isPending) return <LoadingOverlay />
@@ -43,8 +44,10 @@ const ConfirmPurchaseModal = ({
         open={open}
         setOpen={setOpen}
         dismissible
-        dialogClassName="sm:max-w-[640px] "
+        dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
     >
+        
+        <LoadingSpinner isPending={purchasing} />
         <div className="flex flex-col gap-y-2.5">
             {/* <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Airtime Plan Details'}</h1> */}
             

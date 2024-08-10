@@ -76,8 +76,8 @@ const TvCards = () => {
 
 
        {
-            openConfirmPurchaseModal && <ConfirmPurchaseModal 
-                open={openConfirmPurchaseModal}
+             <ConfirmPurchaseModal 
+                open={openConfirmPurchaseModal!}
                 paymentMethod={paymentMethod}
                 selected={selected as any}
                 setOpen={setOpenConfirmPurchaseModal}
@@ -89,7 +89,7 @@ const TvCards = () => {
         }
 
         {
-            proceed && <DynamicModal
+            <DynamicModal
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
@@ -107,7 +107,7 @@ const TvCards = () => {
             </DynamicModal>
         }
         {
-            openMobileNumber && <DynamicModal
+            <DynamicModal
                 open={openMobileNumber}
                 setOpen={setOpenMobileNumber}
                 dismissible

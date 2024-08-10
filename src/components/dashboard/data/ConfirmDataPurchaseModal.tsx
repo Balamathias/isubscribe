@@ -13,6 +13,7 @@ import { PaymentMethod, SubAirtimeProps, SubDataProps, VTPassDataPayload } from 
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import ConfirmProductInfo from './confirm-product-info'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 
 
 interface ConfirmDataPurchaseModalProps {
@@ -34,7 +35,7 @@ const ConfirmDataPurchaseModal = ({
     title,
     setProceed
 }: ConfirmDataPurchaseModalProps) => {
-    const { mobileNumber, currentNetwork } = useNetwork()
+    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
     const { data: wallet, isPending } = useGetWalletBalance()
 
     if (isPending) return <LoadingOverlay />
@@ -43,8 +44,10 @@ const ConfirmDataPurchaseModal = ({
         open={open}
         setOpen={setOpen}
         dismissible
-        dialogClassName="sm:max-w-[640px]"
+        dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
     >
+         
+        <LoadingSpinner isPending={purchasing} />
         <div className="flex flex-col gap-y-2.5 w-full">
             
            <ConfirmProductInfo 

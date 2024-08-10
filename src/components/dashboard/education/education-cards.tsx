@@ -68,8 +68,8 @@ const EducationCard = () => {
 
 
        {
-            openConfirmPurchaseModal && <ConfirmPurchaseModal
-                open={openConfirmPurchaseModal}
+            <ConfirmPurchaseModal
+                open={openConfirmPurchaseModal!}
                 paymentMethod={paymentMethod}
                 setOpen={setOpenConfirmPurchaseModal}
                 selected={selected}
@@ -84,7 +84,7 @@ const EducationCard = () => {
 
 
        {
-            proceed && <DynamicModal
+             <DynamicModal
                 open={proceed}
                 setOpen={setProceed}
                 dismissible

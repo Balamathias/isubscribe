@@ -31,7 +31,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
         }
     }, [type])
 
-  const { currentNetwork, mobileNumber, handleVTPassData } = useNetwork()
+  const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
@@ -79,17 +79,17 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                                 network: d.network
                             }
                         })
-                        setOpen(true)
+                        setOpenConfirmPurchaseModal?.(true)
                     }
                 }
             />
         ))}
 
         <ConfirmDataPurchaseModal 
-            open={open}
+            open={openConfirmPurchaseModal!}
             paymentMethod={paymentMethod}
             selected={selected!}
-            setOpen={setOpen}
+            setOpen={setOpenConfirmPurchaseModal}
             setPaymentMethod={setPaymentMethod}
             setProceed={setProceed}
             title='Data Purchase Details (Confirm Details)'
@@ -106,7 +106,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                 className='rounded-none' 
                 func={() => {
                     handleVTPassData(paymentMethod, selected!)
-                    setOpen(false)
+                    // setOpen(false)
                     setProceed(false)
                 }} 
                 profile={profile?.data!}

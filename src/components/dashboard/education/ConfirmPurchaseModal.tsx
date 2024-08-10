@@ -71,9 +71,8 @@ const ConfirmPurchaseModal = ({
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
     >   
-        {purchasing && 
+      
         <LoadingSpinner isPending={purchasing} />
-        }
         <div className="flex flex-col gap-y-2.5">
             <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Electricity Plan Details'}</h1>
             
