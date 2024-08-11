@@ -231,7 +231,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || data?.status === 'fail') {
-            toast.error(error as string)
             let meta_data: AirtimeDataMetadata = {
                 dataQty: dataAmount ?? 0,
                 duration: null,
