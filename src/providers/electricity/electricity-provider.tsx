@@ -1,8 +1,11 @@
 "use client"
 
+import CopyButton from '@/components/CopyButton'
+import ShareReciept from '@/components/dashboard/ShareReciept'
 import DynamicModal from '@/components/DynamicModal'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
 import { priceToInteger } from '@/funcs/priceToNumber'
@@ -15,7 +18,9 @@ import { Tables } from '@/types/database'
 import { PaymentMethod } from '@/types/networks'
 import { SubTvPayload, TvCables } from '@/types/tv-cable'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
+import { StarFilledIcon } from '@radix-ui/react-icons'
+import { LucideCheckCircle2, LucideXCircle, Share, Share2 } from 'lucide-react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
@@ -366,14 +371,15 @@ const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNu
           dialogClassName="sm:max-w-[640px] md:max-w-[500px] "
           drawerClassName=''
       >
-          <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
+          <div className="flex flex-col gap-y-2 p-3 items-center justify-center">
               {
                   failed ? (<LucideXCircle className="text-red-600 mb-1" />) :
                   pending ? (<LucideXCircle className="text-yellow-600 mb-1" />) :
                   (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
               }
              
-              <h2 className={cn("text-green-600 md:text-lg text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
+              <h2 className={cn("text-green-600 md:text-lg font-[500px] text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
+              <h2 className=' font-bold text-lg text-black dark:text-white'>₦ {powerAmount}</h2>
               {
                   failed ? (
                       <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
@@ -385,40 +391,19 @@ const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNu
                       </p>
                   )
                    : (
-                      <div className=' flex flex-col space-y-1'>
-                      <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                          Congratulations {fullName}!, You have successfully purchased <strong> ₦{powerAmount}</strong> Power for <strong>{meterNumber}</strong>. <br /> Thank you for choosing iSubscribe.
-                      </p>
-
-                      <div className='bg-violet-100 dark:bg-secondary flex flex-col space-y-1 p-2 rounded-sm'>
-                       <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Meter Token:</p>
-                        <p> {resData?.token || resData?.Token || resData?.mainToken}</p>
+                      <div className=' flex flex-col gap-5  max-md:w-[94vw] '>
+                       <div className='flex bg-violet-10 border-2 border-dashed dark:bg-secondary w-full self-center px-2 rounded-sm flex-row justify-between items-center justify-cente gap-x-2'>
+                        <p className='font-semibol text-muted-foreground '>Meter Token:</p>
+                        <p className='font-[500px]  text-black dark:text-white '> {resData?.token || resData?.Token || resData?.mainToken} </p>
+                        <div className=' self-end'>
+                        <CopyButton content={resData?.token || resData?.Token || resData?.mainToken} className=' self-en p-1 hover:bg-transparent' />
+                        </div>
                        </div>
-                       <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Name:</p>
-                        <p> {resData?.customerName || resData?.CustomerName}</p>
-                       </div>
-                       <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Address:</p>
-                        <p>{resData?.customerAddress || resData?.address || resData?.CustomerAddress}</p>
-                       </div>
-                       <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Amount:</p>
-                        <p>{resData?.amount}</p>
-                       </div>
-                       <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Request ID:</p>
-                        <p>{resData?.requestId}</p>
-                       </div>
-                        <div className='flex flex-row justify-between items-center gap-x-2'>
-                        <p className='font-semibold text-muted-foreground'>Transaction ID:</p>
-                        <p>{resData?.content?.transactions?.transactionId}</p>
-                       </div>
-                      </div>
-                      </div>
-                  )
+                       <ShareReciept freeData={"100MB"} rLink={"#"} sLink={"#"}  />
+                     </div>  
+                    )
               }
+              
 
               <Button className="w-full my-2 rounded-full" size={'lg'} variant={failed ? 'destructive' : pending ? "destructive" : 'default'} onClick={() => closeModal()}>Close</Button>
           </div>
