@@ -50,7 +50,7 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
         />
 
     case 'tv_topup':
-        return <TVTopup />
+        return <TVTopup history={history} />
 
     case 'meter_topup':
         return <MeterTopup />
@@ -67,37 +67,6 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
     default:
         return <></>
   }
-
-//   return (
-//     <div className='flex flex-col space-y-4 rounded-lg pb-4' ref={ action === 'download' ? ref : printRef }>
-//         <Logo />
-//       {type === 'airtime_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
-//       {type === 'data_topup' && <DataHistory history={history} dataMetadata={dataMetadata} />}
-//       {type === 'wallet_fund' && <WalletHistory eventData={eventData} history={history} />}
-
-//       <Card className='rounded-xl shadow-none py-6 px-2 md:px-5 border-none drop-shadow-none flex items-center justify-between flex-row dark:bg-card/80'>
-//         <Button
-//             variant={'destructive'}
-//             className='text-xs md:text-sm rounded-full'
-//             size={'lg'}
-//             onClick={() => {
-//                     setAction('download')
-//                     takeScreenshot()
-//                 }}
-//                 >Download</Button>
-
-//         <Button
-//             variant={'default'}
-//             className='text-xs md:text-sm rounded-full'
-//             size={'lg'}
-//             onClick={() => {
-//                 setAction('print')
-//                 printDiv()
-//             }}
-//         >Print</Button>
-//       </Card>
-//     </div>
-//   )
 }
 
 export default HistoryDetail

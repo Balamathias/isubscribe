@@ -11,4 +11,8 @@ export enum QueryKeys {
     update_wallet_balance = 'update_wallet_balance',
     get_cashback_wallet = 'get_cashback_wallet',
     update_user = 'update_user',
+    get_user_chats = 'get_user_chats',
+    create_chat = 'create_chat',
+    get_user_chat_rooms = 'get_user_chat_rooms',
+    create_chat_room = 'create_chat_room',
 }

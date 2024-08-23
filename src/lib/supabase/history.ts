@@ -36,7 +36,7 @@ export const getSingleHistory = async (id: number) => {
     return { data, error }
 }
 
-export const insertTransactionHistory = async ({...rest}: Omit<Tables<'history'>, 'id' | 'created_at'>) => {
+export const insertTransactionHistory = async ({...rest}: Record<string, any>) => {
     const supabase = createClient()
     const { data: user } = await getUser()
 

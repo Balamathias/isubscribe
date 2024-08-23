@@ -15,7 +15,7 @@ const Empty = ({color, content, icon, className, title}: EmptyProps) => {
   return (
     <div className={clsx('flex flex-col gap-4', className)}>
       <Card className="bg-white dark:bg-card/50 p-4 h flex flex-col items-center justify-center gap-y-2 md:gap-y-2.5 rounded-xl border-none shadow-none drop-shadow-none">
-            <div className={`p-2 bg-${color ?? 'red'}-100 rounded-full`}>
+            <div className={`p-2 bg-${color ?? 'red'}-600/20 rounded-full text-${color ?? 'red'}-500`}>
              { icon ? icon : <BarChart className={`text-${color ?? 'red'}-500`} />}
             </div>
             {title && <p className="text-lg font-semibold text-muted-foreground text-center">{title}</p>}
