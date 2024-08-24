@@ -24,7 +24,7 @@ const Rooms = () => {
       open={open}
       setOpen={setOpen}
       trigger={
-        <Button size={'icon'} variant={'ghost'} className='bg-lime-600/15 text-lime-600'>
+        <Button size={'icon'} variant={'ghost'} className='bg-primary/20 rounded-xl text-primary dark:text-gray-100'>
           <LucideHistory size={18} />
         </Button>
       }

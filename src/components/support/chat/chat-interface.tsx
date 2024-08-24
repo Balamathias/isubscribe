@@ -7,16 +7,17 @@ import { useCreateChatRoom, useGetUserChats } from '@/lib/react-query/funcs/chat
 import { Role } from '@/types/constants'
 import SkeletonChat from '@/components/skeletons/skeleton-chat'
 import Empty from '@/components/Empty'
-import { LucidePhone } from 'lucide-react'
+import { LucideHeadphones, LucidePhone } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { Tables } from '@/types/database'
 import { useMutationState, useQueryClient } from '@tanstack/react-query'
 import { QueryKeys } from '@/lib/react-query/query-keys'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NewChatButton from './new-chat'
+import Faqs from './faqs'
 
 interface ChatInterfaceProps {
-    profile?: Tables<'profile'>,
+    profile: Tables<'profile'>,
     chats?: Tables<'chats'>
 }
 
@@ -38,7 +39,7 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
   })
 
 
-  /** @note Point of Note: Currently using @broadcast ... I might switch to @presence later! */
+  /** @note Point of Note: Currently using @broadcast ... I might switch to @presence later for a more realtime functionality! */
   useEffect(() => {
     const supabase = createClient()
     chatBoxRef.current?.scrollIntoView({behavior: 'smooth'})
@@ -69,12 +70,13 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
   if (!chats || chats.length === 0) return (
     <div className='flex flex-col gap-y-5 py-4'>
         <Empty 
-            title='How can we help you today?'
+            title={`Hi ${profile?.full_name ?? "iSubscriber!"}, How may we help you today?`}
             color='green'
             content='Start a chat with us to get help. We are always here to help you.'
-            icon={<LucidePhone size={16} />}
+            icon={<LucideHeadphones size={20} />}
             className='bg-inherit dark:bg-inherit'
         />
+        <Faqs />
         <ChatInput />
     </div>
   )

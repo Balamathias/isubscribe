@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 const Page = async ({ searchParams }: { searchParams: Record<string, any>}) => {
   const params = new URLSearchParams(searchParams)
   const roomId = params.get('chat_room_id')
+  const { data: profile } = await getUser()
   await updateChatRoomParticipants(roomId!)
   
   return (
@@ -24,7 +25,7 @@ const Page = async ({ searchParams }: { searchParams: Record<string, any>}) => {
           <Rooms />
           <NewChatButton />
         </div>
-        <ChatInterface />
+        <ChatInterface profile={profile!} />
     </WidthWrapper>
   )
 }

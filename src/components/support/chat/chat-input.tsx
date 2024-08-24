@@ -57,11 +57,11 @@ const ChatInput = () => {
   }
   
   return (
-    <div className="py-4 mt-3 w-full max-md:right-0 max-md:left-0 bottom-10 z-20 px-2.5 max-w-3xl mx-auto bg-inherit fixed backdrop-blur-lg rounded-lg">
-        <div className="flex items-center gap-x-2 max-w-3xl mx-auto">
+    <div className="py-4 mt-3 w-full max-md:right-0 max-md:left-0 bottom-10 md:bottom-0 z-20 px-2.5 max-w-3xl mx-auto bg-inherit fixed backdrop-blur-lg rounded-lg">
+        <div className="flex items-center gap-x-2 max-w-3xl mx-auto md:mb-3">
             <Input
                 type="text"
-                className="flex-1 border rounded-lg p-2 h-12 bg-background dark:bg-secondary dark:border-none"
+                className="flex-1 border rounded-lg p-2 h-12 bg-background/50 dark:bg-secondary/40 dark:border-none"
                 placeholder="Type your message..."
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={(e) => {
