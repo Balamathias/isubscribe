@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import clsx from 'clsx';
+import { cn } from '@/lib/utils';
 import { BarChart } from 'lucide-react'
 import React, { ReactNode } from 'react'
 
@@ -13,8 +13,8 @@ declare interface EmptyProps {
 
 const Empty = ({color, content, icon, className, title}: EmptyProps) => {
   return (
-    <div className={clsx('flex flex-col gap-4', className)}>
-      <Card className="bg-white dark:bg-card/50 p-4 h flex flex-col items-center justify-center gap-y-2 md:gap-y-2.5 rounded-xl border-none shadow-none drop-shadow-none">
+    <div className={cn('flex flex-col gap-4', className)}>
+      <Card className={cn("bg-white dark:bg-card/50 p-4 h flex flex-col items-center justify-center gap-y-2 md:gap-y-2.5 rounded-xl border-none shadow-none drop-shadow-none", className)}>
             <div className={`p-2 bg-${color ?? 'red'}-600/20 rounded-full text-${color ?? 'red'}-500`}>
              { icon ? icon : <BarChart className={`text-${color ?? 'red'}-500`} />}
             </div>

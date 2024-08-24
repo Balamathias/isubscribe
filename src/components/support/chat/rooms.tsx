@@ -48,7 +48,7 @@ const Rooms = () => {
           <Empty 
             icon={<LucideHistory size={18} />}
             color='green'
-            className='bg-secondary dark:bg-card'
+            className='bg-secondary dark:bg-inherit'
             title='You do not have any chat(s) yet.'
             content="Should you encounter any problem using iSubscribe, do not hesitate to reach out to us."
           />

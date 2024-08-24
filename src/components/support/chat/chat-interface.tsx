@@ -10,7 +10,7 @@ import Empty from '@/components/Empty'
 import { LucidePhone } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { Tables } from '@/types/database'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutationState, useQueryClient } from '@tanstack/react-query'
 import { QueryKeys } from '@/lib/react-query/query-keys'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NewChatButton from './new-chat'
@@ -32,7 +32,13 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
   const moveChatDownWhileChattingRef = React.useRef<HTMLDivElement>(null)
   const chatBoxRef = React.useRef<HTMLDivElement>(null)
 
+  const variables = useMutationState<Tables<'chats'>>({
+    filters: { mutationKey: [QueryKeys.create_chat, chatRoomId], status: 'pending' },
+    select: (mutation) => mutation.state.variables as any,
+  })
 
+
+  /** @note Point of Note: Currently using @broadcast ... I might switch to @presence later! */
   useEffect(() => {
     const supabase = createClient()
     chatBoxRef.current?.scrollIntoView({behavior: 'smooth'})
@@ -67,19 +73,17 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
             color='green'
             content='Start a chat with us to get help. We are always here to help you.'
             icon={<LucidePhone size={16} />}
+            className='bg-inherit dark:bg-inherit'
         />
-
-        {!chatRoomId && <NewChatButton />}
-
         <ChatInput />
     </div>
   )
 
   return (
     <>
-        {chatRoomId ? <div className="flex flex-col dark:bg-inherit py-5 px-3 dark:px-0 rounded-xl relative">
-            <div className="flex-1 overflow-y-auto flex-col">
-                <div className="flex flex-col gap-y-4">
+        {chatRoomId ? <div className="flex flex-col dark:bg-inherit py-5 dark:px-0 rounded-xl">
+            <div className="flex-1 overflow-y-auto flex-col h-screen">
+                <div className="flex flex-col gap-y-4 mb-16">
                     {chats?.map((chat, index) => (
                         <ChatCrumb 
                             key={index} 
@@ -88,7 +92,6 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
                         />
                     ))}
                 </div>
-
 
             </div>
             <ChatInput />

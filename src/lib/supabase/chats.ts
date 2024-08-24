@@ -27,15 +27,17 @@ export const createChatRoom = async () => {
     return data
 }
 
-export const getUserChatRooms = async () => {
+export const getUserChatRooms = async (limit?: number) => {
     const supabase = createClient()
 
     const { data: user } = await getUser()
 
     const { data, error } = await supabase.from('chat_room')
         .select(`*`)
-        .eq('user_id', user?.id!)
-    
+        .contains('participants', [user?.id])
+        .order('created_at', {ascending: true})
+        .limit(limit ?? 10)
+
     if (error) {
         throw error
     }
@@ -50,8 +52,7 @@ export const getUserChats = async ({chat_room_id}: { chat_room_id: string }) => 
 
     const { data, error } = await supabase.from('chats')
         .select(`
-            *,
-            profile (*)
+            *
         `)
         .eq('chat_room', chat_room_id)
         .order('created_at', {ascending: true})
@@ -73,6 +74,7 @@ export const createChat = async (chat: {user_id?: string, message: string, room_
             message: chat?.message,
             user_id: user?.id,
             chat_room: chat.room_id,
+            avatar: user?.avatar,
             role: ADMIN_EMAILS.includes(user?.email as string) ? 'admin' : 'user' 
         })
 
@@ -81,4 +83,21 @@ export const createChat = async (chat: {user_id?: string, message: string, room_
     }
 
     return data
+}
+
+export const updateChatRoomParticipants = async (roomId: string) => {
+    const supabase = createClient()
+    const { data: user } = await getUser()
+  
+    const { data: chatRoom } = await supabase.from('chat_room').select('*').eq('id', roomId!).single()
+    if (chatRoom?.participants?.includes(user?.id!)) {
+        return
+    }
+    
+    await supabase.from('chat_room')
+    .update(
+        {
+            participants: Array.from(new Set([...(chatRoom?.participants || []), user?.id!]))
+        }
+    ).eq('id', roomId!)   
 }
