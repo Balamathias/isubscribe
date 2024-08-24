@@ -101,3 +101,17 @@ export const updateChatRoomParticipants = async (roomId: string) => {
         }
     ).eq('id', roomId!)   
 }
+
+export const deleteChat = async (chatId: string) => {
+    const supabase = createClient()
+
+    const { data, error } = await supabase.from('chats')
+        .delete()
+        .eq('id', chatId)
+
+    if (error) {
+        throw error
+    }
+
+    return data
+}

@@ -1,4 +1,4 @@
-import { createChat, createChatRoom, getUserChatRooms, getUserChats } from "@/lib/supabase/chats";
+import { createChat, createChatRoom, deleteChat, getUserChatRooms, getUserChats } from "@/lib/supabase/chats";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../query-keys";
 import { useSearchParams } from "next/navigation";
@@ -29,3 +29,12 @@ export const useCreateChatRoom = () => useMutation({
     mutationKey: [QueryKeys.create_chat_room],
     mutationFn: () => createChatRoom(),
 })
+
+export const useDeleteChat = () => {
+    const roomId = useSearchParams().get('chat_room_id')
+    return useMutation({
+        mutationKey: [QueryKeys.delete_chat],
+        onSettled: () => queryClient.invalidateQueries({queryKey: [QueryKeys.get_user_chats, roomId]}),
+        mutationFn: (chat_id: string) => deleteChat(chat_id),
+    })
+}
