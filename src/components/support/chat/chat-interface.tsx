@@ -57,13 +57,18 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
                     queryClient.invalidateQueries({queryKey: [QueryKeys.get_user_chats, response?.chat_room]})
                     queryClient.invalidateQueries({queryKey: [QueryKeys.get_user_chats, profile?.id]})
                 }
+
+                if (response?.user_id !== profile?.id) {
+                    const audio = new Audio('/audio/chat.wav')
+                    audio.play()
+                }
             }
         }
     )
     .subscribe()
 
     return () => { supabase.removeChannel(chatChannel) }
-}, [chatRoomId, queryClient])
+}, [chatRoomId, queryClient, profile?.id])
 
   if (getting) return <SkeletonChat />
 
@@ -96,7 +101,7 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
                 </div>
 
             </div>
-            <ChatIwalletnput />
+            <ChatInput />
             <div ref={moveChatDownWhileChattingRef} />
         </div>: (
             <NewChatButton />

@@ -35,13 +35,19 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
                     const response = payload?.new as Tables<'wallet'>
                     setWalletBalance(response.balance?.toFixed(2)?.toString() || "0.00")
                     toast.success('Wallet funded successfully.')
+
+                    if (wallet?.balance! < response.balance!) {
+                        // Play sound
+                        const audio = new Audio('/audio/notification.wav')
+                        audio.play()
+                    }
                 }
             }
         )
         .subscribe()
 
         return () => { supabase.removeChannel(walletChannel) }
-    }, [wallet?.user])
+    }, [wallet?.user, wallet?.balance])
 
   return (
     <div className=' flex flex-row justify-between w-full items-center'>

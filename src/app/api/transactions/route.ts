@@ -4,7 +4,7 @@ import sendEmail from "@/utils/sendMail"
 import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
 
-export const runtime = 'edge'
+export const runtime = 'edge' // No fear, it won't timeout... I am using runtime - Edge
 
 export const POST = async (req: Request, res: Response) => {
 
