@@ -56,7 +56,7 @@ export const getUserChats = async ({chat_room_id}: { chat_room_id: string }) => 
         `)
         .eq('chat_room', chat_room_id)
         .order('created_at', {ascending: true})
-        .limit(40)
+        .limit(100)
 
     if (error) {
         throw error
