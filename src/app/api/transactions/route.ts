@@ -28,7 +28,7 @@ export const POST = async (req: Request, res: Response) => {
         .eq('transaction_id', data?.eventData?.transactionReference)
         .single()
 
-    if (__hist?.transaction_id || __hist__err) return // Avoid duplicating value if monify resends a notification that has been processed already.
+    if (__hist?.transaction_id) return // Avoid duplicating value if monnify resends a notification that has been processed already.
 
     
     const { data: user, error } = await supabase
