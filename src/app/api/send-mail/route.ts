@@ -1,8 +1,6 @@
-import { render } from "@react-email/render";
 import { NextResponse } from "next/server";
 import { EmailTemplateProps, renderEmailHTML } from "@/email/Email";
-
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer'
 
 export const POST = async (req: Request) => {
     const { email, subject, message, title, links, ...rest } = await req.json() as EmailTemplateProps;
@@ -23,7 +21,7 @@ export const POST = async (req: Request) => {
         },
     })
 
-    transporter.sendMail(mailOptions, (err: any, info: any) => {
+    transporter.sendMail(mailOptions, (err, info) => {
         
         if (err) {
           return NextResponse.json({message: 'Connection refused'}, {status: 404})

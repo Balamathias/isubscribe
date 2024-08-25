@@ -21,6 +21,15 @@ export const POST = async (req: Request, res: Response) => {
     if (!data) {
         return NextResponse.json({message: 'Invalid data'}, {status: 400})
     }
+
+    const { data: __hist, error: __hist__err } = await supabase
+        .from('history')
+        .select('transaction_id')
+        .eq('transaction_id', data?.eventData?.transactionReference)
+        .single()
+
+    if (__hist?.transaction_id || __hist__err) return // Avoid duplicating value if monify resends a notification that has been processed already.
+
     
     const { data: user, error } = await supabase
         .from('profile')
@@ -64,7 +73,8 @@ export const POST = async (req: Request, res: Response) => {
             title: 'Wallet Fund',
             user: user?.id,
             meta_data: JSON.stringify(data?.eventData),
-            amount: data?.eventData?.amountPaid
+            amount: data?.eventData?.amountPaid,
+            transaction_id: data?.eventData?.transactionReference,
         }).select()
 
         console.log(_historyError)
