@@ -8,7 +8,7 @@ export const runtime = 'edge' // No fear, it won't timeout... I am using runtime
 
 export const POST = async (req: Request, res: Response) => {
 
-    const allowedIPs = ['35.242.133.146']
+    const allowedIPs = ['35.242.133.146'] // Monnify IP
     var ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
 
     if (!allowedIPs.includes(ip!)) {
