@@ -1,6 +1,7 @@
 import Status from '@/components/status'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { formatDateTime } from '@/funcs/formatDate'
 import type { Status as StatusType } from '@/types/constants'
 import { Tables } from '@/types/database'
 import React from 'react'
@@ -14,6 +15,7 @@ const Education = ({ history }: { history: Tables<'history'> }) => {
         <Status status={history?.status as StatusType} type={'image'} />
         <h2 className='text-xl text-muted-foreground font-semibold text-center'>{history.title}</h2>
         <p className='text-muted-foreground text-xs md:text-sm text-center'>{history?.description}</p>
+        <p className='text-muted-foreground text-xs md:text-sm text-center'>{formatDateTime(history?.created_at)}</p>
       </div>
 
       <div className='flex flex-col bg-card/70 rounded-xl justify-center items-center gap-y-1 p-4'>

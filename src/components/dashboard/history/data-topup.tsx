@@ -1,6 +1,7 @@
 import Status from "@/components/status"
 import { Card } from "@/components/ui/card"
 import { formatNigerianNaira } from "@/funcs/formatCurrency"
+import { formatDateTime } from "@/funcs/formatDate"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
 import type { Status as StatusType } from "@/types/constants"
 import { Tables } from "@/types/database"
@@ -19,6 +20,7 @@ export default function DataTopup ({data, history}: DataTopupProps) {
                     <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                     <h2 className='text-xl text-muted-foreground font-semibold text-center'>{history.title}</h2>
                     <p className='text-muted-foreground text-xs md:text-sm text-center'>{history?.description}</p>
+                    <p className='text-muted-foreground text-xs md:text-sm text-center'>{formatDateTime(history?.created_at)}</p>
                 </Card>
 
                 <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 text-xs md:text-sm tracking-tighter rounded-xl flex flex-col w-full gap-y-6'>

@@ -1,4 +1,5 @@
 import Status from "@/components/status"
+import { formatDateTime } from "@/funcs/formatDate"
 import { Tables } from "@/types/database"
 
 interface TVTopupProps {
@@ -14,6 +15,7 @@ export default function TVTopup ({ history }: TVTopupProps) {
                 <Status status={history?.status as Status} type={'image'} />
                 <h2 className='text-xl text-muted-foreground font-semibold text-center'>{history.title}</h2>
                 <p className='text-muted-foreground text-xs md:text-sm text-center'>{history?.description}</p>
+                <p className='text-muted-foreground text-xs md:text-sm text-center'>{formatDateTime(history?.created_at)}</p>
             </div>
 
             <div className="flex flex-col space-y-3">

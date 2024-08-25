@@ -1,10 +1,8 @@
-import { formatDateTime } from '@/funcs/formatDate'
 import { cn } from '@/lib/utils'
 import { AirtimeDataMetadata } from '@/types/airtime-data'
 import { Tables } from '@/types/database'
 import { Networks } from '@/types/networks'
 import { product } from '@/utils/constants/product'
-import { LucideCheck, LucideX } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -34,6 +32,8 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
         }
     }
 
+    const paidToStatus = (status: string): Status => (status === 'PAID' ? 'success' : status) as Status
+
   return (
     <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
         <div className='flex flex-row gap-x-2.5'>
@@ -55,7 +55,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
             </div>
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
-            <Status status={item.status as StatusType} />
+            <Status status={paidToStatus(item?.status!) as StatusType} />
             <span className='text-xs text-gray-500 dark:text-gray-400'>{formatNigerianNaira(item?.amount!)}</span>
         </div>
     </Link>
