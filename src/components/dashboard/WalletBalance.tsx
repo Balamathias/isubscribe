@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
+import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { Tables } from '@/types/database'
 import { createClient } from '@/utils/supabase/client'
 import { Asterisk, Eye, EyeOff } from 'lucide-react'
@@ -87,7 +88,7 @@ const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hi
                 </div>
                 ) :
                 (
-                    <h1 className='md:text-lg text-base tracking-tight md:tracking-normal font-semibold'>₦{" "}{balance}</h1>
+                    <h1 className='md:text-lg text-base tracking-tight md:tracking-normal font-semibold'>{formatNigerianNaira(parseFloat(balance))}</h1>
                 )
             }
             <Button className={"p-1 h-8 bg-transparent hover:bg-transparent w-9 shadow-none drop-shadow-none border-none"} onClick={toggleShow}>

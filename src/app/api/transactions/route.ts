@@ -1,3 +1,4 @@
+import { formatNigerianNaira } from "@/funcs/formatCurrency"
 import { TransactionEvent } from "@/types/webhooks"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import sendEmail from "@/utils/sendMail"
@@ -8,8 +9,8 @@ export const runtime = 'edge' // No fear, it won't timeout... I am using runtime
 
 export const POST = async (req: Request, res: Response) => {
 
-    const allowedIPs = ['35.242.133.146'] // Monnify IP
-    var ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
+    const allowedIPs = ['35.242.133.146'] // Monnify IP only
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
 
     if (!allowedIPs.includes(ip!)) {
         return NextResponse.json({message: 'Unauthorized'}, {status: 401})
@@ -67,7 +68,7 @@ export const POST = async (req: Request, res: Response) => {
         const { error: _historyError } = await  supabase.from('history')
         .insert({
             type: EVENT_TYPE.wallet_fund,
-            description: `Transferred ${data?.eventData?.amountPaid} successfully to iSubscribe wallet.`,
+            description: `Transferred ${formatNigerianNaira(data?.eventData?.amountPaid)} successfully to iSubscribe wallet.`,
             updated_at: data?.eventData?.paidOn,
             status: data?.eventData?.paymentStatus,
             title: 'Wallet Fund',
