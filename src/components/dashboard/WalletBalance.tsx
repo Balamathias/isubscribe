@@ -35,9 +35,9 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
                 if (payload.new) {
                     const response = payload?.new as Tables<'wallet'>
                     setWalletBalance(response.balance?.toFixed(2)?.toString() || "0.00")
-                    toast.success('Wallet funded successfully.')
-
-                    if (wallet?.balance! < response.balance!) {
+                    
+                    if (response.balance! > wallet?.balance!) {
+                        toast.success('Wallet funded successfully.')
                         // Play sound
                         const audio = new Audio('/audio/notification.wav')
                         audio.play()
