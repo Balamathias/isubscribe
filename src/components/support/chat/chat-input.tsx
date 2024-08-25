@@ -53,7 +53,6 @@ const ChatInput = () => {
           // toast.error(error?.message)
         }
       })
-      setMessage('')
   }
   
   return (

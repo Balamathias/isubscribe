@@ -7,6 +7,14 @@ import { NextResponse } from "next/server"
 export const runtime = 'edge'
 
 export const POST = async (req: Request, res: Response) => {
+
+    const allowedIPs = ['35.242.133.146']
+    var ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
+
+    if (!allowedIPs.includes(ip!)) {
+        return NextResponse.json({message: 'Unauthorized'}, {status: 401})
+    }
+
     const supabase = createClient()
     const data = await req.json() as TransactionEvent
 
@@ -69,7 +77,9 @@ export const POST = async (req: Request, res: Response) => {
             message: 'Your wallet transfer to iSubscribe was successful. Thank you for choosing us.',
         })
         
-        return NextResponse.json({message: 'Wallet credited successfully.'}, {status: 200})
+        return NextResponse.json({message: 'Wallet credited successfully.'}, {
+            status: 200,
+         })
     } else {
         const { error: _historyError } = await  supabase.from('history')
         .insert({

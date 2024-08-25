@@ -96,7 +96,7 @@ const ChatInterface = ({profile}: ChatInterfaceProps) => {
                 </div>
 
             </div>
-            <ChatInput />
+            <ChatIwalletnput />
             <div ref={moveChatDownWhileChattingRef} />
         </div>: (
             <NewChatButton />
