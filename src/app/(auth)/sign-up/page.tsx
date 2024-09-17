@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sign up | Create Your Account',
-  description: 'Sign up today on SubMe to get started with our intuitive VTU platform.'
+  description: 'Sign up today on iSubscribe to get started with Bill Payment.'
 }
 
 const SignUpPage = () => {

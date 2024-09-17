@@ -35,7 +35,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
               <LucideBadgeHelp size={28} strokeWidth={2} className='text-primary  ' />
               <span>Support?</span>
             </Link>
-            <Logo showLogoText={false} className='flex md:hidden' />
+            <Logo showLogoText className='flex md:hidden' />
           </>) : <BackButton />
         }
         </div>

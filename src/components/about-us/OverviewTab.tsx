@@ -5,6 +5,7 @@ import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react'
 import Link from 'next/link'
 import DynamicSheet from '../DynamicSheet'
 import PrivacyPolicy from './PrivacyPolicy'
+import ConnectWithUs from '../ConnectWithUs'
 
 const OverviewTab = () => {
     return (
@@ -31,28 +32,8 @@ const OverviewTab = () => {
         <p  className='text-gray-900 italic text-xs sm:text-sm'>Explore isubscribe network today and I bet, you will chew the bone too.</p>
         <Image src={"/images/p4.jpg"} height={1000} width={1000} alt='Hello' className=' rounded-md' />
         <p  className='text-gray-900 italic text-xs sm:text-sm'>We Cherish and Honor our Customers, We demonstrate this through Data and Airtime Giveaways Every Weekends. With Us, You can always stay connected with your Loved ones.</p>
-        <div className=' lg:hidden'>
-         <AuthTestimonial sheetOpen />
-        </div>
-
-        <div className="mt-6 text-center">
-        <h3 className="text-gray-700 font-semibold mb-2">Connect with Us on Social Networks:</h3>
-        <div className="flex justify-center space-x-8 bg-violet-50 rounded-full p-2 shadow-inner">
-          <Link href="#" className="text-gray-600 hover:text-violet-500 transition-colors duration-300">
-            <Facebook className="w-6 h-6" />
-          </Link>
-          <Link href="#" className="text-gray-600 hover:text-violet-400 transition-colors duration-300">
-            <Twitter className="w-6 h-6" />
-          </Link>
-          <Link href="#" className="text-gray-600 hover:text-pink-500 transition-colors duration-300">
-            <Instagram className="w-6 h-6" />
-          </Link>
-          <Link href="#" className="text-gray-600 hover:text-violet-700 transition-colors duration-300">
-            <Linkedin className="w-6 h-6" />
-          </Link>
-        </div>
-      </div>
-      <PrivacyPolicy />
+    
+      <ConnectWithUs />
     </>
   )
 }
