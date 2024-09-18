@@ -155,7 +155,7 @@ const cardsData = [
       <CarouselContent className={"flex gap- w-[96vw] max-md:w-[100vw]"}>
              {cardsData?.map((d, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 bg-red-30 p- px-6 md:px-6">
-                    <Card className={" flex group items-start flex-col border-non bg-white mt-  shadow-none  py-4 gap-4 px-2 hover:bg-gradient-to-t hover:from-teal-50 hover:to-violet-100  hover:transition-all rounded-md overflow-hidde relative border-dashed dark:border-muted border-[3px] rounded-tl-[3rem] rounded-br-[3rem] min-h-[300px] "}>
+                    <Card className={`${current + 1  === index + 1  && "bg-gradient-to-t from-teal-50 to-violet-100  transition-all"} flex group items-start flex-col border-non bg-white mt-  shadow-none  py-4 gap-4 px-2 hover:bg-gradient-to-t hover:from-teal-50 hover:to-violet-100  hover:transition-all rounded-md overflow-hidde relative border-dashed dark:border-muted border-[3px] rounded-tl-[3rem] rounded-br-[3rem] min-h-[300px] `}>
                       {/* <Image src={d?.img} height={100} width={100} alt={d?.heading} className=' rounded-full bg-emerald-50 p-2 group-hover:fade-out-20' /> */}
 
                       <div className=' flex flex-col px-4  space-y-2 pb-4 max-md:space-y-1 w-full '>

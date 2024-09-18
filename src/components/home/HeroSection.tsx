@@ -73,7 +73,7 @@ const heroData = [
 
 const HeroSection = () => {
   return (
-    <section  className=' w-full min-h-scree bg-whit max-md:px-0  py- relative max-w-[90rem] mx-auto '>
+    <section  className=' w-full max-md:min-h-[80vh] bg-whit max-md:px-0  py- relative max-w-[90rem] mx-auto '>
         <CarouselComponent />
     </section>
   )
@@ -121,10 +121,10 @@ export function CarouselComponent() {
           <CarouselItem key={index}>
             <div className="p-1">
               <Card className={" rounded-none  bg-whit border-none shadow-none"}>
-                <CardContent className="flex max-md:flex-col-reverse max-md:gap-y-4 aspect-squar  items-start justify-between p-3">
+                <CardContent className="flex max-md:flex-col-reverse max-md:gap-y-4 aspect-squar  items-start md:items-center justify-between p-3">
                  <div className=" w-full flex flex-col items-start max-md:items-center max-md:space-y-4 space-y-8 ">
-                   <h1 className=" text-6xl max-md:text-lg max-md:text-center font-semibold text-black">{d?.h2}</h1>
-                   <h4 className=" text-lg  max-md:text-center  text-gray-800">{d?.h3}</h4>
+                   <h1 className=" text-5xl leading-[70px] max-md:text-lg max-md:text-center font-semibold text-black">{d?.h2}</h1>
+                   <h4 className=" text-2xl  max-md:text-center  text-gray-800">{d?.h3}</h4>
                  </div>
                  <div className=" w-full max-md:hidden ">
                     <Image src={d?.img} height={1000} width={1000} alt={d?.h2} className="  object-cover" />
