@@ -10,6 +10,7 @@ import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import Status from '../status'
 import { Status as StatusType } from '@/types/constants'
+import { formatTimestamp } from '@/funcs/formatDate'
 
 const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: string}) => {
 
@@ -43,7 +44,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                     alt={item?.title!}
                     width={500}
                     height={500}
-                    className='object-cover rounded-full md:w-10 md:h-10 w-8 h-8'
+                    className='object-cover rounded-full md:w-10 md:h-10 w-8 h-8 aspect-square'
                 />
             </div>
             <div className="flex flex-col space-y-1 basis-[80%]">
@@ -51,7 +52,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                 <span className={cn("text-[10px] md:text-xs text-gray-500 dark:text-gray-400", {
                     'text-muted-foreground/70': item.status === 'failed',
                     'text-muted-foreground': item.status === 'success'
-                })}>{item?.description?.split?.('\n')?.[0]}</span>
+                })}>{formatTimestamp(item?.created_at)}.</span>
             </div>
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>

@@ -1,11 +1,6 @@
 'use client'
 
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
-import { Card } from '@/components/ui/card'
-import { formatNigerianNaira } from '@/funcs/formatCurrency'
-import generateRequestId from '@/funcs/generateRequestId'
-import { parseDataName } from '@/funcs/parse-data-name'
-import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { airtelData, etisalatData, gloData, mtnData } from '@/utils/constants/vtp/data-plans'
 import { useNetwork } from '@/providers/data/sub-data-provider'
