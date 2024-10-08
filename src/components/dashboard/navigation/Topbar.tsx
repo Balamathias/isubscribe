@@ -50,7 +50,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
           trigger = {
             <Link passHref href={'#'} 
               className='cursor-pointer hover:opacity-80 flex items-center gap-x-1'>
-              <span className='text-muted-foreground text-xs'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></span>
+              <span className='text-muted-foreground text-xs hidden md:block'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></span>
               <Avatar title={data?.full_name ?? ''}>
                 <AvatarImage src={data?.avatar!}/>
                 <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
