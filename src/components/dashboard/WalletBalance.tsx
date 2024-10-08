@@ -38,7 +38,6 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
                     
                     if (response.balance! > wallet?.balance!) {
                         toast.success('Wallet funded successfully.')
-                        // Play sound
                         const audio = new Audio('/audio/notification.wav')
                         audio.play()
                     }
