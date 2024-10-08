@@ -32,5 +32,5 @@ export const formatTimestamp = (date: string) => {
     const ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12 || 12
 
-    return `${day}/${month}/${year} ${hours}:${minutes}${ampm}`;
+    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
 };
