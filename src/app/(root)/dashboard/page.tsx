@@ -18,7 +18,7 @@ const DashboardPage = async ({searchParams}: { searchParams: {[key: string]: str
     <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
 
       <div className='flex flex-col space-y-1 md:hidden'>
-        <h2 className='text-muted-foreground text-lg'>Hi <span className="font-semibold dark:text-amber-500/90">{profile?.full_name}</span></h2>
+        <h2 className='text-muted-foreground text-lg'>Hi, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name}</span>.</h2>
         <p className='text-muted-foreground text-xs'>What do you wish to do today?</p>
       </div>
 
