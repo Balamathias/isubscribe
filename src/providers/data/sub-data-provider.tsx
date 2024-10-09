@@ -432,14 +432,15 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
 
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.get_wallet]
-            })
-
+            
             router.refresh()
             toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
             await saveCashbackHistory({amount: cashbackPrice})
-
+            
+            queryClient.invalidateQueries({
+                queryKey: [QueryKeys.get_wallet],
+            })
+            
             setPurchaseSuccess(true)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)

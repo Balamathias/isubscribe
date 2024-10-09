@@ -66,7 +66,7 @@ export const updateWalletBalance = async (id: number, balance: number) => {
 
 export const updateWalletBalanceByUser = async (userId: string, balance: number, cashback_balance?: number) => {
     const supabase = createClient()
-    const { data, error } = await supabase.from('wallet').update({balance, bonus_claimed: true, cashback_balance}).eq('user', userId).select()
+    const { data, error } = await supabase.from('wallet').update({balance, bonus_claimed: true, cashback_balance}).eq('user', userId).select().single()
     if (error) throw (error)
     return { data, error }
 }

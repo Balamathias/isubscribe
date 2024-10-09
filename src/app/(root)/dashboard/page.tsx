@@ -10,7 +10,7 @@ import { getUser } from '@/lib/supabase/accounts'
 import { getWallet } from '@/lib/supabase/wallets'
 import React, { Suspense } from 'react'
 
-const DashboardPage = async ({searchParams}: { searchParams: {[key: string]: string} }) => {
+const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
     const { data: profile } = await getUser()
     const { data: wallet } = await getWallet(profile?.id!)
 

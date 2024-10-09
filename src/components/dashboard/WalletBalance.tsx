@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import useWalletStore from '@/store/use-wallet-store'
 import { Tables } from '@/types/database'
 import { createClient } from '@/utils/supabase/client'
 import { Asterisk, Eye, EyeOff } from 'lucide-react'
@@ -12,7 +13,13 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(localStorage.getItem('hideBalance') === 'true' || false)
     const [hideCashbackBalance, setHideCashbackBalance] = useState(localStorage.getItem('hideCashbackBalance') === 'true' || false)
 
-    const [walletBalance, setWalletBalance] = useState( wallet?.balance?.toFixed(2) || "0.00" )
+    // const [walletBalance, setWalletBalance] = useState( wallet?.balance?.toFixed(2) || "0.00" )
+
+    const setWalletBalance = useWalletStore(state => state.setBalance)
+    const walletBalance = useWalletStore(state => state.balance)
+
+    useEffect(() => { setWalletBalance(wallet?.balance ?? 0) }, [wallet?.balance, setWalletBalance])
+
     const cashbackBalance = wallet?.cashback_balance?.toFixed(2) || "0.00"
 
     const handleToggleHideBalance  = () => {
@@ -34,7 +41,7 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
             (payload) => {
                 if (payload.new) {
                     const response = payload?.new as Tables<'wallet'>
-                    setWalletBalance(response.balance?.toFixed(2)?.toString() || "0.00")
+                    setWalletBalance(response.balance ?? 0)
                     
                     if (response.balance! > wallet?.balance!) {
                         toast.success('Wallet funded successfully.')
@@ -53,7 +60,7 @@ const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
     <div className=' flex flex-row justify-between w-full items-center'>
         {/* BALANCE */}
         <RevealBalance
-            balance={walletBalance}
+            balance={walletBalance?.toFixed()}
             hide={hideBalance}
             title='Wallet Balance'
             toggleShow={handleToggleHideBalance}

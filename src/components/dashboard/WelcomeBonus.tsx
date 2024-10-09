@@ -9,6 +9,7 @@ import { updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { Tables } from '@/types/database'
 import DynamicModal from '../DynamicModal'
 import { Button } from '../ui/button'
+import useWalletStore from '@/store/use-wallet-store'
 
 interface WelcomeBonusModalProps {
     type?: 'basic' | 'premium',
@@ -23,6 +24,9 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
 
   const [loading, setLoading] = useState(false)
   const [successful, setSuccessful] = useState(false)
+
+  const setWalletBalance = useWalletStore(state => state.setBalance)
+
   const router = useRouter()
 
   const handleClaimWelcomeBonus = async () => {
@@ -41,12 +45,16 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
 
       router.refresh()
 
-      await updateWalletBalanceByUser(profile?.id!, balance)
+      const { data } = await updateWalletBalanceByUser(profile?.id!, balance)
+
       setSuccessful(true)
 
       setClaimed(true)
 
       setLoading(false)
+
+      if (data?.balance)
+        setWalletBalance(data?.balance)
 
       router.refresh()
     } catch (error) {

@@ -45,8 +45,8 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
           <p className='text-sm'>Hi <span className='text-primary/90 dark:text-sky-500/[0.9] font-semibold'>{profile?.full_name}</span>, Are you sure you want to logout?</p>
           <p className="text-xs text-muted-foreground">Once you click on that button, You will be signed out of this account, and you will need to sign in again to be able to carry on transactions. Proceed?</p>
           <div className='flex flex-row gap-x-2 float-right justify-end md:-mb-4'>
-            <Button variant={'destructive'} onClick={handleSignOut}>Yes, {"I'm"} sure</Button>
-            <Button variant={'secondary'} onClick={() => setOpen(false)}>No, Forget it</Button>
+            <Button variant={'destructive'} className='rounded-full' onClick={handleSignOut}>Yes, {"I'm"} sure</Button>
+            <Button variant={'secondary'} className='rounded-full' onClick={() => setOpen(false)}>No, Forget it</Button>
           </div>
         </div>
       </DynamicModal>

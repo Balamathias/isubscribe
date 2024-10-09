@@ -143,7 +143,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
               <LucideDelete className="w-6 h-6" />
             </Button>
           </div>
-          <div className='flex items-center gap-x-1 !w-full flex-row'>
+          <div className='flex items-center gap-x-1 !w-full flex-row justify-center'>
             <BadgeCheckIcon className='text-primary' size={20}></BadgeCheckIcon>
             <p className='text-muted-foreground text-xs'>Powered by:</p>
             <Logo 

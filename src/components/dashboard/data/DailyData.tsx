@@ -15,6 +15,7 @@ import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
 import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
+import { Loader2 } from 'lucide-react'
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
 
@@ -31,7 +32,6 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
   const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
 
-    const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
     const { data: profile, isPending: profilePending } = useGetProfile()
@@ -40,7 +40,11 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending || profilePending || services.isLoading) return <LoadingOverlay />
+    if (isPending || profilePending || services.isLoading) return (
+        <div className="flex p-6 justify-center items-center">
+          <Loader2 className='animate-spin mx-auto my-4' />
+        </div>
+    )
 
     console.log(services);
 
