@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { lazy, Suspense, useState } from 'react'
 import { airtel_data, etisalat_data, glo_data, mtn_data } from '@/utils/constants/data-plans';
 import { useNetwork } from '@/providers/data/sub-data-provider';
 import DynamicModal from '../../DynamicModal';
 import { Button } from '../../ui/button';
 import { PaymentMethod, SubDataProps } from '@/types/networks';
 import { toast } from 'sonner';
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
 import { formatNigerianNaira } from '@/funcs/formatCurrency';
 import ConfirmPin from '../ConfirmPin';
 import { priceToInteger } from '@/funcs/priceToNumber';
@@ -13,10 +12,11 @@ import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { product } from '@/utils/constants/product';
 import { useGetProfile } from '@/lib/react-query/funcs/user';
 import NetworkCardItem from './NetworkCardItem';
-import ConfirmProductInfo from './confirm-product-info';
 import LoadingSpinner from '@/components/loaders/LoadingSpinner';
-import { Loader2 } from 'lucide-react';
 import SimpleLoader from '@/components/loaders/simple-loader';
+import { useWallet } from '@/hooks/use-wallet';
+
+const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
 const object = {
     'mtn': mtn_data,
@@ -30,7 +30,7 @@ const DataNetworkCard = () => {
     const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing } = useNetwork()
     const [selected, setSelected] = useState<SubDataProps | null>(null)
 
-    const {data: wallet, isPending} = useGetWalletBalance()
+    const { wallet, isLoading } = useWallet()
     
     const { data: profile, isPending: profilePending } = useGetProfile()
 
@@ -38,7 +38,7 @@ const DataNetworkCard = () => {
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending || profilePending) return (
+    if (isLoading || profilePending) return (
         <SimpleLoader />
     )
 
@@ -74,37 +74,41 @@ const DataNetworkCard = () => {
                     }
                 <div className="flex flex-col gap-y-2.5 w-full">
                     
-                    <ConfirmProductInfo 
-                        cashBack={priceToInteger(selected?.CashBack || '0.00')}
-                        currentNetwork={currentNetwork}
-                        dataDuration={selected?.Duration || ''}
-                        dataQty={selected?.Data || ''}
-                        image={product[currentNetwork].image}
-                        mobileNumber={mobileNumber}
-                        price={priceToInteger(selected?.Price || '0.00')}
-                    />
+                {selected && (
+                        <Suspense fallback={<SimpleLoader />}>
+                            <ConfirmProductInfo 
+                                cashBack={priceToInteger(selected.CashBack || '0.00')}
+                                currentNetwork={currentNetwork}
+                                dataDuration={selected.Duration || ''}
+                                dataQty={selected.Data || ''}
+                                image={product[currentNetwork].image}
+                                mobileNumber={mobileNumber}
+                                price={priceToInteger(selected.Price || '0.00')}
+                            />
+                        </Suspense>
+                    )}
 
                     <div className='flex flex-col w-full gap-y-2.5'>
                         <ActivePaymentMethodButton 
                             active={paymentMethod === 'wallet'} 
                             handler={() => {setPaymentMethod('wallet')}} 
                             method='wallet'
-                            balance={formatNigerianNaira(wallet?.data?.balance! as number)}
-                            disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
+                            balance={formatNigerianNaira(wallet?.balance! as number)}
+                            disabled={wallet?.balance! < priceToInteger(selected?.Price || '0.00')}
                         />
                         <ActivePaymentMethodButton 
                             active={paymentMethod === 'cashback'} 
                             handler={() => {setPaymentMethod('cashback')}} 
                             method='cashback'
-                            balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
-                            disabled={wallet?.data?.cashback_balance! < priceToInteger(selected?.Price || '0.00')}
+                            balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
+                            disabled={wallet?.cashback_balance! < priceToInteger(selected?.Price || '0.00')}
                         />
                     </div>
 
                     <Button 
                         className='w-full rounded-xl' 
                         size={'lg'}
-                        disabled={wallet?.data?.balance! < priceToInteger(selected?.Price || '0.00')}
+                        disabled={wallet?.balance! < priceToInteger(selected?.Price || '0.00')}
                         onClick={() => {
                             setProceed(true)
                         }}

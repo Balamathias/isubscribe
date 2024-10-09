@@ -32,6 +32,6 @@ export const computeTransaction = ({
         } else {
             return
         }
-    
+        
         return { balance, cashbackBalance, cashbackPrice, deductableAmount, price }
 }

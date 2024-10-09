@@ -9,7 +9,7 @@ import { Asterisk, Eye, EyeOff } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-const WalletBalance = ({wallet}: { wallet: Tables<'wallet'>}) => {
+const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(localStorage.getItem('hideBalance') === 'true' || false)
     const [hideCashbackBalance, setHideCashbackBalance] = useState(localStorage.getItem('hideCashbackBalance') === 'true' || false)
 

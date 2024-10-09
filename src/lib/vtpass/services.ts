@@ -54,7 +54,7 @@ export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTra
         }
         return res.data
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return
     }
 }

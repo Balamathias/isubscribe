@@ -2,18 +2,16 @@
 
 import React from 'react'
 import DynamicModal from '../../DynamicModal'
-import Image from 'next/image'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
-import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber'
 import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
 import { Button } from '../../ui/button'
 import { product } from '@/utils/constants/product'
 import { useNetwork } from '@/providers/data/sub-data-provider'
-import { PaymentMethod, SubAirtimeProps, SubDataProps, VTPassDataPayload } from '@/types/networks'
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
+import { PaymentMethod, VTPassDataPayload } from '@/types/networks'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import ConfirmProductInfo from './confirm-product-info'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
+import { useWallet } from '@/hooks/use-wallet'
 
 
 interface ConfirmDataPurchaseModalProps {
@@ -36,9 +34,9 @@ const ConfirmDataPurchaseModal = ({
     setProceed
 }: ConfirmDataPurchaseModalProps) => {
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const { data: wallet, isPending } = useGetWalletBalance()
+    const { wallet, isLoading } = useWallet()
 
-    if (isPending) return <LoadingOverlay />
+    if (isLoading) return <LoadingOverlay loader='1' />
     
   return (
     <DynamicModal
@@ -66,22 +64,22 @@ const ConfirmDataPurchaseModal = ({
                     active={paymentMethod === 'wallet'} 
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
-                    balance={formatNigerianNaira(wallet?.data?.balance! as number)}
-                    disabled={wallet?.data?.balance! < (selected?.amount || 0)}
+                    balance={formatNigerianNaira(wallet?.balance! as number)}
+                    disabled={wallet?.balance! < (selected?.amount || 0)}
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
-                    balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
-                    disabled={wallet?.data?.cashback_balance! < (selected?.amount || 0)}
+                    balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
+                    disabled={wallet?.cashback_balance! < (selected?.amount || 0)}
                 />
             </div>
 
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={(wallet?.data?.balance! ) < (selected?.amount || 0) && (wallet?.data?.cashback_balance! ) < (selected?.amount || 0)}
+                disabled={(wallet?.balance! ) < (selected?.amount || 0) && (wallet?.cashback_balance! ) < (selected?.amount || 0)}
                 onClick={() => {
                     setProceed(true)
                 }}

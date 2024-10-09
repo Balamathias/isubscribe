@@ -2,12 +2,11 @@
 
 import React from "react"
 import { buyAirtime, buyData } from "@/lib/n3tdata"
-import { useGetWalletBalance } from "@/lib/react-query/funcs/wallet"
 import { Tables } from "@/types/database"
 import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassDataPayload } from "@/types/networks"
 import { nanoid } from 'nanoid'
 import { toast } from "sonner"
-import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
+import { getWallet, updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
 import { insertTransactionHistory, saveCashbackHistory, saveDataErrorHistory } from "@/lib/supabase/history"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { useRouter } from "next/navigation"
@@ -66,8 +65,6 @@ const SubDatContext = React.createContext<{
 
 const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderProps) => {
 
-    const { data: wallet, isPending } = useGetWalletBalance()
-
     const queryClient = useQueryClient()
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
@@ -89,13 +86,16 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
+
+        const { data: wallet } = await getWallet()
+
         const values = computeTransaction({
             payload: {
                 price: parseInt(payload.Price),
                 cashback: parseInt(payload.CashBack),
                 method: payload.method
             },
-            wallet: wallet?.data!
+            wallet: wallet!
         })
         if (!values) return
 
@@ -217,13 +217,16 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     }
 
     const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
+
+        const { data: wallet } = await getWallet()
+
         const values = computeTransaction({
             payload: {
                 price: parseInt(payload.Price),
                 cashback: parseInt(payload.CashBack),
                 method: payload.method
             },
-            wallet: wallet?.data!
+            wallet: wallet!
         })
         if (!values) return
 
@@ -345,14 +348,18 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     }
 
     const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
+
+        const { data: wallet } = await getWallet()
+
         setDataAmount(payload.detail?.dataQty!)
+
         const values = computeTransaction({
             payload: {
                 price: (payload.amount as number),
                 cashback: (payload.cashback as number),
                 method
             },
-            wallet: wallet?.data!
+            wallet: wallet!
         })
 
         if (!values) return toast.info('Please verify all inputs.')
@@ -421,6 +428,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
         else if (res?.code === RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code) {
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
+
+                console.log("RRR: ", _walletBalance, "WWW: ", _balanceError);
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
