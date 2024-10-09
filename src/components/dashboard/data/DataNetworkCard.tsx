@@ -6,7 +6,6 @@ import { Button } from '../../ui/button';
 import { PaymentMethod, SubDataProps } from '@/types/networks';
 import { toast } from 'sonner';
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
-import LoadingOverlay from '../../loaders/LoadingOverlay';
 import { formatNigerianNaira } from '@/funcs/formatCurrency';
 import ConfirmPin from '../ConfirmPin';
 import { priceToInteger } from '@/funcs/priceToNumber';
@@ -16,6 +15,8 @@ import { useGetProfile } from '@/lib/react-query/funcs/user';
 import NetworkCardItem from './NetworkCardItem';
 import ConfirmProductInfo from './confirm-product-info';
 import LoadingSpinner from '@/components/loaders/LoadingSpinner';
+import { Loader2 } from 'lucide-react';
+import SimpleLoader from '@/components/loaders/simple-loader';
 
 const object = {
     'mtn': mtn_data,
@@ -28,14 +29,18 @@ const object = {
 const DataNetworkCard = () => {
     const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing } = useNetwork()
     const [selected, setSelected] = useState<SubDataProps | null>(null)
+
     const {data: wallet, isPending} = useGetWalletBalance()
+    
     const { data: profile, isPending: profilePending } = useGetProfile()
 
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending || profilePending) return <LoadingOverlay />
+    if (isPending || profilePending) return (
+        <SimpleLoader />
+    )
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">

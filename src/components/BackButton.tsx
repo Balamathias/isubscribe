@@ -14,8 +14,8 @@ const BackButton = () => {
   return (
     <div className='flex items-center'>
       <Button variant={'ghost'} className='flex items-center flex-row gap-x-1 rounded-full !px-1' onClick={() => router.back()}>
-        <LucideArrowLeft className='text-primary' />
-        <span className='text-muted-foreground'>Back</span>
+        <LucideArrowLeft className='' />
+        <span className=''>Back</span>
       </Button>
     </div>
   )

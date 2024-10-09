@@ -1,10 +1,9 @@
 'use client'
 
-import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { airtelData, etisalatData, gloData, mtnData } from '@/utils/constants/vtp/data-plans'
 import { useNetwork } from '@/providers/data/sub-data-provider'
-import { PaymentMethod, SubDataProps, VTPassDataPayload } from '@/types/networks'
+import { PaymentMethod, VTPassDataPayload } from '@/types/networks'
 import { VTPassServiceIds } from '@/utils/networks'
 import React, { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -15,7 +14,7 @@ import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
 import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
-import { Loader2 } from 'lucide-react'
+import SimpleLoader from '@/components/loaders/simple-loader'
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
 
@@ -41,12 +40,11 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
     if (isPending || profilePending || services.isLoading) return (
-        <div className="flex p-6 justify-center items-center">
-          <Loader2 className='animate-spin mx-auto my-4' />
-        </div>
+        <SimpleLoader />
     )
 
-    console.log(services);
+    console.log(wallet);
+    // console.log(services);
 
     if (!object[currentNetwork] || !object[currentNetwork]?.length) {
         return (

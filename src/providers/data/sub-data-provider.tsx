@@ -23,6 +23,7 @@ import { priceToInteger } from "@/funcs/priceToNumber"
 import { RESPONSE_CODES } from "@/utils/constants/response-codes"
 import { useQueryClient } from "@tanstack/react-query"
 import { QueryKeys } from "@/lib/react-query/query-keys"
+import useWalletStore from "@/store/use-wallet-store"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -68,6 +69,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
     const { data: wallet, isPending } = useGetWalletBalance()
 
     const queryClient = useQueryClient()
+
+    const setWalletBalance = useWalletStore(state => state.setBalance)
 
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
@@ -155,6 +158,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
+
+            setWalletBalance(_walletBalance.balance ?? 0)
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
@@ -276,6 +281,9 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
                 (balance - deductableAmount))
+
+                setWalletBalance(_walletBalance.balance ?? 0)
+
             if (_balanceError) {
                 await updateWalletBalanceByUser(profile?.id!, 
                     (balance - deductableAmount))
@@ -416,6 +424,8 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
 
             const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
                 (cashbackBalance))
+            
+                setWalletBalance(_walletBalance.balance ?? 0)
 
             if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
 
@@ -433,7 +443,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
 
             
-            router.refresh()
             toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
             await saveCashbackHistory({amount: cashbackPrice})
             
@@ -444,6 +453,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setPurchaseSuccess(true)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
+            router.refresh()
         }
 
         else {
@@ -455,8 +465,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             return
         }
     }
-
-    // if (isPending) return <LoadingOverlay />
 
     return (
         <SubDatContext.Provider value={{

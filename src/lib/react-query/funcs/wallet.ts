@@ -5,4 +5,6 @@ import { getWallet } from "@/lib/supabase/wallets";
 export const useGetWalletBalance = () => useQuery({
     queryKey: [QueryKeys.get_wallet],
     queryFn: () => getWallet(),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
 })
