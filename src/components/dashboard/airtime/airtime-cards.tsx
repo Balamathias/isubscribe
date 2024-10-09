@@ -78,7 +78,7 @@ const AirtimeCards = () => {
                 >
                     <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
                         <p className="font-semibold text-base">{formatNigerianNaira(priceToInteger(plan?.Price!))}</p>
-                        <p className='tracking-tighter'>Pay N{priceToInteger(plan?.Price!)}</p>
+                        <p className='tracking-tighter'>Pay {formatNigerianNaira(priceToInteger(plan?.Price!))}</p>
                         <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
                             <span>{plan?.CashBack}</span>
                             <span>Cashback</span>
@@ -130,15 +130,16 @@ const AirtimeCards = () => {
                 id='amount'
                 type='number'
             />
-            <button 
-                className={cn('focus:outline-none border-none bg-green-600/20 text-green-600 py-2.5 px-3 rounded-lg hover:opacity-70 flex items-center justify-center mt-6 font-semibold', {
+            <Button 
+                className={cn('rounded-full mt-4', {
                     'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
                 })}
+
                 onClick={processDynamicAirtimePlan}
                 disabled={AMOUNT_OUT_OF_RANGE}
             >
                 {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
-            </button>
+            </Button>
         </div>
     </div>
   )

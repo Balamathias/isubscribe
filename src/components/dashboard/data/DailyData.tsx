@@ -14,8 +14,11 @@ import ConfirmPin from '../ConfirmPin'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
 import NetworkCardItem from './NetworkCardItem'
+import { useServices } from '@/lib/react-query/funcs/data'
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
+
+    const services = useServices()
         
     const object = useMemo(() => {
         return {
@@ -27,6 +30,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
     }, [type])
 
   const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
+
     const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const {data: wallet, isPending} = useGetWalletBalance()
@@ -36,7 +40,9 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (isPending || profilePending) return <LoadingOverlay />
+    if (isPending || profilePending || services.isLoading) return <LoadingOverlay />
+
+    console.log(services);
 
     if (!object[currentNetwork] || !object[currentNetwork]?.length) {
         return (

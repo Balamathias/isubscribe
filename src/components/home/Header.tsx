@@ -4,7 +4,7 @@ import AboutUs from '../about-us/AboutUs'
 
 const Header = () => {
   return (
-    <div className=' flex flex-row justify-between bg-white h-[60px] top-0 sticky shadow-l px-2 z-50'>
+    <div className=' flex flex-row justify-between bg-white dark:bg-background border-b h-[70px] top-0 sticky shadow-l px-2 z-50'>
       <div>
       <Logo showLogoText />
       </div>

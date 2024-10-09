@@ -1,8 +1,5 @@
-import { networkIds } from "@/utils/networks"
-import { parseWithInterestPrice } from "./priceToNumber"
-import { PaymentMethod, SubAirtimeProps, SubDataProps } from "@/types/networks"
+import { PaymentMethod } from "@/types/networks"
 import { Tables } from "@/types/database"
-import { toast } from "sonner"
 
 export const computeTransaction = ({
     payload,

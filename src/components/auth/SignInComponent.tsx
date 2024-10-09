@@ -49,7 +49,7 @@ const SignInComponent = () => {
               setStatus(true)
               setSuccess('You have successfully signed in to your account, you will be redirected to the dashboard shortly.')
               toast.success(message)
-            router.push('/')
+            router.push('/dashboard')
             return
         }
         catch (error: any) {

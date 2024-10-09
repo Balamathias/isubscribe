@@ -80,7 +80,6 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
           setIsConfirming(false);
         }
       }
-      // eslint-ignore
     }, [confirmPin, pin]);
     
     return (

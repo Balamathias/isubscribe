@@ -1,7 +1,6 @@
 'use client'
 
 import React from "react"
-import LoadingOverlay from "@/components/loaders/LoadingOverlay"
 import { buyAirtime, buyData } from "@/lib/n3tdata"
 import { useGetWalletBalance } from "@/lib/react-query/funcs/wallet"
 import { Tables } from "@/types/database"
@@ -22,6 +21,8 @@ import { AirtimeDataMetadata } from "@/types/airtime-data"
 import { formatNigerianNaira } from "@/funcs/formatCurrency"
 import { priceToInteger } from "@/funcs/priceToNumber"
 import { RESPONSE_CODES } from "@/utils/constants/response-codes"
+import { useQueryClient } from "@tanstack/react-query"
+import { QueryKeys } from "@/lib/react-query/query-keys"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -63,7 +64,11 @@ const SubDatContext = React.createContext<{
 
 
 const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderProps) => {
+
     const { data: wallet, isPending } = useGetWalletBalance()
+
+    const queryClient = useQueryClient()
+
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
     const [pinPasses, setPinPasses] = React.useState<boolean>(false)
@@ -191,6 +196,10 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
             })
             */
+            queryClient.invalidateQueries({
+                queryKey: [QueryKeys.get_wallet]
+            })
+            
            setPurchasing(false)
            setOpenConfirmPurchaseModal(false)
            setPurchaseSuccess(true)
@@ -312,6 +321,10 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
             })
             */
+            queryClient.invalidateQueries({
+                queryKey: [QueryKeys.get_wallet]
+            })
+
            setPurchasing(false)
            setOpenConfirmPurchaseModal(false)
            setPurchaseSuccess(true)
@@ -418,6 +431,10 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 amount: price
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
+
+            queryClient.invalidateQueries({
+                queryKey: [QueryKeys.get_wallet]
+            })
 
             router.refresh()
             toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)

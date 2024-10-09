@@ -28,7 +28,7 @@ const RecentTransactions = async () => {
         <div className=' flex flex-col gap-2'>
             <div className='flex flex-row items-center justify-between'>
                 <h1 className=' md:text-lg text-base text-gray-950 dark:text-violet-100 font-semibold peer'>Recent Transactions</h1>
-                <Link href={'/dashboard/history'} className='md:text-base text-sm text-amber-500 dark:text-amber-400 hover:underline hover:transition-all hover:duration-500 peer-hover:opacity-65'>
+                <Link href={'/dashboard/history'} className='md:text-base text-sm hover:text-amber-500 hover:underline hover:transition-all hover:duration-500 peer-hover:opacity-65'>
                     See All
                 </Link>
             </div>

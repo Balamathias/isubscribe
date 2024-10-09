@@ -7,24 +7,24 @@ const ConnectWithUs = () => {
   return (
     <div className=' my-6'>
     <div className="my- text-center">
-        <h3 className="text-black font-semibold mb-2">Connect with Us on Social Networks:</h3>
-        <div className="flex justify-center space-x-8 bg-violet-50 rounded-full p-2 shadow-inne">
-          <Link href="#" className="text-gray-600 hover:text-violet-500 transition-colors duration-300">
+        <h3 className="font-semibold my-2.5">Connect with Us on Social Networks:</h3>
+        <div className="flex justify-center space-x-8 py-2 rounded-full p-2 shadow-inner">
+          <Link href="#" className="text-gray-600 hover:text-primary transition-colors duration-300">
             <Facebook className="w-6 h-6" />
           </Link>
-          <Link href="#" className="text-gray-600 hover:text-violet-400 transition-colors duration-300">
+          <Link href="#" className="text-gray-600 hover:text-primary transition-colors duration-300">
             <Twitter className="w-6 h-6" />
           </Link>
           <Link href="#" className="text-gray-600 hover:text-pink-500 transition-colors duration-300">
             <Instagram className="w-6 h-6" />
           </Link>
-          <Link href="#" className="text-gray-600 hover:text-violet-700 transition-colors duration-300">
+          <Link href="#" className="text-gray-600 hover:text-sky-700 transition-colors duration-300">
             <Linkedin className="w-6 h-6" />
           </Link>
         </div>
       </div>
       <PrivacyPolicy />
-      <div className='text-muted-foreground text-xs mt-4  sm:text-sm itali text-center underlin cursor-pointer '
+      <div className='text-muted-foreground text-xs mt-4 sm:text-sm italics text-center underline cursor-pointer '
     >
        <p>Powered By: Dayilo Technologies</p>
     </div>

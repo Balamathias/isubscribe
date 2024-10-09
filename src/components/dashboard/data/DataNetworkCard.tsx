@@ -1,18 +1,15 @@
-import React, { useMemo, useState } from 'react'
-import { Card } from '../../ui/card'
+import React, { useState } from 'react'
 import { airtel_data, etisalat_data, glo_data, mtn_data } from '@/utils/constants/data-plans';
 import { useNetwork } from '@/providers/data/sub-data-provider';
 import DynamicModal from '../../DynamicModal';
 import { Button } from '../../ui/button';
 import { PaymentMethod, SubDataProps } from '@/types/networks';
-import Image from 'next/image';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet';
 import LoadingOverlay from '../../loaders/LoadingOverlay';
 import { formatNigerianNaira } from '@/funcs/formatCurrency';
 import ConfirmPin from '../ConfirmPin';
-import { parseWithInterestPrice, priceToInteger } from '@/funcs/priceToNumber';
+import { priceToInteger } from '@/funcs/priceToNumber';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { product } from '@/utils/constants/product';
 import { useGetProfile } from '@/lib/react-query/funcs/user';

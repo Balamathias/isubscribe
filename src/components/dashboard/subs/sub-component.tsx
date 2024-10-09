@@ -24,7 +24,7 @@ const services = [
         label: 'TV',
         icon: <LucideTv />,
         className: 'text-lime-600 bg-lime-600/10',
-        url: '/dashboard/tv'
+        url: '/dashboard/tv-cable'
     },
     {
         service: 'electricity',

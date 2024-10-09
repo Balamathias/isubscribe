@@ -25,14 +25,14 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   if (isPending) return <LoadingOverlay />
 
   return (
-    <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white dark:bg-gray-900 shadow-sm'>
+    <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white dark:bg-gray-900 shadow-sm border-b'>
       <div className='flex flex-row items-center justify-between p-3 w-full'>
 
         <div className=' md:ml-[220px]'>
         {
           pathname === '/dashboard' ? (<>
-            <Link onClick={() => setOpenSupport(true)} href={'#'} className='text-primary md:flex items-center flex-row gap-x-1 hidden'>
-              <LucideBadgeHelp size={28} strokeWidth={2} className='text-primary  ' />
+            <Link onClick={() => setOpenSupport(true)} href={'#'} className='md:flex items-center flex-row gap-x-1 hidden'>
+              <LucideBadgeHelp size={28} strokeWidth={2} className='' />
               <span>Support?</span>
             </Link>
             <Logo showLogoText className='flex md:hidden' />

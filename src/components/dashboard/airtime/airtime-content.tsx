@@ -34,7 +34,7 @@ const AirtimeContent = () => {
                 <SelectNetworkDropdown />
                 <Input 
                     placeholder='Your Phone Number'
-                    className='focus-within:outline h-12 bg-white dark:bg-secondary dark:text-amber-500/90 dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none dark:text-lg'
+                    className='focus-within:outline h-12 bg-white dark:bg-secondary dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'
                     value={mobileNumber}
                     defaultValue={profile?.data?.phone || ''}
                     onChange={ async (e) => {

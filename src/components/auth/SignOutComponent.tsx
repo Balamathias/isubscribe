@@ -30,8 +30,8 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
     <div className='flex flex-col py-2 gap-y-2'>
       <DynamicModal
         trigger={
-            trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-lg text-xs md:text-sm' variant={'destructive'}>
-              <span>Log out</span>
+            trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-full text-xs md:text-sm' variant={'destructive'}>
+              <span>Sign out</span>
               <LucideArrowRight size={18} />
               <span className='absolute bg-white inset-0 mix-blend-overlay opacity-30 pointer-events-none' />
             </Button>

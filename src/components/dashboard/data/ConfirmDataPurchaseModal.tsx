@@ -39,6 +39,7 @@ const ConfirmDataPurchaseModal = ({
     const { data: wallet, isPending } = useGetWalletBalance()
 
     if (isPending) return <LoadingOverlay />
+    
   return (
     <DynamicModal
         open={open}
