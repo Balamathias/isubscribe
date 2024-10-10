@@ -15,7 +15,7 @@ const Bottombar = () => {
          navLinks.map((link, idx) => (
             <div key={idx} className=' flex flex-row gap-4'>
                 <Link href={link?.href} className={` flex flex-col items-center justify-center`}>
-                    <link.icon size={pathname === link?.href ? 28 : 29} strokeWidth={2} className={cn( "text-violet-800 text-s hover:p-1 hover:bg-violet-50 dark:hover:bg-secondary/80 hover:rounded-md hover:transition-all hover:duration-500", {
+                    <link.icon size={pathname === link?.href ? 24 : 25} strokeWidth={2} className={cn( "text-violet-800 text-s hover:p-1 hover:bg-violet-50 dark:hover:bg-secondary/80 hover:rounded-md hover:transition-all hover:duration-500", {
                       "bg-violet-100 dark:bg-secondary p-1 rounded-md text-violet-600 dark:text-violet-400  hover:transition-all hover:opacity-80": pathname === link.href
                     })} />
                     <span className={cn('text-xs md:text-sm', {
