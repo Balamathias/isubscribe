@@ -1,14 +1,6 @@
 import React from 'react'
-import { Card } from '../../ui/card'
 import { getTransactionHistory } from '@/lib/supabase/history'
-import { Tables } from '@/types/database'
-import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { ArrowUp, LucidePhone } from 'lucide-react'
-import { formatDateTime } from '@/funcs/formatDate'
-import { TransactionEvent } from '@/types/webhooks'
-import Link from 'next/link'
 import Empty from '../../Empty'
-import TransactionHistoryItem from './TransactionHistoryItem'
 import HistoryItem from '../history-item'
 
 const TransactionHistoryComponent = async () => {

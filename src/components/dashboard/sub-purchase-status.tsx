@@ -30,8 +30,7 @@ const SubPurchaseStatus = ({
         <DynamicModal
             open={open}
             closeModal={closeModal}
-            dialogClassName="sm:max-w-[640px] md:max-w-[500px] "
-            drawerClassName=''
+            dialogClassName="sm:max-w-[640px] md:max-w-[500px] rounded-2xl"
         >
             <div className="flex flex-col gap-y-1 p-3 items-center justify-center">
                 {
@@ -46,11 +45,8 @@ const SubPurchaseStatus = ({
                         </p>
                     ) : (
                         <div className="flex flex-col gap-5 mt-2 p-2  max-md:w-[94vw]">
-                            <ShareReciept freeData={"250MB"} rLink={"#"} sLink={"#"} />
+                            <ShareReciept freeData={"5MB"} rLink={"#"} sLink={"#"} />
                         </div>
-                        // <p className="text-muted-foreground text-xs md:text-sm tracking-tighter py-1 text-center">
-                        //     Congratulations {fullName}!, You have successfully topped up {action === 'data' ? dataAmount : airtimeAmount} for {phoneNumber}. Thank you for choosing iSubscribe.
-                        // </p>
                     )
                 }
 
