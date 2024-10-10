@@ -41,3 +41,4 @@ const kind = {
       accountNumber: '0065432190'
     }
   ])
+

@@ -17,7 +17,7 @@ const ShareReciept = ({freeData, rLink, sLink}:any) => {
         <div className=' flex flex-row gap-3 items-center w-full'>
         <Link href={rLink} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
             <span className="text-green-600 p- rounded-full bg-green-600/20 p-1 md:p-2">
-            <Share2 />
+            <Share2 size={15} />
             </span>
             <span className=' text-nowrap max-sm:text-sm'>Share Reciept</span>
         </Link>

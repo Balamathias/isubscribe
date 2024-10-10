@@ -10,7 +10,7 @@ export declare interface VTPassBalanceResponse {
     }
 }
 
-export declare type VTPassServiceName = 'mtn-data' | 'glo-data' | 'airtel-data' | '9mobile-data'
+export declare type VTPassServiceName = 'mtn-data' | 'glo-data' | 'airtel-data' | '9mobile-data' | 'etisalat-data'
 
 export declare interface VTPassVariationServiceResponse {
     response_description: string;

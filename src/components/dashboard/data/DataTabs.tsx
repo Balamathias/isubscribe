@@ -18,45 +18,45 @@ const DailyData = lazy(() => import('./DailyData'))
 
 const tabs = [
     {
-        name: 'Subs',
+        name: 'Hot',
         value: 'hot',
         component: <DataNetworkCard />
     },
     {
-        name: 'Daily',
-        value: 'daily',
+        name: 'Regular',
+        value: 'regular',
         component: <DailyData />
     },
-    {
-        name: 'Night',
-        value: 'night',
-        component: <DailyData type='night' />
-    },
-    {
-        name: 'Weekend',
-        value: 'weekend',
-        component: <DailyData type='weekend' />
-    },
-    {
-        name: 'Weekly',
-        value: 'weekly',
-        component: <DailyData type='weekly' />
-    },
-    {
-        name: 'Monthly',
-        value: 'monthly',
-        component: <DailyData type='monthly' />
-    },
-    {
-        name: 'Social',
-        value: 'social',
-        component: <DailyData type={'social' as any} />
-    },
-    {
-        name: 'Special',
-        value: 'special',
-        component: <DailyData type='special' />
-    },
+    // {
+    //     name: 'Night',
+    //     value: 'night',
+    //     component: <DailyData type='night' />
+    // },
+    // {
+    //     name: 'Weekend',
+    //     value: 'weekend',
+    //     component: <DailyData type='weekend' />
+    // },
+    // {
+    //     name: 'Weekly',
+    //     value: 'weekly',
+    //     component: <DailyData type='weekly' />
+    // },
+    // {
+    //     name: 'Monthly',
+    //     value: 'monthly',
+    //     component: <DailyData type='monthly' />
+    // },
+    // {
+    //     name: 'Social',
+    //     value: 'social',
+    //     component: <DailyData type={'social' as any} />
+    // },
+    // {
+    //     name: 'Special',
+    //     value: 'special',
+    //     component: <DailyData type='special' />
+    // },
 ]
 
 const DataTabs = () => {
@@ -108,12 +108,12 @@ const DataTabs = () => {
                 </div>
             </div>
             <Tabs defaultValue="hot" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-4 gap-2 rounded-xl shadow-none border-none p-2 py-4 h-fit bg-transparent">
+                <TabsList className="grid w-full grid-cols-2 gap-2 rounded-xl shadow-none border-none p-2 py-4 h-fit bg-transparent">
                     {tabs.map((tab, index) => (
                         <TabsTrigger 
                             key={tab.value} 
                             value={tab.value} 
-                            className={`w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-500/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/90 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`}
+                            className={`w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring data-[state=active]:ring data-[state=active]:shadow-none bg-gray-50/80 rounded-full`}
                             onClick={() => setActiveTabIndex(index)}
                             hidden={tab.name === 'Special'}
                         >

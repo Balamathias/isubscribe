@@ -21,14 +21,16 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const services = useServices()
         
-    const object = useMemo(() => {
-        return {
-            'mtn': mtnData?.[type],
-            'glo': gloData?.[type],
-            'airtel': airtelData?.[type],
-            '9mobile': etisalatData?.[type]
-        }
-    }, [type])
+    // const object = useMemo(() => {
+    //     // return {
+    //     //     'mtn': mtnData?.[type],
+    //     //     'glo': gloData?.[type],
+    //     //     'airtel': airtelData?.[type],
+    //     //     '9mobile': etisalatData?.[type]
+    //     // }
+
+    //     return services
+    // }, [type])
 
   const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
 
@@ -43,9 +45,9 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
         <SimpleLoader />
     )
 
-    // console.log(services);
+    console.log(services);
 
-    if (!object[currentNetwork] || !object[currentNetwork]?.length) {
+    if (!services[currentNetwork] || !services[currentNetwork]?.length) {
         return (
             <PlaceHolder 
                 title={`No ${type} data plans available for ${currentNetwork} network`}
@@ -56,7 +58,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
-        {object[currentNetwork]?.map((d, idx) => (
+        {services[currentNetwork]?.map((d, idx) => (
             <NetworkCardItem 
                 key={idx}
                 dataCashBack={d.unitCashback ?? 0}
