@@ -1,16 +1,20 @@
 'use client'
 
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
-import DataNetworkCard from './DataNetworkCard'
-import DailyData from './DailyData'
+// import DataNetworkCard from './DataNetworkCard'
+// import DailyData from './DailyData'
 import { useDebounce } from 'use-debounce'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
 import DataTabsSkeleton from '@/components/skeletons/data-tabs'
+import SimpleLoader from '@/components/loaders/simple-loader'
+
+const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
+const DailyData = lazy(() => import('./DailyData'))
 
 const tabs = [
     {
@@ -80,7 +84,9 @@ const DataTabs = () => {
             className="p-4 bg-white dark:bg-card/80 rounded-xl flex flex-col gap-y-2.5 shadow-none"
         >
             <h2 className='text-muted-foreground text-lg font-semibold'>{tabs[activeTabIndex].name}</h2>
-            {tabs[activeTabIndex].component}
+            <Suspense fallback={<SimpleLoader />}>
+              {tabs[activeTabIndex].component}
+            </Suspense>
         </TabsContent>
     ), [activeTabIndex])
 

@@ -13,7 +13,6 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(localStorage.getItem('hideBalance') === 'true' || false)
     const [hideCashbackBalance, setHideCashbackBalance] = useState(localStorage.getItem('hideCashbackBalance') === 'true' || false)
 
-    // const [walletBalance, setWalletBalance] = useState( wallet?.balance?.toFixed(2) || "0.00" )
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
     const walletBalance = useWalletStore(state => state.balance)
@@ -60,7 +59,7 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
     <div className=' flex flex-row justify-between w-full items-center'>
         {/* BALANCE */}
         <RevealBalance
-            balance={walletBalance?.toFixed()}
+            balance={walletBalance?.toFixed(2)}
             hide={hideBalance}
             title='Wallet Balance'
             toggleShow={handleToggleHideBalance}

@@ -113,8 +113,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             phone: mobileNumber
         })
 
-     
-
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || (data?.status === 'fail')) {
@@ -129,7 +127,7 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
                 description: data?.message,
                 planType: data?.plan_type!,
                 phone: mobileNumber,
-                status: 'failed'
+                status: 'failed',
             }
             
             const { data: _insertHistory } = await insertTransactionHistory({

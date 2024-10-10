@@ -5,22 +5,19 @@ import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { priceToInteger } from '@/funcs/priceToNumber'
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import { PaymentMethod, SubAirtimeProps } from '@/types/networks'
 import { airtel_airtime, etisalat_airtime, glo_airtime, mtn_airtime } from '@/utils/constants/airtime-plans'
-import { product } from '@/utils/constants/product'
-import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { lazy, Suspense, useState } from 'react'
 import { toast } from 'sonner'
-import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
 import { Button } from '@/components/ui/button'
 import ConfirmPin from '../ConfirmPin'
-import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import CustomInput from '../CustomInput'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+
+const ConfirmPurchaseModal = lazy(() => import('./ConfirmPurchaseModal'))
 
 const object = {
     'mtn': mtn_airtime,
@@ -34,10 +31,8 @@ const MIN_THRESHHOLD = 50
 
 const AirtimeCards = () => {
     const { currentNetwork, handleSubAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
-    const [open, setOpen] = React.useState(false)
     const [selected, setSelected] = useState<SubAirtimeProps | null>(null)
-    const {data: wallet, isPending} = useGetWalletBalance()
-    const { data: profile, isPending: profilePending } = useGetProfile()
+    const { data: profile, isPending: _profilePending } = useGetProfile()
     const [amount, setAmount] = useState<number | null>(null)
 
     const [proceed, setProceed] = React.useState(false)
@@ -87,16 +82,18 @@ const AirtimeCards = () => {
                 </Card>
             ))}
 
-            <ConfirmPurchaseModal 
-                open={openConfirmPurchaseModal!}
-                paymentMethod={paymentMethod}
-                selected={selected!}
-                setOpen={setOpenConfirmPurchaseModal}
-                setPaymentMethod={setPaymentMethod}
-                setProceed={setProceed}
-                key={'airtime'}
-                title='Airtime Purchase details...'
-            />
+            <Suspense fallback={<LoadingOverlay />}>
+                <ConfirmPurchaseModal 
+                    open={openConfirmPurchaseModal!}
+                    paymentMethod={paymentMethod}
+                    selected={selected!}
+                    setOpen={setOpenConfirmPurchaseModal}
+                    setPaymentMethod={setPaymentMethod}
+                    setProceed={setProceed}
+                    key={'airtime'}
+                    title='Airtime Purchase details...'
+                />
+            </Suspense>
 
             <DynamicModal
                 open={proceed}
@@ -109,7 +106,6 @@ const AirtimeCards = () => {
                     className='rounded-none' 
                     func={() => {
                         handleSubAirtime?.({...selected!, method: paymentMethod})
-                        // setOpen(false)
                         setProceed(false)
                     }} 
                     profile={profile?.data!}
