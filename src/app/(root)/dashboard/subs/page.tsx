@@ -1,7 +1,12 @@
 import SubsComponent from '@/components/dashboard/subs/sub-component'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import WidthWrapper from '@/components/WidthWrapper'
+import { Metadata } from 'next'
 import React, { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: "Subs | iSubscribe"
+}
 
 const SubsPage = () => {
   return (

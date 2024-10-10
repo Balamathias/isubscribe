@@ -1,8 +1,11 @@
-import { Card } from '@/components/ui/card'
+'use client'
+
+import DynamicModal from '@/components/DynamicModal'
 import { cn } from '@/lib/utils'
 import { LucideBook, LucideHelpCircle, LucideLamp, LucideNetwork, LucideTv, LucideWifi } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
+import Support from '../support'
 
 const services = [
     {
@@ -50,6 +53,9 @@ const services = [
 ]
 
 const SubsComponent = () => {
+
+  const [openSupport, setOpenSupport] = useState(false)
+
   return (
     <div className='flex flex-col gap-y-4 py-4'>
         <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
@@ -59,6 +65,7 @@ const SubsComponent = () => {
                         href={service.url}
                         className={cn('p-4 rounded-2xl flex flex-col gap-y-3 justify-center items-center bg-green-600/10 hover:opacity-70 hover:transition-all peer peer-hover:opacity-85 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', service.className)}
                         key={service.service}
+                        onClick={service.service === 'support' ? (v) => { v.preventDefault(); setOpenSupport(true) } : undefined}
                     >
                         {service.icon}
                         <p className='font-semibold'>{service.label}</p>
@@ -66,6 +73,14 @@ const SubsComponent = () => {
                 ))
             }
         </div>
+
+        <DynamicModal
+            open={openSupport}
+            setOpen={setOpenSupport}
+            dialogClassName='rounded-2xl'
+        >
+            <Support />
+        </DynamicModal>
     </div>
   )
 }

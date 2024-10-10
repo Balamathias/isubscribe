@@ -61,7 +61,6 @@ const AirtimeCards = () => {
         setOpenConfirmPurchaseModal?.(true)
     }
 
-    // if (isPending || profilePending) return <LoadingOverlay />
   return (
     <div className='flex flex-col gap-y-4'>
         <div className='rounded-xl bg-white dark:bg-card/80 md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>

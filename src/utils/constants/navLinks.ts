@@ -1,24 +1,24 @@
-import { Asterisk, Book, GraduationCap, HandCoins, History, LayoutDashboardIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Power, Printer, Settings, Tv, User, Wifi } from "lucide-react";
+import { Book, File, FileBadge, Gift, GraduationCap, HomeIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Settings2, Tv, Wifi } from "lucide-react";
 
 export const navLinks = [
     {
         href: "/dashboard",
-        icon: LayoutDashboardIcon,
+        icon: HomeIcon,
         tooltip: "Home",
       },
     {
         href: "/dashboard/subs"||"/dashboard/data" || "/dashboard/airtime" || "/dashboard/tv-cable" || "/dashboard/electricity" || "/dashboard/education" || "/dashboard/print-recharge-card" || "/dashboard/print-data-card",
-        icon: HandCoins,
+        icon: Gift,
         tooltip: "Subs",
       },
     {
         href: "/dashboard/history",
-        icon: History,
+        icon: FileBadge,
         tooltip: "History",
       },
     {
         href: "/dashboard/settings",
-        icon: Settings,
+        icon: Settings2,
         tooltip: "Settings",
       },
 ]
