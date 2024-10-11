@@ -1,4 +1,4 @@
-import { Book, File, Gift, GraduationCap, HomeIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Settings2, Tv, Wifi } from "lucide-react";
+import { Book, Clock, Gift, GraduationCap, HomeIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Settings2, Tv, Wifi } from "lucide-react";
 
 export const navLinks = [
     {
@@ -13,7 +13,7 @@ export const navLinks = [
       },
     {
         href: "/dashboard/history",
-        icon: File,
+        icon: Clock,
         tooltip: "History",
       },
     {

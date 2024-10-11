@@ -48,7 +48,7 @@ const DynamicModal = ({
   const isDesktop = useMediaQuery("(min-width: 768px)")
   if ((isDesktop || dialogOnly) && !drawerOnly) {
     return (
-      <Dialog open={open} onOpenChange={closeModal ? closeModal : setOpen}>
+      <Dialog open={open} onOpenChange={closeModal ? closeModal : setOpen} modal>
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>

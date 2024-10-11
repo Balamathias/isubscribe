@@ -23,6 +23,7 @@ import { RESPONSE_CODES } from "@/utils/constants/response-codes"
 import { useQueryClient } from "@tanstack/react-query"
 import { QueryKeys } from "@/lib/react-query/query-keys"
 import useWalletStore from "@/store/use-wallet-store"
+import { useGetProfile } from "@/lib/react-query/funcs/user"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -63,11 +64,14 @@ const SubDatContext = React.createContext<{
 })
 
 
-const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderProps) => {
+const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const queryClient = useQueryClient()
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
+
+    const { data: _profile } = useGetProfile()
+    const profile  = _profile?.data
 
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
@@ -491,9 +495,6 @@ const SubDataProvider = ({ children, profile, action='data' }: SubDataProviderPr
             setOpenConfirmPurchaseModal,
         }}>
             { children }
-            {/* {
-                purchasing && (<LoadingOverlay />)
-            } */}
 
             <SubPurchaseStatus
                 closeModal={() => {
