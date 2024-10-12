@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { LucideDelete, LucideX, LucideCheckCircle, BadgeCheckIcon } from 'lucide-react';
+import { LucideDelete, LucideX, BadgeCheckIcon } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useRouter } from 'next/navigation';
 
