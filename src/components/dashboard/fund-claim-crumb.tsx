@@ -1,10 +1,9 @@
 import { Tables } from '@/types/database'
 import { CaretRightIcon } from '@radix-ui/react-icons'
-import { LucidePlus } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
 import { Button } from '../ui/button'
 import ClaimBonusModal from './claim-bonus-modal'
+import AddmoneyModal from './add-money-modal'
 
 const FundClaimCrumb = ({ wallet }: { wallet: Tables<'wallet'> | null }) => {
   return (
@@ -19,10 +18,7 @@ const FundClaimCrumb = ({ wallet }: { wallet: Tables<'wallet'> | null }) => {
         }
       />
 
-        <Link href={'/dashboard/fund-wallet'} className='text-xs tracking-tighter text-violet-950 flex items-center space-x-1 bg-white md:p-2.5 py-1.5 px-3  rounded-full md:px-5 w-fit hover:bg-violet-100 hover:transition-all'>
-            <LucidePlus size={18} />
-            <span>Add Money</span>
-        </Link>
+      <AddmoneyModal />
     </div>
   )
 }

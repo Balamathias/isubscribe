@@ -85,7 +85,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
     return (
       <>
         <LoadingOverlay isPending={isPending} />
-        <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-xl", className)}>
+        <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-xl max-sm:bottom-0", className)}>
           <div className="md:text-2xl text-lg mb-6 text-center">
             {isPending ? (
               <p>Confirming...</p>

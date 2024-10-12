@@ -40,9 +40,10 @@ export const upsertWallet = async ({id, user: userId, ...rest}: {id?: number, us
     if (!ID) return { data: null, error: new Error('User not found') }
 
     if (id) {
-        const { data, error } = await supabase.from('wallet').select('*').eq('id', id).single()
-        if (error) return { data: null, error }
-        if (data) return { data, error: {message: 'Wallet already exists'}}
+        const { data: userProfile, error: userError } = await supabase.from('profile').select('*').eq('id', ID).single();
+        if (userError || !userProfile) {
+            return { data: null, error: new Error('User not found in profile') };
+        }
     }
 
     const { data, error } = await supabase.from('wallet').upsert({
@@ -51,6 +52,10 @@ export const upsertWallet = async ({id, user: userId, ...rest}: {id?: number, us
         user: ID,
         updated_at: new Date().toISOString(),
     })
+
+    if (data) {
+        return { data, error: { message: 'Wallet already exists' } };
+    }
 
     if (error) console.error(error)
 

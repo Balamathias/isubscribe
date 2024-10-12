@@ -1,5 +1,4 @@
 import WidthWrapper from '@/components/WidthWrapper'
-import FundWalletBox from '@/components/dashboard/FundWalletBox'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'

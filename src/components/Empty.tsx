@@ -14,14 +14,14 @@ declare interface EmptyProps {
 const Empty = ({color, content, icon, className, title}: EmptyProps) => {
   return (
     <div className={cn('flex flex-col gap-4', className)}>
-      <Card className={cn("bg-white dark:bg-card/50 p-4 h flex flex-col items-center justify-center gap-y-2 md:gap-y-2.5 rounded-xl border-none shadow-none drop-shadow-none", className)}>
-            <div className={`p-2 bg-${color ?? 'red'}-600/20 rounded-full text-${color ?? 'red'}-500`}>
-             { icon ? icon : <BarChart className={`text-${color ?? 'red'}-500`} />}
+      <Card className={cn("bg-white dark:bg-card/50 p-4 h flex flex-col items-center justify-center gap-y-2 md:gap-y-2.5 rounded-3xl border-none my-2 shadow-none drop-shadow-none", className)}>
+            <div className={`w-12 h-12 flex items-center justify-center bg-${color ?? 'red'}-600/20 rounded-full text-${color ?? 'red'}-500`}>
+             { icon ? icon : <BarChart size={16} className={`text-${color ?? 'red'}-500`} />}
             </div>
             {title && <p className="text-lg font-semibold text-muted-foreground text-center">{title}</p>}
             {
-                content ? <div className="text-muted-foreground text-sm text-center md:text-base">{content}</div> :
-                <p className="text-muted-foreground text-center text-sm md:text-base">There is nothing here right now.</p>
+                content ? <div className="text-muted-foreground text-sm text-center md:text-base tracking-tighter">{content}</div> :
+                <p className="text-muted-foreground text-center text-sm md:text-base tracking-tighter">There is nothing here right now.</p>
             }
         </Card>
     </div>

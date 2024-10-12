@@ -95,7 +95,7 @@ const CreateUpdateSecurityQuestion = ({
                             required
                             min={2}
                             defaultValue={values.a}
-                            type='password'
+                            type='text'
                             onChange={
                             (e) => setValues({
                                 ...values,

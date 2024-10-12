@@ -30,7 +30,7 @@ const FundWalletBox = async () => {
             </div>
         </Card>
 
-        <Card className='flex justify-between object-cover bg-no-repeat bg-center gap-4 md:gap-7 bg-white dark:bg-card/80 rounded-xl shadow-none drop-shadow-none border-none p-4 md:py-6 items-start flex-col'>
+        <Card className='flex justify-between object-cover bg-no-repeat bg-center gap-4 md:gap-7 bg-white dark:bg-card/80 rounded-xl shadow-none drop-shadow-none border-none p-4 md:py-6 items-start flex-col' id='more'>
         <div className='flex flex-col space-y-2.5'>
             <h2 className='text-muted-foreground text-md font-semibold'>Add money via Bank Transfer in just three steps</h2>
         </div>
