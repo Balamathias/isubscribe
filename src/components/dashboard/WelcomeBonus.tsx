@@ -23,7 +23,7 @@ interface WelcomeBonusModalProps {
 const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModalProps) => {
     const [claimed, setClaimed] = useState(wallet?.bonus_claimed)
 
-    const [openSecurityModal, setOpenSecurityModal] = useState(Boolean(profile?.security_question))
+    const [openSecurityModal, setOpenSecurityModal] = useState(Boolean(profile?.security_question && profile?.security_answer))
     const [toggleSetQuestion, setToggleSetQuestion] = useState(false)
 
     const { mutate: setQ, isPending } = useSetSecurityQ()
@@ -192,7 +192,8 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     )
   }
 
-    return (
+    else if (!successful && claimed) 
+      return (
         <DynamicModal
             open={!successful && claimed}
             setOpen={setSuccessful}
@@ -215,6 +216,8 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
             </div>
         </DynamicModal>
     )
+
+    return <></>
 }
 
 export default WelcomeBonusModal
