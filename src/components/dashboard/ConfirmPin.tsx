@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 import LoadingOverlay from '../loaders/LoadingOverlay';
 import { Card } from '../ui/card';
 import { cn } from '@/lib/utils';
-import { LucideDelete, LucideX } from 'lucide-react';
+import { LucideDelete, LucideLock, LucideX } from 'lucide-react';
 import Link from 'next/link';
 import { Tables } from '@/types/database';
 import { useRouter } from 'next/navigation';
@@ -80,14 +80,15 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
     <div className="flex flex-col items-center justify-center">
         <LoadingOverlay isPending={isPending} />
         <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-full self-center md:min-w-[500px] rounded-3xl shadow-none drop-shadow-none", className)}>
-          <div className="md:text-xl text-base mb-6 text-center">
-            {isPending ? (
-              <p>Checking...</p>
-            ) : (
-            <p className='text-primary dark:text-violet-400'>
-                Enter Your Transaction PIN
-            </p>
-            )}
+          <div className="text-base mb-2.5 text-center flex items-center justify-center">
+            <div className='flex flex-col gap-y-1 items-center justify-center'>
+                <div className='h-12 w-12 rounded-full flex items-center justify-center bg-red-600/20 text-red-600'>
+                    <LucideLock size={17} />
+                </div>
+                {isPending ? (
+                  <p>Checking...</p>
+                ) : (<p className='text-primary dark:text-violet-400'>Confirm Transaction Pin</p>)}
+            </div>
           </div>
           <div className="flex justify-center mb-6 space-x-4">
             {(pin).split('').concat(['', '', '', '']).slice(0, 4).map((char, index) => (
