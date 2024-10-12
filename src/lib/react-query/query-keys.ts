@@ -17,6 +17,6 @@ export enum QueryKeys {
     create_chat_room = 'create_chat_room',
     delete_chat = 'delete_chat',
 
-    get_service_variations = "get_service_variations"
+    get_service_variations = "get_service_variations",
     sq = "sq"
 }
