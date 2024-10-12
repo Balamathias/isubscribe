@@ -106,3 +106,17 @@ export const upsertUser = async ({id, ...rest}: Pick<Tables<'profile'>, 'state' 
     if (error) throw error
     return { data, error }
 }
+
+export const updateSecurityQuestion = async ({ security_answer, security_question}: {security_answer: string, security_question: string}) => {
+    const supabase = createClient()
+    const user = await getUser()
+    const { error } = await supabase.from('profile').update({
+        security_answer,
+        security_question
+    }).eq('id', user?.data?.id!)
+
+    if (error) {
+        throw error
+    }
+}
+

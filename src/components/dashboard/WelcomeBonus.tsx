@@ -12,6 +12,7 @@ import { Button } from '../ui/button'
 import useWalletStore from '@/store/use-wallet-store'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { useSetSecurityQ } from '@/lib/react-query/funcs/user'
 
 interface WelcomeBonusModalProps {
     type?: 'basic' | 'premium',
@@ -24,8 +25,15 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
 
     const [openSecurityModal, setOpenSecurityModal] = useState(Boolean(profile?.security_question))
     const [toggleSetQuestion, setToggleSetQuestion] = useState(false)
+
+    const { mutate: setQ, isPending } = useSetSecurityQ()
+
+    const [values, setValues] = useState({
+      q: '',
+      a: ''
+    })
     
-    const reward = 200.00
+    const reward = 50.00
 
   const [loading, setLoading] = useState(false)
   const [successful, setSuccessful] = useState(false)
@@ -71,7 +79,13 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
   }
 
   const handleSecurityQuestion = () => {
-    setToggleSetQuestion(true)
+    setQ(null, {
+      onSuccess: () => {
+        setOpenSecurityModal(false)
+        router.refresh()
+      },
+      onError: rr => toast.error(rr.message)
+    })
   }
 
   const handleCloseModal = () => {
@@ -106,10 +120,9 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
   else if (!openSecurityModal) {
     return (
         <DynamicModal
-              open={(openSecurityModal)}
-              setOpen={setClaimed as any}
+              open={(!openSecurityModal)}
+              setOpen={setOpenSecurityModal as any}
               dialogOnly
-              closeModal={() => setClaimed(true)}
             >
                 <div className='flex flex-col py-2 gap-y-4 items-center justify-center text-center'>
                     <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
@@ -118,41 +131,43 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
                     {
                         toggleSetQuestion ? (
                             <div className='flex flex-col w-full flex-1 gap-y-3'>
-                            <div className='flex flex-col gap-y-2'>
-                              <Label htmlFor={'security-q'}>Question</Label>
-                              <Input id='security-q' placeholder='(E.g): What is my best color? ' 
-                               className='w-full border-none rounded-lg bg-secondary' />
-                            </div>
+                              <div className='flex flex-col gap-y-2'>
+                                <Label htmlFor={'security-q'}>Question</Label>
+                                <Input id='security-q' placeholder='(E.g): What is my best color? ' 
+                                className='w-full border-none rounded-lg bg-secondary' required min={1} 
+                                  onChange={}
+                                />
+                              </div>
 
-                            <div className='flex flex-col gap-y-2'>
-                              <Label htmlFor={'security-q'}>Answer</Label>
-                              <Input id='security-q' placeholder='(E.g): red ' 
-                                className='w-full border-none rounded-lg bg-secondary'
-                              />
-                            </div>
+                              <div className='flex flex-col gap-y-2'>
+                                <Label htmlFor={'security-q'}>Answer</Label>
+                                <Input id='security-q' placeholder='(E.g): red ' 
+                                  className='w-full border-none rounded-lg bg-secondary'
+                                  required
+                                />
+                              </div>
 
-                            <Button 
-                              className='w-full rounded-full mt-2 border-none' 
-                              size={'lg'}
-                              onClick={handleSecurityQuestion}
-                              variant={'default'}
-                            >
-                              Continue
-                            </Button>
+                              <Button 
+                                className='w-full rounded-full mt-2 border-none' 
+                                size={'lg'}
+                                onClick={handleSecurityQuestion}
+                                variant={'default'}
+                              >
+                                {isPending ? 'Processing...' : 'Continue'}
+                              </Button>
                             </div>
                         ): (
                             <>
-                            <h2 className='text-lg font-semibold text-center'>Set Your Security Question</h2>
-                            <p className="text-sm tracking-tighter text-center">Setting a security question would help you to quickly recover or reset your PIN should you forget it.
-                            </p>
-                            <Button 
-                              className='w-full rounded-full mt-2 ring border-none' 
-                              size={'lg'}
-                              onClick={() => setToggleSetQuestion(true)}
-                              variant={'ghost'}
-                            >
-                              Set Question
-                            </Button>
+                              <h2 className='text-lg font-semibold text-center'>Set Your Security Question</h2>
+                              <p className="text-sm tracking-tighter text-center">Setting a security question would help you to quickly recover or reset your PIN should you forget it.
+                              </p>
+                              <Button 
+                                className='w-full rounded-full mt-2 border-none' 
+                                size={'lg'}
+                                onClick={() => setToggleSetQuestion(true)}
+                              >
+                                Set Question
+                              </Button>
                             </>
                         )
                     }
