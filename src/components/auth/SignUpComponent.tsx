@@ -56,18 +56,16 @@ const SignInComponent = () => {
                     phone: values.phone!
                 }
             })
-            // console.log("DATA", data)
             if (status === 200)
              localStorage?.setItem("userReg", JSON.stringify(data?.user?.user_metadata))
               toast.success('Success!', { description: 'Verification OTP sent to ' + values.email, duration: 5000 })
               form.reset()
-            router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
-            // return
+            return router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
         }
         catch (error: any) {
             console.error(error)
             setIsPending(false)
-            return toast.error('Error!', { description: 'Sign up failed, please verify your inputs.' })
+            return toast.error('Error!', { description: error?.message })
         }
         finally { setIsPending(false) }
       }

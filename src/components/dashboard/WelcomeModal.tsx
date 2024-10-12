@@ -25,8 +25,8 @@ const WelcomeModal = ({profile, step}: { profile: Tables<'profile'>, step: strin
         setOpen={setOpen}
     >
         <div className='py-3 p-2 flex flex-col space-y-2.5'>
-            <h2 className='text-lg'>Hi <span className="text-primary font-semibold">{profile?.full_name}</span>, Welcome back!</h2>
-            <p>Thank you for signing up for <span className="text-primary">iSubscribe</span>, start exploring our services! How would you like to start?</p>
+            <h2 className='text-lg'>Hi <span className="text-primary dark:text-violet-400 font-semibold">{profile?.full_name}</span>, Welcome back!</h2>
+            <p>Thank you for signing up for <span className="text-primary dark:text-violet-400">iSubscribe</span>, start exploring our services! How would you like to start?</p>
 
             <div className='flex flex-row gap-x-2 items-center flex-wrap pt-2 mt-3 md:-mb-2 justify-end'>
                 <Button onClick={handleCloseModal} variant={'destructive'} className='focus:outline-none rounded-xl focus:ring-0 focus-within:ring-0'>I know</Button>

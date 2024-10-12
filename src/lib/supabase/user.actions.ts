@@ -8,6 +8,12 @@ import { redirect } from "next/navigation"
 export const signUp = async ({ email, password, metadata={} }: { email: string, password: string, metadata?: Record<string, string> }) => {
     const supabase = createClient()
 
+    const { data: _user, error: _error } = await supabase.from('profile').select('id').eq('email', email).single()
+
+    if (_user?.id) {
+    throw new Error('User with this email already exists.')
+    }
+
     const {data, error } = await supabase.auth.signUp({
         email,
         password,

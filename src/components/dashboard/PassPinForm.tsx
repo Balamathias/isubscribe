@@ -90,7 +90,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
             {isPending ? (
               <p>Confirming...</p>
             ) : (
-            <p className='text-primary dark:text-primary/90'>
+            <p className='text-primary dark:text-violet-400/90'>
                 {isConfirming ? 'Confirm PIN' : 'Set your Transaction PIN'}
             </p>
             )}
@@ -119,7 +119,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
               <Button
                 key={num}
                 onClick={() => handleButtonClick(num.toString())}
-                className="rounded-lg"
+                className="rounded-full"
                 variant={'secondary'}
                 size={'lg'}
               >
@@ -128,7 +128,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
             ))}
             <Button
               onClick={handleClear}
-              className="col-span-1 bg-rose-600/15 text-rose-700 rounded-lg"
+              className="col-span-1 bg-rose-600/15 text-rose-700 rounded-full"
               variant={'secondary'}
               size={'lg'}
             >
@@ -136,7 +136,7 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
             </Button>
             <Button
               onClick={handleDelete}
-              className="col-span-1 bg-red-600/15 text-red-700 rounded-lg"
+              className="col-span-1 bg-red-600/15 text-red-700 rounded-full"
               variant={'secondary'}
               size={'lg'}
             >

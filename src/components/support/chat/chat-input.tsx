@@ -56,7 +56,7 @@ const ChatInput = () => {
   }
   
   return (
-    <div className="py-4 mt-3 w-full max-md:right-0 max-md:left-0 bottom-10 md:bottom-0 z-20 px-2.5 max-w-3xl mx-auto bg-inherit fixed backdrop-blur-lg rounded-lg">
+    <div className="py-4 mt-3 w-full max-md:right-0 max-md:left-0 bottom-16 md:bottom-0 z-20 px-2.5 max-w-3xl mx-auto bg-inherit fixed backdrop-blur-lg rounded-lg">
         <div className="flex items-center gap-x-2 max-w-3xl mx-auto md:mb-3">
             <Input
                 type="text"
