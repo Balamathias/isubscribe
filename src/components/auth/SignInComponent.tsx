@@ -22,6 +22,7 @@ import Logo from '../Logo'
 import AuthSeparator from './AuthSeparator'
 import DynamicModal from '../DynamicModal'
 import LoadingOverlay from '../loaders/LoadingOverlay'
+import Status from '../status'
 
 const SignInComponent = () => {
     const [isPending, setIsPending] = React.useState(false)
@@ -104,13 +105,14 @@ const SignInComponent = () => {
               setOpen={setStatus}
               dialogOnly
             >
-              <div className='flex flex-col gap-y-4 py-2'>
-                <h1 className='text-xl font-semibold text-primary dark:text-primary/90'>{success ? 'Success!': 'Sign In failed.'}</h1>
+              <div className='flex flex-col gap-y-4 py-2 items-center justify-center text-center'>
+                <Status status={success ? 'success' : "failed" } type='icon' />
+                <h1 className='text-xl font-semibold'>{success ? 'Success!': 'Sign In failed.'}</h1>
                 <p className='text-sm'>{success ? success : error }</p>
-                <div className='flex flex-row gap-x-2 float-right justify-end md:-mb-4'>
+                <div className='flex flex-row gap-x-2 w-full md:-mb-4'>
                   <Button 
                     variant={'secondary'}
-                    className='bg-red-500 ring-2 ring-red-600/90 rounded-lg text-white hover:bg-red-400 focus:ring-0 focus-within:ring-0' 
+                    className='ring-1 rounded-lg focus:ring-0 focus-within:ring-0 rounded-full w-full' 
                     onClick={() => setStatus(false)}
                   >Close</Button>
                 </div>

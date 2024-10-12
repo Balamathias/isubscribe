@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useActionState, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BackButton from '@/components/BackButton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
@@ -21,7 +21,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   const { data: profile, isPending } = useGetProfile()
   const [openSupport, setOpenSupport] = useState(false)
 
-  useEffect(() => {setOpenSupport(false)}, [pathname])
+  useEffect(() => { setOpenSupport(false) }, [pathname])
 
   if (isPending) return <LoadingOverlay />
 
@@ -41,14 +41,14 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         }
         </div>
 
-        <div className="md:hidden">
-          <button onClick={() => setOpenSupport(prev => !prev)} className='bg-transparent border-none focus:outline-none'>
-            <LucideHeadphones className='text-violet-500 dark:text-foreground'/>
-          </button>
-        </div>
 
         <div className='md:flex flex-row gap-x-8 items-center'>
           <ModeToggle className='space-y-0 hidden md:flex' />
+          <div className="md:hidden">
+            <button onClick={() => setOpenSupport(prev => !prev)} className='bg-transparent border-none focus:outline-none'>
+              <LucideHeadphones className='text-violet-500 dark:text-foreground'/>
+            </button>
+          </div>
           <DynamicSheet
             trigger = {
               <Link passHref href={'#'} 
