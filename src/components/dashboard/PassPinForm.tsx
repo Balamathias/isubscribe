@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { LucideDelete, LucideX, BadgeCheckIcon } from 'lucide-react';
+import { LucideDelete, LucideX, BadgeCheckIcon, LucideLock } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useRouter } from 'next/navigation';
 
@@ -12,8 +12,10 @@ import { Card } from '../ui/card';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import { useQueryClient } from '@tanstack/react-query';
+import { QueryKeys } from '@/lib/react-query/query-keys';
 
-const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: string }) => {
+const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void, className?: string, update?: boolean }) => {
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
     const [isConfirming, setIsConfirming] = useState(false);
@@ -21,6 +23,8 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
 
     const { mutateAsync: setPassPin, isPending } = useSetPassPin()
     const router = useRouter()
+
+    const queryClient = useQueryClient()
     
     const handleButtonClick = (value: string) => {
       if (isConfirming) {
@@ -56,8 +60,9 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
 
       setPassPin({pin: (await hashPin(pin))}, {
         onSuccess: () => {
-            router.replace("/dashboard")
-            toast.success('Transaction pin set successfully.')
+            update ? router.refresh() : router.replace("/dashboard")
+            toast.success(`Transaction pin ${update ? 'reset' : 'set' } successfully.`)
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.get_user] })
             onClose?.()
         },
       })
@@ -87,13 +92,16 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
         <LoadingOverlay isPending={isPending} />
         <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-xl max-sm:bottom-0", className)}>
           <div className="md:text-2xl text-lg mb-6 text-center">
-            {isPending ? (
-              <p>Confirming...</p>
-            ) : (
-            <p className='text-primary dark:text-violet-400/90'>
-                {isConfirming ? 'Confirm PIN' : 'Set your Transaction PIN'}
-            </p>
-            )}
+            <div className='flex flex-col gap-y-1 items-center justify-center'>
+                <div className='h-12 w-12 rounded-full flex items-center justify-center bg-red-600/20 text-red-600'>
+                    <LucideLock size={17} />
+                </div>
+                {isPending ? (
+                  <p>Checking...</p>
+                ) : (<p className='text-primary dark:text-violet-400/90'>
+                  {isConfirming ? 'Confirm PIN' : `${ update ? 'Reset' : 'Set' } your Transaction PIN`}
+              </p>)}
+            </div>
           </div>
           <div className="flex justify-center mb-6 space-x-4">
             {(isConfirming ? confirmPin : pin).split('').concat(['', '', '', '']).slice(0, 4).map((char, index) => (
@@ -143,15 +151,15 @@ const PassPinForm = ({onClose, className}: { onClose?: () => void, className?: s
               <LucideDelete className="w-6 h-6" />
             </Button>
           </div>
-          <div className='flex items-center gap-x-1 !w-full flex-row justify-center'>
+          {!update && <div className='flex items-center gap-x-1 !w-full flex-row justify-center'>
             <BadgeCheckIcon className='text-primary' size={20}></BadgeCheckIcon>
             <p className='text-muted-foreground text-xs'>Powered by:</p>
             <Logo 
                 className={'!w-fit block !mx-0 !justify-start !items-center'}
-                imageClassName='h-8 w-8'
+                imageClassName='h-4 w-4'
                 textClassName='text-xs'
             />
-          </div>
+          </div>}
         </Card>
       </>
     );
