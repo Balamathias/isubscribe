@@ -36,7 +36,7 @@ const SubPurchaseStatus = ({
                 {
                     failed ? (<LucideXCircle className="text-red-600 dark:text-red-500 mb-1" />) : (<LucideCheckCircle2 size={38} className="text-green-600 dark:green-red-500 mb-1" />)
                 }
-                <h2 className={cn("text-green-600 dark:text-green-500 md:text-lg font-[500px] text-base", {'text-red-600 dark:text-red-500': failed})}>{failed ? 'Purchase Failed' : 'Successfull'}!</h2>
+                <h2 className={cn("text-green-600 dark:text-green-500 md:text-lg font-[500px] text-base", {'text-red-600 dark:text-red-500': failed})}>{failed ? 'Purchase Failed' : 'Successful'}!</h2>
               <h2 className=' font-bold text-lg text-black dark:text-white'>{action === 'data' ? dataAmount : airtimeAmount} <span className=" font-normal text-base">for {phoneNumber}</span></h2>
                 {
                     failed ? (

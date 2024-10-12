@@ -79,9 +79,13 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
   }
 
   const handleSecurityQuestion = () => {
-    setQ(null, {
+    setQ({
+      security_question: values.q,
+      security_answer: values.a
+    }, {
       onSuccess: () => {
         setOpenSecurityModal(false)
+        toast.success('Security question set successfully.')
         router.refresh()
       },
       onError: rr => toast.error(rr.message)
@@ -135,7 +139,12 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
                                 <Label htmlFor={'security-q'}>Question</Label>
                                 <Input id='security-q' placeholder='(E.g): What is my best color? ' 
                                 className='w-full border-none rounded-lg bg-secondary' required min={1} 
-                                  onChange={}
+                                  onChange={
+                                    (e) => setValues({
+                                      ...values,
+                                      q: e.target.value
+                                    })
+                                  }
                                 />
                               </div>
 
@@ -144,6 +153,13 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
                                 <Input id='security-q' placeholder='(E.g): red ' 
                                   className='w-full border-none rounded-lg bg-secondary'
                                   required
+                                  min={1}
+                                  onChange={
+                                    (e) => setValues({
+                                      ...values,
+                                      a: e.target.value
+                                    })
+                                  }
                                 />
                               </div>
 

@@ -378,7 +378,7 @@ const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNu
                   (<LucideCheckCircle2 size={38} className="text-green-600 mb-1" />)
               }
              
-              <h2 className={cn("text-green-600 md:text-lg font-[500px] text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successfull'}!</h2>
+              <h2 className={cn("text-green-600 md:text-lg font-[500px] text-base", {'text-yellow-600': pending}, {'text-red-600': failed})}>{failed ? 'Purchase Failed' : pending ? "Pending" :  'Successful'}!</h2>
               <h2 className=' font-bold text-lg text-black dark:text-white'>₦ {powerAmount}</h2>
               {
                   failed ? (
