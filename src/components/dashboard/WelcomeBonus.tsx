@@ -192,10 +192,10 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     )
   }
 
-    else if (!successful && claimed) 
+    else if (successful && claimed) 
       return (
         <DynamicModal
-            open={!successful && claimed}
+            open={successful && claimed}
             setOpen={setSuccessful}
             dismissible={false}
         >
