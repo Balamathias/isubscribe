@@ -15,6 +15,7 @@ import NetworkCardItem from './NetworkCardItem';
 import LoadingSpinner from '@/components/loaders/LoadingSpinner';
 import SimpleLoader from '@/components/loaders/simple-loader';
 import { useWallet } from '@/hooks/use-wallet';
+import { useSearchParams } from 'next/navigation';
 
 const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
@@ -29,6 +30,8 @@ const object = {
 const DataNetworkCard = () => {
     const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing } = useNetwork()
     const [selected, setSelected] = useState<SubDataProps | null>(null)
+    const searchParams = useSearchParams()
+    const isClaim = searchParams.get('action') === 'claim'
 
     const { wallet, isLoading } = useWallet()
     
@@ -36,7 +39,7 @@ const DataNetworkCard = () => {
 
     const [proceed, setProceed] = React.useState(false)
 
-    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
+    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
 
     if (isLoading || profilePending) return (
         <SimpleLoader />

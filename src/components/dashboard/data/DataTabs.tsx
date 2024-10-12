@@ -113,7 +113,7 @@ const DataTabs = () => {
                         <TabsTrigger 
                             key={tab.value} 
                             value={tab.value} 
-                            className={`w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring data-[state=active]:ring data-[state=active]:shadow-none bg-gray-50/80 rounded-full`}
+                            className={`w-full h-9 md:text-lg text-xs data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring data-  rounded-full`}
                             onClick={() => setActiveTabIndex(index)}
                             hidden={tab.name === 'Special'}
                         >

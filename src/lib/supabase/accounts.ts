@@ -103,13 +103,6 @@ export const upsertUser = async ({id, ...rest}: Pick<Tables<'profile'>, 'state' 
         }
     }
 
-    // if (data?.invited_by) {
-    //     const { data: invite } = await handleInvitation(data.invited_by)
-    //     if (!invite) {
-    //         console.error('Invitation not found')
-    //     }
-    // }
-
     if (error) throw error
     return { data, error }
 }

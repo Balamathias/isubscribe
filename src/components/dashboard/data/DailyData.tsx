@@ -14,6 +14,7 @@ import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
 import SimpleLoader from '@/components/loaders/simple-loader'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
+import { useParams, useSearchParams } from 'next/navigation'
 
 const ConfirmDataPurchaseModal = lazy(() => import('./ConfirmDataPurchaseModal'))
     
@@ -36,10 +37,12 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const { data: profile, isPending: profilePending } = useGetProfile()
+    const searchParams = useSearchParams()
+    const isClaim = searchParams.get('action') === 'claim'
 
     const [proceed, setProceed] = React.useState(false)
 
-    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
+    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
 
     if (profilePending || services.isLoading) return (
         <SimpleLoader />

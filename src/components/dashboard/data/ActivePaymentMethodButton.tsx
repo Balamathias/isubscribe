@@ -1,6 +1,7 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { priceToInteger } from '@/funcs/priceToNumber'
+import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { PaymentMethod } from '@/types/networks'
 import { ArrowRight, ArrowRightCircle, Box, Check, CheckCircle2, Zap } from 'lucide-react'
 import React from 'react'
@@ -34,9 +35,11 @@ const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', bal
                 </div>
                 <div className='flex flex-col gap-y-0.5 items-start justify-start'>
                     <p className='font-semibold'>{
-                            method === 'wallet' ? 'From Wallet' : 'From Cashback'
+                            method === 'wallet' ? 'From Wallet' : 'From Data Bonus'
                         }</p>
-                    <p className='text-base text-muted-foreground'>{balance}</p>
+
+                    <p className='text-base text-muted-foreground'>{method === 'wallet' ? balance : formatDataAmount((priceToInteger(balance as string) * DATA_MB_PER_NAIRA))}</p>
+
                     {disabled && <p className='md:text-xs text-muted-foreground dark:text-white text-[8px]'>Insufficient Funds, Please fund Your wallet.</p>}
                 </div>
             </div>

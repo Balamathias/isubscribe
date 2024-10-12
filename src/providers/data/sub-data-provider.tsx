@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { QueryKeys } from "@/lib/react-query/query-keys"
 import useWalletStore from "@/store/use-wallet-store"
 import { useGetProfile } from "@/lib/react-query/funcs/user"
+import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -195,7 +196,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
 
             router.refresh()
-            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
+            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
             await saveCashbackHistory({amount: cashbackPrice})
 
             /** 
@@ -326,7 +327,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             })
 
             router.refresh()
-            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
+            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
             await saveCashbackHistory({amount: cashbackPrice})
 
             /** 
@@ -454,7 +455,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
 
             
-            toast.info(`Congratulations! You have received a cashback of ${formatNigerianNaira(cashbackPrice)}`)
+            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
             await saveCashbackHistory({amount: cashbackPrice})
             
             queryClient.invalidateQueries({

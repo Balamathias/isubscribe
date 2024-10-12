@@ -1,7 +1,5 @@
 import React from 'react'
 import { Card } from '../ui/card'
-import Link from 'next/link'
-import { LucideCopy } from 'lucide-react'
 import { getAccount } from '@/lib/supabase/accounts'
 import CopyButton from '../CopyButton'
 

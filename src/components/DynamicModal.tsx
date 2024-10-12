@@ -23,7 +23,7 @@ interface DynamicModalProps {
     children: React.ReactNode,
     trigger?: React.ReactNode,
     open?: boolean,
-    setOpen?: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>> | ((bool: boolean) => void),
     showCloseButton?: boolean,
     dialogClassName?: string,
     drawerClassName?: string,

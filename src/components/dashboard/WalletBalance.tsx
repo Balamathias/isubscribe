@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import useWalletStore from '@/store/use-wallet-store'
 import { Tables } from '@/types/database'
 import { createClient } from '@/utils/supabase/client'
@@ -57,25 +58,27 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
 
   return (
     <div className=' flex flex-row justify-between w-full items-center'>
-        {/* BALANCE */}
         <RevealBalance
             balance={walletBalance?.toFixed(2)}
             hide={hideBalance}
             title='Wallet Balance'
             toggleShow={handleToggleHideBalance}
         />
-        {/* CASHBACK */}
         <RevealBalance
-            balance={cashbackBalance}
+            balance={(cashbackBalance)}
             hide={hideCashbackBalance}
-            title='Cashback Balance'
+            title='Data Bonus'
             toggleShow={handleToggleHideCashbackBalance}
+            type="data-bonus"
         />
     </div>
   )
 }
 
-const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hide: boolean, toggleShow: () => void, title: string }) => {
+const RevealBalance = ({balance, hide, title, toggleShow, type="balance"}: { 
+    balance: string, hide: boolean, toggleShow: () => void, title: string
+    type?: "data-bonus" | "balance" | null
+}) => {
 
     return (
         <div>
@@ -93,7 +96,7 @@ const RevealBalance = ({balance, hide, title, toggleShow}: { balance: string, hi
                 </div>
                 ) :
                 (
-                    <h1 className='md:text-lg text-base tracking-tight md:tracking-normal font-semibold'>{formatNigerianNaira(parseFloat(balance))}</h1>
+                    <h1 className='md:text-lg text-base tracking-tight md:tracking-normal font-semibold'>{type === 'balance' ? (formatNigerianNaira(parseFloat(balance))): formatDataAmount(parseFloat(balance) * DATA_MB_PER_NAIRA)}</h1>
                 )
             }
             <Button className={"p-1 h-8 bg-transparent hover:bg-transparent w-9 shadow-none drop-shadow-none border-none"} onClick={toggleShow}>
