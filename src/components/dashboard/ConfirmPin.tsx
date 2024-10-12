@@ -12,6 +12,8 @@ import { LucideDelete, LucideLock, LucideX } from 'lucide-react';
 import Link from 'next/link';
 import { Tables } from '@/types/database';
 import { useRouter } from 'next/navigation';
+import ConfirmSecurity from './settings/confirm-security';
+import { Button } from '../ui/button';
 
 const ConfirmPin = ({ className, func: closeModal, profile }: { className?: string, func?: () => void, profile: Tables<'profile'> }) => {
     const [pin, setPin] = useState('');
@@ -132,9 +134,14 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
               <LucideDelete className="w-6 h-6" />
             </button>
           </div>
-          <div className='flex items-center gap-x-1 !w-full flex-row'>
-            <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
-          </div>
+          
+          <ConfirmSecurity 
+            trigger={
+              <Button asChild variant={'link'} className='flex items-center gap-x-1 !w-full flex-row'>
+                <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
+              </Button>
+            }
+          />
         </Card>
       </div>
   )
