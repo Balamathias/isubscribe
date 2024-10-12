@@ -84,7 +84,7 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
             {isPending ? (
               <p>Checking...</p>
             ) : (
-            <p className='text-primary dark:text-primary/90'>
+            <p className='text-primary dark:text-violet-400'>
                 Enter Your Transaction PIN
             </p>
             )}
@@ -113,26 +113,26 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
               <button
                 key={num}
                 onClick={() => handleButtonClick(num.toString())}
-                className="bg-violet-50 text-foreground dark:bg-secondary md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 hover:bg-secondary hover:opacity-80 hover:transition-all focus:outline-none"
+                className="bg-violet-50 text-foreground dark:bg-secondary md:text-xl text-lg md:p-2.5 p-1.5 rounded-full hover:bg-violet-100 hover:bg-secondary hover:opacity-80 hover:transition-all focus:outline-none"
               >
                 {num}
               </button>
             ))}
             <button
               onClick={handleClear}
-              className="col-span-1 bg-violet-100 text-foreground dark:bg-secondary dark:text-gray-200 md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center hover:bg-secondary hover:opacity-80 hover:transition-all"
+              className="col-span-1 bg-violet-100 text-foreground dark:bg-secondary dark:text-gray-200 text-lg md:p-2.5 p-1.5 hover:bg-violet-100 focus:outline-none flex justify-center items-center hover:bg-secondary hover:opacity-80 hover:transition-all rounded-full"
             >
               <LucideX className="w-6 h-6" />
             </button>
             <button
               onClick={handleDelete}
-              className="col-span-1 bg-violet-50 dark:bg-secondary text-violet-700 md:text-xl text-lg md:p-4 p-2.5 rounded-xl hover:bg-violet-100 focus:outline-none flex justify-center items-center hover:bg-secondary hover:opacity-80 hover:transition-all"
+              className="col-span-1 bg-violet-50 dark:bg-secondary text-violet-700 text-lg md:p-2.5 p-1.5 hover:bg-violet-100 focus:outline-none flex justify-center items-center hover:bg-secondary hover:opacity-80 hover:transition-all rounded-full"
             >
               <LucideDelete className="w-6 h-6" />
             </button>
           </div>
           <div className='flex items-center gap-x-1 !w-full flex-row'>
-            <Link href={'#'} className={'text-primary/80 underline text-sm'}>Forgot PIN?</Link>
+            <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
           </div>
         </Card>
       </div>

@@ -12,7 +12,7 @@ const Logo = ({url, showLogoText=true, className, imageClassName, textClassName}
           className={cn("h-10 w-10 md:h-12 md:w-12 text-violet-900 dark:text-white", imageClassName)}
           strokeWidth={2}
         />
-        {showLogoText && <h2 className={cn("text-primar text-violet-800 font-[550] text-xl dark:text-white", textClassName)}>iSubscribe</h2>}
+        {showLogoText && <h2 className={cn("text-primar text-violet-800 font-[550] text-lg md:text-xl dark:text-white", textClassName)}>iSubscribe</h2>}
     </Link>
   )
 }

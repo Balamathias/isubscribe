@@ -1,10 +1,11 @@
 import React from 'react'
 import DynamicModal from '../DynamicModal'
-import { GiftIcon, LucideArrowBigRight, LucideTriangle } from 'lucide-react'
+import { GiftIcon, LucideArrowBigRight, LucideX } from 'lucide-react'
 import { Tables } from '@/types/database'
 import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { DialogClose } from '../ui/dialog'
 
 interface ClaimBonusModalProps {
     open?: boolean,
@@ -18,6 +19,7 @@ const ClaimBonusModal = ({ open, setOpen, trigger, wallet }: ClaimBonusModalProp
             open={open}
             setOpen={setOpen}
             trigger={trigger}
+            dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4 items-center justify-center text-center'>
                 <div className='h-12 w-12 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
@@ -26,15 +28,20 @@ const ClaimBonusModal = ({ open, setOpen, trigger, wallet }: ClaimBonusModalProp
 
                 <h2 className='text-lg font-semibold tracking-tighter text-center'>You have <b className='font-bold'>{formatDataAmount(wallet?.cashback_balance! * DATA_MB_PER_NAIRA)}</b> bonus data.</h2>
 
-                <h2 className='text-base tracking-tighter text-center'>You can claim your bonus by completing the steps below.</h2>
+                <h2 className='text-sm tracking-tighter text-center'>You can use your bonus by following the steps below:</h2>
                 <div className='flex flex-col'>
-                  <div className='flex flex-row justify-between gap-x-1.5'>
-                    <Button variant={'ghost'} className='rounded-full'>
-                      <LucideTriangle className='text-amber-500 mr-1' />
-                      <span>Get a fixed plan</span>
-                    </Button>
+                  <div className='flex flex-row justify-between gap-x-1.5 mt-4'>
+                    <DialogClose asChild>
+                      <Button 
+                        variant={'ghost'} 
+                        className='rounded-full '
+                      >
+                        <LucideX className='text-pink-500 mr-1' />
+                        <span>Forget it</span>
+                      </Button>
+                    </DialogClose>
 
-                    <Button variant={'ghost'} className='rounded-full' asChild>
+                    <Button variant={'ghost'} className='rounded-full ' asChild>
                       <Link href={'/dashboard/data?action=claim'} className='flex items-center gap-x-1'>
                         <span>Select Plan</span>
                         <LucideArrowBigRight className='text-amber-500' />
