@@ -10,7 +10,7 @@ export declare interface VTPassBalanceResponse {
     }
 }
 
-export declare type VTPassServiceName = 'mtn-data' | 'glo-data' | 'airtel-data' | '9mobile-data' | 'etisalat-data'
+export declare type VTPassServiceName = 'mtn-data' | 'glo-data' | 'airtel-data' | '9mobile-data' | 'etisalat-data' | 'glo-sme-data' | '9mobile-sme-data' | 'smile-direct'
 
 export declare interface VTPassVariationServiceResponse {
     response_description: string;
@@ -39,8 +39,29 @@ export declare interface VTPassTransactionRequest {
     subscription_type?:"Change" | "Renew"
 }
 
+export declare interface VTPassAirtimeTransactionRequest {
+    request_id: string; 
+    serviceID: 'glo' | 'mtn' | 'airtel' | 'etisalat'; 
+    amount?: number;
+    phone: number | string;
+}
+
+export declare interface VTPassAirtimeTransactionResponse {  
+    code: string,
+    response_description: string,
+    requestId: string,
+    transactionId: string,
+    amount: string,
+    transaction_date:{  
+       date: string,
+       timezone_type: number,
+       timezone: string
+    },
+    purchased_code: string
+ }
+
 export declare interface Transaction {
-    status: string;
+    status: 'initiated' | 'pending' | 'delivered';
     product_name: string;
     unique_element: string;
     unit_price: number;

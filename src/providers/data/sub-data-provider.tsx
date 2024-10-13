@@ -144,7 +144,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
-                amount: price,
+                amount: parseInt(payload?.Price),
             })
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
