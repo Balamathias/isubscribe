@@ -34,8 +34,8 @@ const ConfirmPin = ({ className, func: closeModal, profile, setShowResetPin }: {
     
     const handleCheckPin = async () => {
       
+        setIsPending(true)
         try {
-          setIsPending(true)
           if (profile?.pin === null) return toast.warning("Pin Error", {
             description: "Please set your transaction Pin to continue",
             action: <Link href={'/dashboard/settings'} >Set My PIN</Link>,
@@ -60,11 +60,12 @@ const ConfirmPin = ({ className, func: closeModal, profile, setShowResetPin }: {
         } catch (error: any) {
           setIsPending(false)
           setError(error?.message)
+          toast.error(error?.message)
           console.log(error)
         } finally { setIsPending(false) }
     };
     
-    const handleButtonClick = async (value: string) => {
+    const handleButtonClick = (value: string) => {
         if (pin.length < 4) {
             setPin(pin + value);
             setError("")

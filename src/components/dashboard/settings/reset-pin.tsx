@@ -19,8 +19,8 @@ const ResetPIN = () => {
         <DynamicModal
             open={confirmPin}
             setOpen={setConfirmPin}
-            dialogClassName='sm:max-w-max dark:bg-slate-950 !p-0'
-            drawerClassName='dark:bg-slate-950'
+            dialogClassName='sm:max-w-max dark:bg-card !p-0'
+            drawerClassName="dark:bg-card"
             trigger={
                 <Card className='flex flex-row justify-between items-center space-y-3 dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:opacity-65 hover:transition-all'>
                     <div className="flex flex-col space-y-1">

@@ -125,7 +125,7 @@ const DataNetworkCard = () => {
                 open={proceed}
                 setOpen={setProceed}
                 dismissible
-                dialogClassName={'sm:max-w-fit dark:bg-card'}
+                dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
                 drawerClassName="dark:bg-card"
             >
                 <ConfirmPin 

@@ -26,8 +26,8 @@ const SecurityQuestion = ({ profile }: { profile: Tables<'profile'> }) => {
         <DynamicModal
             open={openUpdateSecurityModal}
             setOpen={setOpenUpdateSecurityModal}
-            dialogClassName='sm:max-w-max dark:bg-slate-950 !p-0'
-            drawerClassName='dark:bg-slate-950'
+            dialogClassName='sm:max-w-max dark:bg-card !p-0'
+            drawerClassName='dark:bg-card'
         >
             <ConfirmPin 
                 profile={profile}
