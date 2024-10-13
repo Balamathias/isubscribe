@@ -96,7 +96,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         const values = computeTransaction({
             payload: {
-                price: parseInt(payload.Price),
+                price: priceToInteger(payload.Price),
                 cashback: parseInt(payload.CashBack),
                 method: payload.method
             },
@@ -117,6 +117,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             network: networkId,
             phone: mobileNumber
         })
+
+        console.log(price)
 
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
@@ -144,8 +146,9 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
-                amount: parseInt(payload?.Price),
+                amount: price,
             })
+
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
