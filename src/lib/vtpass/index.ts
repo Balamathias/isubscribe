@@ -61,7 +61,7 @@ export declare interface VTPassAirtimeTransactionResponse {
  }
 
 export declare interface Transaction {
-    status: 'initiated' | 'pending' | 'delivered';
+    status: 'initiated' | 'pending' | 'delivered' | 'failed' | 'success';
     product_name: string;
     unique_element: string;
     unit_price: number;
