@@ -112,7 +112,7 @@ const SignInComponent = () => {
                 <div className='flex flex-row gap-x-2 w-full md:-mb-4'>
                   <Button 
                     variant={'secondary'}
-                    className='ring-1 rounded-lg focus:ring-0 focus-within:ring-0 rounded-full w-full' 
+                    className='ring-1 focus:ring-0 focus-within:ring-0 rounded-full w-full' 
                     onClick={() => setStatus(false)}
                   >Close</Button>
                 </div>

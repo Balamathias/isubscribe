@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import ConfirmSecurity from './settings/confirm-security';
 import { Button } from '../ui/button';
 
-const ConfirmPin = ({ className, func: closeModal, profile }: { className?: string, func?: () => void, profile: Tables<'profile'> }) => {
+const ConfirmPin = ({ className, func: closeModal, profile, setShowResetPin }: { className?: string, func?: () => void, profile: Tables<'profile'>, setShowResetPin?: (bool: boolean) => void }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const router = useRouter()
@@ -141,6 +141,8 @@ const ConfirmPin = ({ className, func: closeModal, profile }: { className?: stri
                 <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
               </Button>
             }
+            setShowResetPin={setShowResetPin}
+            func={closeModal}
           />
         </Card>
       </div>
