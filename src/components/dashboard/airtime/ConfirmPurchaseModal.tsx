@@ -2,7 +2,6 @@
 
 import React from 'react'
 import DynamicModal from '../../DynamicModal'
-import Image from 'next/image'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { priceToInteger } from '@/funcs/priceToNumber'
 import ActivePaymentMethodButton from '../data/ActivePaymentMethodButton'
