@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
-import { CheckCircle2, LucideCheck, LucideGift } from 'lucide-react'
+import { LucideCheck, LucideGift } from 'lucide-react'
 import { toast } from 'sonner'
 import { updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { Tables } from '@/types/database'
@@ -94,7 +94,7 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
             open={(!claimed && !successful)}
             setOpen={setClaimed as any}
             closeModal={() => setClaimed(true)}
-            dialogOnly
+            // dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4 items-center justify-center'>
                 <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
@@ -116,31 +116,40 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     )
   }
 
-  else if (successful && claimed) 
+  else if (!openSecurityModal) {
     return (
-      <DynamicModal
-          open={successful && claimed}
-          setOpen={setSuccessful}
-          dismissible={false}
-          dialogOnly
-      >
-          <div className='flex flex-col py-2 gap-y-4 justify-center items-center'>
-              <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
-                <LucideCheck size={15} strokeWidth={2}/>
-              </div>
-              <h2 className='text-base font-semibold text-center'>Welcome to iSubscribe <span className="text-amber-500">{profile?.full_name}</span>,</h2>
-              <p className="text-sm tracking-tighter text-center">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button! What would you like to do from here?
-              </p>
-              <Button 
-                  className='w-full rounded-full mt-2' 
-                  variant={'default'}
-                  onClick={handleCloseModal}
-              >
-                  Continue
-              </Button>
-          </div>
-      </DynamicModal>
-  )
+        <CreateUpdateSecurityQuestion
+          open={openSecurityModal}
+          setOpen={setOpenSecurityModal}
+        />
+    )
+  }
+
+    else if (successful && claimed) 
+      return (
+        <DynamicModal
+            open={successful && claimed}
+            setOpen={setSuccessful}
+            dismissible={false}
+            // dialogOnly
+        >
+            <div className='flex flex-col py-2 gap-y-4 justify-center items-center'>
+                <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
+                  <LucideCheck size={15} strokeWidth={2}/>
+                </div>
+                <h2 className='text-base font-semibold text-center'>Welcome to iSubscribe <span className="text-amber-500">{profile?.full_name}</span>,</h2>
+                <p className="text-sm tracking-tighter text-center">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button! What would you like to do from here?
+                </p>
+                <Button 
+                    className='w-full rounded-full mt-2' 
+                    variant={'default'}
+                    onClick={handleCloseModal}
+                >
+                    Continue
+                </Button>
+            </div>
+        </DynamicModal>
+    )
 
   else if (!openSecurityModal) {
     return (
