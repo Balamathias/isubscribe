@@ -43,8 +43,8 @@ const ResetPIN = () => {
         {showResetPinForm && <DynamicModal
             open={showResetPinForm}
             setOpen={setShowResetPinForm}
-            dialogClassName='sm:max-w-max dark:bg-slate-950 !p-0'
-            drawerClassName='dark:bg-slate-950'
+            dialogClassName='sm:max-w-max dark:bg-card !p-0'
+            drawerClassName='dark:bg-card'
         >
             <PassPinForm 
                 update
