@@ -16,25 +16,27 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
     ])
 
   return (
-    <WidthWrapper className='flex flex-col space-y-4 !max-w-3xl md:py-12 mt-16'>
+    <WidthWrapper className='flex flex-col space-y-2.5 sm:space-y-4 !max-w-3xl md:py-12 mt-16 max-sm:mt-8'>
 
       <div className='flex flex-col space-y-1 md:hidden'>
         <h2 className='text-muted-foreground text-lg'>Hi, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name}</span>.</h2>
         <p className='text-muted-foreground text-xs'>What do you wish to do today?</p>
       </div>
 
-      <ActionBox />
-      <QuickActions />
+      <div className='flex flex-col space-y-4'>
+        <ActionBox />
+        <QuickActions />
 
-      <Suspense fallback={<ActionBoxSkeleton isHome/>}>
-        <RecentTransactions />
-      </Suspense>
+        <Suspense fallback={<ActionBoxSkeleton isHome/>}>
+          <RecentTransactions />
+        </Suspense>
 
-      <Announcements />
-      
-      <Suspense fallback={<ActionBoxSkeleton />}>
-        <WelcomeBonusModal profile={profile!} wallet={wallet!} />
-      </Suspense>
+        <Announcements />
+        
+        <Suspense fallback={<ActionBoxSkeleton />}>
+          <WelcomeBonusModal profile={profile!} wallet={wallet!} />
+        </Suspense>
+      </div>
     </WidthWrapper>
   )
 }

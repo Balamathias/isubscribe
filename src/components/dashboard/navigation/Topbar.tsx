@@ -26,7 +26,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   if (isPending) return <LoadingOverlay />
 
   return (
-    <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white dark:bg-gray-900 shadow-sm border-b backdrop-blur-md'>
+    <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white/80 dark:bg-gray-900/80 shadow-sm border-b backdrop-blur-md'>
       <div className='flex flex-row items-center justify-between p-3 w-full'>
 
         <div className=' md:ml-[220px]'>
