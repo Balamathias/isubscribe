@@ -52,7 +52,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
           </div>
 
           <div>
-            <DynamicSheet
+            <DynamicModal
               trigger = {
                 <Link passHref href={'#'} 
                   className='cursor-pointer hover:opacity-80 flex items-center gap-x-1'>
@@ -63,7 +63,6 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                   </Avatar>
                 </Link>
               }
-              className={'w-[300px] md:w-[320px] h-screen'}
             >
               <div className='flex flex-col gap-y-2 h-full justify-between md:p-3 md:py-1 py-1 p-1.5'>
                 <Link passHref href={'#'} 
@@ -96,7 +95,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                   <SignOutComponent profile={profile?.data!} />
                 </div>
               </div>
-            </DynamicSheet>
+            </DynamicModal>
           </div>
         </div>
       </div>

@@ -39,6 +39,8 @@ const SignOutComponent = ({ profile, trigger }: { profile: Tables<'profile'>, tr
         open={open}
         setOpen={setOpen}
         dialogOnly
+        drawerClassName='rounded-[2rem]'
+        dialogClassName='rounded-[2rem]'
       >
         <div className='flex flex-col gap-y-4 py-2 text-center justify-center items-center'>
           <div className='h-10 w-10 rounded-full flex items-center justify-center bg-red-600/20 text-red-600 mx-auto'>
