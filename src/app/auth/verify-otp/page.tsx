@@ -8,18 +8,14 @@ import React from 'react'
 
 export const metadata: Metadata = {
   title: 'Verify OTP',
-  description: 'Verify Your OTP.'
+  description: 'Verify Your email.'
 }
 
-const Page = async ({ searchParams }: { searchParams: Record<string, string> }) => {
-  const params = new URLSearchParams(searchParams)
-  const email = params.get('email')
+const Page = async ({}: { searchParams: Record<string, string> }) => {
   const [
     { data: user },
-    { data: currentUser },
   ] = await Promise.all([
     getUser(),
-    getCurrentUser(),
   ]) 
 
   if (user?.onboarded) return redirect('/dashboard')

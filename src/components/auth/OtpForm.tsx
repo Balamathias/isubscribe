@@ -39,12 +39,15 @@ const OtpForm = () => {
             const { data, error } = await verifyOtp(payload);
             if (error) {
                 setError(error || "An error occurred");
+                return toast.error('Invalid code or code has expired.')
             } else {
                 setSuccess(true);
-                router?.push("/auth/pass-pin");
+                toast.success('Code verified successfully... You will be redirected shortly.')
+                return router?.push("/auth/pass-pin");
             }
         } catch (err) {
             setError("An unexpected error occurred, verify your details");
+            toast.error("An unexpected error occurred, verify your details");
         } finally {
             setLoading(false);
         }
@@ -58,10 +61,12 @@ const OtpForm = () => {
             const { data, error } = await resendOtp(payload);
             if (error) {
                 setError(error || "An error occurred");
+                toast.error(error || "An error occurred");
             }
             toast.success(`OTP has been Resent To your Email, ${email}`);
         } catch (err) {
             setError("An unexpected error occurred, verify your details");
+            toast.error("An unexpected error occurred, verify your details");
         } finally {
             setResending(false);
         }
@@ -142,12 +147,12 @@ const OtpForm = () => {
                         onFocus={() => setFocusedIndex(index)} // Set focused index
                         onBlur={() => setFocusedIndex(null)} // Clear focused index on blur
                         onPaste={index === 0 ? handlePaste : undefined}
-                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-lg focus:outline-none ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
+                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-2xl focus:outline-none focus:border-none ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
                         style={{ color: 'transparent', textShadow: '0 0 0 violet' }}
                     />
                 ))}
             </div>
-            <div className="flex flex-col items-center justify-center gap-y-3">
+            <div className="flex-col items-center justify-center gap-y-3 hidden">
                 {error && <Status status='failed' message={error} />}
                 {success && <Status status='success' message={'OTP Verified Successfully! You will be redirected in a bit.'} />}   
             </div>
@@ -156,7 +161,7 @@ const OtpForm = () => {
                     <Button
                         key={number}
                         onClick={() => handleKeypadClick(number.toString())}
-                        className="w-full h-12 text-2xl border-2 dark:border-none rounded-lg bg-secondary/30"
+                        className="w-full h-10 text-xl border-2 dark:border-none bg-secondary rounded-full"
                         variant={'secondary'}
                     >
                         {number}
@@ -164,16 +169,16 @@ const OtpForm = () => {
                 ))}
                 <Button
                     onClick={handleClear}
-                    className="w-full h-12 text-2xl border-2 dark:border-none rounded-lg col-span-2 bg-red-700/20 text-red-600"
+                    className="w-full h-10 text-xl border-2 dark:border-none rounded-full col-span-2 bg-red-700/20 text-red-600"
                     variant={'secondary'}
                 >
                     Clear
                 </Button>
             </div>
-            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-lg h-12 bg-primary/20 text-violet-600'>
+            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-primary dark:bg-violet-400 text-violet-50'>
                 {loading ? 'Verifying...' : 'Verify'}
             </Button>
-            <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20 hover:opacity-70 text-green-600 rounded-lg h-12'>
+            <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20 hover:opacity-70 text-green-600 rounded-full h-10'>
                 {resending ? 'Resending..' : 'Resend OTP'}
             </Button>
         </div>
