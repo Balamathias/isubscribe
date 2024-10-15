@@ -147,7 +147,7 @@ const OtpForm = () => {
                         onFocus={() => setFocusedIndex(index)} // Set focused index
                         onBlur={() => setFocusedIndex(null)} // Clear focused index on blur
                         onPaste={index === 0 ? handlePaste : undefined}
-                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-2xl focus:outline-none focus:border-none ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
+                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-2xl focus:outline-none focus:border-none bg-secondary ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
                         style={{ color: 'transparent', textShadow: '0 0 0 violet' }}
                     />
                 ))}
