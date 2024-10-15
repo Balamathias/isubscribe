@@ -51,7 +51,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
             </button>
           </div>
 
-          <div>
+          <>
             <DynamicModal
               trigger = {
                 <Link passHref href={'#'} 
@@ -64,7 +64,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                 </Link>
               }
             >
-              <div className='flex flex-col gap-y-2 h-full justify-between md:p-3 md:py-1 py-1 p-1.5'>
+              <div className='flex flex-col gap-y-2 justify-between md:p-3 md:py-1 py-1 p-1.5'>
                 <Link passHref href={'#'} 
                   className='cursor-pointer hover:opacity-80 flex items-center gap-x-1 pb-4 py-2'>
                   <Avatar title={data?.full_name ?? ''}>
@@ -80,13 +80,17 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                 <div className="flex flex-col space-y-3 mt-8">
 
                   <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
-                    <LucideSettings2 size={24} strokeWidth={1.5} className='' />
+                    <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
+                      <LucideSettings2 size={17} strokeWidth={1.5} className='' />
+                    </span>
                     <Link href={'#'}>Preferences</Link>
                   </div>
 
                   <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
-                    <LucideShare2 size={24} strokeWidth={1.5} className='' />
-                    <Link href={'#'}>Share</Link>
+                    <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
+                      <LucideShare2 size={17} strokeWidth={1.5} className='' />
+                    </span>
+                    <Link href={'#'}>Share and earn</Link>
                   </div>
 
                 </div>
@@ -96,7 +100,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                 </div>
               </div>
             </DynamicModal>
-          </div>
+          </>
         </div>
       </div>
 

@@ -3,7 +3,8 @@
 import { priceToInteger } from '@/funcs/priceToNumber'
 import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { PaymentMethod } from '@/types/networks'
-import { ArrowRight, ArrowRightCircle, Box, Check, CheckCircle2, Zap } from 'lucide-react'
+import { ArrowRight, Box, Check, Zap } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 interface ActivePaymentMethodButtonProps {
@@ -15,6 +16,12 @@ interface ActivePaymentMethodButtonProps {
 }
 
 const ActivePaymentMethodButton = ({ active=false, handler, method='wallet', balance='0.00', disabled }: ActivePaymentMethodButtonProps) => {
+  
+  const pathname = usePathname()
+  const isDataPath = pathname.match(/data/i)?.at?.(0) === 'data'
+
+  if (method === 'cashback' && !isDataPath) return
+
   return (
         <button className={cn('flex items-center justify-between py-3 px-2.5 rounded-lg focus:outline-none focus:border-none border-none bg-violet-100 dark:bg-secondary relative', {
             'bg-green-200 text-green-900 dark:text-green-400': active,

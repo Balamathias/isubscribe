@@ -63,7 +63,23 @@ export const saveDataErrorHistory = async (msg: string, data: Record<string, any
         meta_data: JSON.stringify(data?.meta_data),
         updated_at: null,
         user: data?.profileId,
-        amount: data?.price
+        amount: data?.price,
+        provider: 'vtpass'
+    })
+}
+
+export const saveAirtimeErrorHistory = async (msg: string, data: Record<string, any>) => {
+    const { data: _insertHistory } = await insertTransactionHistory({
+        description: `Airtime subscription for ${data?.mobile} failed.\n${msg}`,
+        status: 'failed',
+        title: 'Airtime Subscription Failed.',
+        type: EVENT_TYPE.airtime_topup,
+        email: null,
+        meta_data: JSON.stringify(data?.meta_data),
+        updated_at: null,
+        user: data?.profileId,
+        amount: data?.price,
+        provider: 'vtpass'
     })
 }
 

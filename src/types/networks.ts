@@ -17,6 +17,13 @@ export interface SubAirtimeProps {
     CashBack: string;
 }
 
+export interface VTPassAirtimePayload {
+    phone: number;
+    serviceID: 'glo' | 'mtn' | 'airtel' | 'etisalat',
+    amount: number,
+    cashback?: number
+}
+
 export interface VTPassDataPayload {
     serviceID: string,
     variation_code: string,
