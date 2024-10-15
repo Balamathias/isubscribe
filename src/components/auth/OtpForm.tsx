@@ -169,13 +169,13 @@ const OtpForm = () => {
                 ))}
                 <Button
                     onClick={handleClear}
-                    className="w-full h-10 text-xl border-2 dark:border-none rounded-full col-span-2 bg-red-700/20 text-red-600"
+                    className="w-full h-10 border-2 dark:border-none rounded-full col-span-2 bg-red-700/20 text-red-600"
                     variant={'secondary'}
                 >
                     Clear
                 </Button>
             </div>
-            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-primary dark:bg-violet-400 text-violet-50'>
+            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-violet-700/20 hover:opacity-70'>
                 {loading ? 'Verifying...' : 'Verify'}
             </Button>
             <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20 hover:opacity-70 text-green-600 rounded-full h-10'>
