@@ -473,7 +473,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         else {
             setErrorMessage('An unknown error has occured, please try again.')
-            await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
+            await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? { ...meta_data, status: 'failed' }, price, mobile: mobileNumber})
             setPurchasing(false)
             setPurchaseFailed(true)
             setOpenConfirmPurchaseModal(false)
@@ -523,7 +523,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         if (!res) {
             setErrorMessage('An unknown error has occured, please try again.')
-            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
+            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: {...meta_data, transId: generateRequestId(), status: 'failed',} , price, mobile: mobileNumber})
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
@@ -598,7 +598,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         else {
             setErrorMessage('An unknown error has occured, please try again.')
-            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
+            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: {...meta_data, status: 'failed', transId: generateRequestId()}, price, mobile: mobileNumber})
             setPurchasing(false)
             setPurchaseFailed(true)
             setOpenConfirmPurchaseModal(false)

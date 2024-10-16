@@ -11,7 +11,7 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
     const { data: _user, error: _error } = await supabase.from('profile').select('id').eq('email', email).single()
 
     if (_user?.id) {
-    throw new Error('User with this email already exists.')
+        return { error: { message: `User with this email - ${email} already exists.` } }
     }
 
     const {data, error } = await supabase.auth.signUp({

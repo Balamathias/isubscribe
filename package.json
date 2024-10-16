@@ -35,6 +35,7 @@
     "embla-carousel-auto-scroll": "^8.3.0",
     "embla-carousel-autoplay": "^8.3.0",
     "embla-carousel-react": "^8.3.0",
+    "framer-motion": "^11.11.9",
     "html2canvas": "^1.4.1",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.399.0",

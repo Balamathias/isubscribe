@@ -1,6 +1,5 @@
 import AuthTestimonial from '@/components/auth/AuthTestimonials'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
-import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import React, { ReactNode } from 'react'
 

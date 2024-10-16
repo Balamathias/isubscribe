@@ -33,8 +33,8 @@ const ConfirmPurchaseModal = ({
     title,
     setProceed
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
     const { wallet, isLoading } = useWallet()
+    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
 
     if (isLoading) return <LoadingOverlay />
 

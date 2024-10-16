@@ -5,6 +5,7 @@ import { getUser } from "./accounts"
 import { Tables } from "@/types/database"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { formatNigerianNaira } from "@/funcs/formatCurrency"
+import { DATA_MB_PER_NAIRA, formatDataAmount } from "../utils"
 
 export const getTransactionHistory = async () => {
     const supabase = createClient()
@@ -87,7 +88,7 @@ export const saveCashbackHistory = async ({amount, ...rest}: {
     const { data: user } = await getUser()
 
     const { data: _insertHistory } = await insertTransactionHistory({
-        description: `You have successfully received a cashback of ${formatNigerianNaira(amount)}.`,
+        description: `You have successfully received a cashback of ${formatDataAmount(amount * DATA_MB_PER_NAIRA)}.`,
         status: 'success',
         title: 'Cashback',
         type: EVENT_TYPE.cashback,

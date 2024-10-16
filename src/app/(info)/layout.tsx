@@ -4,7 +4,9 @@ import React, { PropsWithChildren } from 'react'
 const InfoLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className='flex flex-col w-full h-full'>
-        {children}
+        <div className='min-h-screen p-4'>
+          {children}
+        </div>
 
         <footer className='flex items-center py-5 px-4 justify-between w-full bg-secondary'>
           <Logo />

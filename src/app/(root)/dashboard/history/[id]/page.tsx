@@ -1,7 +1,7 @@
 import Empty from '@/components/Empty'
 import WidthWrapper from '@/components/WidthWrapper'
 import HistoryDetail from '@/components/dashboard/history/history-detail'
-import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
+import HistoryDetailSkeletopn from '@/components/skeletons/history.detail.skeleton'
 import { getSingleHistory } from '@/lib/supabase/history'
 import React, { Suspense } from 'react'
 
@@ -21,7 +21,7 @@ const HistoryDetailPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <WidthWrapper className='mt-16 !max-w-3xl w-full'>
-        <Suspense fallback={<ActionBoxSkeleton />}>
+        <Suspense fallback={<HistoryDetailSkeletopn />}>
             <HistoryDetail history={history} />
         </Suspense>
     </WidthWrapper>
