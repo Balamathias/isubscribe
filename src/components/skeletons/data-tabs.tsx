@@ -12,8 +12,8 @@ const DataTabsSkeleton = () => {
       </div>
       <div defaultValue="hot" className="space-y-6">
         <div className="grid w-full grid-cols-4 gap-2 rounded-xl shadow-none border-none p-2 py-4 h-fit bg-transparent">
-          {[...Array(7)].map((_, index) => (
-            <Skeleton key={index} className="h-9 w-full" />
+          {[...Array(2)].map((_, index) => (
+            <Skeleton key={index} className="h-12 w-full rounded-full" />
           ))}
         </div>
         <div className="p-4 rounded-xl flex flex-col gap-y-2.5 shadow-none">

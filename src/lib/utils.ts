@@ -9,7 +9,7 @@ export const DATA_MB_PER_NAIRA = 1
 
 export const formatDataAmount = (amount: number) => {
   if (amount <= 1.024)
-    return `${amount.toFixed(2)} KB`
+    return `${amount.toFixed(2)} MB`
   
   else if (amount > 1 && amount <= 1024)
     return `${amount.toFixed(2)} MB`

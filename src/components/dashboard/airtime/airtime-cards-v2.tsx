@@ -4,10 +4,8 @@ import DynamicModal from '@/components/DynamicModal'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
-import { priceToInteger } from '@/funcs/priceToNumber'
 import { useNetwork } from '@/providers/data/sub-data-provider'
-import { PaymentMethod, SubAirtimeProps } from '@/types/networks'
-import { airtel_airtime, etisalat_airtime, glo_airtime, mtn_airtime } from '@/utils/constants/airtime-plans'
+import { PaymentMethod, VTPassAirtimePayload } from '@/types/networks'
 import React, { lazy, Suspense, useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -16,25 +14,34 @@ import { useGetProfile } from '@/lib/react-query/funcs/user'
 import CustomInput from '../CustomInput'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
-const ConfirmPurchaseModal = lazy(() => import('./ConfirmPurchaseModal'))
+const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
 const quickPlans = [
     100,
     200,
     500,
-    1000,
-    2000
+    1_000,
+    2_000,
+    5_000,
+    8_000,
+    10_000,
+    15_000,
+    20_000,
+    25_000
 ]
 
 const MAX_THRESHHOLD = 500_000
 const MIN_THRESHHOLD = 50
 
 const AirtimeCards = () => {
-    const { currentNetwork, handleSubAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
-    const [selected, setSelected] = useState<{} | null>(null)
+    const { currentNetwork, handleVTPassAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
+    const [selected, setSelected] = useState<VTPassAirtimePayload | null>(null)
     const { data: profile, isPending: _profilePending } = useGetProfile()
     const [amount, setAmount] = useState<number | null>(null)
+
+    const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const [proceed, setProceed] = React.useState(false)
     
@@ -46,22 +53,31 @@ const AirtimeCards = () => {
         if (amount! < MIN_THRESHHOLD) return toast.warning('Airtime Amount should not be less than: ' + formatNigerianNaira(MIN_THRESHHOLD))
         if (amount! > MAX_THRESHHOLD) return toast.warning('Airtime Amount should not exceed: ' + formatNigerianNaira(MAX_THRESHHOLD))
         setSelected({
+            amount: amount!,
+            phone: mobileNumber,
+            serviceID: currentNetwork === '9mobile' ? 'etisalat' : currentNetwork, // Convert (9mobile) to (etisalat)
+            cashback: amount! * 0.01
         })
         setOpenConfirmPurchaseModal?.(true)
     }
 
-    const processFixedAirtimePlan = (plan: {}) => {
+    const processFixedAirtimePlan = (amount: number) => {
         if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
-        setSelected({})
+        setSelected({
+            amount: amount!,
+            phone: mobileNumber,
+            serviceID: currentNetwork === '9mobile' ? 'etisalat' : currentNetwork, // Convert (9mobile) to (etisalat)
+            cashback: amount! * 0.01
+        })
         setOpenConfirmPurchaseModal?.(true)
     }
 
   return (
     <div className='flex flex-col gap-y-4'>
         <div className='rounded-xl bg-white dark:bg-card/80 md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4'>
-            {quickPlans.map((plan, idx) => (
+            {(quickPlans.slice(0, !isDesktop ? 6 : 10)).map((plan, idx) => (
                 <Card
                     key={idx}
                     className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
@@ -79,16 +95,16 @@ const AirtimeCards = () => {
             ))}
 
             <Suspense fallback={<LoadingOverlay />}>
-                {/* <ConfirmPurchaseModal 
+                <ConfirmPurchaseModal 
                     open={openConfirmPurchaseModal!}
                     paymentMethod={paymentMethod}
-                    // selected={selected!}
-                    setOpen={setOpenConfirmPurchaseModal}
+                    selected={selected!}
+                    setOpen={setOpenConfirmPurchaseModal as any}
                     setPaymentMethod={setPaymentMethod}
                     setProceed={setProceed}
                     key={'airtime'}
-                    title='Airtime Purchase details...'
-                /> */}
+                    title='Airtime Purchase details'
+                />
             </Suspense>
 
             <DynamicModal
@@ -101,7 +117,7 @@ const AirtimeCards = () => {
                 <ConfirmPin 
                     className='rounded-none' 
                     func={() => {
-                        // handleSubAirtime?.({...selected!, method: paymentMethod})
+                        handleVTPassAirtime(paymentMethod, {...selected!})
                         setProceed(false)
                     }} 
                     profile={profile?.data!}
@@ -129,6 +145,7 @@ const AirtimeCards = () => {
 
                 onClick={processDynamicAirtimePlan}
                 disabled={AMOUNT_OUT_OF_RANGE}
+                size={'lg'}
             >
                 {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
             </Button>

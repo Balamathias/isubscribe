@@ -30,8 +30,6 @@ export const getSingleHistory = async (id: number) => {
         .select('*')
         .eq('id', id)
         .single()
-    
-    if (error) throw error
 
     return { data, error }
 }

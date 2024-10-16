@@ -14,14 +14,6 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
         </div>
         <div className="flex-1 md:flex hidden dark:bg-secondary">
           <AuthTestimonial />
-          {/* <Image
-            src='/auth/auth.svg'
-            alt={'Sign In | Up'}
-            quality={100}
-            width={500}
-            height={500}
-            className='w-full h-96 md:h-full object-contain'
-          /> */}
         </div>
     </main>
   )

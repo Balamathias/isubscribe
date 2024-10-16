@@ -1,5 +1,6 @@
 import { PaymentMethod } from "@/types/networks"
 import { Tables } from "@/types/database"
+import { toast } from "sonner"
 
 export const computeTransaction = ({
     payload,
@@ -11,7 +12,10 @@ export const computeTransaction = ({
         const price = (payload.price)
         const cashbackPrice = (payload.cashback!)
 
-        if (!wallet?.balance) return 
+        if (!wallet?.balance) {
+            toast.info("Insufficient wallet balance, please fund your wallet!")
+            return
+        }
         
         let balance = wallet?.balance ?? 0.00
         let deductableAmount = 0.00
@@ -30,6 +34,7 @@ export const computeTransaction = ({
             
             if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
         } else {
+            toast.error('Invalid or bad data!')
             return
         }
         

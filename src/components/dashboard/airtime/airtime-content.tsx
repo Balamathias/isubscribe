@@ -1,17 +1,15 @@
 'use client'
 
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { Input } from '../../ui/input'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
 import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
-import AirtimeCards from './airtime-cards'
 import { verifyNumber } from '@/funcs/verifyNumber'
+import AirtimeCards from './airtime-cards-v2'
 const AirtimeContent = () => {
 
-    const [activeTabIndex, setActiveTabIndex] = React.useState(0)
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { data: profile, isPending } = useGetProfile()
 

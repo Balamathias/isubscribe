@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import type { Status } from '@/types/constants'
-import { LucideCheckCircle, LucideRefreshCcw, LucideXCircle } from 'lucide-react'
+import { LucideCheckCircle, LucideRefreshCcw, LucideX, LucideXCircle } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -58,23 +58,23 @@ const Status = ({ className, status, type = 'text', message=status }: StatusProp
         aria-label={status} 
         className={
             cn(
-                'flex items-center justify-center text-center h-6 w-6 text-xs md:text-sm rounded-full', 
+                'flex items-center justify-center text-center h-10 w-10 text-xs md:text-sm rounded-full', 
                 {
                     'bg-yellow-600/10 text-yellow-600': status === 'pending',
                     'bg-green-600/10 text-green-600': status === 'success',
-                    'bg-red-600/10 text-red-600': status === 'failed',
+                    'bg-red-600/20 text-red-600': status === 'failed',
                 }, 
                 className,
             )
             }>
         {
-            status === 'success' && <LucideCheckCircle />
+            status === 'success' && <LucideCheckCircle size={16} />
         }
         {
-            status === 'pending' && <LucideRefreshCcw />
+            status === 'pending' && <LucideRefreshCcw size={16} />
         }
         {
-            status === 'failed' && <LucideXCircle />
+            status === 'failed' && <LucideX size={16} />
         }
     </span>
 )

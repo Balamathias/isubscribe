@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import AuthSeparator from "./AuthSeparator";
 import AboutUs from "../about-us/AboutUs";
+import Link from "next/link";
 
 const testimonials = [
   {
@@ -68,11 +69,14 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
 
   return (
     <div className="flex flex-col relative max-w-[700px] items-center mx-auto w-full justify-center h-screen overflow-hidden">
-      { !sheetOpen && <AboutUs />}
+      <Link 
+        href={'/about'} 
+        className={`${"absolute"} rounded-full flex p-2 px-5 py-1 items-center top-2 right-3 justify-center bg-violet-10 dark:bg-card/80 ring-1`}
+      >About us</Link>
       <div className="max-md:flex max-md:gap-5 max-md:flex-col-reverse self-center items-center gap-4 w-full">
         {/*  Testimonial Content */}
         <div className={`flex flex-col justify-center w-full gap-4 items-center ${sheetOpen ? " p-1" : "p-10"}`}>
-          <div className="overflow-auto relative self-center w-full shadow-inner p-6 min-h-[300px] border-dashed dark:border-muted border-[3px] rounded-tl-[3rem] rounded-br-[3rem]">
+          <div className="overflow-auto relative self-center w-full shadow-none p-6 min-h-[300px] border-dashed dark:border-muted border-[2px] rounded-tl-[3rem] rounded-br-[3rem]">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}

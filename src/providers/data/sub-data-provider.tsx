@@ -369,7 +369,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             wallet: wallet!
         })
 
-        if (!values) return toast.info('Please verify all inputs.')
+        if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
 
@@ -496,7 +496,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             wallet: wallet!
         })
 
-        if (!values) return toast.info('Please verify all inputs.')
+        if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
 
@@ -517,6 +517,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         const res = await buyVTPassAirtime({
             ...payload,
+            phone: '08011111111',
             request_id: generateRequestId()
         })
 
@@ -570,7 +571,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription topped-up for ${mobileNumber} successfully.`,
                 status: 'success',
-                title: 'Aitime Subscription Success.',
+                title: 'Airtime Subscription Success.',
                 type: EVENT_TYPE.data_topup,
                 email: null,
                 meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),

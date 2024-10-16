@@ -13,6 +13,7 @@ import AirtimeTopup from './airtime-topup'
 import TVTopup from './tv-topup'
 import MeterTopup from './meter-topup'
 import Education from './education'
+import CashbackHistory from './cashback.history'
 
 interface HistoryDetailProps {
     history: Tables<'history'>
@@ -64,6 +65,8 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
         return <></>
     case 'wallet_fund_failed':
         return <></>
+    case 'cashback':
+        return <CashbackHistory history={history} />
     default:
         return <></>
   }

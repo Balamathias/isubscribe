@@ -1,4 +1,4 @@
-export type Networks = 'mtn' | 'glo' | 'airtel' | '9mobile'
+export type Networks = 'mtn' | 'glo' | 'airtel' | '9mobile' 
 export type PaymentMethod = 'wallet' | 'cashback' | 'card'
 
 export interface SubDataProps {
@@ -18,7 +18,7 @@ export interface SubAirtimeProps {
 }
 
 export interface VTPassAirtimePayload {
-    phone: number;
+    phone: number | string;
     serviceID: 'glo' | 'mtn' | 'airtel' | 'etisalat',
     amount: number,
     cashback?: number

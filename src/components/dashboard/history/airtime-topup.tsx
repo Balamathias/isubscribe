@@ -16,7 +16,7 @@ export default function AirtimeTopup ({data, history}: AirtimeTopupProps) {
         <div className="flex flex-col gap-y-3">
             <div className='flex flex-col space-y-8 w-full'>
                 <Card className='dark:bg-card/80 shadow-none drop-shadow-none border-none p-4 rounded-xl flex flex-col justify-center items-center w-full gap-y-3'>
-                    <Status type="image" status={history.status as StatusType} />
+                    <Status type="icon" status={history.status as StatusType} />
                     <h2 className='text-lg font-semibold'>{formatNigerianNaira(history?.amount ?? 0)}</h2>
                     <h2 className='text-xl text-muted-foreground font-semibold text-center'>{history.title}</h2>
                     <p className='text-muted-foreground text-xs md:text-sm text-center'>{history?.description}</p>

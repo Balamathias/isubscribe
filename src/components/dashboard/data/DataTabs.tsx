@@ -85,7 +85,7 @@ const DataTabs = () => {
         <TabsContent 
             key={tabs[activeTabIndex].value} 
             value={tabs[activeTabIndex].value} 
-            className="p-4 bg-white dark:bg-inherit rounded-xl flex flex-col gap-y-2.5 shadow-none"
+            className="p-4 bg-white dark:bg-card/70 rounded-xl flex flex-col gap-y-2.5 shadow-none"
         >
             <h2 className='text-muted-foreground text-lg font-semibold'>{tabs[activeTabIndex].name}</h2>
             <Suspense fallback={<SimpleLoader />}>
