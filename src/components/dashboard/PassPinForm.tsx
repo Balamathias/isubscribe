@@ -110,7 +110,7 @@ const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void,
                  type="password"
                  value={char}
                  readOnly
-                 className="w-full h-full text-center text-3xl p-2 border-2 border-gray-300/90 dark:border-gray-500 rounded-xl focus:outline-none"
+                 className="w-full h-full text-center text-3xl p-2 border-2 border-gray-300/90 dark:border-gray-500 rounded-xl focus:outline-none bg-secondary"
                  style={{ color: 'transparent', textShadow: '0 0 0 violet' }}
                />
                {char && (

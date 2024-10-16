@@ -1,5 +1,6 @@
 'use server'
 
+import { hashPin } from "@/funcs/bcrypt"
 import { createClient } from "@/utils/supabase/server"
 import { Provider } from "@supabase/supabase-js"
 import { revalidatePath } from "next/cache"
@@ -90,5 +91,76 @@ export const updateAuthUser = async (password: string, metadata?: Record<string,
         password,
     })
     if (error) throw error
+    return { data }
+}
+
+export const resetTransactionPin = async () => {
+
+    const supabase = createClient()
+    
+    const { data: { user } } = await getCurrentUser()
+    if (!user || !user?.email) {
+        return {
+            error: {
+                message: 'You must be logged in to be able to reset your pin.'
+            }
+        }
+    }
+    
+    const {data, error} = await supabase.auth.signInWithOtp({email: user?.email})
+    console.log(data, error)
+
+    if (error) {
+        return {
+            error: {
+                message: error?.message
+            }
+        }
+    }
+
+
+    return { data }
+}
+
+export const verifyTransactionResetPinOTP = async ({ token, newPin }: { token: string, newPin: string }) => {
+    
+    const supabase = createClient()
+
+    const { data: { user } } = await getCurrentUser()
+
+    if (!user || !user?.email) {
+        return {
+            error: {
+                message: 'You must be logged in to be able to reset your pin.'
+            }
+        }
+    }
+
+    const { data, error } = await supabase.auth.verifyOtp({email: user?.email, token, type: "email"})
+
+    if (error) {
+        return {
+            error: {
+                message: error?.message
+            }
+        }
+    }
+
+    const hashedPin = await hashPin(newPin)
+
+    if (data.user) {
+        const { error, data } = await supabase.from('profile').update({ pin: hashedPin }).eq('id', user.id).select().single()
+
+        if (error) {
+            return {
+                error: {
+                    message: error?.message
+                }
+            }
+        }
+
+        return { data }
+    }
+
     return { data }
 }
