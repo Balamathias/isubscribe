@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 import { CheckCircle2, LucideCheck, LucideGift } from 'lucide-react'
@@ -19,11 +19,27 @@ interface WelcomeBonusModalProps {
 }
 
 const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModalProps) => {
+
     const [claimed, setClaimed] = useState(wallet?.bonus_claimed)
+    const [securityConsent, setSecurityConsent] = useState(false)
 
     const [openSecurityModal, setOpenSecurityModal] = useState(Boolean(profile?.security_question && profile?.security_answer))
     
     const reward = 50.00
+  
+  
+    useEffect(() => {
+      const consent = localStorage.getItem('isubscribe.security.consent') ?? 'false'
+  
+      if (consent !== 'false') {
+          setSecurityConsent(false)
+      } else {
+        setSecurityConsent(true)
+      }
+  
+      return () => {consent}
+  
+    }, [securityConsent])
 
   const [loading, setLoading] = useState(false)
   const [successful, setSuccessful] = useState(false)

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { AirtimeDataMetadata } from '@/types/airtime-data'
 import { Tables } from '@/types/database'
 import { Networks } from '@/types/networks'
@@ -48,7 +48,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                 />
             </div>
             <div className="flex flex-col space-y-1 basis-[80%]">
-                <h2 className='text-xs md:text-base tracking-tighter'>{item.title}</h2>
+                <h2 className='text-xs md:text-base tracking-tighter'>{item.title ==='Cashback' ? 'Data Bonus' : item.title}</h2>
                 <span className={cn("text-[10px] md:text-xs text-gray-500 dark:text-gray-400", {
                     'text-muted-foreground/70': item.status === 'failed',
                     'text-muted-foreground': item.status === 'success'
@@ -57,7 +57,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
         </div>
         <div className='flex flex-col space-y-1 justify-end items-end basis-[12%]'>
             <Status status={paidToStatus(item?.status!) as StatusType} />
-            <span className='text-xs text-gray-500 dark:text-gray-400'>{formatNigerianNaira(item?.amount!)}</span>
+            <span className='text-xs text-gray-500 dark:text-gray-400'>{item?.type === EVENT_TYPE.cashback ? formatDataAmount(item?.amount! * DATA_MB_PER_NAIRA) : formatNigerianNaira(item?.amount!)}</span>
         </div>
     </Link>
   )

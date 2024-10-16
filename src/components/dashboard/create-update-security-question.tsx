@@ -7,7 +7,6 @@ import { Button } from '../ui/button'
 import { useSetSecurityQ } from '@/lib/react-query/funcs/user'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import ConfirmPin from './ConfirmPin'
 
 interface CreateUpdateSecurityQuestionProps {
     open: boolean,
@@ -112,6 +111,7 @@ const CreateUpdateSecurityQuestion = ({
                         >
                         {isPending ? 'Processing...' : 'Continue'}
                         </Button>
+
                     </form>
                 ): (
                     <>
@@ -119,11 +119,21 @@ const CreateUpdateSecurityQuestion = ({
                         <p className="text-sm tracking-tighter text-center">Setting a security question would help you to quickly recover or reset your PIN should you forget it.
                         </p>
                         <Button 
-                        className='w-full rounded-full mt-2 border-none' 
-                        size={'lg'}
-                        onClick={() => setToggleSetQuestion(true)}
+                            className='w-full rounded-full mt-2 border-none' 
+                            size={'lg'}
+                            onClick={() => setToggleSetQuestion(true)}
                         >
-                        Set Question
+                            Set Question
+                        </Button>
+                        <Button 
+                            className='w-full rounded-full mt-2 border-none hidden' 
+                            size={'lg'}
+                            variant={'secondary'}
+                            onClick={() => {
+                                localStorage.setItem('isubscribe.security.consent', 'false')
+                            }}
+                        >
+                            I don&apos;t want to see this
                         </Button>
                     </>
                 )

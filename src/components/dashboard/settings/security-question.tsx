@@ -1,5 +1,5 @@
 import DynamicModal from '@/components/DynamicModal'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ConfirmPin from '../ConfirmPin'
 import CreateUpdateSecurityQuestion from '../create-update-security-question'
 import { Tables } from '@/types/database'
@@ -7,8 +7,23 @@ import { Card } from '@/components/ui/card'
 import { LucideArrowRight } from 'lucide-react'
 
 const SecurityQuestion = ({ profile }: { profile: Tables<'profile'> }) => {
+
+
+  const [securityConsent, setSecurityConsent] = useState(false)
+
   const [updateSecurityQ, setUpdateSecurityQ] = useState(Boolean(profile?.security_question && profile?.security_answer))
   const [openUpdateSecurityModal, setOpenUpdateSecurityModal] = useState(false)
+
+  useEffect(() => {
+    const consent = localStorage.getItem('isubscribe.security.consent') ?? 'false'
+
+    if (consent && consent === 'true') {
+        setSecurityConsent(true)
+    }
+
+    return () => {consent}
+
+  }, [securityConsent])
 
   return (
     <div>
