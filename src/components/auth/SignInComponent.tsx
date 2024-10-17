@@ -98,7 +98,8 @@ const SignInComponent = () => {
               <p className='text-foreground'>{"Don't"} have an account? <Link href="/sign-up" className="underline text-primary">Sign up</Link></p>
               <p className='text-foreground'>Forgot password? <Link href="/auth/forgot-password" className="underline text-primary">Reset password</Link></p>
 
-              <div className="text-xs md:text-sm text-muted-foreground mt-4 text-center">
+            </div>
+              <div className="text-xs md:text-sm text-muted-foreground mt-4">
               By signing in, you agree to our{' '}
               <Link href="/terms-and-conditions" className="underline text-primary hover:text-primary/80">
                 Terms and Conditions
@@ -108,7 +109,6 @@ const SignInComponent = () => {
                 Privacy Policy
               </Link>
               </div>
-            </div>
           </Card>
 
           <DynamicModal 
