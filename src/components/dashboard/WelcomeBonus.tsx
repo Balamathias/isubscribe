@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 import { LucideCheck, LucideGift } from 'lucide-react'
@@ -10,7 +10,6 @@ import { Tables } from '@/types/database'
 import DynamicModal from '../DynamicModal'
 import { Button } from '../ui/button'
 import useWalletStore from '@/store/use-wallet-store'
-import CreateUpdateSecurityQuestion from './create-update-security-question'
 
 interface WelcomeBonusModalProps {
     type?: 'basic' | 'premium',
@@ -21,25 +20,8 @@ interface WelcomeBonusModalProps {
 const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModalProps) => {
 
     const [claimed, setClaimed] = useState(wallet?.bonus_claimed)
-    const [securityConsent, setSecurityConsent] = useState(false)
-
-    const [openSecurityModal, setOpenSecurityModal] = useState(Boolean(profile?.security_question && profile?.security_answer))
     
     const reward = 50.00
-  
-  
-    useEffect(() => {
-      const consent = localStorage.getItem('isubscribe.security.consent') ?? 'false'
-  
-      if (consent !== 'false') {
-          setSecurityConsent(false)
-      } else {
-        setSecurityConsent(true)
-      }
-  
-      return () => {consent}
-  
-    }, [securityConsent])
 
   const [loading, setLoading] = useState(false)
   const [successful, setSuccessful] = useState(false)
@@ -94,7 +76,6 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
             open={(!claimed && !successful)}
             setOpen={setClaimed as any}
             closeModal={() => setClaimed(true)}
-            // dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4 items-center justify-center'>
                 <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
@@ -116,22 +97,12 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     )
   }
 
-  else if (!openSecurityModal) {
-    return (
-        <CreateUpdateSecurityQuestion
-          open={openSecurityModal}
-          setOpen={setOpenSecurityModal}
-        />
-    )
-  }
-
     else if (successful && claimed) 
       return (
         <DynamicModal
             open={successful && claimed}
             setOpen={setSuccessful}
             dismissible={false}
-            // dialogOnly
         >
             <div className='flex flex-col py-2 gap-y-4 justify-center items-center'>
                 <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
@@ -151,14 +122,6 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
         </DynamicModal>
     )
 
-  else if (!openSecurityModal) {
-    return (
-        <CreateUpdateSecurityQuestion
-          open={openSecurityModal}
-          setOpen={setOpenSecurityModal}
-        />
-    )
-  }
     return <></>
 }
 

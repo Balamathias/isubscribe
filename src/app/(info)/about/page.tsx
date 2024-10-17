@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ChartBarIcon, CreditCardIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { BarChart2Icon, CreditCardIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link'
 
 const About = () => {
@@ -13,9 +13,9 @@ const About = () => {
   }
 
   const features = [
-    { icon: ChartBarIcon, title: 'Analytics', description: 'Track your subscriptions and spending habits with ease.' },
+    { icon: BarChart2Icon, title: 'Analytics', description: 'Track your subscriptions and spending habits with ease.' },
     { icon: CreditCardIcon, title: 'Cost Management', description: 'Optimize your subscription costs and save money.' },
-    { icon: UserGroupIcon, title: 'Team Collaboration', description: 'Manage subscriptions for your entire team or organization.' },
+    { icon: UsersIcon, title: 'Team Collaboration', description: 'Manage subscriptions for your entire team or organization.' },
   ]
 
   return (

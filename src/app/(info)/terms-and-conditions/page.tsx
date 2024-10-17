@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { DocumentTextIcon, ScaleIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { UserCheck2, ScaleIcon, ClockIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 
@@ -15,7 +15,7 @@ const TermsAndConditions = () => {
 
   const terms = [
     { 
-      icon: DocumentTextIcon, 
+      icon: UserCheck2, 
       title: 'User Agreement', 
       description: 'By using iSubscribe, you agree to abide by these terms and conditions.' 
     },

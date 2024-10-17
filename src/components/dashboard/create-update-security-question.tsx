@@ -7,7 +7,7 @@ import { Button } from '../ui/button'
 import { useSetSecurityQ } from '@/lib/react-query/funcs/user'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { resetTransactionPin } from '@/lib/supabase/user.actions'
+import { sendResetPinOTP } from '@/lib/supabase/user.actions'
 
 interface CreateUpdateSecurityQuestionProps {
     open: boolean,
@@ -122,7 +122,7 @@ const CreateUpdateSecurityQuestion = ({
                         <Button 
                             className='w-full rounded-full mt-2 border-none' 
                             size={'lg'}
-                            onClick={() => setToggleSetQuestion(true)}
+                            onClick={async () => await sendResetPinOTP()}
                         >
                             Set Question
                         </Button>

@@ -4,9 +4,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import { getUser } from '@/lib/supabase/accounts'
-import { LucideLock } from 'lucide-react'
+import { sendResetPinOTP, verifyResetPinOtp } from '@/lib/supabase/user.actions'
+import { LucideCheck, LucideLock } from 'lucide-react'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
+import ResetPinOTPInput from './reset-pin-otp-input'
+import { verifyOtp } from '@/lib/supabase/verify-otp'
 
 interface ConfirmSecurityProps {
     trigger?: React.ReactNode,
@@ -16,11 +19,19 @@ interface ConfirmSecurityProps {
 const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProps) => {
 
   const [toggleConfirmForm, setToggleConfirmForm] = useState(false)
+  const [tokenSent, setTokenSent] = useState(false)
+
   const { data: profile } = useGetProfile()
 
+  const [tokenValue, setTokenValue] = useState('')
+
   const [status, setStatus] = useState<'stale' | 'pending' | 'settled'>('stale')
+  const [tokenStatus, setTokenStatus] = useState<'stale' | 'pending' | 'settled'>('stale')
+  const [tokenConfirmStatus, setTokenConfirmStatus] = useState<'stale' | 'pending' | 'settled'>('stale')
 
   const [value, setValue] = useState('')
+
+  const hasSecurityQuestionSet = Boolean(profile?.data?.security_question && profile?.data?.security_answer)
 
   const handleSecurityQuestion = async (e: React.FormEvent) => {
 
@@ -42,6 +53,60 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
     } catch (error) {
         setStatus('settled')
         console.error(error)
+    } finally {
+        setStatus('settled')
+    }
+  }
+
+  const handleTokenResetPin = async () => {
+    setTokenStatus('pending')
+
+    try {
+        const response = await sendResetPinOTP()
+
+        if (response?.error) {
+            toast.error(response?.error?.message)
+            setTokenStatus('settled')
+            return
+        }
+
+        toast.success('A reset pin token has been sent to ' + profile?.data?.email + ' successfully.')
+        setTokenSent(true)
+        setTokenStatus('settled')
+
+    } catch (error: any) {
+        console.error(error)
+        toast.error(error?.message)
+        setTokenStatus('settled')
+    } finally {
+        setTokenStatus('settled')
+    }
+  }
+
+  const handleVerifyToken = async () => {
+    setTokenConfirmStatus('pending')
+
+    try {
+        const response = await verifyResetPinOtp(tokenValue)
+
+        if (!response) {
+            toast.error('Invalid or expired OTP')
+            setTokenConfirmStatus('settled')
+            return
+        }
+
+        setShowResetPin?.(true)
+        func?.()
+
+        toast.success('Confirmation successful!')
+        setTokenConfirmStatus('settled')
+
+    } catch (error: any) {
+        console.error(error)
+        toast.error(error?.message)
+        setTokenConfirmStatus('settled')
+    } finally {
+        setTokenConfirmStatus('settled')
     }
   }
 
@@ -49,10 +114,15 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
     <div>
         <DynamicModal
             trigger={trigger}
-            dialogOnly
         >
             <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600 mx-auto'>
-                <LucideLock size={15} />
+                {
+                    tokenSent ? (
+                        <LucideCheck />
+                    ): (
+                        <LucideLock size={15} />
+                    )
+                }
             </div>
             {
                 toggleConfirmForm ? (
@@ -86,16 +156,117 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                 ) : (
 
                     <div className='flex flex-col gap-y-3 items-center justify-center'>
-                        <h2 className='text-lg font-semibold text-center'>Verify Security Question</h2>
-                        <p className="text-sm tracking-tighter text-center">To reset your pin this way, you must verify the security question you set when your first signed up to iSubscribe. 
-                        </p>
-                        <Button 
-                            className='w-full rounded-full mt-2 border-none' 
-                            size={'lg'}
-                            onClick={() => setToggleConfirmForm(true)}
-                        >
-                            Verify Now!
-                        </Button>
+                        {
+                            hasSecurityQuestionSet ? (
+                                <div>
+                                {
+                                tokenSent ? (
+                                    <>
+                                        <h2 className='text-lg font-semibold text-center'>Token sent</h2>
+
+                                        <p className="text-sm tracking-tighter text-center">Please verify the 5-digit token sent to your email. Didn&apos;t find it? Check your spam folder or request for a new one.
+                                        </p>
+
+                                        <div className='flex flex-col w-full justify-center items-center'>
+                                            <ResetPinOTPInput 
+                                                onChange={(value) => setTokenValue(value)}
+                                            />
+                                        </div>
+
+                                        <Button 
+                                            className='w-full rounded-full mt-2 border-none' 
+                                            size={'lg'}
+                                            onClick={handleVerifyToken}
+                                        >
+                                            {tokenConfirmStatus === 'pending' ? 'Verifying...' : 'Verify'}
+                                        </Button>
+
+                                        <Button 
+                                            className='w-full rounded-full mt-2 border-none' 
+                                            size={'lg'}
+                                            onClick={handleTokenResetPin}
+                                            variant={'secondary'}
+                                            >
+                                                {tokenStatus === 'pending' ? 'Sending...' : 'Resend Token'}
+                                        </Button>
+                                    </>
+                                        ) :
+                                    (<>
+                                        <h2 className='text-lg font-semibold text-center'>Verify Security Question or Request a verification token</h2>
+                                        <p className="text-sm tracking-tighter text-center">To reset your pin this way, you must verify the security question you set when your first signed up to iSubscribe or request a verification token for your email. 
+                                        </p>
+                                        <Button 
+                                            className='w-full rounded-full mt-2 border-none' 
+                                            size={'lg'}
+                                            onClick={() => setToggleConfirmForm(true)}
+                                        >
+                                            Verify Question!
+                                        </Button>
+
+                                        <Button 
+                                            className='w-full rounded-full mt-2 border-none' 
+                                            size={'lg'}
+                                            onClick={handleTokenResetPin}
+                                            variant={'secondary'}
+                                            >
+                                                {tokenStatus === 'pending' ? 'Sending...' : 'Request Token'}
+                                        </Button>
+                                    </>)
+                                }
+                                </div>
+                            ): (
+                                <div>
+                                    {
+                                        tokenSent ? (
+                                            <>
+                                                <h2 className='text-lg font-semibold text-center'>Token sent</h2>
+
+                                                <p className="text-sm tracking-tighter text-center">Please verify the 5-digit token sent to your email. Didn&apos;t find it? Check your spam folder or request for a new one.
+                                                </p>
+
+                                                <div className='flex flex-col w-full justify-center items-center'>
+                                                    <ResetPinOTPInput 
+                                                        onChange={(value) => setTokenValue(value)}
+                                                    />
+                                                </div>
+
+                                                <Button 
+                                                    className='w-full rounded-full mt-2 border-none' 
+                                                    size={'lg'}
+                                                    onClick={handleVerifyToken}
+                                                >
+                                                    {tokenConfirmStatus === 'pending' ? 'Verifying...' : 'Verify'}
+                                                </Button>
+
+                                                <Button 
+                                                    className='w-full rounded-full mt-2 border-none' 
+                                                    size={'lg'}
+                                                    onClick={handleTokenResetPin}
+                                                    variant={'secondary'}
+                                                    >
+                                                        {tokenStatus === 'pending' ? 'Sending...' : 'Resend Token'}
+                                                </Button>
+                                            </>
+                                        ): (
+                                            <>
+                                                <h2 className='text-lg font-semibold text-center'>Send verification token</h2>
+
+                                                <p className="text-sm tracking-tighter text-center">We will send a verification one-time password to your registered email so as to verify your request to reset your PIN. Once you are ready, click on &quot;Request Token&quot; below.
+                                                </p>
+
+                                                <Button 
+                                                    className='w-full rounded-full mt-2 border-none' 
+                                                    size={'lg'}
+                                                    onClick={handleTokenResetPin}
+                                                >
+                                                    {tokenStatus === 'pending' ? 'Sending...' : 'Request Token'}
+                                                </Button>
+                                            </>
+                                        )
+                                    }
+                                </div>
+                            )
+                        }
                     </div>
                 )
             }

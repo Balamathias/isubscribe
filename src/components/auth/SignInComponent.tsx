@@ -95,17 +95,17 @@ const SignInComponent = () => {
               <Button type="submit" disabled={isPending} className='rounded-lg w-full mt-2' size={'lg'}>{isPending ? 'Processing...' : 'Sign In'}</Button>
             </form>
             <div className="flex flex-col space-y-2 text-xs md:text-base py-2">
-              <p className='text-foreground'>{"Don't"} have an account? <Link href="/sign-up" className="underline text-primary">Sign up</Link></p>
-              <p className='text-foreground'>Forgot password? <Link href="/auth/forgot-password" className="underline text-primary">Reset password</Link></p>
+              <p className='text-foreground'>{"Don't"} have an account? <Link href="/sign-up" className="underline dark:text-violet-400">Sign up</Link></p>
+              <p className='text-foreground'>Forgot password? <Link href="/auth/forgot-password" className="underline text-primary dark:text-violet-400">Reset password</Link></p>
 
             </div>
               <div className="text-xs md:text-sm text-muted-foreground mt-4">
               By signing in, you agree to our{' '}
-              <Link href="/terms-and-conditions" className="underline text-primary hover:text-primary/80">
+              <Link href="/terms-and-conditions" className="underline text-primary dark:text-violet-400 hover:text-primary/80">
                 Terms and Conditions
               </Link>{' '}
               and{' '}
-              <Link href="/privacy-policy" className="underline text-primary hover:text-primary/80">
+              <Link href="/privacy-policy" className="underline text-primary dark:text-violet-400 hover:text-primary/80">
                 Privacy Policy
               </Link>
               </div>

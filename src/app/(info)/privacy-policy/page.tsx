@@ -2,8 +2,9 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ShieldCheckIcon, LockClosedIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { ShieldCheckIcon, LockKeyholeIcon, EyeOffIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import Link from 'next/link'
 
 const PrivacyPolicy = () => {
   const fadeIn = {
@@ -19,12 +20,12 @@ const PrivacyPolicy = () => {
       description: 'We employ industry-standard encryption and security measures to protect your personal information.' 
     },
     { 
-      icon: LockClosedIcon, 
+      icon: LockKeyholeIcon, 
       title: 'Limited Data Collection', 
       description: 'We only collect essential information needed to provide and improve our services.' 
     },
     { 
-      icon: EyeSlashIcon, 
+      icon: EyeOffIcon, 
       title: 'No Data Sharing', 
       description: 'Your data is never sold or shared with third parties for marketing purposes.' 
     },
@@ -139,12 +140,12 @@ const PrivacyPolicy = () => {
           <p className="text-lg mb-4">
             By using iSubscribe, you agree to our privacy policy and terms of service.
           </p>
-          <a
-            href="/terms"
+          <Link
+            href="/terms-and-conditions"
             className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full transition-colors duration-300"
           >
             Read Full Terms of Service
-          </a>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

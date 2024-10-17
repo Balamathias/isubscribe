@@ -1,10 +1,15 @@
 'use server'
 
 import { hashPin } from "@/funcs/bcrypt"
+import { sendOtpEmail } from "@/funcs/sendOTPEmail"
 import { createClient } from "@/utils/supabase/server"
 import { Provider } from "@supabase/supabase-js"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const signUp = async ({ email, password, metadata={} }: { email: string, password: string, metadata?: Record<string, string> }) => {
     const supabase = createClient()
@@ -93,6 +98,147 @@ export const updateAuthUser = async (password: string, metadata?: Record<string,
     if (error) throw error
     return { data }
 }
+
+export const getUserPin = async () => {
+    const supabase = createClient()
+
+    const { data: { user } } = await getCurrentUser()
+
+    if (user && user?.id) {
+        const { data, error } = await supabase.from('profile').select('pin').eq('id', user?.id).single()
+
+        if (error) {
+            return {
+                error: {
+                    message: error?.message
+                }
+            }
+        }
+
+        return { data, pin: data?.pin }
+    } else {
+        return { data: null, pin: null }
+    }
+
+}
+
+const getValidOtpForUser = async (userId: string) => {
+
+    const supabase = createClient()
+
+    const { data, error } = await supabase
+        .from('otp_requests')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('used', false)
+        .gt('expires_at', new Date().toISOString())
+        .single()
+
+    if (error) {
+        console.error(error)
+        return null
+    }
+
+    return data ? data : null;
+};
+
+
+export const sendResetPinOTP = async () => {
+
+    const generateOtp = () => {
+        return Math.floor((Math.random() * 89999) + 10000).toString();
+    };
+
+    const otp = generateOtp()
+
+    const supabase = createClient()
+
+    const { data: { user } } = await getCurrentUser()
+
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    if (!user || !user?.id) {
+        return {
+            error: {
+                message: 'You must be signed in to request a reset pin'
+            }
+        }
+    }
+
+    let validOTP = await getValidOtpForUser(user?.id)
+
+    if (!validOTP) {
+        const { error, data } = await supabase
+        .from('otp_requests')
+        .insert([{ user_id: user?.id, otp, expires_at: expiresAt, }])
+        .select()
+        .single()
+
+        validOTP = data
+
+        if (error) throw new Error(`Error storing OTP: ${error.message}`);
+    }
+
+    sendOtpEmail(user?.email!, validOTP?.otp!, user?.email!)
+};
+
+export const resetPin = async (newPin: string) => {
+    const supabase = createClient()
+
+    const { data: { user } } = await getCurrentUser()
+
+    if (!user || !user?.id) {
+        return {
+            error: {
+                message: 'You must be signed in to request a reset pin'
+            }
+        }
+    }
+
+    const hashedPin = await hashPin(newPin)
+
+    const { error } = await supabase
+        .from('profile')
+        .update({ pin: hashedPin })
+        .eq('id', user.id);
+
+    if (error) throw new Error(`Error resetting pin: ${error.message}`);
+};
+
+export const verifyResetPinOtp = async (otp: string) => {
+
+    const supabase = createClient()
+
+    const { data: { user } } = await getCurrentUser()
+
+    if (!user || !user?.id) {
+        return false
+    }
+
+    const { data, error } = await supabase
+        .from('otp_requests')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('otp', otp)
+        .eq('used', false)
+        .gt('expires_at', new Date().toISOString())
+        .single();
+
+
+    if (error || !data) {
+        console.log(error)
+        return false
+    }
+    
+    await supabase
+        .from('otp_requests')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('otp', otp)
+    
+    return true;
+};
+
 
 export const resetTransactionPin = async () => {
 

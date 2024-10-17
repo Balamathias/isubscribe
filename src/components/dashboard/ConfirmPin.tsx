@@ -14,8 +14,9 @@ import { Tables } from '@/types/database';
 import { useRouter } from 'next/navigation';
 import ConfirmSecurity from './settings/confirm-security';
 import { Button } from '../ui/button';
+import { getUserPin } from '@/lib/supabase/user.actions';
 
-const ConfirmPin = ({ className, func: closeModal, profile, setShowResetPin }: { className?: string, func?: () => void, profile: Tables<'profile'>, setShowResetPin?: (bool: boolean) => void }) => {
+const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { className?: string, func?: () => void, profile?: Tables<'profile'>, setShowResetPin?: (bool: boolean) => void }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const router = useRouter()
@@ -33,8 +34,13 @@ const ConfirmPin = ({ className, func: closeModal, profile, setShowResetPin }: {
     };
     
     const handleCheckPin = async () => {
+
+      setIsPending(true)
+
+        const  { data: profile, error } = await getUserPin()
+
+        if (error) return toast.error(error?.message)
       
-        setIsPending(true)
         try {
           if (profile?.pin === null) return toast.warning("Pin Error", {
             description: "Please set your transaction Pin to continue",
