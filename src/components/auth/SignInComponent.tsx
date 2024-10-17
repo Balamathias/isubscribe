@@ -97,6 +97,17 @@ const SignInComponent = () => {
             <div className="flex flex-col space-y-2 text-xs md:text-base py-2">
               <p className='text-foreground'>{"Don't"} have an account? <Link href="/sign-up" className="underline text-primary">Sign up</Link></p>
               <p className='text-foreground'>Forgot password? <Link href="/auth/forgot-password" className="underline text-primary">Reset password</Link></p>
+
+              <div className="text-xs md:text-sm text-muted-foreground mt-4 text-center">
+              By signing in, you agree to our{' '}
+              <Link href="/terms-and-conditions" className="underline text-primary hover:text-primary/80">
+                Terms and Conditions
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy-policy" className="underline text-primary hover:text-primary/80">
+                Privacy Policy
+              </Link>
+              </div>
             </div>
           </Card>
 
@@ -118,17 +129,6 @@ const SignInComponent = () => {
                 </div>
               </div>
             </DynamicModal>
-            <div className="text-xs md:text-sm text-muted-foreground mt-4 text-center">
-              By signing in, you agree to our{' '}
-              <Link href="/terms-and-conditions" className="underline text-primary hover:text-primary/80">
-                Terms and Conditions
-              </Link>{' '}
-              and{' '}
-              <Link href="/privacy-policy" className="underline text-primary hover:text-primary/80">
-                Privacy Policy
-              </Link>
-            </div>
-
             {
               isPending && <LoadingOverlay loader='2' isPending={isPending} />
             }
