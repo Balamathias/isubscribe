@@ -118,6 +118,16 @@ const SignInComponent = () => {
                 </div>
               </div>
             </DynamicModal>
+            <div className="text-xs md:text-sm text-muted-foreground mt-4 text-center">
+              By signing in, you agree to our{' '}
+              <Link href="/terms-and-conditions" className="underline text-primary hover:text-primary/80">
+                Terms and Conditions
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy-policy" className="underline text-primary hover:text-primary/80">
+                Privacy Policy
+              </Link>
+            </div>
 
             {
               isPending && <LoadingOverlay loader='2' isPending={isPending} />

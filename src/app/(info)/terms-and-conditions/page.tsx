@@ -4,6 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { DocumentTextIcon, ScaleIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { Card } from '@/components/ui/card'
+import Link from 'next/link'
 
 const TermsAndConditions = () => {
   const fadeIn = {
@@ -128,12 +129,30 @@ const TermsAndConditions = () => {
           <p className="text-lg mb-4">
             If you have any questions about our Terms and Conditions, please contact us.
           </p>
-          <a
+          <Link
             href="/contact"
             className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full transition-colors duration-300"
           >
             Contact Us
-          </a>
+          </Link>
+        </motion.div>
+
+        <motion.div
+          className="mt-8 text-center"
+          {...fadeIn}
+          transition={{ delay: 1 }}
+        >
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            For more information, please read our{' '}
+            <Link href="/privacy-policy" className="text-orange-500 hover:text-orange-600 underline">
+              Privacy Policy
+            </Link>
+            {' '}and{' '}
+            <Link href="/about" className="text-orange-500 hover:text-orange-600 underline">
+              About Us
+            </Link>
+            {' '}pages.
+          </p>
         </motion.div>
       </motion.div>
     </div>
