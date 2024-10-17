@@ -6,7 +6,7 @@ import { useGetProfile } from '@/lib/react-query/funcs/user'
 import { getUser } from '@/lib/supabase/accounts'
 import { sendResetPinOTP, verifyResetPinOtp } from '@/lib/supabase/user.actions'
 import { LucideCheck, LucideLock } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import ResetPinOTPInput from './reset-pin-otp-input'
 import { verifyOtp } from '@/lib/supabase/verify-otp'
@@ -32,6 +32,14 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
   const [value, setValue] = useState('')
 
   const hasSecurityQuestionSet = Boolean(profile?.data?.security_question && profile?.data?.security_answer)
+
+  useEffect(() => {
+    (async () => {
+        if (tokenValue?.length === 5) {
+            await handleVerifyToken()
+        }
+    })()
+  }, [tokenValue])
 
   const handleSecurityQuestion = async (e: React.FormEvent) => {
 
@@ -97,6 +105,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
 
         setShowResetPin?.(true)
         func?.()
+        setTokenValue('')
 
         toast.success('Confirmation successful!')
         setTokenConfirmStatus('settled')
@@ -104,6 +113,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
     } catch (error: any) {
         console.error(error)
         toast.error(error?.message)
+        setTokenValue('')
         setTokenConfirmStatus('settled')
     } finally {
         setTokenConfirmStatus('settled')
@@ -177,6 +187,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                             className='w-full rounded-full mt-2 border-none' 
                                             size={'lg'}
                                             onClick={handleVerifyToken}
+                                            disabled={tokenConfirmStatus === 'pending'}
                                         >
                                             {tokenConfirmStatus === 'pending' ? 'Verifying...' : 'Verify'}
                                         </Button>
@@ -186,6 +197,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                             size={'lg'}
                                             onClick={handleTokenResetPin}
                                             variant={'secondary'}
+                                            disabled={tokenStatus === 'pending'}
                                             >
                                                 {tokenStatus === 'pending' ? 'Sending...' : 'Resend Token'}
                                         </Button>
@@ -208,6 +220,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                             size={'lg'}
                                             onClick={handleTokenResetPin}
                                             variant={'secondary'}
+                                            disabled={tokenStatus === 'pending'}
                                             >
                                                 {tokenStatus === 'pending' ? 'Sending...' : 'Request Token'}
                                         </Button>
@@ -234,6 +247,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                                     className='w-full rounded-full mt-2 border-none' 
                                                     size={'lg'}
                                                     onClick={handleVerifyToken}
+                                                    disabled={tokenConfirmStatus === 'pending'}
                                                 >
                                                     {tokenConfirmStatus === 'pending' ? 'Verifying...' : 'Verify'}
                                                 </Button>
@@ -243,6 +257,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                                     size={'lg'}
                                                     onClick={handleTokenResetPin}
                                                     variant={'secondary'}
+                                                    disabled={tokenStatus === 'pending'}
                                                     >
                                                         {tokenStatus === 'pending' ? 'Sending...' : 'Resend Token'}
                                                 </Button>
@@ -258,6 +273,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                                                     className='w-full rounded-full mt-2 border-none' 
                                                     size={'lg'}
                                                     onClick={handleTokenResetPin}
+                                                    disabled={tokenStatus === 'pending'}
                                                 >
                                                     {tokenStatus === 'pending' ? 'Sending...' : 'Request Token'}
                                                 </Button>
