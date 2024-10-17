@@ -10,6 +10,7 @@
     "generate": "npx supabase gen types typescript --project-id youoemwgqrmvpjfcvzua --schema public > src/types/database.ts"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.6.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-collapsible": "^1.1.0",
