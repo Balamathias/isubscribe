@@ -8,7 +8,7 @@ const Footer = async () => {
   const { data: { user } } = await getCurrentUser()
 
   return (
-    <div className=' flex flex-row items-center justify-between gap-x-4 bg-background h-[60px] bottom-0 py-1 sticky shadow-lg px-3 z-50'>
+    <div className=' flex flex-row items-center justify-center gap-x-4 bg-inherit h-[60px] bottom-0 py-1 sticky shadow-lg px-3 z-50'>
       {
         user ? (
           <>
@@ -17,15 +17,15 @@ const Footer = async () => {
             </Button>
           </>
         ): (
-          <>
-            <Button asChild variant={'secondary'} className='rounded-full w-full dark:bg-secondary bg-white ring-1 ring-black font-semibold'>
+          <div className='flex flex-row items-center gap-x-2'>
+            <Button asChild variant={'secondary'} className='rounded-full w-full dark:bg-secondary bg-white ring-1 font-semibold border-none' size={'lg'}>
               <Link href={"/sign-up"}>Sign up</Link>
             </Button>
             <Separator orientation="vertical" className='my-2' color='#030712' />
-            <Button asChild className=' rounded-full w-full' >
+            <Button asChild className='rounded-full w-full border-none' size={'lg'}>
               <Link href={"/sign-in"}>Login</Link>
             </Button>
-          </>
+          </div>
         )
       }
     </div>

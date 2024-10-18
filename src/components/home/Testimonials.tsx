@@ -1,22 +1,17 @@
 "use client"
 
 import Image from 'next/image'
-import React, { act, useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
+import React from 'react'
+import { Card } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
 
 import Autoplay from "embla-carousel-autoplay"
-import Autoscroll from "embla-carousel-autoplay"
-import { Button } from '../ui/button'
-import { Calendar, MapPin, Quote, Star } from 'lucide-react'
-import AuthSeparator from '../auth/AuthSeparator'
+import { MapPin, Quote, Star } from 'lucide-react'
 
 
 const cardsData = [
@@ -32,7 +27,7 @@ const cardsData = [
       reviews:"4.9",
       company:"Huoispay Ltd",
       name:"Dafe Stanley",
-      comment:"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis"
+      comment:"I had discovered over time that it had become quite expensive to train MTN data as was my case recently, but not until I discovered isubscribe. It has helped me in my daily data purchases by simplifying it all for me."
     },
     {
       heading:"Africa, Amazing Africa Safari",
@@ -46,7 +41,7 @@ const cardsData = [
       reviews:"4.9",
       company:"Huoispay Ltd",
       name:"Dafe Stanley",
-      comment:"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis"
+      comment:"As for me, I would say that isubscribe has gotten a user for life! It is now my go-to platform for every of my data purchases."
     },
     {
       heading:"Africa, Amazing Africa Safari",
@@ -60,7 +55,7 @@ const cardsData = [
       reviews:"4.9",
       company:"Huoispay Ltd",
       name:"Dafe Stanley",
-      comment:"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis"
+      comment:"I had discovered over time that it had become quite expensive to train MTN data as was my case recently, but not until I discovered isubscribe"
     },
     {
       heading:"Africa, Amazing Africa Safari",
@@ -74,7 +69,7 @@ const cardsData = [
       reviews:"4.9",
       company:"Huoispay Ltd",
       name:"Dafe Stanley",
-      comment:"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis"
+      comment:"As for me, I would say that isubscribe has gotten a user for life! It is now my go-to platform for every of my data purchases."
     },
     {
       heading:"Africa, Amazing Africa Safari",
@@ -88,19 +83,16 @@ const cardsData = [
       reviews:"4.9",
       company:"Huoispay Ltd",
       name:"Dafe Stanley",
-      comment:"Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliquaquis"
+      comment:"As for me, I would say that isubscribe has gotten a user for life! It is now my go-to platform for every of my data purchases."
     },
   ]
 
   const TestimonialsSection = () => {
     return (
-      <section  className=' w-full  max-md:px-4 px-20 py-6 relative overflow-hidden max-w-[90rem] mx-auto  '>
+      <section  className=' w-full  max-md:px-4 px-20 py-12 relative overflow-hidden max-w-[90rem] mx-auto  '>
       
         <div className=' flex flex-col items-center max-md:space-y-4 space-y-7 max-md:mt-4 py-6'>
           <h1 className=" text-4xl max-md:text-lg font-semibold ">Reviews & Testimonials</h1>
-          {/* <AuthSeparator separatorText="Reviews & Testimonials" seperatorWrapperClassName=" text-4xl max-md:text-lg font-semibold text-black" /> */}
-          {/* <h2 className=" text-5xl max-md:text-3xl font-semibold text-black text-center">What Our Customers Are <br />
-          Saying About Us</h2> */}
           <div className={""}>
             <CarousalComponent />
           </div>
@@ -147,15 +139,12 @@ const cardsData = [
          Autoplay({
           delay: 7000,
         }),
-        // Autoscroll({
-        //   delay:2000,
-        // })
       ]}
      > 
-      <CarouselContent className={"flex gap- w-[96vw] max-md:w-[100vw]"}>
+      <CarouselContent className={"flex max-md:w-[100vw]"}>
              {cardsData?.map((d, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 bg-red-30 p- px-6 md:px-6">
-                    <Card className={`${current + 1  === index + 1  && "bg-gradient-to-t from-teal-50 to-violet-100 dark:from-teal-950 dark:to-violet-900 transition-all"} flex group items-start flex-col border-none mt-1 shadow-none  py-4 gap-4 px-2 hover:bg-gradient-to-t hover:from-teal-50 dark:hover:from-teal-950 dark:hover:to-violet-900 hover:transition-all rounded-md overflow-hidden relative border-dashed dark:border-muted border-[3px] rounded-   tl-[3rem] rounded-br-[3rem] min-h-[300px] `}>
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 px-6 md:px-6">
+                    <Card className={`${current + 1  === index + 1  && ""} !bg-inherit backdrop-blur-md border-1 flex group items-start flex-col mt-1 shadow-none  py-4 gap-4 px-2 hover:transition-all rounded-2xl overflow-hidden relative dark:border-muted border h-auto`}>
 
                       <div className=' flex flex-col px-4  space-y-2 pb-4 max-md:space-y-1 w-full '>
                         <h2 className=' text-muted-foreground text-lg py-1'>{d?.comment}</h2>
@@ -173,7 +162,9 @@ const cardsData = [
                     </div>
                        
                       </div>
-                      <span className=' absolute bottom-11 right-2 bg-secondary rounded-full p-3'><Quote size={20} /> </span>
+                      <span className=' absolute bottom-11 right-2 bg-gray-600/20 text-gray-600 rounded-full p-3'>
+                        <Quote size={20} /> 
+                      </span>
                     </Card>
                 </CarouselItem>
              ))}
