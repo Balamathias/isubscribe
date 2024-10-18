@@ -9,7 +9,7 @@ const ShareReciept = ({freeData, rLink, sLink}:any) => {
     <>
        <Card className='shadow-none bg-secondary/15 dark:bg-secondary/50 border-none rounded-xl  flex flex-row gap-4 p-2 items-center justify-between w-full '>
             <span>Bonus Earned:</span>
-            <span> <strong className=' text-sm text-green-600'>+</strong>{freeData} Free Data</span>
+            <span> <strong className=' text-sm text-green-600'>+</strong>{freeData} Data Bonus</span>
         </Card>
 
         <span className=' text-sm mb-[-4px] text-center animate-pulse'>Thank You for Choosing iSubscribe...</span>
