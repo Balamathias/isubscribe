@@ -6,7 +6,7 @@ import { StarFilledIcon } from '@radix-ui/react-icons'
 import Feedback from './feedback'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 
-const ShareReciept = ({freeData}: { freeData: string }) => {
+const ShareReciept = ({freeData}: { freeData: string, sLink?: string, rLink?: string }) => {
   const { historyId } = useNetwork()
   return (
     <>
