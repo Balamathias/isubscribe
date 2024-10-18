@@ -65,7 +65,7 @@ const ConfirmProductInfo = ({
             </div>
 
             <div className='flex flex-row justify-between items-center gap-x-2'>
-                <p className='font-semibold text-muted-foreground'>Cashback</p>
+                <p className='font-semibold text-muted-foreground'>Data Bonus</p>
                 <p className='px-2 py-1 rounded-full bg-violet-700/15'>+{formatDataAmount(cashBack * DATA_MB_PER_NAIRA)}</p>
             </div>
         </div>
