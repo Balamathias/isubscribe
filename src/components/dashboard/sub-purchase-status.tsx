@@ -1,19 +1,21 @@
-import { cn } from "@/lib/utils"
+import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react"
 import DynamicModal from "../DynamicModal"
 import ShareReciept from "./ShareReciept"
+import { motion } from "framer-motion"
 
 const SubPurchaseStatus = ({
     closeModal, 
     dataAmount, 
+    dataBonus, 
     fullName, 
     open, 
     phoneNumber, 
     failed, 
     action='data', 
     airtimeAmount,
-    errorMessage
+    errorMessage,
 }: {
     dataAmount: string,
     phoneNumber: string,
@@ -25,6 +27,8 @@ const SubPurchaseStatus = ({
     airtimeAmount?: string | number,
     errorMessage?: string,
     successMessage?: string,
+    dataBonus?: number,
+    
 }) => {
     return (
         <DynamicModal
@@ -44,9 +48,14 @@ const SubPurchaseStatus = ({
                             {errorMessage}
                         </p>
                     ) : (
-                        <div className="flex flex-col gap-5 mt-2 p-2  max-md:w-[94vw]">
-                            <ShareReciept freeData={"5MB"} rLink={"#"} sLink={"#"} />
-                        </div>
+                        <motion.div 
+                            className="flex flex-col gap-5 mt-2 p-2 max-md:w-[94vw]"
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <ShareReciept freeData={formatDataAmount(dataBonus! * DATA_MB_PER_NAIRA)} rLink={"#"} sLink={"#"} />
+                        </motion.div>
                     )
                 }
 

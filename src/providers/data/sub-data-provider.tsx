@@ -85,6 +85,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const [successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const [airtimeAmount, setAirtimeAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
+    const [dataBonus, setDataBonus] = React.useState(0)
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
@@ -106,6 +107,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        setDataBonus(cashbackPrice)
 
         const networkId = networkIds[currentNetwork]
         setDataAmount(payload.Data)
@@ -238,6 +240,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        setDataBonus(cashbackPrice)
         
         const networkId = networkIds[currentNetwork]
         setAirtimeAmount(payload.Price)
@@ -372,6 +375,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        setDataBonus(cashbackPrice)
 
         setPurchasing(true)
 
@@ -499,6 +503,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (!values) return
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        setDataBonus(cashbackPrice)
 
         setPurchasing(true)
 
@@ -631,6 +636,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     return setPurchaseSuccess(false)
                 }}
                 dataAmount={dataAmount}
+                dataBonus={dataBonus}
                 fullName={profile?.full_name!}
                 open={purchaseSuccess}
                 phoneNumber={mobileNumber}
