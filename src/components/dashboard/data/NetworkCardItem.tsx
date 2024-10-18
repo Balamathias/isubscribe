@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import React from 'react'
 
 interface NetworkCardItemProps {
@@ -27,8 +28,8 @@ const NetworkCardItem = ({
             <p>{dataDuration}</p>
             <p>{formatNigerianNaira(dataPrice)}</p>
             <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
-                <span>{formatNigerianNaira(dataCashBack)}</span>
-                <span>Cashback</span>
+                <span>+{formatDataAmount(dataCashBack * DATA_MB_PER_NAIRA)}</span>
+                <span className='sr-only'>Data bonus</span>
             </div>
         </div>
     </Card>

@@ -239,74 +239,25 @@ export const verifyResetPinOtp = async (otp: string) => {
     return true;
 };
 
-
-export const resetTransactionPin = async () => {
-
-    const supabase = createClient()
-    
-    const { data: { user } } = await getCurrentUser()
-    if (!user || !user?.email) {
-        return {
-            error: {
-                message: 'You must be logged in to be able to reset your pin.'
-            }
-        }
-    }
-    
-    const {data, error} = await supabase.auth.signInWithOtp({email: user?.email})
-    console.log(data, error)
-
-    if (error) {
-        return {
-            error: {
-                message: error?.message
-            }
-        }
-    }
-
-
-    return { data }
-}
-
-export const verifyTransactionResetPinOTP = async ({ token, newPin }: { token: string, newPin: string }) => {
-    
+export const setUserRating = async (rating: number, comment: string) => {
     const supabase = createClient()
 
     const { data: { user } } = await getCurrentUser()
 
-    if (!user || !user?.email) {
+    if (!user) {
         return {
             error: {
-                message: 'You must be logged in to be able to reset your pin.'
-            }
+                message: 'User not found, please log in'
+            },
+            data: null
         }
     }
 
-    const { data, error } = await supabase.auth.verifyOtp({email: user?.email, token, type: "email"})
+    const { data, error } = await supabase.from('ratings').insert([{ user_id: user.id, rating, comment }]).select().single()
 
     if (error) {
-        return {
-            error: {
-                message: error?.message
-            }
-        }
+        console.log(error)
     }
 
-    const hashedPin = await hashPin(newPin)
-
-    if (data.user) {
-        const { error, data } = await supabase.from('profile').update({ pin: hashedPin }).eq('id', user.id).select().single()
-
-        if (error) {
-            return {
-                error: {
-                    message: error?.message
-                }
-            }
-        }
-
-        return { data }
-    }
-
-    return { data }
+    return { data, error }
 }

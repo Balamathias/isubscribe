@@ -1,4 +1,5 @@
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'
 
@@ -64,8 +65,8 @@ const ConfirmProductInfo = ({
             </div>
 
             <div className='flex flex-row justify-between items-center gap-x-2'>
-                <p className='font-semibold text-muted-foreground'>Cashback</p>
-                <p className='px-2 py-1 rounded-full bg-violet-700/15'>+{formatNigerianNaira(cashBack)}</p>
+                <p className='font-semibold text-muted-foreground'>Data bonus</p>
+                <p className='px-2 py-1 rounded-full bg-violet-700/15'>+{formatDataAmount(cashBack * DATA_MB_PER_NAIRA)}</p>
             </div>
         </div>
     </div>

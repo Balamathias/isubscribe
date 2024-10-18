@@ -446,7 +446,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Data subscription topped-up for ${mobileNumber} successfully.`,
                 status: 'success',
-                title: 'Data Subscription Success.',
+                title: 'Data Subscription.',
                 type: EVENT_TYPE.data_topup,
                 email: null,
                 meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),

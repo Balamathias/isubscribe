@@ -13,7 +13,7 @@ import ConfirmPin from '../ConfirmPin'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import CustomInput from '../CustomInput'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
+import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
@@ -87,8 +87,8 @@ const AirtimeCards = () => {
                         <p className="font-semibold text-base">{formatNigerianNaira(plan)}</p>
                         <p className='tracking-tighter'>Pay {formatNigerianNaira(plan)}</p>
                         <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
-                            <span>{formatNigerianNaira(plan * 0.01)}</span>
-                            <span>Cashback</span>
+                            <span>+{formatDataAmount(plan * 0.01 * DATA_MB_PER_NAIRA)}</span>
+                            <span className='sr-only'>Data bonus</span>
                         </div>
                     </div>
                 </Card>
