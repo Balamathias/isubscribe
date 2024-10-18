@@ -4,7 +4,7 @@ Isubscribe is a new VTU platform developed by Programmers at Dayilo Software Inc
 
 We have chosen to engage the very best APIs for this purpose and you can pay your utitlity bill now with massive discount prices.
 
-To get started, visit (https://isubscribe.com.ng)[Isubscribe.com.ng] to get started
+To get started, visit (https://isubscribe.ng)[Isubscribe.ng] to get started
 
 **__Pay your utility bills with just a single click.__**
 We currently offer the following services:
