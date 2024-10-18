@@ -10,7 +10,7 @@ import LoadingOverlay from '../loaders/LoadingOverlay';
 import { useGetProfile, useSetPassPin } from '@/lib/react-query/funcs/user';
 import { Card } from '../ui/card';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
+import { cn, dynamic } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from '@/lib/react-query/query-keys';
@@ -97,19 +97,26 @@ const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void,
         <Card className={cn("bg-white dark:bg-card border-none p-6 max-sm:w-[100vw] self-center md:min-w-[500px] rounded-3xl shadow-xl max-sm:bottom-0", className)}>
           <div className="md:text-2xl text-lg mb-6 text-center">
             <div className='flex flex-col gap-y-1 items-center justify-center'>
-                {/* <div className='h-12 w-12 rounded-full flex items-center justify-center bg-red-600/20 text-red-600'>
-                    <LucideLock size={17} />
-                </div> */}
-                <div className='flex flex-col gap-y-2.5 items-center justify-center text-center py-2'>
-                  <Avatar className='w-16 h-16'>
-                    <AvatarImage src={profile?.data?.avatar!} />
-                    <AvatarFallback content={profile?.data?.full_name?.[0]} />
-                  </Avatar>
+                {
+                  dynamic(
+                    <div className='h-12 w-12 rounded-full flex items-center justify-center bg-red-600/20 text-red-600'>
+                        <LucideLock size={17} />
+                    </div>,
 
-                  <p className='text-muted-foreground text-sm'>
-                    Hi <b className="font-semibold">{profile?.data?.full_name?.split(' ')?.at(0)}</b>, welcome to isubscribe. Set up your pin below to continue.
-                  </p>
-                </div>
+                    <div className='flex flex-col gap-y-2.5 items-center justify-center text-center py-2'>
+                      <Avatar className='w-16 h-16'>
+                        <AvatarImage src={profile?.data?.avatar!} />
+                        <AvatarFallback content={profile?.data?.full_name?.[0]} />
+                      </Avatar>
+
+                      <p className='text-muted-foreground text-sm'>
+                        Hi <b className="font-semibold">{profile?.data?.full_name?.split(' ')?.at(0)}</b>, welcome to isubscribe. Set up your pin below to continue.
+                      </p>
+                    </div>,
+
+                    update
+                  )
+                }
                 {isPending ? (
                   <p>Checking...</p>
                 ) : (<p className='text-primary dark:text-violet-400/90'>
