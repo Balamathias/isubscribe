@@ -70,7 +70,7 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
 
   return (
     <div className="flex flex-col relative max-w-[700px] items-center mx-auto w-full justify-center h-screen overflow-hidden">
-          <Button asChild variant={'secondary'} className='rounded-full w-full absolute top-2 right-3 dark:bg-secondary bg-white ring-1 font-semibold border-none' size={'lg'}>
+          <Button asChild variant={'secondary'} className='rounded-full absolute top-2 right-3 dark:bg-secondary bg-white ring-1 font-semibold border-none' size={'lg'}>
               <Link 
                 href={'/about'} 
                 className={``}
