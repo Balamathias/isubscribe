@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import AuthSeparator from "./AuthSeparator";
 import AboutUs from "../about-us/AboutUs";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 const testimonials = [
   {
@@ -69,10 +70,12 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
 
   return (
     <div className="flex flex-col relative max-w-[700px] items-center mx-auto w-full justify-center h-screen overflow-hidden">
-      <Link 
-        href={'/about'} 
-        className={`${"absolute"} rounded-full flex p-2 px-5 py-1 items-center top-2 right-3 justify-center bg-violet-10 dark:bg-card/80 ring-1`}
-      >About us</Link>
+          <Button asChild variant={'secondary'} className='rounded-full w-full absolute top-2 right-3 dark:bg-secondary bg-white ring-1 font-semibold border-none' size={'lg'}>
+              <Link 
+                href={'/about'} 
+                className={``}
+              >About us</Link>
+          </Button>
       <div className="max-md:flex max-md:gap-5 max-md:flex-col-reverse self-center items-center gap-4 w-full">
         {/*  Testimonial Content */}
         <div className={`flex flex-col justify-center w-full gap-4 items-center ${sheetOpen ? " p-1" : "p-10"}`}>

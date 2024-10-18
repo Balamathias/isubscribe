@@ -3,6 +3,7 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import { Button } from '../ui/button'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
+import { ModeToggle } from '../mode-toggle'
 
 const Header = async () => {
 
@@ -15,6 +16,7 @@ const Header = async () => {
           <Logo showLogoText />
         </div>
         <div className='flex items-center justify-between gap-x-3'>
+          <ModeToggle />
           <Button asChild variant={'secondary'} className='rounded-full w-full dark:bg-secondary bg-white ring-1 font-semibold border-none' size={'lg'}>
               <Link 
                 href={'/about'} 

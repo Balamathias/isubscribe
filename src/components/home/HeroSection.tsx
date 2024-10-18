@@ -115,7 +115,7 @@ export function CarouselComponent() {
                 <CardContent className="flex max-md:flex-col-reverse max-md:gap-y-4 items-start md:items-center justify-between p-3">
                  <div className="w-full flex flex-col items-start max-md:items-center max-md:space-y-4 space-y-4 ">
                   <motion.h1
-                      className="text-5xl md:text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 dark:from-blue-400 dark:via-indigo-500 dark:to-purple-500"
+                      className="text-3xl md:text-5xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 dark:from-blue-400 dark:via-indigo-500 dark:to-purple-500"
                       {...fadeIn}
                     >
                       {d.h2}
