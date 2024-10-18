@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { UserCheck2, ScaleIcon, ClockIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
+import Footer from '@/components/info/footer'
 
 const TermsAndConditions = () => {
   const fadeIn = {
@@ -32,7 +33,7 @@ const TermsAndConditions = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-amber-100 dark:from-gray-900 dark:to-amber-900 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-amber-100 dark:from-gray-900 dark:to-amber-900 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col gap-y-6 justify-between">
       <motion.div
         className="max-w-7xl mx-auto"
         initial="initial"
@@ -155,6 +156,8 @@ const TermsAndConditions = () => {
           </p>
         </motion.div>
       </motion.div>
+
+      <Footer />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { ShieldCheckIcon, LockKeyholeIcon, EyeOffIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
+import Footer from '@/components/info/footer'
 
 const PrivacyPolicy = () => {
   const fadeIn = {
@@ -32,7 +33,7 @@ const PrivacyPolicy = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-100 dark:from-gray-900 dark:to-yellow-900 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-100 dark:from-gray-900 dark:to-yellow-900 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col gap-y-6 justify-between">
       <motion.div
         className="max-w-7xl mx-auto"
         initial="initial"
@@ -148,6 +149,8 @@ const PrivacyPolicy = () => {
           </Link>
         </motion.div>
       </motion.div>
+
+      <Footer />
     </div>
   )
 }

@@ -35,6 +35,10 @@ const OtpForm = () => {
         setError('');
         setSuccess(false);
 
+        if (payload.otp?.length < 6) {
+            return toast.error('OTP must be complete!')
+        }
+
         try {
             const { data, error } = await verifyOtp(payload);
             if (error) {
@@ -131,8 +135,8 @@ const OtpForm = () => {
     };
 
     return (
-        <div className='flex flex-col gap-3 max-sm:w-[96vw] md:w-[400px] shadow-md p-3 rounded-md'>
-            <h1 className='text-center text-l font-[600px]'>Enter the OTP sent to your email below</h1>
+        <div className='flex flex-col gap-3 max-sm:w-[96vw] md:w-[400px] shadow-md p-4 py-6 rounded-2xl bg-card dark:bg-inherit'>
+            <h1 className='text-center text-sm text-muted-foreground py-2'>Enter the OTP sent to your email below. Cannot find it? Check your spam folder or click on {"\"Resend\""} below.</h1>
             <div className="flex justify-center mb-3 space-x-2">
                 {otp.map((data, index) => (
                     <input
@@ -161,7 +165,7 @@ const OtpForm = () => {
                     <Button
                         key={number}
                         onClick={() => handleKeypadClick(number.toString())}
-                        className="w-full h-10 text-xl border-2 dark:border-none bg-secondary rounded-full"
+                        className="w-full h-10 text-xl border-2 dark:border-none rounded-full"
                         variant={'secondary'}
                     >
                         {number}
@@ -175,10 +179,10 @@ const OtpForm = () => {
                     Clear
                 </Button>
             </div>
-            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-violet-700/20 hover:opacity-70'>
+            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-violet-700/20'>
                 {loading ? 'Verifying...' : 'Verify'}
             </Button>
-            <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20 hover:opacity-70 text-green-600 rounded-full h-10'>
+            <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20  text-green-600 rounded-full h-10'>
                 {resending ? 'Resending..' : 'Resend OTP'}
             </Button>
         </div>

@@ -4,6 +4,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { BarChart2Icon, CreditCardIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link'
+import Footer from '@/components/info/footer'
 
 const About = () => {
   const fadeIn = {
@@ -19,7 +20,7 @@ const About = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col gap-y-6 justify-between">
       <motion.div
         className="max-w-7xl mx-auto"
         initial="initial"
@@ -102,6 +103,8 @@ const About = () => {
           </Link>
         </motion.div>
       </motion.div>
+
+      <Footer />
     </div>
   )
 }

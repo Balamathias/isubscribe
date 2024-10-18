@@ -7,7 +7,7 @@ const Footer = () => {
         <div className='max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between'>
         <div className='flex items-center mb-4 md:mb-0'>
             <Logo />
-            <p className='ml-4 text-muted-foreground'>&copy; iSubscribe {new Date().getFullYear()}. All rights reserved.</p>
+            <p className='ml-4 text-muted-foreground'>&copy; isubscribe {new Date().getFullYear()}. All rights reserved.</p>
         </div>
         <div className='flex items-center space-x-4'>
             <a href="#" className='text-muted-foreground hover:text-primary transition-colors'>
