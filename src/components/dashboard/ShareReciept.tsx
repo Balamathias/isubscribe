@@ -19,16 +19,16 @@ const ShareReciept = ({freeData}: { freeData: string }) => {
         
         <div className=' flex flex-row gap-3 items-center w-full'>
         <Link href={`/dashboard/history/${historyId}`} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
-            <span className="text-green-600 p- rounded-full bg-green-600/20 p-1 md:p-2">
-            <Share2 size={15} />
+            <span className="text-green-600 p- rounded-full bg-green-600/20 w-8 h-8 flex items-center justify-center">
+              <Share2 size={15} />
             </span>
             <span className=' text-nowrap max-sm:text-sm'>Share Reciept</span>
         </Link>
         <Feedback 
           trigger={
             <button className=' hover:opacity-70 hover:transition-all ring-1 shadow-none border-none rounded-xl  flex flex-row gap-4 max-md:gap-2 items-center justify-center p-4 max-sm:p-2 w-full outline-none focus:outline-none'>
-                <span className="text-yellow-600 py- rounded-full bg-yellow-600/20 p-1.5 md:p-3">
-                <StarFilledIcon  />
+                <span className="text-yellow-600 py- rounded-full bg-yellow-600/20 w-8 h-8 flex items-center justify-center">
+                  <StarFilledIcon  />
                 </span>
                 <span className=' text-nowrap max-sm:text-sm'>Give Us a Star</span>
             </button>
