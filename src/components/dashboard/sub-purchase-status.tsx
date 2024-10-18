@@ -54,7 +54,7 @@ const SubPurchaseStatus = ({
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <ShareReciept freeData={formatDataAmount(dataBonus! * DATA_MB_PER_NAIRA)} rLink={"#"} sLink={"#"} />
+                            <ShareReciept freeData={formatDataAmount(dataBonus! * DATA_MB_PER_NAIRA)} />
                         </motion.div>
                     )
                 }

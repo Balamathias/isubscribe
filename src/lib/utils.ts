@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx"
+import { ReactNode } from "react"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -44,3 +45,6 @@ export function parseNigerianPhoneNumber(phoneNumber: string): string | null {
   }
 }
 
+export const dynamic = (a: ReactNode, b: ReactNode, c: boolean): ReactNode => {
+  return c ? a : b
+}

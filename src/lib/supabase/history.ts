@@ -43,7 +43,7 @@ export const insertTransactionHistory = async ({...rest}: Record<string, any>) =
         .insert({
             ...rest,
             user: user?.id!,
-        })
+        }).select('id').single()
 
     if (error) {
         throw error

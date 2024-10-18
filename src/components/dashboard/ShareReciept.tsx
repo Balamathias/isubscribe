@@ -4,8 +4,10 @@ import Link from 'next/link'
 import { Share2 } from 'lucide-react'
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import Feedback from './feedback'
+import { useNetwork } from '@/providers/data/sub-data-provider'
 
-const ShareReciept = ({freeData, rLink, sLink}:any) => {
+const ShareReciept = ({freeData}: { freeData: string }) => {
+  const { historyId } = useNetwork()
   return (
     <>
        <Card className='shadow-none bg-secondary/15 dark:bg-secondary/50 border-none rounded-xl  flex flex-row gap-4 p-2 items-center justify-between w-full '>
@@ -16,7 +18,7 @@ const ShareReciept = ({freeData, rLink, sLink}:any) => {
         <span className=' text-sm mb-[-4px] text-center animate-pulse'>Thank You for Choosing iSubscribe...</span>
         
         <div className=' flex flex-row gap-3 items-center w-full'>
-        <Link href={rLink} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
+        <Link href={`/dashboard/history/${historyId}`} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
             <span className="text-green-600 p- rounded-full bg-green-600/20 p-1 md:p-2">
             <Share2 size={15} />
             </span>

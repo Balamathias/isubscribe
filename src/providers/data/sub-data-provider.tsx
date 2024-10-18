@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react"
+import React, { useState } from "react"
 import { buyAirtime, buyData } from "@/lib/n3tdata"
 import { Tables } from "@/types/database"
 import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassAirtimePayload, VTPassDataPayload } from "@/types/networks"
@@ -47,6 +47,7 @@ const SubDatContext = React.createContext<{
     purchasing?:boolean,
     openConfirmPurchaseModal?: boolean,
     setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
+    historyId?: string | number
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
@@ -78,14 +79,19 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
     const [pinPasses, setPinPasses] = React.useState<boolean>(false)
+
     const [fundSufficient, setFundSufficient] = React.useState<boolean>(false)
     const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
     const [purchaseFailed, setPurchaseFailed] = React.useState(false)
+
     const [errorMessage, setErrorMessage] = React.useState<string>('')
     const [successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const [airtimeAmount, setAirtimeAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
+
     const [dataBonus, setDataBonus] = React.useState(0)
+    const [historyId, setHistoryId] = useState<string | number>('')
+
     const router = useRouter()
 
     const [purchasing, setPurchasing] = React.useState(false)
@@ -200,6 +206,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 provider: 'n3t'
             })
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+            setHistoryId(_insertHistory.id)
 
             router.refresh()
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
@@ -335,6 +342,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             router.refresh()
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            setHistoryId(_insertHistory.id)
             await saveCashbackHistory({amount: cashbackPrice})
 
             /** 
@@ -460,8 +468,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 provider: 'vtpass',
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
+            setHistoryId(_insertHistory.id)
 
-            
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
             await saveCashbackHistory({amount: cashbackPrice})
             
@@ -586,7 +594,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 provider: 'vtpass',
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
-
+            setHistoryId(_insertHistory.id)
             
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
             await saveCashbackHistory({amount: cashbackPrice})
@@ -628,6 +636,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             purchasing,
             openConfirmPurchaseModal,
             setOpenConfirmPurchaseModal,
+            historyId
         }}>
             { children }
 

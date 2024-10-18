@@ -18,15 +18,30 @@ const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
   const [open, setOpen] = useState(false)
 
   const handleRating = async () => {
+    
+    if (!rating) {
+      return toast.info('You have not rated us yet!')
+    }
+
+    if (!comment) {
+      return toast.info('Please post a comment to continue.')
+    }
+
     setStatus('pending')
+
     const response = await setUserRating(rating, comment)
+
     if (response?.data) {
+
       setStatus('success')
       setComment('')
       toast.success('Feedback posted successfully.')
+
     } else {
+
       toast.error('We could not post your comment at this time, please try again.')
       setStatus('failed')
+
     }
   }
 
