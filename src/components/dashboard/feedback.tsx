@@ -77,11 +77,11 @@ const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
             transition={{ type: 'spring', stiffness: 200, damping: 10 }}
             className='flex flex-col gap-y-4 items-center justify-center'
           >
-            <div className="flex items-center gap-x-3">
-              <h2 className='animate-pulse text-xl font-semibold py-2'>Rate us</h2>
+            <div className="flex items-center justify-center flex-col gap-x-3">
               <div className='w-10 h-10 flex items-center justify-center rounded-full bg-amber-600/20 text-amber-600'>
                 <LucideThumbsUp size={15} />
               </div>
+              <h2 className='animate-pulse text-xl font-semibold py-2'>Rate us</h2>
             </div>
             <StarRating onRate={(count) => setRating(count)} />
             <Textarea
