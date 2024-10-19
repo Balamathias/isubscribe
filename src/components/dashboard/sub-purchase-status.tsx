@@ -51,8 +51,9 @@ const SubPurchaseStatus = ({
             <LucideXCircle className="w-12 h-12" />
           </motion.div>
         ) : (
-          <motion.svg
-            className="w-12 h-12 text-lime-600 dark:text-lime-500"
+          <div className="h-12 w-12 rounded-full bg-lime-600/25 flex items-center justify-center">
+            <motion.svg
+            className="w-6 h-6 text-lime-600 dark:text-lime-500"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -68,8 +69,8 @@ const SubPurchaseStatus = ({
               strokeLinejoin="round"
               variants={iconVariants}
             />
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
           </motion.svg>
+          </div>
         )}
 
         <motion.h2
