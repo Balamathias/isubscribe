@@ -15,6 +15,7 @@ import DynamicSheet from '@/components/DynamicSheet'
 import DynamicModal from '@/components/DynamicModal'
 import Support from '../support'
 import { ModeToggle } from '@/components/mode-toggle'
+import ComingSoon from '../comig-soon'
 
 const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   const pathname = usePathname()
@@ -83,14 +84,17 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                     <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
                       <LucideSettings2 size={17} strokeWidth={1.5} className='' />
                     </span>
-                    <Link href={'#'}>Preferences</Link>
+                    <Link href={'/dashboard/settings'}>Preferences</Link>
                   </div>
 
                   <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
                     <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
                       <LucideShare2 size={17} strokeWidth={1.5} className='' />
                     </span>
-                    <Link href={'#'}>Share and earn</Link>
+                    <ComingSoon 
+                      trigger={<Link href={'#'}>Share and earn</Link>}
+                      message='We are working very hard to bring this feature to you. Very soon, you will be able to share and earn.'
+                    />
                   </div>
 
                 </div>

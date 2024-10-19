@@ -45,8 +45,9 @@ export const buyData = async (payload: Payload): Promise<{data: ResponseData | n
           console.log(res.statusText, res)
           
           if (!res.ok) {
-            console.error('Error fetching data')
-            return {data: null, status: res.status, OK: false, error: res.statusText}
+              const response = (await res.json()) as ResponseData
+              console.error(response)
+            return {data: response, status: res.status, OK: false, error: res.statusText}
         }
         const data = await res.json()
         console.log(data)

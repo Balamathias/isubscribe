@@ -14,6 +14,7 @@ import { useElectricity } from '@/providers/electricity/electricity-provider'
 import { electricServices } from '@/utils/constants/electricity-plans'
 import { useEducation } from '@/providers/education/education-provider'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
+import ComingSoon from '../comig-soon'
 
 export const tvProducts = {
     'dstv': {
@@ -141,26 +142,18 @@ const ConfirmPurchaseModal = ({
                 />
             </div>
             
-            {wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00')  ? 
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Fund wallet to proceed</Button>
-
-            :
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Proceed</Button>
-
-            }
+            <ComingSoon
+                trigger={
+                    <Button 
+                        className='w-full rounded-xl' 
+                        size={'lg'}
+                        disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00') }
+                        // onClick={() => {
+                        //     setProceed(true)
+                        // }}
+                    >Proceed</Button>
+                }
+            />
         </div>
     </DynamicModal>
   )

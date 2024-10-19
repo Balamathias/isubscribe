@@ -85,7 +85,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const [purchaseFailed, setPurchaseFailed] = React.useState(false)
 
     const [errorMessage, setErrorMessage] = React.useState<string>('')
-    const [successMessage, setSuccessMessage] = React.useState<string>('')
+    const [_successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const [airtimeAmount, setAirtimeAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
 
@@ -120,12 +120,14 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         setPurchasing(true)
 
         const { data, error } = await buyData({
-            "request-id": `Data_${nanoid(24)}`,
+            "request-id": `Data_${generateRequestId()}`,
             bypass: false,
             data_plan: payload.Plan_ID,
             network: networkId,
             phone: mobileNumber
         })
+
+        console.error(data)
 
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
@@ -142,6 +144,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 planType: data?.plan_type!,
                 phone: mobileNumber,
                 status: 'failed',
+                transaction_id: data?.["request-id"]
             }
             
             const { data: _insertHistory } = await insertTransactionHistory({
@@ -149,17 +152,25 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 status: 'failed',
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
-                email: null,
                 meta_data: JSON.stringify(meta_data),
-                updated_at: null,
                 user: profile?.id!,
                 amount: price,
-                provider: 'n3t'
+                provider: 'n3t',
+                request_id: data?.['request-id']
             })
 
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
+
+            const match = data?.message?.includes('Insufficient')
+
+            console.log(match)
+
+            if (match) {
+                return setErrorMessage('This service provider is temporarily unavailable, please try again later.')
+            }
+
             setErrorMessage(data?.message ?? 'Data subscription failed. Please try again.')
 
             router.refresh()
@@ -190,7 +201,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 description: data?.message,
                 planType: data?.plan_type,
                 phone: mobileNumber,
-                status: 'success'
+                status: 'success',
+                transaction_id: data?.["request-id"]
             }
 
             const { data: _insertHistory } = await insertTransactionHistory({
@@ -584,7 +596,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             const { data: _insertHistory } = await insertTransactionHistory({
                 description: `Airtime subscription topped-up for ${mobileNumber} successfully.`,
                 status: 'success',
-                title: 'Airtime Subscription Success.',
+                title: 'Airtime Subscription.',
                 type: EVENT_TYPE.data_topup,
                 email: null,
                 meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),

@@ -2,16 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { PaymentMethod } from '@/types/networks'
-import { Coins } from 'lucide-react'
-import React, { useState } from 'react'
+import React from 'react'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { toast } from 'sonner'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
-import CustomInput from '../CustomInput'
 import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 import { useEducation } from '@/providers/education/education-provider'
 

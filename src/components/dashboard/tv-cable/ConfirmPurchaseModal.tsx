@@ -11,6 +11,7 @@ import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider'
 import { SubTvPayload } from '@/types/tv-cable'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
+import ComingSoon from '../comig-soon'
 
 export const tvProducts = {
     'dstv': {
@@ -135,26 +136,18 @@ const ConfirmPurchaseModal = ({
                 />
             </div>
             
-            {wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00')  ? 
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Fund wallet to proceed</Button>
-
-            :
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00') }
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Proceed</Button>
-
-            }
+            <ComingSoon 
+                trigger={
+                    <Button 
+                        className='w-full rounded-xl' 
+                        size={'lg'}
+                        disabled={wallet?.data?.balance! < priceToInteger(selected?.variation_amount || '0.00') }
+                        // onClick={() => {
+                        //     setProceed(true)
+                        // }}
+                    >Proceed</Button>
+                }
+            />
         </div>
     </DynamicModal>
   )

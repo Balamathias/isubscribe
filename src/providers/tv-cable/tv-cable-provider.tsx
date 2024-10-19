@@ -153,7 +153,7 @@ const TvCableProvider = ({ children, profile, action='tv-cable' }: SubTvProvider
 
       router.refresh()
       setOpenConfirmPurchaseModal(false)
-      return
+      return toast.error('Transaction attempt failed! Please try again.')
   }
 
 

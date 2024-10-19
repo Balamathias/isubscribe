@@ -13,6 +13,7 @@ import { SubTvPayload } from '@/types/tv-cable'
 import { useElectricity } from '@/providers/electricity/electricity-provider'
 import { electricServices } from '@/utils/constants/electricity-plans'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
+import ComingSoon from '../comig-soon'
 
 export const tvProducts = {
     'dstv': {
@@ -70,7 +71,7 @@ const ConfirmPurchaseModal = ({
          
         <LoadingSpinner isPending={purchasing} />
         <div className="flex flex-col gap-y-2.5">
-            <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700">{title ? title : 'Electricity Plan Details'}</h1>
+            <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-500 py-3">{title ? title : 'Electricity Plan Details'}</h1>
             
             <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-secondary text-xs md:text-sm'>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
@@ -131,26 +132,18 @@ const ConfirmPurchaseModal = ({
                 />
             </div>
             
-            {wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00')  ? 
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Fund wallet to proceed</Button>
-
-            :
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Proceed</Button>
-
-            }
+            <ComingSoon 
+                trigger={
+                    <Button 
+                        className='w-full rounded-xl' 
+                        size={'lg'}
+                        disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
+                        // onClick={() => {
+                        //     setProceed(true)
+                        // }}
+                    >Proceed</Button>
+                }
+            />
         </div>
     </DynamicModal>
   )

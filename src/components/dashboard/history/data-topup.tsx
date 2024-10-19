@@ -53,7 +53,7 @@ export default function DataTopup ({data, history}: DataTopupProps) {
                     <div className='flex items-start justify-between'>
                         <p className='text-muted-foreground basis-2/3'>Transaction ID</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                            <p>{data?.transId}</p>
+                            <p>{history?.id}</p>
                         </div>
                     </div>
 
