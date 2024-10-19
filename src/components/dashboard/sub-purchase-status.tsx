@@ -75,11 +75,7 @@ const SubPurchaseStatus = ({
 
         <motion.h2
           className={cn(
-            "text-lg font-semibold text-center",
-            failed
-              ? "text-red-600 dark:text-red-500"
-              : "text-green-600 dark:text-green-500"
-          )}
+            "text-lg font-semibold text-center",)}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
