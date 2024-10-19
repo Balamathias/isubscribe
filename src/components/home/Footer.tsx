@@ -12,7 +12,7 @@ const Footer = async () => {
       {
         user ? (
           <>
-            <Button asChild className='rounded-full w-fit float-left' variant={'secondary'} >
+            <Button asChild className='rounded-full w-fit float-left ring-1' variant={'secondary'} >
               <Link href={"/dashboard"}>Go to dashboard</Link>
             </Button>
           </>
