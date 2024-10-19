@@ -46,7 +46,7 @@ const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="p-6 rounded-lg shadow-lg"
+        className="sm:p-6"
       >
         {status === 'success' ? (
           <motion.div
