@@ -90,6 +90,10 @@ const ConfirmPurchaseModal = ({
                 </div>
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
+                    <p className='font-semibold text-muted-foreground'>Name</p>
+                    <p>{selected?.name }</p>
+                </div>
+                <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Decoder Number</p>
                     <p>{smartcardNumber}</p>
                 </div>
