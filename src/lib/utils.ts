@@ -48,3 +48,27 @@ export function parseNigerianPhoneNumber(phoneNumber: string): string | null {
 export const dynamic = (a: ReactNode, b: ReactNode, c: boolean): ReactNode => {
   return c ? a : b
 }
+
+export function getGreeting(name: string): string {
+  const now = new Date();
+  const hours = now.getHours();
+  const day = now.getDate();
+  const month = now.getMonth();
+
+  if (month === 11 && day === 25) {
+      return `Merry Christmas, ${name}!`;
+  }
+  if (month === 0 && day === 1) {
+      return `Happy New Year, ${name}!`;
+  }
+
+  if (hours >= 5 && hours < 12) {
+      return `Good morning, ${name}!`;
+  } else if (hours >= 12 && hours < 17) {
+      return `Good afternoon, ${name}!`;
+  } else if (hours >= 17 && hours < 21) {
+      return `Good evening, ${name}!`;
+  } else {
+      return `Good day, ${name}!`;
+  }
+}

@@ -51,9 +51,9 @@ const SubPurchaseStatus = ({
             <LucideXCircle className="w-12 h-12" />
           </motion.div>
         ) : (
-          <div className="h-12 w-12 rounded-full bg-lime-600/25 flex items-center justify-center">
+          <div className="h-12 w-12 rounded-full bg-green-600/25 flex items-center justify-center">
             <motion.svg
-            className="w-6 h-6 text-lime-600 dark:text-lime-500"
+            className="w-6 h-6 text-green-600 dark:text-green-500"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ const SubPurchaseStatus = ({
             "text-lg font-semibold text-center",
             failed
               ? "text-red-600 dark:text-red-500"
-              : "text-lime-600 dark:text-lime-500"
+              : "text-green-600 dark:text-green-500"
           )}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

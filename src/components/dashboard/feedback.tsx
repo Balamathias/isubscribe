@@ -7,7 +7,7 @@ import { Textarea } from '../ui/textarea'
 import { Button } from '../ui/button'
 import { setUserRating } from '@/lib/supabase/user.actions'
 import { toast } from 'sonner'
-import { LucideCheck } from 'lucide-react'
+import { LucideCheck, LucideThumbsUp } from 'lucide-react'
 
 const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
   const [rating, setRating] = useState(0)
@@ -54,7 +54,7 @@ const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
       {
         status === 'success' ? (
           <div className='flex flex-col gap-y-3 justify-center items-center text-center'>
-            <div className='w-12 h-12 flex items-center justify-center rounded-full bg-green-600/20 text-green-600'>
+            <div className='w-12 h-12 flex items-center justify-center rounded-full bg-amber-600/20 text-amber-600'>
               <LucideCheck />
             </div>
 
@@ -68,7 +68,12 @@ const Feedback = ({ trigger }: { trigger: React.ReactNode }) => {
           </div>
         ): (
           <div className='flex flex-col gap-y-4 items-center justify-center'>
-            <h2 className='animate-pulse text-xl font-semibold py-2'>Rate us</h2>
+            <div className="flex items-center gap-x-3">
+              <h2 className='animate-pulse text-xl font-semibold py-2'>Rate us</h2>
+              <div className='w-10 h-10 flex items-center justify-center rounded-full bg-amber-600/20 text-amber-600'>
+                <LucideThumbsUp size={15} />
+              </div>
+            </div>
             <StarRating onRate={(count) => setRating(count)} />
 
             <Textarea 

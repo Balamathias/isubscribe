@@ -3,7 +3,7 @@
 import React, { ReactNode, useState } from 'react';
 import { motion } from 'framer-motion';
 import DynamicModal from '../DynamicModal';
-import { LucideX } from 'lucide-react';
+import { LucideX, SmileIcon } from 'lucide-react';
 
 const ComingSoon = ({ trigger, message }: { trigger: ReactNode, message?: string }) => {
     const [open, setOpen] = useState(false)
@@ -54,20 +54,7 @@ const ComingSoon = ({ trigger, message }: { trigger: ReactNode, message?: string
 
 const ComingSoonIcon: React.FC = () => {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-12 h-12"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 8c.556 0 1.091-.178 1.534-.504m1.876 2.47A3.992 3.992 0 0112 12a3.992 3.992 0 01-2.876-6.534m-2.47-1.876A4 4 0 118 12a3.992 3.992 0 01-6.534 2.876m10.67-7.44a4 4 0 1110.674 4.588m-2.47-1.876a3.992 3.992 0 01-4.588 10.674m2.47-1.876a4 4 0 11-4.588-10.674"
-      />
-    </svg>
+    <SmileIcon />
   );
 };
 

@@ -16,13 +16,18 @@ import DynamicModal from '@/components/DynamicModal'
 import Support from '../support'
 import { ModeToggle } from '@/components/mode-toggle'
 import ComingSoon from '../comig-soon'
+import { getGreeting } from '@/lib/utils'
 
 const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
   const pathname = usePathname()
   const { data: profile, isPending } = useGetProfile()
   const [openSupport, setOpenSupport] = useState(false)
+  const [openProfileActions, setOpenProfileActions] = useState(false)
 
-  useEffect(() => { setOpenSupport(false) }, [pathname])
+  useEffect(() => { 
+    setOpenSupport(false)
+    setOpenProfileActions(false)
+  }, [pathname])
 
   if (isPending) return <LoadingOverlay />
 
@@ -54,10 +59,12 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
 
           <>
             <DynamicModal
+              open={openProfileActions}
+              setOpen={setOpenProfileActions}
               trigger = {
                 <Link passHref href={'#'} 
                   className='cursor-pointer hover:opacity-80 flex items-center gap-x-1'>
-                  <span className='text-muted-foreground text-xs hidden md:block'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></span>
+                  <span className='text-muted-foreground text-xs hidden md:block'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name?.split(' ')?.at(0)}</span>!</span>
                   <Avatar title={data?.full_name ?? ''}>
                     <AvatarImage src={data?.avatar!}/>
                     <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
@@ -73,8 +80,8 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                     <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
                   </Avatar>
                   <div className='flex flex-col space-y-1'>
-                    <p className='text-muted-foreground text-sm'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name}</span></p>
-                    <p className='text-muted-foreground text-xs'>What do you wish to do today?</p>
+                    <p className='text-muted-foreground text-xs hidden md:block'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name?.split(' ')?.at(0)}</span>!</p>
+                    <p className='text-muted-foreground text-sm'>{getGreeting(data?.full_name?.split(' ')?.at(0) ?? '')}, What&#39;s up?</p>
                   </div>
                 </Link>
 
