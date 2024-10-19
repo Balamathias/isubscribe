@@ -10,8 +10,8 @@ const ShareReciept = ({freeData}: { freeData: string, sLink?: string, rLink?: st
   const { historyId } = useNetwork()
   return (
     <>
-       <Card className='shadow-none bg-secondary/15 dark:bg-secondary/50 border-none rounded-xl  flex flex-row gap-4 p-2 items-center justify-between w-full '>
-            <span>Bonus Earned:</span>
+       <Card className='shadow-none bg-secondary/15 dark:bg-secondary/50 border-none rounded-xl  flex flex-row gap-4 p-2 items-center justify-center w-full text-center'>
+            {/* <span>Bonus Earned:</span> */}
             <span> <strong className=' text-sm text-green-600'>+</strong>{freeData} Data Bonus</span>
         </Card>
 
@@ -19,7 +19,7 @@ const ShareReciept = ({freeData}: { freeData: string, sLink?: string, rLink?: st
         
         <div className=' flex flex-row gap-3 items-center w-full'>
         <Link href={`/dashboard/history/${historyId}`} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
-            <span className="text-green-600 p- rounded-full bg-green-600/20 w-8 h-8 flex items-center justify-center">
+            <span className="text-green-600 rounded-full bg-green-600/20 w-8 h-8 flex items-center justify-center">
               <Share2 size={15} />
             </span>
             <span className=' text-nowrap max-sm:text-sm'>Share Reciept</span>
