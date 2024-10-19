@@ -81,7 +81,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                   </Avatar>
                   <div className='flex flex-col space-y-1'>
                     <p className='text-muted-foreground text-xs hidden md:block'>Hi <span className="font-semibold dark:text-amber-500/90">{data?.full_name?.split(' ')?.at(0)}</span>!</p>
-                    <p className='text-muted-foreground text-sm'>{getGreeting(data?.full_name?.split(' ')?.at(0) ?? '')}, What&#39;s up?</p>
+                    <p className='text-muted-foreground text-sm'>{getGreeting(data?.full_name?.split(' ')?.at(0) ?? '')}</p>
                   </div>
                 </Link>
 
