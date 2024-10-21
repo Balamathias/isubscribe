@@ -1,10 +1,9 @@
 'use client'
 
-import { airtelData, etisalatData, gloData, mtnData } from '@/utils/constants/vtp/data-plans'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import { PaymentMethod, VTPassDataPayload } from '@/types/networks'
 import { VTPassServiceIds } from '@/utils/networks'
-import React, { lazy, Suspense, useMemo, useState } from 'react'
+import React, { lazy, Suspense, useState } from 'react'
 import { toast } from 'sonner'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
@@ -14,31 +13,20 @@ import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
 import SimpleLoader from '@/components/loaders/simple-loader'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 const ConfirmDataPurchaseModal = lazy(() => import('./ConfirmDataPurchaseModal'))
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {
 
     const services = useServices()
-        
-    // const object = useMemo(() => {
-    //     // return {
-    //     //     'mtn': mtnData?.[type],
-    //     //     'glo': gloData?.[type],
-    //     //     'airtel': airtelData?.[type],
-    //     //     '9mobile': etisalatData?.[type]
-    //     // }
-
-    //     return services
-    // }, [type])
 
   const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
 
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
     const { data: profile, isPending: profilePending } = useGetProfile()
     const searchParams = useSearchParams()
-    const isClaim = searchParams.get('action') === 'claim'
+    const isClaim = searchParams.get('action') === 'claim' 
 
     const [proceed, setProceed] = React.useState(false)
 

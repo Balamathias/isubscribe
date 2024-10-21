@@ -19,7 +19,7 @@ interface ClaimBonusModalProps {
 
 const ClaimBonusModal = ({ open, setOpen, trigger, wallet }: ClaimBonusModalProps) => {
   return (
-    <DynamicModal open={open} setOpen={setOpen} trigger={trigger} dialogOnly>
+    <DynamicModal open={open} setOpen={setOpen} trigger={trigger}>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

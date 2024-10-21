@@ -5,8 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
-// import DataNetworkCard from './DataNetworkCard'
-// import DailyData from './DailyData'
 import { useDebounce } from 'use-debounce'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
@@ -27,36 +25,6 @@ const tabs = [
         value: 'regular',
         component: <DailyData />
     },
-    // {
-    //     name: 'Night',
-    //     value: 'night',
-    //     component: <DailyData type='night' />
-    // },
-    // {
-    //     name: 'Weekend',
-    //     value: 'weekend',
-    //     component: <DailyData type='weekend' />
-    // },
-    // {
-    //     name: 'Weekly',
-    //     value: 'weekly',
-    //     component: <DailyData type='weekly' />
-    // },
-    // {
-    //     name: 'Monthly',
-    //     value: 'monthly',
-    //     component: <DailyData type='monthly' />
-    // },
-    // {
-    //     name: 'Social',
-    //     value: 'social',
-    //     component: <DailyData type={'social' as any} />
-    // },
-    // {
-    //     name: 'Special',
-    //     value: 'special',
-    //     component: <DailyData type='special' />
-    // },
 ]
 
 const DataTabs = () => {

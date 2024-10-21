@@ -1,17 +1,9 @@
-import { Card } from '@/components/ui/card'
-import { formatDateTime } from '@/funcs/formatDate'
-import { cn } from '@/lib/utils'
-import { AirtimeDataMetadata } from '@/types/airtime-data'
-import { Networks } from '@/types/networks'
-import { EVENT_TYPE } from '@/utils/constants/EVENTS'
-import { product } from '@/utils/constants/product'
 import { createClient } from '@/utils/supabase/server'
-import { LucideCheck, LucideX } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import HistoryItem from './history-item'
 import Empty from '../Empty'
+import { Info } from 'lucide-react'
 
 const RecentTransactions = async () => {
     const supabase = createClient()
@@ -37,7 +29,9 @@ const RecentTransactions = async () => {
                     data?.length === 0 ? (
                     <Empty 
                         title='No recent Transactions.'
-                        content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by buying Airtime or Data bundle(s),'}
+                        content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by funding your wallet above so you can buy Airtime or Data bundle(s).'}
+                        color='blue'
+                        icon={<Info />}
                     />) : data?.map(item => (
                         <HistoryItem 
                             key={item.id}
