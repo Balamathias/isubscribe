@@ -15,10 +15,12 @@ import { Button } from '../ui/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { QueryKeys } from '@/lib/react-query/query-keys';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import useVibration from '@/hooks/use-vibration';
 
 const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void, className?: string, update?: boolean }) => {
 
     const { data: profile, isPending: gettingProfile } = useGetProfile()
+    const vibrate = useVibration()
 
     const [pin, setPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
@@ -84,6 +86,7 @@ const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void,
           handleSubmit();
         } else {
           setError('PINs do not match. Try again.');
+          vibrate('failure')
           setPin('');
           setConfirmPin('');
           setIsConfirming(false);
