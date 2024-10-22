@@ -215,7 +215,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 updated_at: null,
                 user: profile?.id!,
                 amount: price,
-                provider: 'n3t'
+                provider: 'n3t',
             })
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
             setHistoryId(_insertHistory.id)
@@ -387,7 +387,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             payload: {
                 price: (payload.amount as number),
                 cashback: (payload.cashback as number),
-                method
+                method,
+                interest: payload?.interest
             },
             wallet: wallet!
         })

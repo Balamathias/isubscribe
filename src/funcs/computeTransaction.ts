@@ -6,11 +6,13 @@ export const computeTransaction = ({
     payload,
     wallet,
 }: {
-    payload: { method?: PaymentMethod, price: number, cashback: number },
+    payload: { method?: PaymentMethod, price: number, cashback: number, interest?: number },
     wallet: Tables<'wallet'>
 }) => {
         const price = (payload.price)
         const cashbackPrice = (payload.cashback!)
+
+        const commission: number = (payload?.interest ?? 0) - cashbackPrice
 
         if (!wallet?.balance) {
             toast.info("Insufficient wallet balance, please fund your wallet!")
@@ -38,5 +40,12 @@ export const computeTransaction = ({
             return
         }
         
-        return { balance, cashbackBalance, cashbackPrice, deductableAmount, price }
+        return { 
+            balance, 
+            cashbackBalance, 
+            cashbackPrice, 
+            deductableAmount,
+            price, 
+            commission: commission < 0 ? 0 : commission
+        }
 }
