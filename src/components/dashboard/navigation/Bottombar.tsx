@@ -10,7 +10,7 @@ const Bottombar = () => {
     const pathname = usePathname()
 
   return (
-    <nav className="h-16 bg-white dark:bg-secondary backdrop-blur-md shadow-md md:hidden max-lg:py-1 py-5 max-lg:px-4 px-9 sticky max-md:fixed bottom-0 w-full flex flex-row items-center justify-between z-30 border-t">
+    <nav className="h-16 bg-white/80 dark:bg-secondary/80 backdrop-blur-md shadow-md md:hidden max-lg:py-1 py-5 max-lg:px-4 px-9 sticky max-md:fixed bottom-0 w-full flex flex-row items-center justify-between z-30 border-t">
       {
          navLinks.map((link, idx) => (
             <div key={idx} className=' flex flex-row gap-4'>

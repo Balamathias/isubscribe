@@ -14,6 +14,8 @@ import { useServices } from '@/lib/react-query/funcs/data'
 import SimpleLoader from '@/components/loaders/simple-loader'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { useSearchParams } from 'next/navigation'
+import DataNetworkCardSkeleton from '@/components/skeletons/data-network-cards-skeleton'
+import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
 const ConfirmDataPurchaseModal = lazy(() => import('./ConfirmDataPurchaseModal'))
     
@@ -33,7 +35,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
 
     if (profilePending || services.isLoading) return (
-        <SimpleLoader />
+        <NetworkCardSkeleton />
     )
 
     console.log(services);

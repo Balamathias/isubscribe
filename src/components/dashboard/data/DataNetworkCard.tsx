@@ -16,6 +16,7 @@ import LoadingSpinner from '@/components/loaders/LoadingSpinner';
 import SimpleLoader from '@/components/loaders/simple-loader';
 import { useWallet } from '@/hooks/use-wallet';
 import { useSearchParams } from 'next/navigation';
+import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton';
 
 const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
@@ -42,7 +43,7 @@ const DataNetworkCard = () => {
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
 
     if (isLoading || profilePending) return (
-        <SimpleLoader />
+        <NetworkCardSkeleton />
     )
 
   return (
