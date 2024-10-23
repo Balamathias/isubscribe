@@ -9,7 +9,7 @@ import { useDebounce } from 'use-debounce'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
 import DataTabsSkeleton from '@/components/skeletons/data-tabs'
-import SimpleLoader from '@/components/loaders/simple-loader'
+import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -32,18 +32,16 @@ const DataTabs = () => {
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { data: profile, isPending } = useGetProfile()
 
-    const [debouncedNumber] = useDebounce(mobileNumber, 4000)
-
-    // const handleVerifyNumber = useCallback([mobileNumber, setCurrentNetwork])
-
-    useEffect(() => {
-        async () => {
-            if (mobileNumber.length === 11) {
-                const res = await verifyNumber(mobileNumber)
-                if (res) setCurrentNetwork(res)
-            }
+    const handleVerifyNumber = useCallback(async () => {
+        if (mobileNumber.length === 11) {
+            const res = await verifyNumber(mobileNumber)
+            if (res) setCurrentNetwork(res)
         }
     }, [mobileNumber, setCurrentNetwork])
+
+    useEffect(() => {
+        handleVerifyNumber()
+    }, [mobileNumber, handleVerifyNumber])
 
     const handleNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setMobileNumber(e.target.value)
@@ -56,7 +54,7 @@ const DataTabs = () => {
             className="p-4 bg-white dark:bg-card/70 rounded-xl flex flex-col gap-y-2.5 shadow-none"
         >
             <h2 className='text-muted-foreground text-lg font-semibold'>{tabs[activeTabIndex].name}</h2>
-            <Suspense fallback={<SimpleLoader />}>
+            <Suspense fallback={<NetworkCardSkeleton />}>
               {tabs[activeTabIndex].component}
             </Suspense>
         </TabsContent>

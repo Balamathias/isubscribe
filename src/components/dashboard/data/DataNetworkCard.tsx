@@ -13,7 +13,6 @@ import { product } from '@/utils/constants/product';
 import { useGetProfile } from '@/lib/react-query/funcs/user';
 import NetworkCardItem from './NetworkCardItem';
 import LoadingSpinner from '@/components/loaders/LoadingSpinner';
-import SimpleLoader from '@/components/loaders/simple-loader';
 import { useWallet } from '@/hooks/use-wallet';
 import { useSearchParams } from 'next/navigation';
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton';
@@ -79,7 +78,7 @@ const DataNetworkCard = () => {
                 <div className="flex flex-col gap-y-2.5 w-full">
                     
                 {selected && (
-                        <Suspense fallback={<SimpleLoader />}>
+                        <Suspense fallback={<NetworkCardSkeleton />}>
                             <ConfirmProductInfo 
                                 cashBack={priceToInteger(selected.CashBack || '0.00')}
                                 currentNetwork={currentNetwork}
