@@ -16,6 +16,7 @@ import LoadingSpinner from '@/components/loaders/LoadingSpinner';
 import { useWallet } from '@/hooks/use-wallet';
 import { useSearchParams } from 'next/navigation';
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton';
+import SimpleLoader from '@/components/loaders/simple-loader';
 
 const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
@@ -78,7 +79,7 @@ const DataNetworkCard = () => {
                 <div className="flex flex-col gap-y-2.5 w-full">
                     
                 {selected && (
-                        <Suspense fallback={<NetworkCardSkeleton />}>
+                        <Suspense fallback={<SimpleLoader />}>
                             <ConfirmProductInfo 
                                 cashBack={priceToInteger(selected.CashBack || '0.00')}
                                 currentNetwork={currentNetwork}
