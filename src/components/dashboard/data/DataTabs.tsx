@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
-import { useDebounce } from 'use-debounce'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
 import DataTabsSkeleton from '@/components/skeletons/data-tabs'
@@ -72,7 +71,6 @@ const DataTabs = () => {
                         value={mobileNumber}
                         defaultValue={profile?.data?.phone || ''}
                         onChange={handleNumberChange}
-                        // onKeyDown={handleVerifyNumber}
                         name='phone'
                     />
                 </div>

@@ -20,7 +20,7 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
     <WidthWrapper className='flex flex-col space-y-2.5 sm:space-y-4 !max-w-3xl md:py-12 mt-16 max-sm:mt-8'>
 
       <div className='flex flex-col space-y-1 md:hidden'>
-        <h2 className='text-muted-foreground text-lg'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name?.split(' ')?.at(0)}</span>,</h2>
+        <h2 className='text-muted-foreground text-lg'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name?.split(' ')?.at(0)}</span>.</h2>
         <p className='text-muted-foreground text-base'>What would you like to subscribe today?</p>
       </div>
 
