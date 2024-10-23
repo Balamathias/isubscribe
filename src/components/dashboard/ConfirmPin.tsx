@@ -69,8 +69,8 @@ const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { classNam
             setIsPending(false)
         } catch (error: any) {
           setIsPending(false)
-          setError(error?.message)
-          toast.error(error?.message)
+          setError('Internal server error, please refresh and try again.')
+          toast.error('Internal server error, please refresh and try again.')
           console.log(error)
           vibrate('failure')
         } finally { setIsPending(false) }

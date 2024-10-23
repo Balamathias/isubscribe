@@ -395,7 +395,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         if (!values) return
 
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
         setDataBonus(cashbackPrice)
 
         setPurchasing(true)
@@ -410,7 +410,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             description: '',
             planType: null,
             phone: mobileNumber,
-            status: 'success'
+            status: 'success',
+            commission: commission
         }
 
         const res = await buyVTPassData({
@@ -479,6 +480,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 user: profile?.id!,
                 amount: price,
                 provider: 'vtpass',
+                commission: commission
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
             setHistoryId(_insertHistory.id)

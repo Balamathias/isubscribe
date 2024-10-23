@@ -9,5 +9,6 @@ export interface AirtimeDataMetadata {
     planType: string | null
     phone: string | null
     status: string | null,
-    transaction_id?: string
+    transaction_id?: string,
+    commission?: number | null
 }

@@ -44,14 +44,14 @@ interface RawVariation {
       }
   
       const unitPrice = parseFloat(plan.variation_amount);
-      const unitCashback = unitPrice * 0.025;
+      const unitCashback = unitPrice * 0.004;
       const interest = 0.04 * unitPrice;
   
       return {
         planId: plan.variation_code,
         dataQty: dataQty,
         duration: duration === 'Unknown' ? "24 hrs" : duration,
-        unitPrice: unitPrice > 500 ? unitPrice + interest : unitPrice,
+        unitPrice: Math.round(unitPrice > 500 ? unitPrice + interest : unitPrice),
         unitCashback: unitCashback,
         network: network,
         interest: interest

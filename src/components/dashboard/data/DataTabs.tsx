@@ -15,8 +15,8 @@ const DailyData = lazy(() => import('./DailyData'))
 
 const tabs = [
     {
-        name: 'Hot',
-        value: 'hot',
+        name: 'Awoof',
+        value: 'awoof',
         component: <DataNetworkCard />
     },
     {
@@ -75,7 +75,7 @@ const DataTabs = () => {
                     />
                 </div>
             </div>
-            <Tabs defaultValue="hot" className="space-y-6">
+            <Tabs defaultValue="awoof" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2 gap-2 rounded-xl shadow-none border-none p-2 py-4 h-fit bg-transparent">
                     {tabs.map((tab, index) => (
                         <TabsTrigger 
@@ -83,7 +83,6 @@ const DataTabs = () => {
                             value={tab.value} 
                             className={`w-full h-9 md:text-lg text-xs data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring data-  rounded-full`}
                             onClick={() => setActiveTabIndex(index)}
-                            hidden={tab.name === 'Special'}
                         >
                             {tab.name}
                         </TabsTrigger>

@@ -8,20 +8,29 @@ import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import AirtimeCards from './airtime-cards-v2'
+import { useCallback, useEffect } from 'react'
+
+
 const AirtimeContent = () => {
 
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { data: profile, isPending } = useGetProfile()
 
-    const className = `w-full h-9 md:text-lg text-xs rounded-none data-[state=active]:bg-background peer-hover:opacity-90 data-[state=active]:text-violet-800 data-[state=active]:border-b-2 md:data-[state=active]:border-b-4 data-[state=active]:border-violet-600 data-[state=active]:shadow-none bg-gray-50/80 rounded-md`
 
-    const handleVerifyNumber = async () => {
+    const handleVerifyNumber = useCallback(async () => {
         if (mobileNumber.length === 11) {
             const res = await verifyNumber(mobileNumber)
-            if (!res) return
-            setCurrentNetwork(res)
+            if (res) setCurrentNetwork(res)
         }
-    }
+    }, [mobileNumber, setCurrentNetwork])
+
+    useEffect(() => {
+        handleVerifyNumber()
+    }, [mobileNumber, handleVerifyNumber])
+
+    const handleNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setMobileNumber(e.target.value)
+    }, [setMobileNumber])
 
     if (isPending) return <LoadingOverlay />
 
@@ -35,12 +44,7 @@ const AirtimeContent = () => {
                     className='focus-within:outline h-12 bg-white dark:bg-secondary dark:border dark:border-muted-foreground items-center focus:ring-0 dark:focus:ring-1 dark:focus:ring-amber-500 focus-within:ring-0 rounded-lg border-none shadow-none drop-shadow-none'
                     value={mobileNumber}
                     defaultValue={profile?.data?.phone || ''}
-                    onChange={ async (e) => {
-                        setMobileNumber(e.target.value)
-                    }}
-                    onKeyDown={async (e) => {
-                        await handleVerifyNumber()
-                    }}
+                    onChange={handleNumberChange}
                     name='phone'
                 />
             </div>

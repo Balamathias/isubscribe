@@ -11,10 +11,8 @@ import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
 import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
-import SimpleLoader from '@/components/loaders/simple-loader'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { useSearchParams } from 'next/navigation'
-import DataNetworkCardSkeleton from '@/components/skeletons/data-network-cards-skeleton'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
 const ConfirmDataPurchaseModal = lazy(() => import('./ConfirmDataPurchaseModal'))
@@ -37,8 +35,6 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
     if (profilePending || services.isLoading) return (
         <NetworkCardSkeleton />
     )
-
-    console.log(services);
 
     if (!services[currentNetwork] || !services[currentNetwork]?.length) {
         return (
@@ -69,6 +65,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                             variation_code: d.planId,
                             amount: d.unitPrice,
                             cashback: d.unitCashback,
+                            interest: d?.interest,
                             detail: {
                                 dataAmount: d.unitPrice,
                                 dataQty: d.dataQty,
