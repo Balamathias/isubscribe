@@ -19,7 +19,7 @@ const Error = ({ reset }: { reset: () => any }) => {
           </div>
           <h2 className='text-xl md:text-2xl font-semibold text-red-600'>Oops! Something went wrong.</h2>
           <p className='text-muted-foreground'>We encountered an unexpected error. Please try again later or return to the homepage.</p>
-          <Button onClick={reset} className='py-2 px-6 mt-3 flex items-center justify-center rounded-full bg-violet-600/20 text-violet-600 hover:bg-violet-700 focus:outline-none'>
+          <Button onClick={reset} variant='ghost' className='py-2 px-6 mt-3 flex items-center justify-center rounded-full bg-violet-600/20 text-violet-600 hover:bg-violet-700 focus:outline-none'>
               Go to Homepage
           </Button>
         </div>
