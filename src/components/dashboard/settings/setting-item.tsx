@@ -13,13 +13,14 @@ interface SettingItemProp {
   className?: string,
   iconClassName?: string,
   title: string,
+  indicator?: React.ReactNode,
   description: string,
   biometric?: {
     isEnabled?: boolean
   }
 }
 
-const SettingItem = ({ icon: Icon, className, iconClassName, onClick, biometric, description, title }: SettingItemProp) => {
+const SettingItem = ({ icon: Icon, className, iconClassName, onClick, biometric, description, title, indicator }: SettingItemProp) => {
   return (
     <motion.button
       className={cn("w-full p-6 bg-card/70 rounded-xl shadow-sm hover:shadow-md transition-shadow", className)}
@@ -48,12 +49,7 @@ const SettingItem = ({ icon: Icon, className, iconClassName, onClick, biometric,
             { description }
           </p>
         </div>
-        <motion.div
-          animate={biometric?.isEnabled ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="w-3 h-3 bg-green-500 rounded-full" />
-        </motion.div>
+        { indicator }
       </motion.div>
     </motion.button>
   )
