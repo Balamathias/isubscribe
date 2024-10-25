@@ -110,6 +110,10 @@ const AirtimeCards = () => {
                     setProceed={setProceed}
                     key={'airtime'}
                     title='Airtime Purchase details'
+                    func={() => {
+                        handleVTPassAirtime(paymentMethod, {...selected!})
+                        setProceed(false)
+                    }}
                 />
             </Suspense>
 

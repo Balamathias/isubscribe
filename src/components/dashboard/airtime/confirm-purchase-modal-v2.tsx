@@ -24,7 +24,7 @@ interface ConfirmPurchaseModal {
     paymentMethod: PaymentMethod,
     setPaymentMethod: (method: PaymentMethod) => void,
     setProceed: (proceed: boolean) => void,
-    handleAuth?: () => void
+    func?: () => void,
 }
 
 const ConfirmPurchaseModal = ({
@@ -35,6 +35,7 @@ const ConfirmPurchaseModal = ({
     setPaymentMethod,
     title,
     setProceed,
+    func
 }: ConfirmPurchaseModal) => {
     const { wallet, isLoading } = useWallet()
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
@@ -43,7 +44,7 @@ const ConfirmPurchaseModal = ({
     const handleAuth = async () => {
         if (isEnabled) {
             const isAuthenticated = await authenticate()
-            if (isAuthenticated) setProceed(true)
+            if (isAuthenticated) func()
         } else {
             setProceed(true)
         }
