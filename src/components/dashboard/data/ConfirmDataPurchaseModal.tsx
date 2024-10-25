@@ -15,6 +15,7 @@ import { useWallet } from '@/hooks/use-wallet'
 import { toast } from 'sonner'
 import Empty from '@/components/Empty'
 import { useSearchParams } from 'next/navigation'
+import useBiometricAuth from '@/hooks/use-biometric-auth'
 
 
 interface ConfirmDataPurchaseModalProps {
@@ -25,7 +26,8 @@ interface ConfirmDataPurchaseModalProps {
     paymentMethod: PaymentMethod,
     setPaymentMethod: (method: PaymentMethod) => void,
     setProceed: (proceed: boolean) => void,
-    isDailyData?: boolean
+    isDailyData?: boolean,
+    func?: () => void
 }
 
 const ConfirmDataPurchaseModal = ({
@@ -36,13 +38,25 @@ const ConfirmDataPurchaseModal = ({
     setPaymentMethod,
     title,
     setProceed,
-    isDailyData
+    isDailyData,
+    func
 }: ConfirmDataPurchaseModalProps) => {
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
     const { wallet, isLoading } = useWallet()
 
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim' 
+
+    const { isEnabled, authenticate, error } = useBiometricAuth()
+
+    const handleAuth = async () => {
+        if (isEnabled) {
+            const isAuthenticated = await authenticate()
+            if (isAuthenticated) func?.()
+        } else {
+            setProceed(true)
+        }
+    }
 
     if (isLoading) return <LoadingOverlay loader='1' />
 
@@ -101,7 +115,7 @@ const ConfirmDataPurchaseModal = ({
                             size={'lg'}
                             disabled={(wallet?.balance! ) < (selected?.amount || 0) && (wallet?.cashback_balance! ) < (selected?.amount || 0)}
                             onClick={() => {
-                                setProceed(true)
+                                isEnabled && !error ? handleAuth() : setProceed(true)
                             }}
                         >Proceed</Button>
                     </div>

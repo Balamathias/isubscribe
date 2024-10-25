@@ -89,6 +89,10 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                         setPaymentMethod={setPaymentMethod}
                         setProceed={setProceed}
                         title='Data Purchase Details (Confirm Details)'
+                        func={() => {
+                            handleVTPassData(paymentMethod, selected!)
+                            setProceed(false)
+                        }}
                         isDailyData
                     />
                 </Suspense>

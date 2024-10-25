@@ -119,7 +119,7 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
     } catch (err) {
       const message = err instanceof Error ? err.message : "Authentication error.";
       setError(message);
-      toast.error(message);
+      toast.error("Biometric authentication failed.");
       console.error("Authentication error:", err);
       return false;
     }

@@ -17,6 +17,7 @@ import { useWallet } from '@/hooks/use-wallet';
 import { useSearchParams } from 'next/navigation';
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton';
 import SimpleLoader from '@/components/loaders/simple-loader';
+import useBiometricAuth from '@/hooks/use-biometric-auth';
 
 const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
@@ -41,6 +42,20 @@ const DataNetworkCard = () => {
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
+
+    const { isEnabled, authenticate, error } = useBiometricAuth()
+
+    const handleAuth = async () => {
+        if (isEnabled) {
+            const isAuthenticated = await authenticate()
+            if (isAuthenticated) {
+                handleSubData?.({...selected!, method: paymentMethod})
+                setProceed(false)
+            }
+        } else {
+            setProceed(true)
+        }
+    }
 
     if (isLoading || profilePending) return (
         <NetworkCardSkeleton />
@@ -114,7 +129,7 @@ const DataNetworkCard = () => {
                         size={'lg'}
                         disabled={wallet?.balance! < priceToInteger(selected?.Price || '0.00')}
                         onClick={() => {
-                            setProceed(true)
+                            isEnabled && !error ? handleAuth() : setProceed(true)
                         }}
                     >Proceed</Button>
                 </div>
