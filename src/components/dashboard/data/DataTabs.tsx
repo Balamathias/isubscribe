@@ -9,7 +9,11 @@ import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
 import DataTabsSkeleton from '@/components/skeletons/data-tabs'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
-import { useSearchParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { UsersIcon } from 'lucide-react'
+import { parseNigerianPhoneNumber } from '@/lib/utils'
+
+import useContacts from '@/hooks/use-contacts'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -31,8 +35,8 @@ const DataTabs = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { data: profile, isPending } = useGetProfile()
-    const searchParams = useSearchParams()
-    const action = searchParams.get('action')
+    
+    const { contact, importContact } = useContacts()
 
     const handleVerifyNumber = useCallback(async () => {
         if (mobileNumber.length === 11) {
@@ -45,6 +49,13 @@ const DataTabs = () => {
         handleVerifyNumber()
     }, [mobileNumber, handleVerifyNumber])
 
+    useEffect(() => {
+        if (contact) {
+            const phoneNumber = parseNigerianPhoneNumber(contact?.phone)
+            setMobileNumber(phoneNumber || '')
+        }
+    }, [contact, setMobileNumber])
+
     const handleNumberChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setMobileNumber(e.target.value)
     }, [setMobileNumber])
@@ -53,7 +64,7 @@ const DataTabs = () => {
         <TabsContent 
             key={tabs[activeTabIndex].value} 
             value={tabs[activeTabIndex].value} 
-            className="p-4 bg-white dark:bg-card/70 rounded-xl flex flex-col gap-y-2.5 shadow-none"
+            className="p-4 bg-white dark:bg-card/70 rounded-xl flex flex-col gap-y-2.5 shadow-sm"
         >
             <h2 className='text-muted-foreground text-lg font-semibold'>{tabs[activeTabIndex].name}</h2>
             <Suspense fallback={<NetworkCardSkeleton />}>
@@ -75,8 +86,17 @@ const DataTabs = () => {
                         defaultValue={profile?.data?.phone || ''}
                         onChange={handleNumberChange}
                         name='phone'
+                        className='shadow-sm'
                     />
+                    <Button 
+                        variant={'ghost'} 
+                        size={'icon'}
+                        onClick={async () => await importContact()}
+                    >
+                        <UsersIcon className='w-6 h-6' />
+                    </Button>
                 </div>
+                {contact?.name && <span className='text-muted-foreground text-xs'>Contact: {contact?.name}</span>}
             </div>
         
             <Tabs defaultValue="awoof" className="space-y-6">
@@ -85,7 +105,7 @@ const DataTabs = () => {
                         <TabsTrigger 
                             key={tab.value} 
                             value={tab.value} 
-                            className={`w-full h-9 md:text-lg text-xs data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring data-  rounded-full`}
+                            className={`w-full h-9 md:text-lg text-xs data-[state=active]:bg-background/80 peer-hover:opacity-90 dark:data-[state=active]:text-violet-400/70 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70 data-[state=active]:ring md:data-[state=active]:ring shadow-sm rounded-full`}
                             onClick={() => setActiveTabIndex(index)}
                         >
                             {tab.name}

@@ -8,7 +8,7 @@ const QuickActions = () => {
     <div className=' flex flex-col gap-2 py-8'>
         <h1 className=' text-lg text-foreground/80 font-semibold'>Quick Actions</h1>
 
-        <Card className='grid grid-flow-row grid-cols-4 gap-4 bg-white dark:bg-card/80 p-5 rounded-xl border-none drop-shadow-none shadow-none'>
+        <Card className='grid grid-flow-row grid-cols-4 gap-4 bg-white dark:bg-card/80 p-5 rounded-xl border-none drop-shadow-none shadow-sm'>
             {
             quickActionsLinks.map((link,idx) => (
                 <div key={idx} className=' '>

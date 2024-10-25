@@ -36,7 +36,7 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
     const paidToStatus = (status: string): Status => (status === 'PAID' ? 'success' : status) as Status
 
   return (
-    <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
+    <Link href={'/dashboard/history/' + item.id} key={item?.id} className={cn('flex flex-row justify-between items-center space-y-3 bg-card dark:bg-card/60 rounded-xl p-4 border-none shadow-sm outline-none cursor-pointer hover:transition-all hover:opacity-65 peer peer-hover:opacity-75 peer-hover:transition-all hover:duration-300 peer-hover:duration-300', className)}>
         <div className='flex flex-row gap-x-2.5'>
             <div className='md:w-10 md:h-10 w-8 h-8  aspect-square rounded-full block'>
                 <Image 
