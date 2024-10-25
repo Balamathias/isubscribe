@@ -16,6 +16,8 @@ import { Label } from '@/components/ui/label'
 import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
+import useBiometricAuth from '@/hooks/use-biometric-auth'
+
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
 const quickPlans = [
@@ -41,11 +43,15 @@ const AirtimeCards = () => {
     const { data: profile, isPending: _profilePending } = useGetProfile()
     const [amount, setAmount] = useState<number | null>(null)
 
+    const { isEnabled, authenticate } = useBiometricAuth()
+
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const [proceed, setProceed] = React.useState(false)
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
+
+    
 
     const AMOUNT_OUT_OF_RANGE = amount! > MAX_THRESHHOLD || amount! < MIN_THRESHHOLD
 

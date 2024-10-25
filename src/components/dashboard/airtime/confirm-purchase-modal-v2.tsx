@@ -13,6 +13,8 @@ import ConfirmProductInfo from '../data/confirm-product-info'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import { useWallet } from '@/hooks/use-wallet'
 
+import useBiometricAuth from '@/hooks/use-biometric-auth'
+
 
 interface ConfirmPurchaseModal {
     open: boolean,
@@ -21,7 +23,8 @@ interface ConfirmPurchaseModal {
     selected: VTPassAirtimePayload,
     paymentMethod: PaymentMethod,
     setPaymentMethod: (method: PaymentMethod) => void,
-    setProceed: (proceed: boolean) => void
+    setProceed: (proceed: boolean) => void,
+    handleAuth?: () => void
 }
 
 const ConfirmPurchaseModal = ({
@@ -31,10 +34,20 @@ const ConfirmPurchaseModal = ({
     setOpen,
     setPaymentMethod,
     title,
-    setProceed
+    setProceed,
 }: ConfirmPurchaseModal) => {
     const { wallet, isLoading } = useWallet()
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
+    const { isEnabled, authenticate, error } = useBiometricAuth()
+
+    const handleAuth = async () => {
+        if (isEnabled) {
+            const isAuthenticated = await authenticate()
+            if (isAuthenticated) setProceed(true)
+        } else {
+            setProceed(true)
+        }
+    }
 
     if (isLoading) return <LoadingOverlay />
 
@@ -85,7 +98,7 @@ const ConfirmPurchaseModal = ({
                 size={'lg'}
                 disabled={wallet?.balance! < selected?.amount && (wallet?.cashback_balance! ) < selected?.amount}
                 onClick={() => {
-                    setProceed(true)
+                    isEnabled && !error ? handleAuth() : setProceed(true)
                 }}
             >Proceed</Button>
         </div>
