@@ -24,12 +24,12 @@ export const formatDataAmount = (amount: number) => {
  * 
  * @example
  * ```js
-console.log(parseNigerianPhoneNumber('+2348012345678')); // Output: '08012345678'
-console.log(parseNigerianPhoneNumber('2348012345678'));  // Output: '08012345678'
-console.log(parseNigerianPhoneNumber('8012345678'));     // Output: '08012345678'
-console.log(parseNigerianPhoneNumber('12345678'));       // Output: null
+  console.log(parseNigerianPhoneNumber('+2348012345678')); // Output: '08012345678'
+  console.log(parseNigerianPhoneNumber('2348012345678'));  // Output: '08012345678'
+  console.log(parseNigerianPhoneNumber('8012345678'));     // Output: '08012345678'
+  console.log(parseNigerianPhoneNumber('12345678'));       // Output: null
 ```
- * @returns 
+ * @returns a string
  */
 export function parseNigerianPhoneNumber(phoneNumber: string): string | null {
   const sanitizedNumber = phoneNumber.replace(/[^0-9+]/g, '').replace(/\s/g, '');
