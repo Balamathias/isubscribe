@@ -24,6 +24,7 @@ import { QueryKeys } from "@/lib/react-query/query-keys"
 import useWalletStore from "@/store/use-wallet-store"
 import { useGetProfile } from "@/lib/react-query/funcs/user"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
+import useVibration from "@/hooks/use-vibration"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -72,6 +73,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const queryClient = useQueryClient()
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
+    const vibrate = useVibration()
 
     const { data: _profile } = useGetProfile()
     const profile  = _profile?.data
@@ -222,6 +224,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             router.refresh()
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            vibrate('success')
             await saveCashbackHistory({amount: cashbackPrice})
 
             /** 
@@ -354,6 +357,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             router.refresh()
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            vibrate('success')
             setHistoryId(_insertHistory.id)
             await saveCashbackHistory({amount: cashbackPrice})
 
@@ -486,6 +490,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setHistoryId(_insertHistory.id)
 
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            vibrate('success')
             await saveCashbackHistory({amount: cashbackPrice})
             
             queryClient.invalidateQueries({
@@ -612,6 +617,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setHistoryId(_insertHistory.id)
             
             toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            vibrate('success')
             await saveCashbackHistory({amount: cashbackPrice})
             
             queryClient.invalidateQueries({

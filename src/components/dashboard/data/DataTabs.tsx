@@ -9,6 +9,7 @@ import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
 import DataTabsSkeleton from '@/components/skeletons/data-tabs'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
+import { useSearchParams } from 'next/navigation'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -30,6 +31,8 @@ const DataTabs = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { data: profile, isPending } = useGetProfile()
+    const searchParams = useSearchParams()
+    const action = searchParams.get('action')
 
     const handleVerifyNumber = useCallback(async () => {
         if (mobileNumber.length === 11) {
@@ -75,6 +78,7 @@ const DataTabs = () => {
                     />
                 </div>
             </div>
+        
             <Tabs defaultValue="awoof" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2 gap-2 rounded-xl shadow-none border-none p-2 py-4 h-fit bg-transparent">
                     {tabs.map((tab, index) => (
@@ -90,7 +94,7 @@ const DataTabs = () => {
                 </TabsList>
                 {tabsContent}
             </Tabs>
-        </div>
+        </div>  
     )
 }
 

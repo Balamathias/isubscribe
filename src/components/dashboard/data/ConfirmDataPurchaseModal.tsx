@@ -14,6 +14,7 @@ import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import { useWallet } from '@/hooks/use-wallet'
 import { toast } from 'sonner'
 import Empty from '@/components/Empty'
+import { useSearchParams } from 'next/navigation'
 
 
 interface ConfirmDataPurchaseModalProps {
@@ -23,7 +24,8 @@ interface ConfirmDataPurchaseModalProps {
     selected: VTPassDataPayload,
     paymentMethod: PaymentMethod,
     setPaymentMethod: (method: PaymentMethod) => void,
-    setProceed: (proceed: boolean) => void
+    setProceed: (proceed: boolean) => void,
+    isDailyData?: boolean
 }
 
 const ConfirmDataPurchaseModal = ({
@@ -33,10 +35,14 @@ const ConfirmDataPurchaseModal = ({
     setOpen,
     setPaymentMethod,
     title,
-    setProceed
+    setProceed,
+    isDailyData
 }: ConfirmDataPurchaseModalProps) => {
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
     const { wallet, isLoading } = useWallet()
+
+    const searchParams = useSearchParams()
+    const isClaim = searchParams.get('action') === 'claim' 
 
     if (isLoading) return <LoadingOverlay loader='1' />
 
@@ -77,13 +83,17 @@ const ConfirmDataPurchaseModal = ({
                                 balance={formatNigerianNaira(wallet?.balance! as number)}
                                 disabled={wallet?.balance! < (selected?.amount || 0)}
                             />
-                            <ActivePaymentMethodButton 
-                                active={paymentMethod === 'cashback'} 
-                                handler={() => {setPaymentMethod('cashback')}} 
-                                method='cashback'
-                                balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
-                                disabled={wallet?.cashback_balance! < (selected?.amount || 0)}
-                            />
+                            {
+                                !isDailyData && !isClaim && (
+                                    <ActivePaymentMethodButton 
+                                        active={paymentMethod === 'cashback'} 
+                                        handler={() => {setPaymentMethod('cashback')}} 
+                                        method='cashback'
+                                        balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
+                                        disabled={wallet?.cashback_balance! < (selected?.amount || 0)}
+                                    />
+                                )
+                            }
                         </div>
 
                         <Button 

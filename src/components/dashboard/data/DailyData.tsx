@@ -30,7 +30,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const [proceed, setProceed] = React.useState(false)
 
-    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
+    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
     if (profilePending || services.isLoading) return (
         <NetworkCardSkeleton />
@@ -89,6 +89,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                         setPaymentMethod={setPaymentMethod}
                         setProceed={setProceed}
                         title='Data Purchase Details (Confirm Details)'
+                        isDailyData
                     />
                 </Suspense>
             )}
