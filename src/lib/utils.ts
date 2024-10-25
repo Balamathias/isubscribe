@@ -32,7 +32,7 @@ console.log(parseNigerianPhoneNumber('12345678'));       // Output: null
  * @returns 
  */
 export function parseNigerianPhoneNumber(phoneNumber: string): string | null {
-  const sanitizedNumber = phoneNumber.replace(/[^0-9+]/g, '');
+  const sanitizedNumber = phoneNumber.replace(/[^0-9+]/g, '').replace(/\s/g, '');
 
   if (sanitizedNumber.startsWith('+234')) {
       return '0' + sanitizedNumber.slice(4);
