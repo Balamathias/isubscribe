@@ -26,10 +26,10 @@ const EnableBiometricAuth = () => {
 
   return (
     <SettingItem
-      title={isEnabled ? 'Biometric Authentication Enabled' : 'Enable Biometric Authentication'}
+      title={isEnabled ? 'Biometric Authentication' : 'Enable Biometric Authentication'}
       description={isEnabled
-        ? 'Your account is secured with biometric authentication.'
-        : 'Secure your account with biometric authentication.'}
+        ? 'Enabled'
+        : 'Disabled, click to enable'}
       onClick={handleEnableBiometrics}
       biometric={{isEnabled}}
       icon={<Fingerprint />}
