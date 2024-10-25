@@ -1,9 +1,9 @@
-const sha512 = require('js-sha512').sha512;
+import { sha512 } from 'js-sha512'
 
 const DEFAULT_MERCHANT_CLIENT_SECRET = process.env.NEXT_MONNIFY_SECRET_KEY
 
 export const computeHash = (requestBody: any) => {
-    const result = sha512.hmac(DEFAULT_MERCHANT_CLIENT_SECRET, requestBody)
+    const result = sha512.hmac(DEFAULT_MERCHANT_CLIENT_SECRET!, requestBody)
     return result
 }
 

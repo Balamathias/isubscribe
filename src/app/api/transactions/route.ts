@@ -43,6 +43,8 @@ export const POST = async (req: Request) => {
 
     const computedHash = computeHash(rawBody);
 
+    console.log(computedHash, signature, rawBody)
+
     if (computedHash !== signature) {
         return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
     }
