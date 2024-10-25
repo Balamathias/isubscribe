@@ -51,7 +51,7 @@ const DataTabs = () => {
 
     useEffect(() => {
         if (contact) {
-            const phoneNumber = parseNigerianPhoneNumber(contact?.phone)
+            const phoneNumber = parseNigerianPhoneNumber(contact?.phone?.toString())
             setMobileNumber(phoneNumber || '')
         }
     }, [contact, setMobileNumber])
@@ -92,11 +92,12 @@ const DataTabs = () => {
                         variant={'ghost'} 
                         size={'icon'}
                         onClick={async () => await importContact()}
+                        className="hover:bg-transparent focus:bg-transparent hover:opacity-80 transition-all"
                     >
                         <UsersIcon className='w-6 h-6' />
                     </Button>
                 </div>
-                {contact?.name && <span className='text-muted-foreground text-xs'>Contact: {contact?.name}</span>}
+                {contact?.name && <span className='text-muted-foreground text-xs'>@{contact?.name}</span>}
             </div>
         
             <Tabs defaultValue="awoof" className="space-y-6">

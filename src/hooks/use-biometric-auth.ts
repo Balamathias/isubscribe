@@ -9,6 +9,7 @@ interface UseBiometricAuthResult {
   enableBiometrics: () => Promise<void>;
   authenticate: () => Promise<boolean>;
   error: string | null;
+  disableBiometrics: () => void;
 }
 
 export const BIOMETRIC_ENABLED_KEY = "biometric-enabled";
@@ -27,18 +28,23 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
     setIsEnabled(storedState === "true");
   }, []);
 
+  const generateRandomChallenge = () => 
+    crypto.getRandomValues(new Uint8Array(32));
+  
   const enableBiometrics = useCallback(async () => {
     try {
       if (!window.PublicKeyCredential) {
         throw new Error("Your device does not support biometric authentication.");
       }
-
+  
+      const challenge = generateRandomChallenge();
+  
       const credentials = await navigator.credentials.create({
         publicKey: {
-          challenge: new Uint8Array(32),
+          challenge,
           rp: { name: "VTU Payment" },
           user: {
-            id: new Uint8Array(16),
+            id: new TextEncoder().encode(email ?? "default-user"),
             name: email ?? "user",
             displayName: name ?? "user",
           },
@@ -46,11 +52,11 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
           authenticatorSelection: { userVerification: "required" },
         },
       });
-
+  
       if (!credentials) {
         throw new Error("Failed to register biometric credentials.");
       }
-
+  
       localStorage.setItem(BIOMETRIC_ENABLED_KEY, "true");
       setIsEnabled(true);
       setError(null);
@@ -59,36 +65,46 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       setError(message);
       console.error("Enable biometrics error:", err);
     }
-  }, []);
+  }, [email, name]);
+  
 
   const authenticate = useCallback(async () => {
     try {
       if (!isEnabled) {
         throw new Error("Biometric authentication is not enabled.");
       }
-
+  
+      const challenge = generateRandomChallenge();
+  
       const assertion = await navigator.credentials.get({
         publicKey: {
-          challenge: new Uint8Array(32),
+          challenge,
           timeout: 60000,
           userVerification: "required",
+          rpId: window.location.hostname,
         },
       });
-
+  
       if (!assertion) {
         throw new Error("Authentication failed.");
       }
-
+  
       setError(null);
       return true;
     } catch (err) {
       const message = err instanceof Error ? err.message : "Authentication error.";
       setError(message);
-      toast.error(message)
+      toast.error(message);
       console.error("Authentication error:", err);
       return false;
     }
   }, [isEnabled]);
+  
 
-  return { isEnabled, enableBiometrics, authenticate, error };
+  const disableBiometrics = useCallback(() => {
+    localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
+    setIsEnabled(false);
+  }, []);
+
+  return { isEnabled, enableBiometrics, authenticate, error, disableBiometrics };
 }
