@@ -63,9 +63,8 @@ const CashbackHistory = ({ history }: CashbackHistoryProps) => {
                             }
 
                             if (typeof value === 'number' && key.toLowerCase().includes('amount')) {
-                                formattedValue = formatNigerianNaira(value);
+                                formattedValue = formatDataAmount(Number(value) * DATA_MB_PER_NAIRA);
                             }
-
                             return (
                                 <motion.div 
                                     className='flex items-start justify-between' 
