@@ -15,30 +15,56 @@ interface UseBiometricAuthResult {
 export const BIOMETRIC_ENABLED_KEY = "biometric-enabled";
 
 export default function useBiometricAuth(): UseBiometricAuthResult {
-  const { data: profile } = useGetProfile()
+  const { data: profile } = useGetProfile();
 
-  const email = profile?.data?.email
-  const name = profile?.data?.full_name
+  const email = profile?.data?.email;
+  const name = profile?.data?.full_name;
 
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const generateRandomChallenge = () =>
+    crypto.getRandomValues(new Uint8Array(32));
+
   useEffect(() => {
-    const storedState = localStorage.getItem(BIOMETRIC_ENABLED_KEY);
-    setIsEnabled(storedState === "true");
+    const initializeBiometricState = async () => {
+      try {
+        const storedState = localStorage.getItem(BIOMETRIC_ENABLED_KEY);
+        let enabled = storedState === "true";
+
+        if (enabled && navigator.credentials) {
+          const availableCredentials = await navigator.credentials.get({
+            publicKey: {
+              challenge: generateRandomChallenge(),
+              timeout: 10000,
+              userVerification: "required",
+            },
+          });
+
+          if (!availableCredentials) {
+            enabled = false;
+            localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
+          }
+        }
+
+        setIsEnabled(enabled);
+      } catch (err) {
+        console.error("Error initializing biometric state:", err);
+        setIsEnabled(false);
+      }
+    };
+
+    initializeBiometricState();
   }, []);
 
-  const generateRandomChallenge = () => 
-    crypto.getRandomValues(new Uint8Array(32));
-  
   const enableBiometrics = useCallback(async () => {
     try {
       if (!window.PublicKeyCredential) {
         throw new Error("Your device does not support biometric authentication.");
       }
-  
+
       const challenge = generateRandomChallenge();
-  
+
       const credentials = await navigator.credentials.create({
         publicKey: {
           challenge,
@@ -52,11 +78,11 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
           authenticatorSelection: { userVerification: "required" },
         },
       });
-  
+
       if (!credentials) {
         throw new Error("Failed to register biometric credentials.");
       }
-  
+
       localStorage.setItem(BIOMETRIC_ENABLED_KEY, "true");
       setIsEnabled(true);
       setError(null);
@@ -66,16 +92,15 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       console.error("Enable biometrics error:", err);
     }
   }, [email, name]);
-  
 
   const authenticate = useCallback(async () => {
     try {
       if (!isEnabled) {
         throw new Error("Biometric authentication is not enabled.");
       }
-  
+
       const challenge = generateRandomChallenge();
-  
+
       const assertion = await navigator.credentials.get({
         publicKey: {
           challenge,
@@ -84,11 +109,11 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
           rpId: window.location.hostname,
         },
       });
-  
+
       if (!assertion) {
         throw new Error("Authentication failed.");
       }
-  
+
       setError(null);
       return true;
     } catch (err) {
@@ -99,18 +124,17 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       return false;
     }
   }, [isEnabled]);
-  
 
   const disableBiometrics = useCallback(async () => {
     try {
-      if (navigator.credentials && navigator.credentials.preventSilentAccess) {
+      if (navigator.credentials?.preventSilentAccess) {
         await navigator.credentials.preventSilentAccess();
       }
-  
+
       localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
       setIsEnabled(false);
       setError(null);
-  
+
       toast.success("Biometric authentication has been disabled.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to disable biometrics.";
@@ -119,7 +143,6 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       console.error("Disable biometrics error:", err);
     }
   }, []);
-  
 
   return { isEnabled, enableBiometrics, authenticate, error, disableBiometrics };
 }
