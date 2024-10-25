@@ -101,10 +101,25 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
   }, [isEnabled]);
   
 
-  const disableBiometrics = useCallback(() => {
-    localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
-    setIsEnabled(false);
+  const disableBiometrics = useCallback(async () => {
+    try {
+      if (navigator.credentials && navigator.credentials.preventSilentAccess) {
+        await navigator.credentials.preventSilentAccess();
+      }
+  
+      localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
+      setIsEnabled(false);
+      setError(null);
+  
+      toast.success("Biometric authentication has been disabled.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to disable biometrics.";
+      setError(message);
+      toast.error(message);
+      console.error("Disable biometrics error:", err);
+    }
   }, []);
+  
 
   return { isEnabled, enableBiometrics, authenticate, error, disableBiometrics };
 }
