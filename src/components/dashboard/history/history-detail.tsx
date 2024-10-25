@@ -54,7 +54,9 @@ const HistoryDetail = ({ history }: HistoryDetailProps) => {
         return <TVTopup history={history} />
 
     case 'meter_topup':
-        return <MeterTopup />
+        return <MeterTopup 
+            history={history}
+        />
 
     case 'education_topup':
         return <Education
