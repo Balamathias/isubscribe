@@ -4,7 +4,8 @@ import ConfirmPin from '../ConfirmPin'
 import CreateUpdateSecurityQuestion from '../create-update-security-question'
 import { Tables } from '@/types/database'
 import { Card } from '@/components/ui/card'
-import { LucideArrowRight } from 'lucide-react'
+import { FileQuestion, LucideArrowRight } from 'lucide-react'
+import SettingItem from './setting-item'
 
 const SecurityQuestion = ({ profile }: { profile: Tables<'profile'> }) => {
 
@@ -13,17 +14,13 @@ const SecurityQuestion = ({ profile }: { profile: Tables<'profile'> }) => {
 
   return (
     <div>
-        <Card 
-            className='flex flex-row justify-between items-center space-y-3 dark:bg-card/60 rounded-xl p-4 border-none shadow-none outline-none cursor-pointer hover:opacity-65 hover:transition-all'
+        <SettingItem 
+            icon={<FileQuestion />}
+            iconClassName='text-blue-500 bg-blue-500/15'
+            title={'Edit Security Question'}
+            description={profile?.security_question ? profile?.security_question : 'Edit your security question and answer.'}
             onClick={() => setOpenUpdateSecurityModal(prev => !prev)}
-        >
-            <div className="flex flex-col space-y-1">
-                <h2 className='text-lg md:text-xl tracking-tighter'>Edit Security Question</h2>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{profile?.security_question ? profile?.security_question : 'Edit your security question and answer.'}</span>
-            </div>
-            <LucideArrowRight className='w-6 h-6 text-gray-500 dark:text-gray-400' />
-        </Card>
-
+        />
         <DynamicModal
             open={openUpdateSecurityModal}
             setOpen={setOpenUpdateSecurityModal}
