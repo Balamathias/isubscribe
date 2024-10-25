@@ -19,31 +19,45 @@ export const formatDataAmount = (amount: number) => {
 }
 
 /**
- * @description Clean a phone number
- * @param phoneNumber number
+ * @description Clean and parse a Nigerian phone number into a standard format
+ * @param phoneNumber string
  * 
  * @example
  * ```js
-  console.log(parseNigerianPhoneNumber('+2348012345678')); // Output: '08012345678'
-  console.log(parseNigerianPhoneNumber('2348012345678'));  // Output: '08012345678'
-  console.log(parseNigerianPhoneNumber('8012345678'));     // Output: '08012345678'
-  console.log(parseNigerianPhoneNumber('12345678'));       // Output: null
-```
- * @returns a string
+ * console.log(parseNigerianPhoneNumber('+2348012345678'));  // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('2348012345678'));   // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('8012345678'));      // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('08012345678'));     // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('080 1234 5678'));   // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('+234 080 1234 5678')); // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('234 080 1234 5678'));  // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('80 1234 5678'));    // Output: '08012345678'
+ * console.log(parseNigerianPhoneNumber('12345678'));        // Output: null
+ * ```
+ * @returns a cleaned phone number string or null if invalid
  */
 export function parseNigerianPhoneNumber(phoneNumber: string): string | null {
-  const sanitizedNumber = phoneNumber.replace(/[^0-9+]/g, '').replace(/\s/g, '');
+  const sanitizedNumber = phoneNumber.replace(/[^0-9+]/g, '');
 
   if (sanitizedNumber.startsWith('+234')) {
-      return '0' + sanitizedNumber.slice(4);
-  } else if (sanitizedNumber.startsWith('234')) {
-      return '0' + sanitizedNumber.slice(3);
-  } else if (sanitizedNumber.length === 10) {
-      return '0' + sanitizedNumber;
-  } else {
-      return null;
+    return '0' + sanitizedNumber.slice(4);
   }
+
+  if (sanitizedNumber.startsWith('234')) {
+    return '0' + sanitizedNumber.slice(3);
+  }
+
+  if (/^[789]\d{9}$/.test(sanitizedNumber)) {
+    return '0' + sanitizedNumber;
+  }
+
+  if (/^0\d{10}$/.test(sanitizedNumber)) {
+    return sanitizedNumber;
+  }
+
+  return null;
 }
+
 
 export const dynamic = (a: ReactNode, b: ReactNode, c: boolean): ReactNode => {
   return c ? a : b
