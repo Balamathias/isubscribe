@@ -8,6 +8,7 @@ export interface SubDataProps {
     Price: string;
     Duration: string;
     CashBack: string;
+    commission?: number
 }
 
 export interface SubAirtimeProps {

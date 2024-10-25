@@ -108,13 +108,14 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             payload: {
                 price: priceToInteger(payload.Price),
                 cashback: parseInt(payload.CashBack),
-                method: payload.method
+                method: payload.method,
+                interest: payload?.commission
             },
             wallet: wallet!
         })
         if (!values) return
 
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
         setDataBonus(cashbackPrice)
 
         const networkId = networkIds[currentNetwork]
@@ -146,7 +147,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 planType: data?.plan_type!,
                 phone: mobileNumber,
                 status: 'failed',
-                transaction_id: data?.["request-id"]
+                transaction_id: data?.["request-id"],
+                commission
             }
             
             const { data: _insertHistory } = await insertTransactionHistory({
@@ -158,7 +160,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 user: profile?.id!,
                 amount: price,
                 provider: 'n3t',
-                request_id: data?.['request-id']
+                request_id: data?.['request-id'],
+                commission,
             })
 
             setPurchasing(false)
@@ -204,11 +207,12 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 planType: data?.plan_type,
                 phone: mobileNumber,
                 status: 'success',
-                transaction_id: data?.["request-id"]
+                transaction_id: data?.["request-id"],
+                commission
             }
 
             const { data: _insertHistory } = await insertTransactionHistory({
-                description: `Data subscription for ${mobileNumber}`,
+                description: `Data subscription`,
                 status: 'success',
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
@@ -218,6 +222,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 user: profile?.id!,
                 amount: price,
                 provider: 'n3t',
+                commission
             })
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
             setHistoryId(_insertHistory.id)
