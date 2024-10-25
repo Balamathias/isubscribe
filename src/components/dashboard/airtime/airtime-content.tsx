@@ -41,7 +41,7 @@ const AirtimeContent = () => {
 
     useEffect(() => {
         if (contact) {
-            const phoneNumber = parseNigerianPhoneNumber(contact?.phone?.toString())
+            const phoneNumber = parseNigerianPhoneNumber(contact?.phone?.replace(/\s/g, '')?.toString())
             setMobileNumber(phoneNumber || '')
         }
     }, [contact, setMobileNumber])
