@@ -44,7 +44,7 @@ const ConfirmPurchaseModal = ({
     const handleAuth = async () => {
         if (isEnabled) {
             const isAuthenticated = await authenticate()
-            if (isAuthenticated) func()
+            if (isAuthenticated) func?.()
         } else {
             setProceed(true)
         }
