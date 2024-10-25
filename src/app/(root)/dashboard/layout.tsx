@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation'
 import React, { PropsWithChildren } from 'react'
 
 export const metadata:Metadata = {
-    title: 'ISUBSCRIBE | Dashboard.',
+    title: 'isubscribe | Dashboard.',
     description: 'Your home of affordable utility bills.',
 }
 
