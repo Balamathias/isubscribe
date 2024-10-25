@@ -2,11 +2,11 @@
 
 import { ModeToggle } from '@/components/mode-toggle'
 import { Card } from '@/components/ui/card'
-import { LucideArrowRight } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Tables } from '@/types/database'
 import SecurityQuestion from './security-question'
 import ResetPIN from './reset-pin'
+import EnableBiometricAuth from './enable-biometric-auth'
 
 const SettingsComponent = ({ profile }: { profile: Tables<'profile'> }) => {
   const { theme } = useTheme()
@@ -24,6 +24,8 @@ const SettingsComponent = ({ profile }: { profile: Tables<'profile'> }) => {
         <ResetPIN />
 
         <SecurityQuestion profile={profile} />
+
+        <EnableBiometricAuth />
     </div>
   )
 }
