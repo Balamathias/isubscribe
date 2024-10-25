@@ -4,9 +4,16 @@ import { EVENT_TYPE } from "@/utils/constants/EVENTS";
 import sendEmail from "@/utils/sendMail";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
+import { sha512 } from 'js-sha512';
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
+
+const DEFAULT_MERCHANT_CLIENT_SECRET = process.env.NEXT_MONNIFY_SECRET_KEY!;
+
+const computeHash = (requestBody: string) => {
+  return sha512.hmac(DEFAULT_MERCHANT_CLIENT_SECRET, requestBody);
+};
 
 const insertHistory = async (data: TransactionEvent, userId: string, type: string, description: string, status: string) => {
     const supabase = createClient();
@@ -30,15 +37,21 @@ const insertHistory = async (data: TransactionEvent, userId: string, type: strin
 };
 
 export const POST = async (req: Request) => {
-    const allowedIPs = ['35.242.133.146'];
-    const ipHeader = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip') || '';
-    const ip = ipHeader.split(',')[0].trim();
+    const signature = req.headers.get('x-monnify-signature') || '';
 
-    if (!allowedIPs.includes(ip)) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    const rawBody = await req.text();
+
+    const computedHash = computeHash(rawBody);
+
+    console.info(computedHash)
+    console.info(signature)
+
+    if (computedHash !== signature) {
+        return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
     }
 
     let data: TransactionEvent;
+
     try {
         data = await req.json() as TransactionEvent;
     } catch (error) {

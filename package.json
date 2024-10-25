@@ -61,6 +61,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/js-sha512": "^0.8.0",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.15",
     "@types/react": "^18",
