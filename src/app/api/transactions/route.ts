@@ -37,16 +37,23 @@ const insertHistory = async (data: TransactionEvent, userId: string, type: strin
 };
 
 export const POST = async (req: Request) => {
-    const signature = req.headers.get('x-monnify-signature') || '';
+    const signature = req.headers.get('monnify-signature') || '';
 
     const rawBody = await req.text();
 
     const computedHash = computeHash(rawBody);
 
-    console.log('computed: ', computedHash, '\n\n', 'signature: ', signature, '\n\n', 'rawBody: ', rawBody)
+    console.log('computed: ', computedHash, '\n\n', 'signature: ', signature, '\n\n', 'rawBody: ', rawBody, '\n\n', req.headers)
 
     if (computedHash !== signature) {
         return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
+    }
+
+    const allowedIPs = ['35.242.133.146']
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('cf-connecting-ip')
+
+    if (!allowedIPs.includes(ip!)) {
+        return NextResponse.json({message: 'Unauthorized'}, {status: 401})
     }
 
     let data: TransactionEvent;
