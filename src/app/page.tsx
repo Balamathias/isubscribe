@@ -5,10 +5,10 @@ import { redirect } from "next/navigation";
 
 export default async function Home({searchParams}: { searchParams: {[key: string]: string }}) {
   
-  const sP = new URLSearchParams(searchParams)
+  const params = new URLSearchParams(searchParams)
 
-  const errorCode = sP.get('error_code')
-  const errorMessage = sP.get('error_description')
+  const errorCode = params.get('error_code')
+  const errorMessage = params.get('error_description')
 
   if (errorCode === '403') {
     return redirect('/auth/auth-code-error?msg=' + encodeURIComponent(errorMessage!))
