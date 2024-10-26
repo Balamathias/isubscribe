@@ -43,8 +43,6 @@ export const POST = async (req: Request) => {
 
     const computedHash = computeHash(rawBody);
 
-    console.log('computed: ', computedHash, '\n\n', 'signature: ', signature, '\n\n', 'rawBody: ', rawBody, '\n\n', req.headers)
-
     if (computedHash !== signature) {
         return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
     }
@@ -59,7 +57,7 @@ export const POST = async (req: Request) => {
     let data: TransactionEvent;
 
     try {
-        data = await req.json() as TransactionEvent;
+        data = JSON.parse(rawBody) as TransactionEvent;
     } catch (error) {
         console.error('Invalid JSON:', error);
         return NextResponse.json({ message: 'Invalid JSON data' }, { status: 400 });
