@@ -16,6 +16,7 @@ export default async function Home({searchParams}: { searchParams: {[key: string
 
   return(
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 flex flex-col gap-y-6 justify-between">
+      <h2>We call it home </h2>
       <Header />
       <HomePage />
       <Footer />
