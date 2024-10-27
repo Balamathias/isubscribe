@@ -110,7 +110,7 @@ export default function CarouselComponent() {
                       {...fadeIn}
                     >
                       {data?.title}
-                      <span className="absolute text-violet-200 top-0 -left-8 max-sm:-left-4 text-xs md:text-sm">{index + 1}/{heroData?.length}</span>
+                      <span className="fixed text-violet-200 top-0 -left-8 max-sm:-left-5 text-xs md:text-sm">{index + 1}/{heroData?.length}</span>
                     </motion.h1>
                     <motion.p
                       className="text-base md:text-xl text-violet-100 mb-12"
@@ -149,7 +149,7 @@ export default function CarouselComponent() {
                         </Button>
                       )
                     }
-                    
+
                     <Reviews />
                  </div>
                 </CardContent>

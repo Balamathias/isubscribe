@@ -30,7 +30,7 @@ const Reviews = () => {
     <DynamicModal
       trigger={
         <Button variant={'ghost'} className='rounded-full ring-1 text-white hover:text-violet-100 w-full border-none text-lg hover:opacity-75 transition-all border hover:bg-transparent' size={'lg'}>
-          See what people are saying.
+          Reviews
         </Button>
       }
       dialogClassName='max-w-3xl w-full'
