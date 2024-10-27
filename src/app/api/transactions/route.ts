@@ -21,7 +21,7 @@ const insertHistory = async (data: TransactionEvent, userId: string, type: strin
     const { error } = await supabase.from('history').insert({
         type,
         description,
-        status,
+        status: status === 'PAID' ? 'success' : status,
         title: type === EVENT_TYPE.wallet_fund ? 'Wallet Fund' : 'Wallet Fund Failed',
         user: userId,
         meta_data: JSON.stringify(data.eventData),

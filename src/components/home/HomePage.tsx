@@ -1,16 +1,10 @@
 import React from 'react'
-import HeroSection from './HeroSection'
-import TestimonialsSection from './Testimonials'
-import ConnectWithUs from '../ConnectWithUs'
+import HeroSection from './hero-section'
 
 const HomePage = () => {
   return (
-    <div style={{ minHeight: 'calc(100vh - 120px)' }} className='!bg-inherit px-3'>
+    <div style={{ minHeight: 'calc(100vh - 120px)' }} className='bg-inherit'>
       <HeroSection />
-      <TestimonialsSection />
-      <div>
-        <ConnectWithUs />
-      </div>
     </div>
   )
 }
