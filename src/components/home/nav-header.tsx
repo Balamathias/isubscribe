@@ -4,9 +4,8 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { ModeToggle } from '../mode-toggle'
 import { User } from '@supabase/supabase-js'
-import { Tables } from '@/types/database'
 
-const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
+const NavHeader = ({ user }: { user: User | null }) => {
 
   return (
     <div className='flex flex-row justify-center items-center w-full bg-transparent h-[70px] top-0 sticky z-50'>

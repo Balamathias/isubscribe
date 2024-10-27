@@ -18,9 +18,8 @@ import NavHeader from "./nav-header"
 import { Button } from "../ui/button"
 import Link from "next/link"
 import Footer from "./footer-transparent"
-import Loader from "../loaders/loader"
-import { useGetProfile } from "@/lib/react-query/funcs/user"
 import Reviews from "./reviews"
+import { User } from "@supabase/supabase-js"
 
 
 const heroData = [
@@ -42,9 +41,7 @@ const heroData = [
   
 ];
 
-export default function CarouselComponent() {
-
-  const { data: user, isPending } = useGetProfile()
+export default function CarouselComponent({ user }: { user: User | null }) {
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -68,12 +65,6 @@ export default function CarouselComponent() {
         setCurrent(api.selectedScrollSnap() + 1)
       })
     }, [api])
-
-  if (isPending) {
-    return (
-      <Loader />
-    )
-  }
 
   return (
     <div className=" flex flex-col inset-0">
@@ -101,7 +92,7 @@ export default function CarouselComponent() {
               "bg-gradient-to-r from-violet-950/90 dark:to-violet-700/20 to-violet-700/35 bg-blend-multiply rounded-none"
               )}
                 >
-                <NavHeader user={user?.data!} />
+                <NavHeader user={user!} />
 
                 <CardContent className="flex flex-col my-16 md:mt-28 max-w-7xl mx-auto">
                  <div className="w-full flex flex-col gap-y-4 md:gap-y-7 h-full md:max-w-[50%]">
@@ -139,7 +130,7 @@ export default function CarouselComponent() {
 
 
                     {
-                      user?.data ? (
+                      user ? (
                         <Button variant={'ghost'} asChild className='rounded-full hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
                           <Link href={"/dashboard"}>Go to Dashboard</Link>
                         </Button>
