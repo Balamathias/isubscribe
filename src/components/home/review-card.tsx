@@ -33,7 +33,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ avatar, full_name, comment, rating 
     >
       <Avatar className="w-14 h-14">
         <AvatarImage src={avatar} />
-        <AvatarFallback content={full_name?.slice(0,2).toUpperCase()} />
+        <AvatarFallback content={full_name?.at?.(0)} />
       </Avatar>
 
       <div className="flex flex-col w-full">
