@@ -16,7 +16,7 @@ const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
         </div>
         <div className='flex items-center justify-between gap-x-3'>
           <ModeToggle />
-          <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75 hover:text-black'>
+          <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
               <Link 
                 href={'/about'} 
                 className={``}
@@ -24,7 +24,7 @@ const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
           </Button>
           {
           user && 
-            <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
+            <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75 hover:text-black'>
                 <Link 
                   href={'/dashboard'} 
                   className={``}
