@@ -107,7 +107,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         const values = computeTransaction({
             payload: {
                 price: priceToInteger(payload.Price),
-                cashback: parseInt(payload.CashBack),
+                cashback: priceToInteger(payload.CashBack),
                 method: payload.method,
                 interest: payload?.commission
             },
