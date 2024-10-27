@@ -78,7 +78,7 @@ const SignInComponent = () => {
 
     return (
         <Form {...form}>
-          <Card className='flex flex-col gap-2 shadow-none border-none w-full max-w-[450px] py-4 px-3'>
+          <Card className='flex flex-col gap-2 shadow-none border-none w-full bg-transparent dark:bg-transparent max-w-[450px] py-4 px-3'>
 
             <Logo />
 

@@ -16,7 +16,7 @@ const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
         </div>
         <div className='flex items-center justify-between gap-x-3'>
           <ModeToggle />
-          <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75'>
+          <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75 hover:text-black'>
               <Link 
                 href={'/about'} 
                 className={``}
@@ -24,7 +24,7 @@ const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
           </Button>
           {
           user && 
-            <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75'>
+            <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
                 <Link 
                   href={'/dashboard'} 
                   className={``}
@@ -32,10 +32,10 @@ const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
             </Button>
           }
           {!user && <div className='md:flex hidden flex-row items-center gap-x-2 !text-violet-50'>
-              <Button asChild variant={'ghost'} className='hover:bg-white hover:opacity-75'>
+              <Button asChild variant={'ghost'} className='hover:bg-white hover:opacity-75 hover:text-black'>
                 <Link href={"/sign-up"}>Sign up</Link>
               </Button>
-              <Button asChild className='hover:bg-white hover:opacity-75' variant={'ghost'}>
+              <Button asChild className='hover:bg-white hover:opacity-75 hover:text-black' variant={'ghost'}>
                 <Link href={"/sign-in"}>Login</Link>
               </Button>
             </div>}

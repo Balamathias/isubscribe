@@ -32,7 +32,7 @@ const Loader = () => {
 
   return (
     <motion.div
-      className="flex justify-center items-center h-screen dark:bg-gray-900 bg-violet-950"
+      className="flex justify-center items-center h-screen dark:bg-gray-900 bg-violet-950 w-full fixed top-0 left-0 z-50"
       initial="hidden"
       animate="visible"
       variants={container}

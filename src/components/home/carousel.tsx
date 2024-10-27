@@ -85,7 +85,7 @@ export default function CarouselComponent() {
     }}
      plugins={[
          Autoplay({
-          delay: 5000,
+          delay: 12000,
         }),
       ]}
      >
@@ -97,7 +97,7 @@ export default function CarouselComponent() {
               style={{ backgroundImage: `url("${data.img}")`}}
             >
               <Card className={cn("flex items-center justify-between border-none flex-col shadow-none bg-inherit inset-0 h-full w-full p-4",
-                `bg-gradient-to-r from-violet-950/90 to-violet-700/20 rounded-none`
+                `bg-gradient-to-r from-violet-950/90 dark:to-violet-700/20 to-violet-700/35 rounded-none`
               )}
                 >
                 <NavHeader user={user?.data!} />
@@ -105,10 +105,11 @@ export default function CarouselComponent() {
                 <CardContent className="flex flex-col my-16 md:mt-28 max-w-7xl mx-auto">
                  <div className="w-full flex flex-col gap-y-4 md:gap-y-7 h-full md:max-w-[50%]">
                   <motion.h1
-                      className="text-3xl md:text-5xl font-semibold text-violet-50"
+                      className="text-3xl md:text-5xl font-semibold text-violet-50 relative"
                       {...fadeIn}
                     >
                       {data?.title}
+                      <span className="absolute text-violet-200 top-0 -left-8 text-xs md:text-sm">{index + 1}/{heroData?.length}</span>
                     </motion.h1>
                     <motion.p
                       className="text-base md:text-xl text-violet-100 mb-12"
@@ -137,11 +138,11 @@ export default function CarouselComponent() {
 
                     {
                       user?.data ? (
-                        <Button variant={'ghost'} asChild className='rounded-full w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
+                        <Button variant={'ghost'} asChild className='rounded-full hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
                           <Link href={"/dashboard"}>Go to Dashboard</Link>
                         </Button>
                       ): (
-                        <Button variant={'ghost'} asChild className='rounded-full w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
+                        <Button variant={'ghost'} asChild className='rounded-full hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
                           <Link href={"/sign-in"}>Get started.</Link>
                         </Button>
                       )
