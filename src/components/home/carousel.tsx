@@ -11,35 +11,39 @@ import {
   } from "@/components/ui/carousel"
 
 import Autoplay from "embla-carousel-autoplay"
-import Image from "next/image"
 
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import NavHeader from "./nav-header"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import Footer from "./footer-transparent"
+import Loader from "../loaders/loader"
+import { useGetProfile } from "@/lib/react-query/funcs/user"
 
 
 const heroData = [
   {
       title: "Pay Your Bills Effortlessly, Anytime, Anywhere",
-      description: "Discover the Ultimate Convenience in Bill Management. Experience no struggle in accessing the perfect plan for you!",
+      description: "Discover the Ultimate Convenience in Bill Management. Experience no struggle in accessing the perfect plan for you! Our plans are so much affordable. Spend less, enjoy more!",
+      img: "/images/slides/girl-making-call.jpg",
+    },
+    {
+      title: "Streamline Your Bill Payments with Ease",
+      description: "Experience Seamless Transactions and Unmatched Convenience. We are available 24/7 to attend to your demands. Experience the freedom and live in the moment",
       img: "/images/slides/first-slide.jpg",
     },
     {
-      title: "Streamline Your Bill Payments with Ease",
-      description: "Experience Seamless Transactions and Unmatched Convenience. We are available 24/7 to attend to your demands. Experience the freedom and live in the moment",
-      img: "/images/slides/second-slide.jpg",
-    },
-    {
-      title: "Streamline Your Bill Payments with Ease",
-      description: "Experience Seamless Transactions and Unmatched Convenience. We are available 24/7 to attend to your demands. Experience the freedom and live in the moment",
-      img: "/images/slides/third-slide.jpg",
+      title: "Experience seamless transaction with zero charges.",
+      description: "Ever experienced bottle necks with transaction fees? We do not charge a dime for transfers. We in fact offer you a data bonus for every successful transaction you make to keep you up to date.",
+      img: "/images/slides/girl-with-phone.jpg",
   },
   
 ];
 
 export default function CarouselComponent() {
+
+  const { data: user, isPending } = useGetProfile()
 
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -48,8 +52,8 @@ export default function CarouselComponent() {
   }
 
     const [api, setApi] = React.useState<CarouselApi>()
-    const [current, setCurrent] = React.useState(0)
     const [count, setCount] = React.useState(0)
+    const [current, setCurrent] = React.useState(0)
    
     React.useEffect(() => {
       if (!api) {
@@ -64,6 +68,11 @@ export default function CarouselComponent() {
       })
     }, [api])
 
+  if (isPending) {
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <div className=" flex flex-col">
@@ -76,7 +85,7 @@ export default function CarouselComponent() {
     }}
      plugins={[
          Autoplay({
-          delay: 20000,
+          delay: 5000,
         }),
       ]}
      >
@@ -91,7 +100,7 @@ export default function CarouselComponent() {
                 `bg-gradient-to-r from-violet-950/90 to-violet-700/20`
               )}
                 >
-                <NavHeader />
+                <NavHeader user={user?.data!} />
 
                 <CardContent className="flex flex-col my-16 md:mt-28 max-w-7xl mx-auto">
                  <div className="w-full flex flex-col gap-y-4 md:gap-y-7 h-full md:max-w-[50%]">
@@ -126,12 +135,23 @@ export default function CarouselComponent() {
                       ))}
                     </motion.p>
 
-                    <Button variant={'ghost'} asChild className='rounded-full w-full border-none bg-white text-black text-lg' size={'lg'}>
-                      <Link href={"/sign-in"}>Get started.</Link>
-                    </Button>
+                    {
+                      user?.data ? (
+                        <Button variant={'ghost'} asChild className='rounded-full w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
+                          <Link href={"/dashboard"}>Go to Dashboard</Link>
+                        </Button>
+                      ): (
+                        <Button variant={'ghost'} asChild className='rounded-full w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
+                          <Link href={"/sign-in"}>Get started.</Link>
+                        </Button>
+                      )
+                    }
                  </div>
                 </CardContent>
-                <div className="md:basis-[18%]"/>
+
+                <div className="">
+                  <Footer />
+                </div>
               </Card>
             </div>
           </CarouselItem>

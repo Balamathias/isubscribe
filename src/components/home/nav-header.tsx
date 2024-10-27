@@ -4,10 +4,9 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { ModeToggle } from '../mode-toggle'
 import { User } from '@supabase/supabase-js'
+import { Tables } from '@/types/database'
 
-const NavHeader = () => {
-
-  let user: User | null = null
+const NavHeader = ({ user }: { user: Tables<'profile'> | null }) => {
 
   return (
     <div className='flex flex-row justify-center items-center w-full bg-transparent h-[70px] top-0 sticky z-50'>
@@ -17,17 +16,26 @@ const NavHeader = () => {
         </div>
         <div className='flex items-center justify-between gap-x-3'>
           <ModeToggle />
-          <Button asChild variant={'ghost'} className='text-violet-50'>
+          <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75'>
               <Link 
                 href={'/about'} 
                 className={``}
               >About us</Link>
           </Button>
+          {
+          user && 
+            <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75'>
+                <Link 
+                  href={'/dashboard'} 
+                  className={``}
+                >Dashboard</Link>
+            </Button>
+          }
           {!user && <div className='md:flex hidden flex-row items-center gap-x-2 !text-violet-50'>
-              <Button asChild variant={'ghost'} className=''>
+              <Button asChild variant={'ghost'} className='hover:bg-white hover:opacity-75'>
                 <Link href={"/sign-up"}>Sign up</Link>
               </Button>
-              <Button asChild className='' variant={'ghost'}>
+              <Button asChild className='hover:bg-white hover:opacity-75' variant={'ghost'}>
                 <Link href={"/sign-in"}>Login</Link>
               </Button>
             </div>}
