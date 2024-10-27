@@ -20,6 +20,7 @@ import Link from "next/link"
 import Footer from "./footer-transparent"
 import Loader from "../loaders/loader"
 import { useGetProfile } from "@/lib/react-query/funcs/user"
+import Reviews from "./reviews"
 
 
 const heroData = [
@@ -75,9 +76,9 @@ export default function CarouselComponent() {
   }
 
   return (
-    <div className=" flex flex-col">
+    <div className=" flex flex-col inset-0">
     <Carousel 
-     className="w-full  "
+     className="w-full inset-0 p-0 m-0"
      setApi={setApi} 
      opts={{
       align: "start",
@@ -97,7 +98,7 @@ export default function CarouselComponent() {
               style={{ backgroundImage: `url("${data.img}")`}}
             >
               <Card className={cn("flex items-center justify-between border-none flex-col shadow-none bg-inherit inset-0 h-full w-full p-4",
-                `bg-gradient-to-r from-violet-950/90 dark:to-violet-700/20 to-violet-700/35 rounded-none`
+              "bg-gradient-to-r from-violet-950/90 dark:to-violet-700/20 to-violet-700/35 bg-blend-multiply rounded-none"
               )}
                 >
                 <NavHeader user={user?.data!} />
@@ -136,6 +137,7 @@ export default function CarouselComponent() {
                       ))}
                     </motion.p>
 
+
                     {
                       user?.data ? (
                         <Button variant={'ghost'} asChild className='rounded-full hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
@@ -147,6 +149,8 @@ export default function CarouselComponent() {
                         </Button>
                       )
                     }
+                    
+                    <Reviews />
                  </div>
                 </CardContent>
 

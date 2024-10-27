@@ -2,7 +2,7 @@ import CarouselComponent from './carousel'
 
 const HeroSection = () => {
   return (
-    <div>
+    <div className='inset-0'>
       <CarouselComponent />
     </div>
   )

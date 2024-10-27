@@ -53,7 +53,7 @@ const DynamicModal = ({
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className={cn("sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", dialogClassName)}>
+        <DialogContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", dialogClassName)}>
           <DialogTitle className="sr-only" />
           <div className="flex flex-col gap-3 p-2.5">
             {children}
