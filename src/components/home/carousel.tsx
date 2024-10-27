@@ -97,7 +97,7 @@ export default function CarouselComponent() {
               style={{ backgroundImage: `url("${data.img}")`}}
             >
               <Card className={cn("flex items-center justify-between border-none flex-col shadow-none bg-inherit inset-0 h-full w-full p-4",
-                `bg-gradient-to-r from-violet-950/90 to-violet-700/20`
+                `bg-gradient-to-r from-violet-950/90 to-violet-700/20 rounded-none`
               )}
                 >
                 <NavHeader user={user?.data!} />
@@ -111,7 +111,7 @@ export default function CarouselComponent() {
                       {data?.title}
                     </motion.h1>
                     <motion.p
-                      className="text-xl text-violet-100 mb-12"
+                      className="text-base md:text-xl text-violet-100 mb-12"
                       {...fadeIn}
                     >
                       {[data.description]?.map((sentence, index) => (
