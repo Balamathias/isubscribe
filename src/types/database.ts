@@ -238,6 +238,7 @@ export type Database = {
           phone: string | null
           phone_numbers: string[] | null
           pin: string | null
+          role: string | null
           security_answer: string | null
           security_question: string | null
           state: string | null
@@ -254,6 +255,7 @@ export type Database = {
           phone?: string | null
           phone_numbers?: string[] | null
           pin?: string | null
+          role?: string | null
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
@@ -270,6 +272,7 @@ export type Database = {
           phone?: string | null
           phone_numbers?: string[] | null
           pin?: string | null
+          role?: string | null
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
@@ -284,6 +287,7 @@ export type Database = {
           created_at: string
           id: string
           rating: number | null
+          status: string | null
           updated_at: string | null
           user_id: string | null
         }
@@ -292,6 +296,7 @@ export type Database = {
           created_at?: string
           id?: string
           rating?: number | null
+          status?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -300,6 +305,7 @@ export type Database = {
           created_at?: string
           id?: string
           rating?: number | null
+          status?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
@@ -362,7 +368,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_total_transactions_amount: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
