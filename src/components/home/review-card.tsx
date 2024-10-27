@@ -29,7 +29,7 @@ const ReviewCard: React.FC<ReviewProps> = ({ avatar, full_name, comment, rating 
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      className="bg-white dark:bg-inherit p-3.5 md:p-5 border-b flex flex-col sm:flex-row items-center gap-4 w-full max-w-xl mx-auto"
+      className="bg-white dark:bg-inherit p-3.5 md:p-5 border-b flex flex-row items-center gap-4 w-full max-w-xl mx-auto"
     >
       <Avatar className="w-14 h-14">
         <AvatarImage src={avatar} />
