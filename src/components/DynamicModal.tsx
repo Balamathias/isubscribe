@@ -67,13 +67,13 @@ const DynamicModal = ({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} dismissible={showDrawerCancel || dismissible}>
+    <Drawer open={open} onOpenChange={setOpen} dismissible={!showDrawerCancel}>
       <DrawerTrigger asChild>
         { trigger }
       </DrawerTrigger>
       <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
 
-        <DrawerTitle className={cn('bg-transparent')} asChild>
+        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex')} asChild>
           <DrawerClose asChild>
             <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
               <LucideX />
