@@ -4,7 +4,7 @@ import { Tables } from '@/types/database';
 
 interface WalletData extends Tables<'wallet'> {}
 
-interface UseWalletResult {
+export interface UseWalletResult {
   wallet: WalletData | null;
   isLoading: boolean;
   error: Error | null;

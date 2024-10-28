@@ -14,6 +14,7 @@ import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import { useWallet } from '@/hooks/use-wallet'
 
 import useBiometricAuth from '@/hooks/use-biometric-auth'
+import { toast } from 'sonner'
 
 
 interface ConfirmPurchaseModal {
@@ -37,22 +38,26 @@ const ConfirmPurchaseModal = ({
     setProceed,
     func
 }: ConfirmPurchaseModal) => {
-    const { wallet, isLoading } = useWallet()
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const { isEnabled, authenticate, error } = useBiometricAuth()
+    const { wallet, isLoading } = useWallet()
 
+    const { isEnabled, authenticate, error } = useBiometricAuth()
+    
     const handleAuth = async () => {
         if (isEnabled) {
             const isAuthenticated = await authenticate()
             if (isAuthenticated) func?.()
-        } else {
-            setProceed(true)
+            } else {
+        setProceed(true)
         }
     }
+    
 
     if (isLoading) return <LoadingOverlay />
 
-    if (!wallet || !wallet?.balance) return null
+    if (!wallet) {
+        toast.error("Error loading wallet, please refresh.")
+    }
     
   return (
     <DynamicModal
@@ -83,7 +88,7 @@ const ConfirmPurchaseModal = ({
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
                     balance={formatNigerianNaira(wallet?.balance as number)}
-                    disabled={wallet?.balance < selected?.amount}
+                    disabled={wallet?.balance! < selected?.amount}
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 

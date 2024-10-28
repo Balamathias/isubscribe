@@ -6,12 +6,11 @@ import { Tables } from "@/types/database"
 import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassAirtimePayload, VTPassDataPayload } from "@/types/networks"
 import { nanoid } from 'nanoid'
 import { toast } from "sonner"
-import { getWallet, updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
+import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
 import { insertTransactionHistory, saveAirtimeErrorHistory, saveCashbackHistory, saveDataErrorHistory } from "@/lib/supabase/history"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { useRouter } from "next/navigation"
 import { networkIds } from "@/utils/networks"
-import { computeTransaction } from "@/funcs/computeTransaction"
 
 import { buyData as buyVTPassData, buyAirtime as buyVTPassAirtime } from "@/lib/vtpass/services"
 import generateRequestId from "@/funcs/generateRequestId"
@@ -25,6 +24,7 @@ import useWalletStore from "@/store/use-wallet-store"
 import { useGetProfile } from "@/lib/react-query/funcs/user"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 import useVibration from "@/hooks/use-vibration"
+import { computeServerTransaction } from "@/actions/compute.server"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -102,18 +102,16 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
 
-        const { data: wallet } = await getWallet()
-
-        const values = computeTransaction({
+        const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
                 price: priceToInteger(payload.Price),
                 cashback: priceToInteger(payload.CashBack),
                 method: payload.method,
                 interest: payload?.commission
             },
-            wallet: wallet!
         })
-        if (!values) return
+
+        if (computeError || !values) return toast.error(computeError || 'An unknown error has occured, please try again.')
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
         setDataBonus(cashbackPrice)
@@ -254,17 +252,15 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
 
-        const { data: wallet } = await getWallet()
-
-        const values = computeTransaction({
+        const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
                 price: parseInt(payload.Price),
                 cashback: parseInt(payload.CashBack),
-                method: payload.method
+                method: payload.method,
             },
-            wallet: wallet!
         })
-        if (!values) return
+
+        if (computeError || !values) return toast.error(computeError || 'An unknown error has occured, please try again.')
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
         setDataBonus(cashbackPrice)
@@ -388,21 +384,18 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
 
-        const { data: wallet } = await getWallet()
-
         setDataAmount(payload.detail?.dataQty!)
 
-        const values = computeTransaction({
+        const { data: values, error } = await computeServerTransaction({
             payload: {
                 price: (payload.amount as number),
-                cashback: (payload.cashback as number),
+                cashback: (payload?.cashback as number),
                 method,
-                interest: payload?.interest
+                interest: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
             },
-            wallet: wallet!
         })
 
-        if (!values) return
+        if (error || !values) return toast.error(error || 'An unknown error has occured, please try again.')
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
         setDataBonus(cashbackPrice)
@@ -520,20 +513,18 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const handleVTPassAirtime = async (method: PaymentMethod, payload: VTPassAirtimePayload) => {
 
-        const { data: wallet } = await getWallet()
-
         setAirtimeAmount(payload.amount.toString()!)
 
-        const values = computeTransaction({
+        const { data: values, error } = await computeServerTransaction({
             payload: {
                 price: (payload.amount as number),
                 cashback: (payload?.cashback as number),
-                method
+                method,
+                interest: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
             },
-            wallet: wallet!
         })
 
-        if (!values) return
+        if (error || !values) return toast.error(error || 'An unknown error has occured, please try again.')
 
         const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
         setDataBonus(cashbackPrice)

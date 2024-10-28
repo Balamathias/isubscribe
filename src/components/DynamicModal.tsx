@@ -14,11 +14,12 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerTrigger,
+  DrawerTitle,
 } from "@/components/ui/drawer"
-import clsx from 'clsx'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/utils'
 import { DialogTitle } from '@radix-ui/react-dialog'
+import { LucideX } from 'lucide-react'
 
 interface DynamicModalProps {
     children: React.ReactNode,
@@ -31,7 +32,8 @@ interface DynamicModalProps {
     dialogOnly?: boolean,
     drawerOnly?: boolean,
     dismissible?: boolean,
-    closeModal?: (open?: boolean) => void
+    closeModal?: (open?: boolean) => void,
+    showDrawerCancel?: boolean
 }
 const DynamicModal = ({
   children, 
@@ -44,6 +46,7 @@ const DynamicModal = ({
   dialogOnly=false, 
   drawerOnly=false, 
   dismissible=true,
+  showDrawerCancel=true,
   closeModal
 }: DynamicModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -64,11 +67,20 @@ const DynamicModal = ({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} dismissible={dismissible}>
+    <Drawer open={open} onOpenChange={setOpen} dismissible={showDrawerCancel || dismissible}>
       <DrawerTrigger asChild>
         { trigger }
       </DrawerTrigger>
-      <DrawerContent className={clsx('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
+      <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
+
+        <DrawerTitle className={cn('bg-transparent')} asChild>
+          <DrawerClose asChild>
+            <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
+              <LucideX />
+            </Button>
+          </DrawerClose>
+        </DrawerTitle>
+
         <div className="flex flex-col gap-3">
             {children}
         </div>

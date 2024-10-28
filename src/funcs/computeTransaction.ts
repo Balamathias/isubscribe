@@ -12,7 +12,7 @@ export const computeTransaction = ({
         const price = (payload.price)
         const cashbackPrice = (payload.cashback!)
 
-        const commission: number = (payload?.interest ?? 0) - cashbackPrice
+        const commission: number = ((payload?.interest ?? 0) - cashbackPrice) - (price * 0.015) /** @description: 1.5% monnify charges */
 
         if (!wallet?.balance) {
             toast.info("Insufficient wallet balance, please fund your wallet!")
@@ -28,13 +28,13 @@ export const computeTransaction = ({
             balance = wallet?.balance ?? 0.00
             deductableAmount = price
             cashbackBalance += cashbackPrice
-            if (balance < 0 || balance < price) return /** @example: Edge case, balance cannot be negative! */
+            if (balance < 0 || balance < price) return /** @description: Edge case, balance cannot be negative! */
         } else if (payload?.method === 'cashback') {
             cashbackBalance = wallet?.cashback_balance ?? 0.00
             cashbackBalance -= price
             cashbackBalance += cashbackPrice
             
-            if (cashbackBalance < 0) return /** @example: Ensure that cashbackBalance is not below 0 */
+            if (cashbackBalance < 0) return /** @desc: Ensure that cashbackBalance is not below 0 */
         } else {
             toast.error('Invalid or bad data!')
             return

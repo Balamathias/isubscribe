@@ -16,8 +16,6 @@ import { Label } from '@/components/ui/label'
 import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 
-import useBiometricAuth from '@/hooks/use-biometric-auth'
-
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
 const quickPlans = [
@@ -42,8 +40,6 @@ const AirtimeCards = () => {
     const [selected, setSelected] = useState<VTPassAirtimePayload | null>(null)
     const { data: profile, isPending: _profilePending } = useGetProfile()
     const [amount, setAmount] = useState<number | null>(null)
-
-    const { isEnabled, authenticate } = useBiometricAuth()
 
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -89,7 +85,7 @@ const AirtimeCards = () => {
                     className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
                     onClick={() => processFixedAirtimePlan(plan)}
                 >
-                    <div className="flex flex-col gap-y-1 items-center text-xs md:text-sm hover:transition-all">
+                    <div className="flex flex-col gap-y-2 items-center text-xs md:text-sm hover:transition-all">
                         <p className="font-semibold text-base">{formatNigerianNaira(plan)}</p>
                         <p className='tracking-tighter'>Pay {formatNigerianNaira(plan)}</p>
                         <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
@@ -100,22 +96,26 @@ const AirtimeCards = () => {
                 </Card>
             ))}
 
-            <Suspense fallback={<LoadingOverlay />}>
-                <ConfirmPurchaseModal 
-                    open={openConfirmPurchaseModal!}
-                    paymentMethod={paymentMethod}
-                    selected={selected!}
-                    setOpen={setOpenConfirmPurchaseModal as any}
-                    setPaymentMethod={setPaymentMethod}
-                    setProceed={setProceed}
-                    key={'airtime'}
-                    title='Airtime Purchase details'
-                    func={() => {
-                        handleVTPassAirtime(paymentMethod, {...selected!})
-                        setProceed(false)
-                    }}
-                />
-            </Suspense>
+            {
+                selected && (
+                    <Suspense fallback={<LoadingOverlay />}>
+                        <ConfirmPurchaseModal 
+                            open={openConfirmPurchaseModal!}
+                            paymentMethod={paymentMethod}
+                            selected={selected!}
+                            setOpen={setOpenConfirmPurchaseModal as any}
+                            setPaymentMethod={setPaymentMethod}
+                            setProceed={setProceed}
+                            key={'airtime'}
+                            title='Airtime Purchase details'
+                            func={() => {
+                                handleVTPassAirtime(paymentMethod, {...selected!})
+                                setProceed(false)
+                            }}
+                        />
+                    </Suspense>
+                )
+            }
 
             <DynamicModal
                 open={proceed}
