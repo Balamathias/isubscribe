@@ -1,5 +1,4 @@
 import React from 'react'
-import { Card } from '../ui/card'
 import Link from 'next/link'
 import { Share2 } from 'lucide-react'
 import { StarFilledIcon } from '@radix-ui/react-icons'
