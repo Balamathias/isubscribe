@@ -54,7 +54,7 @@ const InstallButton: React.FC<InstallButtonProps> = ({ className }) => {
   return (
     <motion.button
       onClick={handleInstallClick}
-      className={`bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 md:py-3 px-5 md:px-6 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-violet-300 ${className}`}
+      className={`bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 md:py-3 px-5 md:px-6 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-violet-300 text-base ${className}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
