@@ -99,6 +99,7 @@ const AirtimeCards = () => {
                 ): (
                     <PleaseSignIn 
                         message='Please sign in to buy airtime'
+                        key={idx}
                         trigger={
                             <Card
                                 key={idx}
