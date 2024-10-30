@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import DynamicModal from "../DynamicModal";
 import ShareReciept from "./ShareReciept";
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react";
+import { formatNigerianNaira } from "@/funcs/formatCurrency";
 
 const SubPurchaseStatus = ({
   closeModal,
@@ -39,6 +40,7 @@ const SubPurchaseStatus = ({
       open={open}
       closeModal={closeModal}
       dialogClassName="sm:max-w-[640px] md:max-w-[500px] rounded-2xl"
+      dismissible={false}
     >
       <div className="flex flex-col gap-y-1 p-6 items-center justify-center">
         {failed ? (
@@ -80,22 +82,22 @@ const SubPurchaseStatus = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {failed ? "Purchase Failed" : "Purchase Successful"}!
+          {failed ? "Failed" : "Successful"}!
         </motion.h2>
 
         <motion.h2
-          className="font-bold text-lg text-black dark:text-white text-center"
+          className="text-black dark:text-white text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          {action === "data" ? dataAmount : airtimeAmount}{" "}
-          <span className="font-normal text-base">for {phoneNumber}</span>
+          {action === "data" ? dataAmount : formatNigerianNaira(airtimeAmount as number)}{" "}
+          <span className="font-semibold text-base">for {phoneNumber}</span>
         </motion.h2>
 
         {failed ? (
           <motion.p
-            className="text-xs md:text-sm tracking-tighter py-1 text-center text-red-600 dark:text-red-500"
+            className="text-xs md:text-sm tracking-tighter py-1 text-center text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}

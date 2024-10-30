@@ -601,13 +601,13 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 description: `Airtime subscription topped-up for ${mobileNumber} successfully.`,
                 status: 'success',
                 title: 'Airtime Subscription.',
-                type: EVENT_TYPE.data_topup,
                 email: null,
                 meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
                 updated_at: null,
                 user: profile?.id!,
                 amount: price,
                 provider: 'vtpass',
+                type: EVENT_TYPE.airtime_topup
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
             setHistoryId(_insertHistory.id)

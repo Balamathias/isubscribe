@@ -67,7 +67,7 @@ const DynamicModal = ({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} dismissible={!showDrawerCancel}>
+    <Drawer open={open} onOpenChange={setOpen} dismissible={dismissible}>
       <DrawerTrigger asChild>
         { trigger }
       </DrawerTrigger>

@@ -1,13 +1,14 @@
 'use client'
 
 import React from 'react'
-import DynamicModal from '../DynamicModal'
+import DynamicSheet from '../DynamicSheet'
 
 import { Button } from '@/components/ui/button'
 import ReviewCard from './review-card'
 import { useReviews } from '@/lib/react-query/funcs/ratings'
 
 import SimpleLoader from '@/components/loaders/simple-loader'
+import Empty from '../Empty'
 
 const reviews = [
   {
@@ -25,16 +26,27 @@ const reviews = [
 ];
 
 const Reviews = () => {
-  const { data: reviews, isPending } = useReviews()
+  const { data: reviews, isPending, isError } = useReviews()
   return (
-    <DynamicModal
+    <DynamicSheet
       trigger={
         <Button variant={'ghost'} className='rounded-full ring-1 text-white hover:text-violet-100 w-full border-none text-lg hover:opacity-75 transition-all border hover:bg-transparent' size={'lg'}>
           Reviews
         </Button>
       }
-      dialogClassName='max-w-3xl w-full'
+      sheetClassName='max-w-3xl !w-[400px] overflow-auto'
+      drawerClassName='h-[75%] overflow-auto'
     >
+      {
+        isError && (
+          <Empty 
+            title='Error loading reviews'
+            content="We could not load reviews at this time, please try again."
+            color='red'
+          />
+        )
+      }
+      
       {
         isPending ? (
           <SimpleLoader />
@@ -52,7 +64,7 @@ const Reviews = () => {
           </div>
         )
       }
-    </DynamicModal>
+    </DynamicSheet>
   )
 }
 

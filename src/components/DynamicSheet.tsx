@@ -1,35 +1,96 @@
 'use client'
 
 import React from 'react'
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle
+} from "@/components/ui/sheet"
 
 import {
-    Sheet,
-    SheetContent,
-    SheetTrigger,
-  } from "@/components/ui/sheet"
-import clsx, { ClassValue } from 'clsx'
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerFooter,
+  DrawerTrigger,
+  DrawerTitle,
+} from "@/components/ui/drawer"
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
+import { LucideX } from 'lucide-react'
 
 interface DynamicSheetProps {
-    trigger: React.ReactNode,
     children: React.ReactNode,
+    trigger?: React.ReactNode,
     open?: boolean,
-    className?: string,
-    onClose?: () => void,
-    setOpen?: (open: boolean) => void,
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>> | ((bool: boolean) => void),
+    showCloseButton?: boolean,
+    sheetClassName?: string,
+    drawerClassName?: string,
+    sheetOnly?: boolean,
+    drawerOnly?: boolean,
+    dismissible?: boolean,
+    closeSheet?: (open?: boolean) => void,
+    showDrawerCancel?: boolean
 }
-  
-const DynamicSheet = ({trigger, children, className}: DynamicSheetProps) => {
-  return (
-    <Sheet>
+const DynamicSheet = ({
+  children, 
+  trigger, 
+  open, 
+  setOpen, 
+  sheetClassName, 
+  drawerClassName, 
+  showCloseButton, 
+  sheetOnly=false, 
+  drawerOnly=false, 
+  dismissible=true,
+  showDrawerCancel=true,
+  closeSheet
+}: DynamicSheetProps) => {
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+  if ((isDesktop || sheetOnly) && !drawerOnly) {
+    return (
+      <Sheet open={open} onOpenChange={closeSheet ? closeSheet : setOpen}>
         <SheetTrigger asChild>
-            {trigger}
+          {trigger}
         </SheetTrigger>
-        <SheetContent className={clsx('flex flex-col gap-3 overflow-hidden border-none rounded-md drop-shadow-md shadow-md px-2 py-5 custom-scrollbar', className)}>
-           <div className="flex flex-col p-4 px-1 overflow-auto custom-scrollbar">
+        <SheetContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", sheetClassName)}>
+          <SheetTitle className="sr-only" />
+          <div className="flex flex-col gap-3 p-2.5">
             {children}
-           </div>
+          </div>
         </SheetContent>
-    </Sheet>
+      </Sheet>
+    )
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen} dismissible={dismissible}>
+      <DrawerTrigger asChild>
+        { trigger }
+      </DrawerTrigger>
+      <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
+
+        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex')} asChild>
+          <DrawerClose asChild>
+            <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
+              <LucideX />
+            </Button>
+          </DrawerClose>
+        </DrawerTitle>
+
+        <div className="flex flex-col gap-3">
+            {children}
+        </div>
+        {showCloseButton && <DrawerFooter className="pt-2">
+          <DrawerClose asChild>
+            <Button variant="destructive">Close</Button>
+          </DrawerClose>
+        </DrawerFooter>}
+      </DrawerContent>
+    </Drawer>
   )
 }
 

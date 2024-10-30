@@ -29,30 +29,33 @@ const ReviewCard: React.FC<ReviewProps> = ({ avatar, full_name, comment, rating 
       variants={cardVariants}
       initial="hidden"
       animate="visible"
-      className="bg-white dark:bg-inherit p-3.5 md:p-5 border-b flex flex-row items-center gap-4 w-full max-w-xl mx-auto"
+      className="bg-white dark:bg-inherit p-3.5 md:p-5 border-b flex flex-row items-start gap-4 w-full max-w-xl mx-auto"
     >
       <Avatar className="w-14 h-14">
         <AvatarImage src={avatar} />
-        <AvatarFallback content={full_name?.at?.(0)} />
+        <AvatarFallback>
+          {full_name?.at?.(0)}
+        </AvatarFallback>
       </Avatar>
 
       <div className="flex flex-col w-full">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{full_name}</h3>
-          <div className="flex items-center">
+        </div>
+
+        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{comment}</p>
+
+        <div className="flex items-center mt-2">
             {[...Array(5)].map((_, i) => (
               <motion.span key={i} variants={starVariants} initial="initial" animate="animate">
                 <StarIcon
-                  className={`text-xl ${
+                  className={`text-base ${
                     i < rating ? "text-amber-400" : "text-gray-400 dark:text-gray-600"
                   }`}
                 />
               </motion.span>
             ))}
           </div>
-        </div>
-
-        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{comment}</p>
       </div>
     </motion.div>
   );

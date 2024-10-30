@@ -42,7 +42,7 @@ const ConfirmPurchaseModal = ({
     <DynamicModal
         open={open}
         setOpen={setOpen}
-        dismissible
+        dismissible={false}
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
     >
         

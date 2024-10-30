@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Button } from '../ui/button'
 import { ModeToggle } from '../mode-toggle'
 import { User } from '@supabase/supabase-js'
+import InstallButton from '../install-pwa-button'
 
 const NavHeader = ({ user }: { user: User | null }) => {
 
@@ -15,7 +16,7 @@ const NavHeader = ({ user }: { user: User | null }) => {
         </div>
         <div className='flex items-center justify-between gap-x-3'>
           <ModeToggle />
-          <Button asChild variant={'ghost'} className='text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
+          <Button asChild variant={'ghost'} className='hidden md:flex text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
               <Link 
                 href={'/about'} 
                 className={``}
@@ -38,6 +39,8 @@ const NavHeader = ({ user }: { user: User | null }) => {
                 <Link href={"/sign-in"}>Login</Link>
               </Button>
             </div>}
+
+          <InstallButton className='hidden md:flex' />
         </div>
       </div>
     </div>
