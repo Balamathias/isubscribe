@@ -40,7 +40,7 @@ const NavHeader = ({ user }: { user: User | null }) => {
               </Button>
             </div>}
 
-          <InstallButton className='hidden md:flex' />
+          <InstallButton className='md:flex' />
         </div>
       </div>
     </div>
