@@ -31,7 +31,6 @@ const AboutUs = ({isDashboard}:{isDashboard?:boolean}) => {
     <>
      <DynamicSheet 
        trigger={ <button className={`${!isDashboard && "absolute"} rounded-full flex p-2 px-5 py-1 items-center top-2 right-3 justify-center bg-violet-10 dark:bg-card/80 border-[3p] border-dashe ring-1 font-semibol`}>About us</button>}
-       className={" md:min-w-[460px] w-full"}
        >
         <div className=''>
         <Card className='flex justify-between object-cover bg-no-repeat bg-center gap-4 md:gap-7  bg-white dark:bg-card rounded-xl shadow-none drop-shadow-none border-none p-4 md:py-6 items-start flex-col'>
