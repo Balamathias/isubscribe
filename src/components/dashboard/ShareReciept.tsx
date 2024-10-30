@@ -9,13 +9,8 @@ import { useNetwork } from '@/providers/data/sub-data-provider'
 const ShareReciept = ({freeData}: { freeData: string, sLink?: string, rLink?: string }) => {
   const { historyId } = useNetwork()
   return (
-    <>
-       <Card className='shadow-none bg-secondary/15 dark:bg-secondary/50 border-none rounded-xl  flex flex-row gap-4 p-2 items-center justify-center w-full text-center'>
-            {/* <span>Bonus Earned:</span> */}
-            <span> <strong className=' text-sm text-green-600'>+</strong>{freeData} Data Bonus</span>
-        </Card>
-
-        <span className=' text-sm mb-[-4px] text-center animate-pulse'>Thank You for Choosing iSubscribe...</span>
+    <div className="flex flex-col gap-y-3">
+        <span className='text-sm mb-[-4px] text-center'>You have also received {freeData} Data Bonus</span>
         
         <div className=' flex flex-row gap-3 items-center w-full'>
         <Link href={`/dashboard/history/${historyId}`} className=' hover:opacity-70 hover:transition-all flex ring-1 max-md:gap-2 shadow-none border-none rounded-xl flex-row gap-4 p-4 max-sm:p-2 items-center justify-center w-full '>
@@ -35,7 +30,7 @@ const ShareReciept = ({freeData}: { freeData: string, sLink?: string, rLink?: st
           }
         />
         </div>
-    </>
+    </div>
   )
 }
 
