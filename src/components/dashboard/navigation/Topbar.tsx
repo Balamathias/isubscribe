@@ -40,7 +40,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
               <LucideBadgeHelp size={28} strokeWidth={2} className='' />
               <span>Support?</span>
             </Link>
-            <Logo showLogoText className='flex md:hidden' />
+            <Logo showLogoText textClassName='hidden md:block' className='flex md:hidden' />
           </>) : <BackButton />
         }
         </div>
