@@ -9,7 +9,6 @@ const PrivacyPolicy = () => {
     >
        <p>Privacy Policy</p>
     </div>}
-    className={" md:min-w-[460px] w-full"}
      >
     <div className=' flex flex-col gap-2'>
      <h2 className='text-muted-foreground text-[14px] font-semibold text-nowrap text-center'>Our Privacy Policy.</h2>

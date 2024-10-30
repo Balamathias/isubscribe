@@ -33,7 +33,8 @@ interface DynamicSheetProps {
     drawerOnly?: boolean,
     dismissible?: boolean,
     closeSheet?: (open?: boolean) => void,
-    showDrawerCancel?: boolean
+    showDrawerCancel?: boolean,
+    className?: string
 }
 const DynamicSheet = ({
   children, 
@@ -47,6 +48,7 @@ const DynamicSheet = ({
   drawerOnly=false, 
   dismissible=true,
   showDrawerCancel=true,
+  className,
   closeSheet
 }: DynamicSheetProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -56,7 +58,7 @@ const DynamicSheet = ({
         <SheetTrigger asChild>
           {trigger}
         </SheetTrigger>
-        <SheetContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", sheetClassName)}>
+        <SheetContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", className, sheetClassName)}>
           <SheetTitle className="sr-only" />
           <div className="flex flex-col gap-3 p-2.5">
             {children}
@@ -71,7 +73,7 @@ const DynamicSheet = ({
       <DrawerTrigger asChild>
         { trigger }
       </DrawerTrigger>
-      <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
+      <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', className, drawerClassName)}>
 
         <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex')} asChild>
           <DrawerClose asChild>
