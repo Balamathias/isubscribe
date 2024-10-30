@@ -7,9 +7,9 @@ import { Info } from 'lucide-react'
 
 const RecentTransactions = async () => {
     const supabase = createClient()
-    const { data: user } = await supabase.auth.getUser()
+    const { data: user, error: userError } = await supabase.auth.getUser()
 
-    const { data } = await supabase.from('history')
+    const { data, error: historyError } = await supabase.from('history')
         .select('*')
         .eq('user', user?.user?.id!)
         .order('created_at', { ascending: false })
@@ -24,22 +24,35 @@ const RecentTransactions = async () => {
                     See All
                 </Link>
             </div>
-            <div className=' self-center w-full flex flex-col gap-y-3'>
-                {
-                    data?.length === 0 ? (
-                    <Empty 
-                        title='No recent Transactions.'
-                        content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by funding your wallet above so you can buy Airtime or Data bundle(s).'}
-                        color='blue'
-                        icon={<Info />}
-                    />) : data?.map(item => (
-                        <HistoryItem 
-                            key={item.id}
-                            item={item}
+            {
+                user?.user ? (
+                    <div className=' self-center w-full flex flex-col gap-y-3'>
+                        {
+                            data?.length === 0 ? (
+                            <Empty 
+                                title='No recent Transactions.'
+                                content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by funding your wallet above so you can buy Airtime or Data bundle(s).'}
+                                color='blue'
+                                icon={<Info />}
+                            />) : data?.map(item => (
+                                <HistoryItem 
+                                    key={item.id}
+                                    item={item}
+                                />
+                            ))
+                        }
+                    </div>
+                ): (
+                    <div className='self-center w-full flex flex-col gap-y-3'>
+                        <Empty 
+                            title='You are not signed in.'
+                            content={'Please sign in to view your recent transactions.'}
+                            color='blue'
+                            icon={<Info />}
                         />
-                    ))
-                }
-            </div>
+                    </div>
+                )
+            }
         </div>
     </>
   )

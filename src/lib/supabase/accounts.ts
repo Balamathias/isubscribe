@@ -12,7 +12,7 @@ export const getAccount = async (id?: string) => {
     const supabase = createClient()
     const { data, error } = await supabase.from('account').select('*').eq('user', id ?? user?.id!).single()
 
-    if (error) throw error
+    if (error) return { data, error }
 
     return { data, error }
 }
@@ -75,7 +75,7 @@ export const getUser = async (id?: string) => {
 
     const { data, error } = await supabase.from('profile').select('*').eq('id', ID).single()
 
-    if (error) throw error
+    if (error) return { error, data }
 
     return { data, error }
 

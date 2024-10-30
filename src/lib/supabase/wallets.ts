@@ -23,7 +23,7 @@ export const getWallet = async (userId?: string) => {
         return { data, error }
     }
 
-    if (error) throw error
+    if (error) return { data, error }
 
     return { data, error }
 }

@@ -11,7 +11,7 @@ import { getGreeting } from '@/lib/utils'
 import React, { Suspense } from 'react'
 
 const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
-    const [{ data: profile }, { data: wallet }] = await Promise.all([
+    const [{ data: profile, error: profileError }, { data: wallet, error: walletError }] = await Promise.all([
       getUser(),
       getWallet()
     ])

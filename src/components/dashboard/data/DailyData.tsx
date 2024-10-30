@@ -54,6 +54,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                 dataQty={d.dataQty}
                 dataDuration={d.duration}
                 dataPrice={d.unitPrice}
+                profile={profile?.data}
                 handler={
                     () => {
                         if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')

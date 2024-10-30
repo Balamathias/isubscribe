@@ -77,6 +77,7 @@ const DataNetworkCard = () => {
                 dataQty={d.Data}
                 dataDuration={d.Duration}
                 dataPrice={priceToInteger(d.Price)}
+                profile={profile?.data}
             />
         ))}
 

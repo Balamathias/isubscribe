@@ -70,57 +70,57 @@ const WelcomeBonusModal = ({ type = 'basic', profile, wallet }: WelcomeBonusModa
     setSuccessful(false)
   }
 
-  if (!claimed) {
-    return (
-        <DynamicModal
-            open={(!claimed && !successful)}
-            setOpen={setClaimed as any}
-            closeModal={() => setClaimed(true)}
-        >
-            <div className='flex flex-col py-2 gap-y-4 items-center justify-center'>
-                <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
-                    <LucideGift size={15} />
-                </div>
-                <h2 className='text-base font-semibold text-center'>Congratulations <span className="text-amber-500">{profile?.full_name}</span>!,</h2>
-                <p className="text-sm tracking-tighter text-center">Your account has been verified successfully! <br />
-                    You&apos;ve also been Awarded with <span className='font-extrabold'>₦{reward}</span> Welcome Bonus for signing up to <span className="font-extrabold">iSubscribe</span>.
-                </p>
-                <Button 
-                    className='w-full rounded-full mt-2' 
-                    size={'lg'}
-                    onClick={handleClaimWelcomeBonus}
-                >
-                    {loading ? 'Hang tight...' : 'Claim Bonus Now'}
-                </Button>
-            </div>
-        </DynamicModal>
-    )
-  }
+  // if (!claimed) {
+  //   return (
+  //       <DynamicModal
+  //           open={(!claimed && !successful)}
+  //           setOpen={setClaimed as any}
+  //           closeModal={() => setClaimed(true)}
+  //       >
+  //           <div className='flex flex-col py-2 gap-y-4 items-center justify-center'>
+  //               <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
+  //                   <LucideGift size={15} />
+  //               </div>
+  //               <h2 className='text-base font-semibold text-center'>Congratulations <span className="text-amber-500">{profile?.full_name}</span>!,</h2>
+  //               <p className="text-sm tracking-tighter text-center">Your account has been verified successfully! <br />
+  //                   You&apos;ve also been Awarded with <span className='font-extrabold'>₦{reward}</span> Welcome Bonus for signing up to <span className="font-extrabold">iSubscribe</span>.
+  //               </p>
+  //               <Button 
+  //                   className='w-full rounded-full mt-2' 
+  //                   size={'lg'}
+  //                   onClick={handleClaimWelcomeBonus}
+  //               >
+  //                   {loading ? 'Hang tight...' : 'Claim Bonus Now'}
+  //               </Button>
+  //           </div>
+  //       </DynamicModal>
+  //   )
+  // }
 
-    else if (successful && claimed) 
-      return (
-        <DynamicModal
-            open={successful && claimed}
-            setOpen={setSuccessful}
-            dismissible={false}
-        >
-            <div className='flex flex-col py-2 gap-y-4 justify-center items-center'>
-                <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
-                  <LucideCheck size={15} strokeWidth={2}/>
-                </div>
-                <h2 className='text-base font-semibold text-center'>Welcome to iSubscribe <span className="text-amber-500">{profile?.full_name}</span>,</h2>
-                <p className="text-sm tracking-tighter text-center">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button! What would you like to do from here?
-                </p>
-                <Button 
-                    className='w-full rounded-full mt-2' 
-                    variant={'default'}
-                    onClick={handleCloseModal}
-                >
-                    Continue
-                </Button>
-            </div>
-        </DynamicModal>
-    )
+    // else if (successful && claimed) 
+    //   return (
+    //     <DynamicModal
+    //         open={successful && claimed}
+    //         setOpen={setSuccessful}
+    //         dismissible={false}
+    //     >
+    //         <div className='flex flex-col py-2 gap-y-4 justify-center items-center'>
+    //             <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600'>
+    //               <LucideCheck size={15} strokeWidth={2}/>
+    //             </div>
+    //             <h2 className='text-base font-semibold text-center'>Welcome to iSubscribe <span className="text-amber-500">{profile?.full_name}</span>,</h2>
+    //             <p className="text-sm tracking-tighter text-center">You have successfully claimed your welcome bonus! We Welcome You to our Community where Bill Payment is just a Click of a Button! What would you like to do from here?
+    //             </p>
+    //             <Button 
+    //                 className='w-full rounded-full mt-2' 
+    //                 variant={'default'}
+    //                 onClick={handleCloseModal}
+    //             >
+    //                 Continue
+    //             </Button>
+    //         </div>
+    //     </DynamicModal>
+    // )
 
     return <></>
 }

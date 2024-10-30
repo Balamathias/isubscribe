@@ -14,6 +14,7 @@ import { UsersIcon } from 'lucide-react'
 import { parseNigerianPhoneNumber } from '@/lib/utils'
 
 import useContacts from '@/hooks/use-contacts'
+import { Tables } from '@/types/database'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -31,11 +32,9 @@ const tabs = [
     },
 ]
 
-const DataTabs = () => {
+const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
-    const { data: profile, isPending } = useGetProfile()
-    
     const { contact, importContact } = useContacts()
 
     const handleVerifyNumber = useCallback(async () => {
@@ -73,8 +72,6 @@ const DataTabs = () => {
         </TabsContent>
     ), [activeTabIndex])
 
-    if (isPending) return <DataTabsSkeleton />
-
     return (
         <div className='flex-col gap-y-6 md:gap-y-10 max-sm:w-[90vw] w-[600px]'>
             <div className='flex flex-col gap-y-4 py-4'>
@@ -83,7 +80,7 @@ const DataTabs = () => {
                     <CustomInput 
                         placeholder='Your Phone Number'
                         value={mobileNumber}
-                        defaultValue={profile?.data?.phone || ''}
+                        defaultValue={profile?.phone || ''}
                         onChange={handleNumberChange}
                         name='phone'
                         className='shadow-sm'

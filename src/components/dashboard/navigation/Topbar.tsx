@@ -9,18 +9,14 @@ import { usePathname } from 'next/navigation'
 import { LucideBadgeHelp, LucideHeadphones, LucideSettings2, LucideShare2 } from 'lucide-react'
 import Logo from '@/components/Logo'
 import SignOutComponent from '@/components/auth/SignOutComponent'
-import { useGetProfile } from '@/lib/react-query/funcs/user'
-import LoadingOverlay from '@/components/loaders/LoadingOverlay'
-import DynamicSheet from '@/components/DynamicSheet'
 import DynamicModal from '@/components/DynamicModal'
 import Support from '../support'
 import { ModeToggle } from '@/components/mode-toggle'
 import ComingSoon from '../comig-soon'
 import { getGreeting } from '@/lib/utils'
 
-const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
+const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const pathname = usePathname()
-  const { data: profile, isPending } = useGetProfile()
   const [openSupport, setOpenSupport] = useState(false)
   const [openProfileActions, setOpenProfileActions] = useState(false)
 
@@ -28,8 +24,6 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
     setOpenSupport(false)
     setOpenProfileActions(false)
   }, [pathname])
-
-  if (isPending) return <LoadingOverlay />
 
   return (
     <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white/80 dark:bg-gray-900/80 shadow-sm border-b backdrop-blur-md'>
@@ -64,10 +58,10 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
               trigger = {
                 <Link passHref href={'#'} 
                   className='cursor-pointer hover:opacity-80 flex items-center gap-x-1'>
-                  <span className='text-muted-foreground text-xs hidden md:block'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{data?.full_name?.split(' ')?.at(0)}</span>!</span>
-                  <Avatar title={data?.full_name ?? ''}>
-                    <AvatarImage src={data?.avatar!}/>
-                    <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
+                  <span className='text-muted-foreground text-xs hidden md:block'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name?.split(' ')?.at(0) || 'Guest'}</span>!</span>
+                  <Avatar title={profile?.full_name ?? 'Guest'}>
+                    <AvatarImage src={profile?.avatar!}/>
+                    <AvatarFallback>{profile?.full_name?.[0] || 'G'}</AvatarFallback>
                   </Avatar>
                 </Link>
               }
@@ -75,13 +69,13 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
               <div className='flex flex-col gap-y-2 justify-between md:p-3 md:py-1 py-1 p-1.5'>
                 <Link passHref href={'#'} 
                   className='cursor-pointer hover:opacity-80 flex items-center gap-x-1 pb-4 py-2'>
-                  <Avatar title={data?.full_name ?? ''}>
-                    <AvatarImage src={data?.avatar!}/>
-                    <AvatarFallback>{data?.full_name?.[0]}</AvatarFallback>
+                  <Avatar title={profile?.full_name ?? ''}>
+                    <AvatarImage src={profile?.avatar!}/>
+                    <AvatarFallback>{profile?.full_name?.[0]}</AvatarFallback>
                   </Avatar>
                   <div className='flex flex-col space-y-1'>
-                    <p className='text-muted-foreground text-xs'>{data?.full_name}</p>
-                    <p className='text-muted-foreground text-sm'>{data?.email}</p>
+                    <p className='text-muted-foreground text-xs'>{profile?.full_name || 'Guest'}</p>
+                    <p className='text-muted-foreground text-sm'>{profile?.email || ''}</p>
                   </div>
                 </Link>
 
@@ -107,7 +101,7 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
                 </div>
                 
                 <div className='mt-auto'>
-                  <SignOutComponent profile={profile?.data!} />
+                  <SignOutComponent profile={profile} />
                 </div>
               </div>
             </DynamicModal>
@@ -115,13 +109,17 @@ const Topbar = ({ profile: data }: { profile: Tables<'profile'>}) => {
         </div>
       </div>
 
-      <DynamicModal
-        open={openSupport}
-        setOpen={setOpenSupport}
-        dialogClassName='rounded-2xl'
-      >
-        <Support />
-      </DynamicModal>
+      {
+        profile && (
+          <DynamicModal
+            open={openSupport}
+            setOpen={setOpenSupport}
+            dialogClassName='rounded-2xl'
+          >
+            <Support />
+          </DynamicModal>
+        )
+      }
     </div>
   )
 }
