@@ -17,7 +17,7 @@ import { Button } from '../ui/button';
 import { getUserPin } from '@/lib/supabase/user.actions';
 import useVibration from '@/hooks/use-vibration';
 
-const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { className?: string, func?: () => void, profile?: Tables<'profile'>, setShowResetPin?: (bool: boolean) => void }) => {
+const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { className?: string, func?: () => void, profile?: Tables<'profile'> | null, setShowResetPin?: (bool: boolean) => void }) => {
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const router = useRouter()

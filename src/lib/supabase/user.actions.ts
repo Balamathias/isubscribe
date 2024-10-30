@@ -49,10 +49,10 @@ export const signOut = async () => {
     if (user) {
         const { error } = await supabase.auth.signOut()
         if (error) throw error
-        revalidatePath('/', 'layout')
-        return redirect('/sign-in')
+        revalidatePath('/dashboard', 'layout')
+        return redirect('/dashboard')
     } else {
-        return redirect('/sign-in')
+        return redirect('/dashboard')
     }
 }
 

@@ -13,7 +13,7 @@ import ComingSoon from '../comig-soon'
 import { LucideShieldCheck } from 'lucide-react'
 
 
-const SettingsComponent = ({ profile }: { profile: Tables<'profile'> }) => {
+const SettingsComponent = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const { theme } = useTheme()
 
   return (
@@ -29,7 +29,7 @@ const SettingsComponent = ({ profile }: { profile: Tables<'profile'> }) => {
 
         <SecurityQuestion profile={profile} />
 
-        <EnableBiometricAuth />
+        <EnableBiometricAuth profile={profile} />
 
         <ComingSoon 
           trigger={

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-// import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import localFont from 'next/font/local'
 import "./globals.css";
 import Providers from "@/providers";
@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 // const inter = Inter({ subsets: ["latin"] });
 
-// const poppins = Poppins({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
+const poppins = Poppins({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
 
 const localPoppins = localFont({
   src: './fonts/poppins/Poppins-Regular.ttf',
@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn('antialised', localPoppins.className,)}>
+      <body className={cn('antialised', process.env.NODE_ENV === 'development' ? localPoppins.className : poppins.className)}>
         <Providers>
           {children}
         </Providers>

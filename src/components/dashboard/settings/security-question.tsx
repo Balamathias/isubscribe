@@ -6,21 +6,39 @@ import { Tables } from '@/types/database'
 import { Card } from '@/components/ui/card'
 import { FileQuestion, LucideArrowRight } from 'lucide-react'
 import SettingItem from './setting-item'
+import PleaseSignIn from '../please-sign-in.modal'
 
-const SecurityQuestion = ({ profile }: { profile: Tables<'profile'> }) => {
+const SecurityQuestion = ({ profile }: { profile?: Tables<'profile'> | null }) => {
 
   const [updateSecurityQ, setUpdateSecurityQ] = useState(true)
   const [openUpdateSecurityModal, setOpenUpdateSecurityModal] = useState(false)
 
   return (
     <div>
-        <SettingItem 
-            icon={<FileQuestion />}
-            iconClassName='text-blue-500 bg-blue-500/15'
-            title={'Edit Security Question'}
-            description={profile?.security_question ? profile?.security_question : 'Edit your security question and answer.'}
-            onClick={() => setOpenUpdateSecurityModal(prev => !prev)}
-        />
+        {
+            profile ? (
+                <SettingItem 
+                    icon={<FileQuestion />}
+                    iconClassName='text-blue-500 bg-blue-500/15'
+                    title={'Edit Security Question'}
+                    description='Edit your security question and answer.'
+                    onClick={() => setOpenUpdateSecurityModal(prev => !prev)}
+                />
+                
+            ) : (
+                <PleaseSignIn
+                    message='Please sign in to edit your security question'
+                    trigger={
+                        <SettingItem 
+                            icon={<FileQuestion />}
+                            iconClassName='text-blue-500 bg-blue-500/15'
+                            title={'Edit Security Question'}
+                            description='Edit your security question and answer.'
+                        />
+                    }
+                />
+            )
+        }
         <DynamicModal
             open={openUpdateSecurityModal}
             setOpen={setOpenUpdateSecurityModal}

@@ -38,9 +38,9 @@ const PleaseSignIn = ({ trigger, message }: { trigger: ReactNode, message?: stri
           {message || `You have to be signed in to be able to complete this action.!`}
         </motion.p>
 
-        <Link href="/sign-in">
+        <Link href="/sign-in" className='w-full'>
           <motion.button
-            className="flex items-center justify-center gap-2 py-2 px-2.5 bg-violet-600 text-white shadow-lg hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-700 transition-all ease-in-out duration-300 rounded-full w-full"
+            className="flex items-center justify-center gap-2 py-2 px-3 bg-violet-600 text-white shadow-lg hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-700 transition-all ease-in-out duration-300 rounded-full w-full"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.35 }}

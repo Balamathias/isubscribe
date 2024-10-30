@@ -15,6 +15,7 @@ import CustomInput from '../CustomInput'
 import { Label } from '@/components/ui/label'
 import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
+import PleaseSignIn from '../please-sign-in.modal'
 
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
@@ -80,20 +81,41 @@ const AirtimeCards = () => {
     <div className='flex flex-col gap-y-4'>
         <div className='rounded-xl bg-white dark:bg-card/80 md:p-5 p-2 grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4 shadow-sm'>
             {(quickPlans.slice(0, !isDesktop ? 6 : 10)).map((plan, idx) => (
-                <Card
-                    key={idx}
-                    className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
-                    onClick={() => processFixedAirtimePlan(plan)}
-                >
-                    <div className="flex flex-col gap-y-2 items-center text-xs md:text-sm hover:transition-all">
-                        <p className="font-semibold text-base">{formatNigerianNaira(plan)}</p>
-                        <p className='tracking-tighter'>Pay {formatNigerianNaira(plan)}</p>
-                        <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
-                            <span>+{formatDataAmount(plan * 0.01 * DATA_MB_PER_NAIRA)}</span>
-                            <span className='sr-only'>Data bonus</span>
+                profile ? (
+                    <Card
+                        key={idx}
+                        className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
+                        onClick={() => processFixedAirtimePlan(plan)}
+                    >
+                        <div className="flex flex-col gap-y-2 items-center text-xs md:text-sm hover:transition-all">
+                            <p className="font-semibold text-base">{formatNigerianNaira(plan)}</p>
+                            <p className='tracking-tighter'>Pay {formatNigerianNaira(plan)}</p>
+                            <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
+                                <span>+{formatDataAmount(plan * 0.01 * DATA_MB_PER_NAIRA)}</span>
+                                <span className='sr-only'>Data bonus</span>
+                            </div>
                         </div>
-                    </div>
-                </Card>
+                    </Card>
+                ): (
+                    <PleaseSignIn 
+                        message='Please sign in to buy airtime'
+                        trigger={
+                            <Card
+                                key={idx}
+                                className="shadow-none cursor-pointer hover:transition-all rounded-sm hover:bg-violet-50 border-none drop-shadow-none bg-violet-100 rounded-tr-3xl p-2 dark:bg-secondary hover:opacity-50 hover:translate-all peer peer-hover:opacity-65 peer-hover:transition-all"
+                            >
+                                <div className="flex flex-col gap-y-2 items-center text-xs md:text-sm hover:transition-all">
+                                    <p className="font-semibold text-base">{formatNigerianNaira(plan)}</p>
+                                    <p className='tracking-tighter'>Pay {formatNigerianNaira(plan)}</p>
+                                    <div className="flex flex-row items-center gap-1 text-violet-600 dark:text-muted-foreground text-[9px] bg-violet-50 dark:bg-gray-900 rounded-full px-2 p-1">
+                                        <span>+{formatDataAmount(plan * 0.01 * DATA_MB_PER_NAIRA)}</span>
+                                        <span className='sr-only'>Data bonus</span>
+                                    </div>
+                                </div>
+                            </Card>
+                        }
+                    />
+                )
             ))}
 
             {
@@ -148,17 +170,34 @@ const AirtimeCards = () => {
                 id='amount'
                 type='number'
             />
-            <Button 
-                className={cn('rounded-full mt-4', {
-                    'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
-                })}
+            {
+                profile ? (
+                    <Button 
+                        className={cn('rounded-full mt-4', {
+                            'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
+                        })}
 
-                onClick={processDynamicAirtimePlan}
-                disabled={AMOUNT_OUT_OF_RANGE}
-                size={'lg'}
-            >
-                {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
-            </Button>
+                        onClick={processDynamicAirtimePlan}
+                        disabled={AMOUNT_OUT_OF_RANGE}
+                        size={'lg'}
+                    >
+                        {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
+                    </Button>
+                ): (
+                    <PleaseSignIn
+                        message='Please sign in to buy airtime'
+                        trigger={
+                            <Button 
+                                className={cn('rounded-full mt-4', {
+                                    'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
+                                })}
+                            >
+                                {amount ? 'Pay ' + formatNigerianNaira(amount!) : 'Proceed'}
+                            </Button>
+                        }
+                    />
+                )
+            }
         </div>
     </div>
   )
