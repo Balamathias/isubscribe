@@ -25,11 +25,11 @@ const reviews = [
   },
 ];
 
-const Reviews = ({ trigger }: { trigger: React.ReactNode }) => {
+const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
   const { data: reviews, isPending, isError } = useReviews()
   return (
     <DynamicSheet
-      trigger={trigger}
+      trigger={trigger || <></>}
       sheetClassName='max-w-3xl overflow-auto'
       drawerClassName='max-md:h-[60vh]'
     >
