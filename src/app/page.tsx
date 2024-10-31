@@ -12,7 +12,7 @@ export default async function Home({searchParams}: { searchParams: {[key: string
     return redirect('/auth/auth-code-error?msg=' + encodeURIComponent(errorMessage!))
   }
 
-  redirect('/dashboard')
+  return redirect('/dashboard')
 
   return(
     <div className="min-h-screen">

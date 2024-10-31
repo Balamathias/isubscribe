@@ -7,11 +7,11 @@ import { Info } from 'lucide-react'
 
 const RecentTransactions = async () => {
     const supabase = createClient()
-    const { data: user, error: userError } = await supabase.auth.getUser()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     const { data, error: historyError } = await supabase.from('history')
         .select('*')
-        .eq('user', user?.user?.id!)
+        .eq('user', user?.id!)
         .order('created_at', { ascending: false })
         .limit(3)
 
@@ -25,7 +25,7 @@ const RecentTransactions = async () => {
                 </Link>
             </div>
             {
-                user?.user ? (
+                user ? (
                     <div className=' self-center w-full flex flex-col gap-y-3'>
                         {
                             data?.length === 0 ? (
@@ -33,6 +33,7 @@ const RecentTransactions = async () => {
                                 title='No recent Transactions.'
                                 content={'You haven\'t carried out any transaction on iSubscribe yet. You can start by funding your wallet above so you can buy Airtime or Data bundle(s).'}
                                 color='blue'
+                                className='pb-4'
                                 icon={<Info />}
                             />) : data?.map(item => (
                                 <HistoryItem 
@@ -49,6 +50,7 @@ const RecentTransactions = async () => {
                             content={'Please sign in to view your recent transactions.'}
                             color='blue'
                             icon={<Info />}
+                            className='pb-4'
                         />
                     </div>
                 )
