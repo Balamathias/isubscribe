@@ -1,6 +1,6 @@
 ## Introducing Isubscribe web platform
 
-Isubscribe is a new VTU platform developed by Programmers at Dayilo Software Inc. for a faster, secure and liable utility payments processing.
+Isubscribe is a new VTU platform developed by Programmers at Dayilo Software Inc. for a faster, secure and reliable utility payments processing.
 
 We have chosen to engage the very best APIs for this purpose and you can pay your utitlity bill now with massive discount prices.
 
