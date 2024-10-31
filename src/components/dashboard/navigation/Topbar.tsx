@@ -15,7 +15,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 import ComingSoon from '../comig-soon'
 import { getGreeting } from '@/lib/utils'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, LucideUserCheck, LucideInfo } from 'lucide-react'
 import InstallButton from '@/components/install-pwa-button'
 
 
@@ -98,6 +98,20 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
 
                   <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
                     <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
+                      <LucideUserCheck size={17} strokeWidth={1.5} className='' />
+                    </span>
+                    <Link href={'/privacy-policy'}>Privacy Policy</Link>
+                  </div>
+
+                  <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
+                    <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
+                      <LucideInfo size={17} strokeWidth={1.5} className='' />
+                    </span>
+                    <Link href={'/about'}>About us</Link>
+                  </div>
+
+                  <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
+                    <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
                       <LucideShare2 size={17} strokeWidth={1.5} className='' />
                     </span>
                     <ComingSoon 
@@ -109,7 +123,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
                 </div>
                 
                 <div className='mt-auto'>
-                  <SignOutComponent profile={profile} />
+                  <SignOutComponent profile={profile} setOpenProfileActions={setOpenProfileActions} />
                 </div>
 
                 {

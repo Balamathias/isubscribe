@@ -32,6 +32,20 @@ const PrivacyPolicy = () => {
     },
   ]
 
+  const privacyDetails = [
+    "At iSubscribe Network (https://isubscribe.ng), your privacy is paramount to us. We are committed to respecting your privacy and complying with any applicable law and regulation regarding any personal information we may collect about you.",
+    "We collect both information you knowingly provide to us when using our services and promotions, and information that your devices automatically send while accessing our products and services.",
+    "When you visit our website, our servers may log standard data provided by your web browser, including your device's IP address, browser type and version, pages visited, and visit timing.",
+    "We may request personal information such as name, email address, and phone number to provide our services effectively.",
+    "We use Paystack and Monnify for payment processing. When processing payments, some of your data will be shared with these companies, including information necessary to process or support the payment.",
+    "We take commercially acceptable steps to protect your personal information from loss, theft, unauthorized access, disclosure, copying, use, or modification.",
+    "We retain your personal information only as long as necessary for the purposes set out in this privacy policy, or to comply with legal obligations.",
+    "We do not target our services directly at children under the age of 13, and we do not knowingly collect personal information from children under 13.",
+    "You have the right to withhold personal information from us, request details of any personal information we hold about you, and opt-out of marketing communications.",
+    "We use cookies to collect information about you and your activity across our site to improve your experience.",
+    "We may use your email and username to auto-create your iSubscribe virtual account when you sign up for the first time, or to verify your identity as the case may be.",
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-100 dark:from-gray-900 dark:to-yellow-900 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col gap-y-6 justify-between">
       <motion.div
@@ -108,29 +122,25 @@ const PrivacyPolicy = () => {
             className='text-base font-semibold md:text-xl'
             {...fadeIn}
           >
-            How we use your data
+            Our Privacy Policy
           </motion.h2>
-          <motion.p 
-            className='text-sm md:text-base'
-            {...fadeIn}
-            transition={{ delay: 0.2 }}
+          <motion.ul 
+            className='list-disc pl-6 space-y-4'
+            initial="initial"
+            animate="animate"
+            variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
           >
-            We may use your email and username to auto-create your iSubscribe virtual account when you sign up for the first time, or to verify your identity as the case may be.
-          </motion.p>
-          <motion.p 
-            className='text-sm md:text-base'
-            {...fadeIn}
-            transition={{ delay: 0.4 }}
-          >
-            iSubscribe cannot read your PIN or Password as they are hashed using the bcrypt package. This ensures an additional layer of security for your account.
-          </motion.p>
-          <motion.p 
-            className='text-sm md:text-base'
-            {...fadeIn}
-            transition={{ delay: 0.6 }}
-          >
-            We might use your email to update you with news about our recent updates and important service information.
-          </motion.p>
+            {privacyDetails.map((detail, index) => (
+              <motion.li 
+                key={index}
+                className='text-sm md:text-base marker:text-yellow-600 dark:marker:text-yellow-400'
+                variants={fadeIn}
+                transition={{ delay: index * 0.2 }}
+              >
+                {detail}
+              </motion.li>
+            ))}
+          </motion.ul>
         </Card>
 
         <motion.div

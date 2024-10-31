@@ -10,7 +10,7 @@ import { Tables } from '@/types/database'
 import { LogOut, LucideArrowRight } from 'lucide-react'
 import PleaseSignIn from '../dashboard/please-sign-in.modal'
 
-const SignOutComponent = ({ profile, trigger }: { profile?: Tables<'profile'> | null, trigger?: ReactNode }) => {
+const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile?: Tables<'profile'> | null, trigger?: ReactNode, setOpenProfileActions?: (bool: boolean) => void }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
@@ -19,6 +19,7 @@ const SignOutComponent = ({ profile, trigger }: { profile?: Tables<'profile'> | 
         try {
             setLoading(true)
             await signOut()
+            setOpenProfileActions && setOpenProfileActions(false)
         } catch (error: any) {
             toast.error(error.message)
             setLoading(false)

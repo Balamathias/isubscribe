@@ -19,6 +19,21 @@ const About = () => {
     { icon: UsersIcon, title: 'Team Collaboration', description: 'Manage subscriptions for your entire team or organization.' },
   ]
 
+  const services = [
+    "Cheap Data Subscriptions with massive Data Bonus",
+    "Airtime top up with massive Data Bonus",
+    "Electricity top up with massive Data Bonus",
+    "TV Cable Subscriptions with massive Data Bonus",
+    "WAEC/JAMB/NECO pins with massive Data Bonus"
+  ]
+
+  const overviewContent = [
+    "Isubscribe is a Bill Payment Platform with the Vision to steamline a faster, secure and reliable utility payments processing.",
+    "We have chosen to engage the very best and modern technologies for this purpose and you can pay your utitlity bills now with massive discount prices and a whoping Data Bonus for every Successful Transactions and Zero Wallet Funding Fee.",
+    "Pay your utility bills with just a single click. We currently offer the following services:",
+    "We cherish and honor our Customers, we demonstrate this through Data and Airtime Giveaways every weekends. With us, you can always stay connected with your loved ones."
+  ]
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 py-16 px-4 sm:px-6 lg:px-8 flex flex-col gap-y-6 justify-between">
       <motion.div
@@ -89,6 +104,46 @@ const About = () => {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          className="mt-10 py-6 px-4 md:px-5 flex flex-col border-none gap-y-4 rounded-lg shadow-none !bg-amber-500/20 text-amber-700 dark:text-amber-300"
+          initial="initial"
+          animate="animate"
+          variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
+        >
+          <motion.ul 
+            className="list-disc pl-6 space-y-4 mb-8 py-10"
+            variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
+          >
+            {overviewContent.map((content, index) => (
+              <motion.li
+                key={index}
+                className="text-gray-600 dark:text-gray-400 text-sm sm:text-base marker:text-violet-600 dark:marker:text-violet-400"
+                variants={fadeIn}
+                transition={{ delay: index * 0.2 }}
+              >
+                {content}
+                {index === 2 && (
+                  <motion.ul 
+                    className="list-disc pl-6 space-y-2 mt-4"
+                    variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
+                  >
+                    {services.map((service, serviceIndex) => (
+                      <motion.li
+                        key={serviceIndex}
+                        className="text-gray-600 dark:text-gray-400 text-sm sm:text-base italic marker:text-violet-400 dark:marker:text-violet-300"
+                        variants={fadeIn}
+                        transition={{ delay: (serviceIndex + 4) * 0.2 }}
+                      >
+                        {service}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                )}
+              </motion.li>
+            ))}
+          </motion.ul>
+        </motion.div>
 
         <motion.div
           className="mt-16 text-center"

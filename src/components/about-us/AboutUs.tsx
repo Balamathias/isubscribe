@@ -38,7 +38,7 @@ const AboutUs = ({isDashboard}:{isDashboard?:boolean}) => {
             <h2 className='text-muted-foreground text-[14px] font-semibold text-nowrap'>Introducing You to iSubscribe Community...</h2>
         </div>
         <>
-         <DynamicTabs tabs={tabs as any} />  
+         <DynamicTabs tabs={tabs} />  
         </>
         </Card>
         </div>
