@@ -1,23 +1,21 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import { verifySmartcardNumber } from '@/lib/vtpass/services';
 import { Loader2, Check, X, Tv, User, Calculator, Currency, Coins } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { useElectricity } from '@/providers/electricity/electricity-provider';
 import CustomInput from '../CustomInput';
+import { Tables } from '@/types/database';
 
-const SmartcardAndMobileInput = () => {
+const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [data, setData] = useState<any>(null);
 
   const { currentProvider, mobileNumber, setMobileNumber, isPrepaid, setIsPrepaid, meterNumber, setMeterNumber  } = useElectricity();
-
-  // console.log("type", isPrepaid ? "prepaid" : "postpaid")
-  // console.log("cP", currentProvider)
-
 
   const payload = {
     serviceID: currentProvider,
@@ -33,11 +31,13 @@ const SmartcardAndMobileInput = () => {
   };
 
   const handleVerifyMeter = async () => {
+
+    if (!profile) return
+    
     setLoading(true);
     setSuccess(false);
     setError(false);
     const res = await verifySmartcardNumber(payload);
-    // console.log("Resssss", res)
     setData(res?.content);
     if (res?.content?.Customer_Name) {
       setSuccess(true);

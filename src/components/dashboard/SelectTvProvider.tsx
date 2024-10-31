@@ -1,18 +1,16 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs'
 import Image from 'next/image'
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider'
 import { Card } from '../ui/card'
-import { Check, CheckCircle, Loader, Loader2, Tv, User, X } from 'lucide-react'
-import { Input } from '../ui/input'
-import { dstv_subscription, gotv_subscription, showmax_subscription, startimes_subscription } from '@/utils/constants/tv-plans'
+import { Check, Loader2, Tv, User, X } from 'lucide-react'
 import { TvCables } from '@/types/tv-cable'
-import { Button } from '../ui/button'
 import TvCards from './tv-cable/tv-cards'
 import { verifySmartcardNumber } from '@/lib/vtpass/services'
 import CustomInput from './CustomInput'
+import { Tables } from '@/types/database'
 
 export const tvImages = {
     'dstv': '/images/tv-cables/ds-tv-logo.jpg',
@@ -46,7 +44,7 @@ const tvTabs = [
 
 ]
 
-const SelectTvProvider = () => {
+const SelectTvProvider = ({ profile }: { profile?: Tables<'profile'> | null }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -70,6 +68,8 @@ const SelectTvProvider = () => {
    
 
     const handleVerifySmartCard = async () => {
+      if (!profile) return
+
       setLoading(true)
       setSuccess(false)
       setError(false)

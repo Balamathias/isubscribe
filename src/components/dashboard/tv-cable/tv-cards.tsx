@@ -39,14 +39,6 @@ const TvCards = () => {
 
     const { currentProvider, smartcardNumber, mobileNumber, setMobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, handleBuyTvCable} = useTvCable()
 
-    // console.log("SELEC", selected)
-//   console.log("SEEEEEEEEEEEELLLL", selected)
-
-    // console.log("Smaaa", smartcardNumber)
-
-    // if(openMobileNumber === true)  toast.warning("Heyyyyyyyyyyyyyyyyyyyy")
-
-
     if (isPending || profilePending) return <LoadingOverlay />
 
   return (

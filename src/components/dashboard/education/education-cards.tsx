@@ -7,20 +7,18 @@ import React from 'react'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
 import { toast } from 'sonner'
-import { useGetProfile } from '@/lib/react-query/funcs/user'
-import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import ConfirmPurchaseModal from './ConfirmPurchaseModal'
 import { useEducation } from '@/providers/education/education-provider'
+import { Tables } from '@/types/database'
+import PleaseSignIn from '../please-sign-in.modal'
 
-const EducationCard = () => {
-    // const [open, setOpen] = React.useState(false)
+const EducationCard = ({  profile }: { profile?: Tables<'profile'> | null }) => {
     
     const [proceed, setProceed] = React.useState(false)
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
     const { educationAmount, profileCode, mobileNumber, currentProvider, isUTME, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, handleBuyEducation } = useEducation()
 
-    const { data: profile, isPending: profilePending } = useGetProfile()
     
     const selected ={
       billersCode: profileCode,
@@ -39,8 +37,6 @@ const EducationCard = () => {
        setOpenConfirmPurchaseModal?.(true)
     }
 
-    if (profilePending) return <LoadingOverlay loader='2' />
-
   return (
     <Card className='rounded-xl space-y-6 border-none shadow-none max-md:space-y-2 md:min-h-[200px] md:p-5 p-2 dark:bg-card/70  '>
         <div className="p-4 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
@@ -55,49 +51,56 @@ const EducationCard = () => {
 
        </div>
 
+       {
+        profile ? (
           <Button
                 className='w-full rounded-xl shadow-sm' 
                 size={'lg'}
                 
                 onClick={handleProceed}
             >Continue</Button>
-
-
+        ): (
+          <PleaseSignIn 
+            trigger={<Button className='w-full rounded-xl shadow-sm' size={'lg'}>Continue</Button>}
+            message='Please sign in to continue'
+          />
+        )
+       }
 
        {
-            <ConfirmPurchaseModal
-                open={openConfirmPurchaseModal!}
-                paymentMethod={paymentMethod}
-                setOpen={setOpenConfirmPurchaseModal}
-                selected={selected}
-                setPaymentMethod={setPaymentMethod}
-                setProceed={setProceed}
-                key={'education'}
-                title='Exam Type Purchase details...'
-            />
+        <ConfirmPurchaseModal
+            open={openConfirmPurchaseModal!}
+            paymentMethod={paymentMethod}
+            setOpen={setOpenConfirmPurchaseModal}
+            selected={selected}
+            setPaymentMethod={setPaymentMethod}
+            setProceed={setProceed}
+            key={'education'}
+            title='Exam Type Purchase details...'
+        />
         }
 
 
 
 
        {
-             <DynamicModal
-                open={proceed}
-                setOpen={setProceed}
-                dismissible
-                dialogClassName={'sm:max-w-fit dark:bg-card'}
-                drawerClassName='dark:bg-card'
-            >
-                <ConfirmPin 
-                  className='rounded-none' 
-                  func={() => {
-                      handleBuyEducation?.({...selected!, method: paymentMethod})
-                      // setOpen(false)
-                      setProceed(false)
-                  }} 
-                  profile={profile?.data!}
-                />
-            </DynamicModal>
+        <DynamicModal
+          open={proceed}
+          setOpen={setProceed}
+          dismissible
+          dialogClassName={'sm:max-w-fit dark:bg-card'}
+          drawerClassName='dark:bg-card'
+      >
+          <ConfirmPin 
+            className='rounded-none' 
+            func={() => {
+                handleBuyEducation?.({...selected!, method: paymentMethod})
+                // setOpen(false)
+                setProceed(false)
+            }} 
+            profile={profile!}
+          />
+      </DynamicModal>
         }
 
     </Card>

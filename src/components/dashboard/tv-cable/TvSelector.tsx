@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 
-import { ChevronDown, LucideArrowDown } from 'lucide-react';
 import DynamicModal from '@/components/DynamicModal';
-import { electricServices } from '@/utils/constants/electricity-plans';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { useElectricity } from '@/providers/electricity/electricity-provider';
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider';
 import { toast } from 'sonner';
 
+import { useGetProfile } from '@/lib/react-query/funcs/user';
+import { ChevronDown } from 'lucide-react';
+import PleaseSignIn from '../please-sign-in.modal';
 
 const TvSelector = ({object, selected, setSelected}:any) => {
   const [open, setOpen] = useState(false);
-//   const [selected, setSelected] = useState(electricServices[0]);
-//   const {setCurrentProvider, currentProvider, setProviderName, setProviderImage} = useElectricity()
 
-  const { currentProvider, smartcardNumber, mobileNumber, setMobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, handleBuyTvCable} = useTvCable()
-
-  // console.log("CCCCCCCCCPPPPPPPPPPP",currentProvider)
+  const { currentProvider, smartcardNumber, mobileNumber, setOpenConfirmPurchaseModal } = useTvCable()
+  const { data: profile, isPending: profilePending } = useGetProfile()
 
 
   const handleOpenModal = () => {
     if (!smartcardNumber) return toast.warning('Please enter your decoder number, it can\'t be empty!')
         if ((smartcardNumber.length < 10) || (smartcardNumber.length > 10)) return toast.warning('Please enter a valid 10-digit decorder number')
         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit phone number')
-        // if ((mobileNumber.length < 12) || (mobileNumber.length > 12)) return setOpenMobileNumber(true)
 
         setOpen(true)
   }
@@ -34,7 +29,7 @@ const TvSelector = ({object, selected, setSelected}:any) => {
   const handleCardClick = (item:any) => {
     setSelected(item);
     setTimeout(() => {
-        setOpen(false); // Close the modal
+        setOpen(false);
     }, 500);
     
     setTimeout(() => {
@@ -42,21 +37,36 @@ const TvSelector = ({object, selected, setSelected}:any) => {
     }, 500);
   };
 
-//   console.log("SEEEEEEEEEEEELLLL", selected)
-
   return (
     <>
       <div 
         onClick={handleOpenModal}
         className='bg-gray-200 hover:bg-gray-300 dark:bg-card/60 text-foreground hover:opacity-85 hover:transition-all p- rounded-lg cursor-pointer p-5'
       >
-        <div className='flex flex-row justify-between items-center border-none shadow-none outline-none'>
-          <div className="flex flex-row space-x-3 items-center">
-          
-            <span className="text-lg text-muted-foreground">Select plan to proceed</span>
-          </div>
-          <ChevronDown className='w-6 h-6 text-muted-foreground' />
-        </div>
+        {
+          profile?.data ? (
+            <div className='flex flex-row justify-between items-center border-none shadow-none outline-none'>
+              <div className="flex flex-row space-x-3 items-center">
+              
+                <span className="text-lg text-muted-foreground">Select plan to proceed</span>
+              </div>
+              <ChevronDown className='w-6 h-6 text-muted-foreground' />
+            </div>
+          ): (
+            <PleaseSignIn 
+              message='Please sign in to continue'
+              trigger={
+                <div className='flex flex-row justify-between items-center border-none shadow-none outline-none'>
+                  <div className="flex flex-row space-x-3 items-center">
+                  
+                    <span className="text-lg text-muted-foreground">Select plan to proceed</span>
+                  </div>
+                  <ChevronDown className='w-6 h-6 text-muted-foreground' />
+                </div>
+              }
+            />
+          )
+        }
       </div>
 
       {

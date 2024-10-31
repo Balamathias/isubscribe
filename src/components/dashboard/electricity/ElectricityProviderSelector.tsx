@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from 'react';
 import Image from 'next/image';
 
@@ -14,16 +16,13 @@ const ElectricityProviderSelector = () => {
   const [selected, setSelected] = useState(electricServices[0]);
   const {setCurrentProvider, currentProvider, setProviderName, setProviderImage} = useElectricity()
 
-  // console.log("CCCCCCCCCPPPPPPPPPPP",currentProvider)
-
-
   const handleCardClick = (item:any) => {
     setSelected(item);
     setCurrentProvider(item?.serviceID)
     setProviderName(item?.fullName)
     setProviderImage(item?.image)
     setTimeout(() => {
-      setOpen(false); // Close the modal
+      setOpen(false);
     }, 500);
   };
 
