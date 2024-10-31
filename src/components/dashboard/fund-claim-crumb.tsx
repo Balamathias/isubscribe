@@ -24,10 +24,10 @@ const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) =
           />
         ): (
           <PleaseSignIn 
-            message='Please sign in to use bonus'
+            message='Please `sign in` below to continue.'
             trigger={
               <Button variant={'ghost'} className='text-xs tracking-tight text-violet-50 p-0 rounded-full hover:opacity-70 hover:bg-inherit flex items-center space-x-0.5 md:space-x-1 hover:text-white'>
-                  <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Use bonus</span>
+                  <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Sign in</span>
                   <CaretRightIcon className='h-7 w-7' />
               </Button>
             }

@@ -25,17 +25,13 @@ const reviews = [
   },
 ];
 
-const Reviews = () => {
+const Reviews = ({ trigger }: { trigger: React.ReactNode }) => {
   const { data: reviews, isPending, isError } = useReviews()
   return (
     <DynamicSheet
-      trigger={
-        <Button variant={'ghost'} className='rounded-full ring-1 text-white hover:text-violet-100 w-full border-none text-lg hover:opacity-75 transition-all border hover:bg-transparent' size={'lg'}>
-          Reviews
-        </Button>
-      }
-      sheetClassName='max-w-3xl !w-[400px] overflow-auto'
-      drawerClassName='h-[75%] overflow-auto'
+      trigger={trigger}
+      sheetClassName='max-w-3xl overflow-auto'
+      drawerClassName='max-md:h-[60vh]'
     >
       {
         isError && (
@@ -43,6 +39,7 @@ const Reviews = () => {
             title='Error loading reviews'
             content="We could not load reviews at this time, please try again."
             color='red'
+            className='bg-transparent'
           />
         )
       }

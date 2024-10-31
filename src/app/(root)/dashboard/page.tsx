@@ -3,6 +3,7 @@ import ActionBox from '@/components/dashboard/ActionBox'
 import Announcements from '@/components/dashboard/Announcements'
 import QuickActions from '@/components/dashboard/QuickActions'
 import WelcomeBonusModal from '@/components/dashboard/WelcomeBonus'
+import MoreActions, { MoreActionsSkeleton } from '@/components/dashboard/more-actions'
 import RecentTransactions from '@/components/dashboard/recent-transactions'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import { getUser } from '@/lib/supabase/accounts'
@@ -21,7 +22,7 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
 
       <div className='flex flex-col space-y-1 md:hidden'>
         <h2 className='text-muted-foreground text-lg'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name?.split(' ')?.at(0) || 'Guest'}</span>.</h2>
-        <p className='text-muted-foreground text-base'>What would you like to subscribe today?</p>
+        <p className='text-muted-foreground text-base'>Welcome to <span className='font-semibold'>iSubscribe</span>, what would you like to subscribe today?</p>
       </div>
 
       <div className='flex flex-col space-y-4'>
@@ -30,6 +31,10 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
 
         <Suspense fallback={<ActionBoxSkeleton isHome/>}>
           <RecentTransactions />
+        </Suspense>
+
+        <Suspense fallback={<MoreActionsSkeleton />}>
+          <MoreActions />
         </Suspense>
 
         <Announcements />
