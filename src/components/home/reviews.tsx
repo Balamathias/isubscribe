@@ -30,8 +30,8 @@ const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
   return (
     <DynamicSheet
       trigger={trigger || <></>}
-      sheetClassName='max-w-3xl overflow-auto'
-      drawerClassName='max-md:h-[60vh]'
+      sheetClassName='max-w-3xl overflow-auto !w-[600px]'
+      drawerClassName=''
     >
       {
         isError && (
@@ -48,16 +48,18 @@ const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
         isPending ? (
           <SimpleLoader />
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:gap-5 overflow-auto">
-            {reviews?.data?.map((review, index) => (
-              <ReviewCard
-                key={index}
-                avatar={review?.profile?.avatar || ''}
-                full_name={review?.profile?.full_name || ''}
-                comment={review?.comment || ''}
-                rating={review?.rating ?? 0}
-              />
-            ))}
+          <div className='flex flex-col gap-4 h-full overflow-auto max-md:h-[60vh]'>
+            <div className="grid grid-cols-1 gap-4 md:gap-5">
+              {reviews?.data?.map((review, index) => (
+                <ReviewCard
+                  key={index}
+                  avatar={review?.profile?.avatar || ''}
+                  full_name={review?.profile?.full_name || ''}
+                  comment={review?.comment || ''}
+                  rating={review?.rating ?? 0}
+                />
+              ))}
+            </div>
           </div>
         )
       }
