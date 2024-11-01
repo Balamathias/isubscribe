@@ -86,7 +86,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                         open={openConfirmPurchaseModal}
                         paymentMethod={paymentMethod}
                         selected={selected}
-                        setOpen={setOpenConfirmPurchaseModal}
+                        setOpen={setOpenConfirmPurchaseModal!}
                         setPaymentMethod={setPaymentMethod}
                         setProceed={setProceed}
                         title='Data Purchase Details (Confirm Details)'
