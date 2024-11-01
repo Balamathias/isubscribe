@@ -1,7 +1,6 @@
-import Loader from '@/components/loaders/loader'
-
+import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 const Loading = () => {
-  return <Loader />
+  return <LoadingOverlay />
 }
 
 export default Loading
