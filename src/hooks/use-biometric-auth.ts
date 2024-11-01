@@ -20,32 +20,34 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
   const email = profile?.data?.email ?? "user@example.com";
   const name = profile?.data?.full_name ?? "User";
 
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(() => {
+    return localStorage.getItem(BIOMETRIC_ENABLED_KEY) === "true";
+  });
   const [error, setError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const generateRandomChallenge = () =>
     crypto.getRandomValues(new Uint8Array(32));
 
-  // Enhanced state initialization with more checks and logging
   useEffect(() => {
     const initializeBiometricState = async () => {
+      if (isInitialized || !profile?.data) return;
+
       try {
         const storedState = localStorage.getItem(BIOMETRIC_ENABLED_KEY);
         let enabled = storedState === "true";
 
-        // Extra validation: Attempt to fetch credentials only if stored state is true
         if (enabled && navigator.credentials) {
           try {
             const result = await navigator.credentials.get({
               publicKey: {
                 challenge: generateRandomChallenge(),
-                timeout: 5000, // Short timeout to check quickly
+                timeout: 5000,
                 userVerification: "required",
               },
             });
 
             if (!result) {
-              console.warn("No credentials found, disabling biometric auth.");
               enabled = false;
               localStorage.removeItem(BIOMETRIC_ENABLED_KEY);
             }
@@ -60,11 +62,13 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       } catch (initErr) {
         console.error("Initialization error:", initErr);
         setIsEnabled(false);
+      } finally {
+        setIsInitialized(true);
       }
     };
 
     initializeBiometricState();
-  }, []);
+  }, [profile, isInitialized]);
 
   const enableBiometrics = useCallback(async () => {
     try {
@@ -92,7 +96,6 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
         throw new Error("Failed to register biometric credentials.");
       }
 
-      // Store success state in localStorage and state
       localStorage.setItem(BIOMETRIC_ENABLED_KEY, "true");
       setIsEnabled(true);
       setError(null);
