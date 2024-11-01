@@ -32,20 +32,22 @@ const Loader = () => {
 
   return (
     <motion.div
-      className="flex justify-center items-center h-screen dark:bg-gray-900 bg-violet-950 w-full fixed top-0 left-0 z-50"
+      className="flex justify-center items-center h-screen dark:bg-gray-900 bg-gray-900 w-full fixed top-0 left-0 z-50"
       initial="hidden"
       animate="visible"
       variants={container}
     >
-      {letters.map((letter, index) => (
-        <motion.span
-          key={index}
-          className="md:text-5xl text-3xl font-semibold text-primary px-4"
-          variants={bounce}
-        >
-          {letter}
-        </motion.span>
-      ))}
+      <div className="max-sm:max-w-[90vw]">y
+        {letters.map((letter, index) => (
+          <motion.span
+            key={index}
+            className="md:text-5xl text-3xl font-semibold text-primary px-4"
+            variants={bounce}
+          >
+            {letter}
+          </motion.span>
+        ))}
+      </div>
     </motion.div>
   );
 };
