@@ -15,6 +15,7 @@ import { useWallet } from '@/hooks/use-wallet'
 
 import useBiometricAuth from '@/hooks/use-biometric-auth'
 import { toast } from 'sonner'
+import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 
 
 interface ConfirmPurchaseModal {
@@ -39,7 +40,7 @@ const ConfirmPurchaseModal = ({
     func
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const { wallet, isLoading } = useWallet()
+    const { data:wallet, isPending: isLoading } = useGetWalletBalance()
 
     const { isEnabled, authenticate, error } = useBiometricAuth()
     
@@ -55,7 +56,7 @@ const ConfirmPurchaseModal = ({
 
     if (isLoading) return <LoadingOverlay />
 
-    if (!wallet) {
+    if (!wallet?.data || !wallet?.data?.balance) {
         toast.error("Error loading wallet, please refresh.")
     }
     
@@ -87,22 +88,22 @@ const ConfirmPurchaseModal = ({
                     active={paymentMethod === 'wallet'} 
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
-                    balance={formatNigerianNaira(wallet?.balance as number)}
-                    disabled={wallet?.balance! < selected?.amount}
+                    balance={formatNigerianNaira(wallet?.data?.balance as number)}
+                    disabled={wallet?.data?.balance! < selected?.amount}
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
-                    balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
-                    disabled={wallet?.cashback_balance! < (selected?.amount)}
+                    balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
+                    disabled={wallet?.data?.cashback_balance! < (selected?.amount)}
                 />
             </div>
 
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={wallet?.balance! < selected?.amount && (wallet?.cashback_balance! ) < selected?.amount}
+                disabled={wallet?.data?.balance! < selected?.amount && (wallet?.data?.cashback_balance! ) < selected?.amount}
                 onClick={() => {
                     isEnabled && !error ? handleAuth() : setProceed(true)
                 }}

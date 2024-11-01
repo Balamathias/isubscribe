@@ -33,7 +33,7 @@ export const computeServerTransaction = async ({
       cashbackBalance += cashbackPrice
       if (balance < 0 || balance < price) {
         return {
-          error: "Edge case, balance cannot be negative!",
+          error: "Insufficient wallet balance, please fund your wallet!",
           data: null
         }
       }
@@ -44,7 +44,7 @@ export const computeServerTransaction = async ({
       
       if (cashbackBalance < 0) {
         return {
-          error: "Ensure that cashbackBalance is not below 0",
+          error: "Insufficient cashback balance, please fund your wallet!",
           data: null
         }
       }

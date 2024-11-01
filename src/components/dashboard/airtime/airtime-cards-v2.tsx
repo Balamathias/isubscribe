@@ -16,6 +16,8 @@ import { Label } from '@/components/ui/label'
 import { cn, DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import PleaseSignIn from '../please-sign-in.modal'
+import { useQueryClient } from '@tanstack/react-query'
+import { QueryKeys } from '@/lib/react-query/query-keys'
 
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
@@ -48,11 +50,11 @@ const AirtimeCards = () => {
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    
+    const queryClient = useQueryClient()
 
     const AMOUNT_OUT_OF_RANGE = amount! > MAX_THRESHHOLD || amount! < MIN_THRESHHOLD
 
-    const processDynamicAirtimePlan = () => {
+    const processDynamicAirtimePlan = async () => {
         if (amount! < MIN_THRESHHOLD) return toast.warning('Airtime Amount should not be less than: ' + formatNigerianNaira(MIN_THRESHHOLD))
         if (amount! > MAX_THRESHHOLD) return toast.warning('Airtime Amount should not exceed: ' + formatNigerianNaira(MAX_THRESHHOLD))
         setSelected({
@@ -62,9 +64,11 @@ const AirtimeCards = () => {
             cashback: amount! * 0.01
         })
         setOpenConfirmPurchaseModal?.(true)
+
+        await queryClient.invalidateQueries({ queryKey: [QueryKeys.get_wallet] })
     }
 
-    const processFixedAirtimePlan = (amount: number) => {
+    const processFixedAirtimePlan = async (amount: number) => {
         if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
         if ((mobileNumber.length < 11) || (mobileNumber.length > 11)) return toast.warning('Please enter a valid 11-digit mobile number')
 
@@ -75,6 +79,7 @@ const AirtimeCards = () => {
             cashback: amount! * 0.01
         })
         setOpenConfirmPurchaseModal?.(true)
+        await queryClient.invalidateQueries({ queryKey: [QueryKeys.get_wallet] })
     }
 
   return (
