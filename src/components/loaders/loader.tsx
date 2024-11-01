@@ -40,7 +40,7 @@ const Loader = () => {
       {letters.map((letter, index) => (
         <motion.span
           key={index}
-          className="text-5xl font-extrabold text-primary mx-1"
+          className="md:text-5xl text-3xl font-semibold text-primary px-4"
           variants={bounce}
         >
           {letter}

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description: "A round trip VTU platform to ace your utility bills with a single click.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

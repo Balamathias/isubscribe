@@ -1,22 +1,28 @@
-import HomePage from "@/components/home/HomePage";
-import { redirect } from "next/navigation";
+'use client'
 
-export default async function Home({searchParams}: { searchParams: {[key: string]: string }}) {
+import { useRouter } from "next/navigation"
+import Loader from '@/components/loaders/loader'
+import { useEffect } from "react"
+
+export default function Home({searchParams}: { searchParams: {[key: string]: string }}) {
+  const router = useRouter()
   
-  const params = new URLSearchParams(searchParams)
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams)
+    const errorCode = params.get('error_code')
+    const errorMessage = params.get('error_description')
 
-  const errorCode = params.get('error_code')
-  const errorMessage = params.get('error_description')
+    if (errorCode === '403') {
+      router.push('/auth/auth-code-error?msg=' + encodeURIComponent(errorMessage!))
+      return
+    }
 
-  if (errorCode === '403') {
-    return redirect('/auth/auth-code-error?msg=' + encodeURIComponent(errorMessage!))
-  }
+    const timeoutId = setTimeout(() => {
+      router.push('/dashboard')
+    }, 400)
 
-  return redirect('/dashboard')
+    return () => clearTimeout(timeoutId)
+  }, [searchParams, router])
 
-  return(
-    <div className="min-h-screen">
-      <HomePage />
-    </div>
-  )
+  return <Loader />
 }
