@@ -37,7 +37,7 @@ const Loader = () => {
       animate="visible"
       variants={container}
     >
-      <div className="max-sm:max-w-[90vw]">y
+      <div className="max-sm:max-w-[90vw]">
         {letters.map((letter, index) => (
           <motion.span
             key={index}
