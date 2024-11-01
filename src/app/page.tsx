@@ -1,8 +1,8 @@
 'use client'
 
 import { useRouter } from "next/navigation"
-import Loader from '@/components/loaders/loader'
 import { useEffect } from "react"
+import SplashScreen from "@/components/splash-screen"
 
 export default function Home({searchParams}: { searchParams: {[key: string]: string }}) {
   const router = useRouter()
@@ -19,10 +19,10 @@ export default function Home({searchParams}: { searchParams: {[key: string]: str
 
     const timeoutId = setTimeout(() => {
       router.push('/dashboard')
-    }, 400)
+    }, 1500)
 
     return () => clearTimeout(timeoutId)
   }, [searchParams, router])
 
-  return <Loader />
+  return <SplashScreen />
 }

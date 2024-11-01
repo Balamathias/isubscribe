@@ -80,9 +80,9 @@ export function getGreeting(name?: string): string {
 
   if (hours >= 5 && hours < 12) {
       greeting = `Good morning`;
-  } else if (hours >= 12 && hours < 17) {
+  } else if (hours >= 12 && hours < 15) {
       greeting = `Good afternoon`;
-  } else if (hours >= 17 && hours < 21) {
+  } else if (hours >= 15 && hours < 21) {
       greeting = `Good evening`;
   } else {
       greeting = `Hi`;
