@@ -20,16 +20,11 @@ import GoogleAuthButton from '@/components/GoogleAuthButton'
 import { LucideLock, LucideMail } from 'lucide-react'
 import Logo from '../Logo'
 import AuthSeparator from './AuthSeparator'
-import DynamicModal from '../DynamicModal'
 import LoadingOverlay from '../loaders/LoadingOverlay'
-import Status from '../status'
 
 const SignInComponent = () => {
     const [isPending, setIsPending] = React.useState(false)
     const router = useRouter()
-    const [status, setStatus] = React.useState(false)
-    const [error, setError] = React.useState('')
-    const [success, setSuccess] = React.useState('')
 
     const form = useForm<z.infer<typeof AuthSchema>>({
         resolver: zodResolver(AuthSchema),
@@ -47,8 +42,6 @@ const SignInComponent = () => {
                 password: values.password!
             })
             if (status === 200)
-              setStatus(true)
-              // setSuccess('You have successfully signed in to your account, you will be redirected to the dashboard shortly.')
               toast.success(message)
             router.push('/dashboard')
             return
@@ -56,8 +49,7 @@ const SignInComponent = () => {
         catch (error: any) {
             console.error(error)
             setIsPending(false)
-            setStatus(true)
-            setError(error.message === 'fetch failed' ? 'Make sure you are connected to the internet to continue.' : 'Make sure the details you entered are correct. You may want to double-check your Password or Email.')
+            toast.error(error.message === 'fetch failed' ? 'Make sure you are connected to the internet to continue.' : 'Make sure the details you entered are correct. You may want to double-check your Password or Email.')
         }
         finally { setIsPending(false) }
       }
@@ -110,25 +102,6 @@ const SignInComponent = () => {
               </Link>
               </div>
           </Card>
-
-          <DynamicModal 
-              open={status}
-              setOpen={setStatus}
-              dialogOnly
-            >
-              <div className='flex flex-col gap-y-4 py-2 items-center justify-center text-center'>
-                <Status status={success ? 'success' : "failed" } type='icon' />
-                <h1 className='text-xl font-semibold'>{success ? 'Success!': 'Sign In failed.'}</h1>
-                <p className='text-sm'>{success ? success : error }</p>
-                <div className='flex flex-row gap-x-2 w-full md:-mb-4'>
-                  <Button 
-                    variant={'secondary'}
-                    className='ring-1 focus:ring-0 focus-within:ring-0 rounded-full w-full' 
-                    onClick={() => setStatus(false)}
-                  >Close</Button>
-                </div>
-              </div>
-            </DynamicModal>
             {
               isPending && <LoadingOverlay loader='2' isPending={isPending} />
             }
