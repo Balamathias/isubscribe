@@ -10,9 +10,10 @@ type BeforeInstallPromptEvent = Event & { prompt: () => Promise<void>; userChoic
 
 interface InstallButtonProps {
   className?: string;
+  onInstallable?: (isInstallable: boolean) => void;
 }
 
-const InstallButton: React.FC<InstallButtonProps> = ({ className }) => {
+const InstallButton: React.FC<InstallButtonProps> = ({ className, onInstallable }) => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
@@ -22,6 +23,7 @@ const InstallButton: React.FC<InstallButtonProps> = ({ className }) => {
       beforeInstallPromptEvent.preventDefault();
       setDeferredPrompt(beforeInstallPromptEvent);
       setIsInstallable(true);
+      onInstallable?.(true);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
@@ -40,13 +42,14 @@ const InstallButton: React.FC<InstallButtonProps> = ({ className }) => {
 
     if (choiceResult.outcome === 'accepted') {
       console.log('App installed successfully');
-      toast.success('App installed successfully.')
+      toast.info('App installation has started in the background.')
     } else {
       console.log('App installation dismissed');
     }
 
     setDeferredPrompt(null);
     setIsInstallable(false);
+    onInstallable?.(false);
   };
 
   if (!isInstallable) return null;

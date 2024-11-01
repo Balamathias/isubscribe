@@ -13,7 +13,7 @@ import DynamicModal from '@/components/DynamicModal'
 import Support from '../support'
 import { ModeToggle } from '@/components/mode-toggle'
 import ComingSoon from '../comig-soon'
-import { getGreeting } from '@/lib/utils'
+import { cn, getGreeting } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { ArrowRight, LucideUserCheck, LucideInfo } from 'lucide-react'
 import InstallButton from '@/components/install-pwa-button'
@@ -23,6 +23,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const pathname = usePathname()
   const [openSupport, setOpenSupport] = useState(false)
   const [openProfileActions, setOpenProfileActions] = useState(false)
+  const [isInstallable, setIsInstallable] = useState(false)
 
   useEffect(() => { 
     setOpenSupport(false)
@@ -40,14 +41,14 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
               <LucideBadgeHelp size={28} strokeWidth={2} className='' />
               <span>Support?</span>
             </Link>
-            <Logo showLogoText textClassName='hidden md:block' className='flex md:hidden' />
+            <Logo showLogoText textClassName={cn('block', isInstallable && 'max-sm:text-xs')} className='flex md:hidden' />
           </>) : <BackButton />
         }
         </div>
 
 
         <div className='flex flex-row gap-x-8 items-center'>
-          {!profile && <InstallButton className='flex' />}
+          {!profile && <InstallButton className={cn('flex', isInstallable && 'max-sm:text-xs')} onInstallable={setIsInstallable} />}
 
           <ModeToggle className='space-y-0 hidden md:flex' />
 
