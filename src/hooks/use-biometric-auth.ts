@@ -99,7 +99,7 @@ export default function useBiometricAuth(): UseBiometricAuthResult {
       localStorage.setItem(BIOMETRIC_ENABLED_KEY, "true");
       setIsEnabled(true);
       setError(null);
-      toast.success("Biometric authentication enabled.");
+      // toast.success("Biometric authentication enabled.");
     } catch (err) {
       const message = err instanceof Error ? err.message : "An error occurred.";
       setError(message);

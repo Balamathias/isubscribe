@@ -20,6 +20,7 @@ const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile
             setLoading(true)
             await signOut()
             setOpenProfileActions && setOpenProfileActions(false)
+            toast.success('You have been signed out successfully')
         } catch (error: any) {
             toast.error(error.message)
             setLoading(false)
