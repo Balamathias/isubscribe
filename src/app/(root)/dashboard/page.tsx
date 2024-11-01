@@ -22,7 +22,7 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
 
       <div className='flex flex-col space-y-1 md:hidden'>
         <h2 className='text-muted-foreground text-lg'>{getGreeting()}, <span className="font-semibold dark:text-amber-500/90">{profile?.full_name?.split(' ')?.at(0) || 'Guest'}</span>.</h2>
-        <p className='text-muted-foreground text-base'>Welcome to <span className='font-semibold'>iSubscribe</span>, what would you like to subscribe today?</p>
+        <p className='text-muted-foreground text-sm md:text-base'>Welcome to <span className='font-semibold'>iSubscribe</span>, what would you like to subscribe today?</p>
       </div>
 
       <div className='flex flex-col space-y-4'>
