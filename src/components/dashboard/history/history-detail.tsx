@@ -1,7 +1,3 @@
-'use client'
-
-import usePrint from '@/hooks/usePrint'
-import useScreenshot from '@/hooks/useScreenshot'
 import { AirtimeDataMetadata } from '@/types/airtime-data'
 import { Tables } from '@/types/database'
 import { TransactionEvent } from '@/types/webhooks'
@@ -19,10 +15,7 @@ interface HistoryDetailProps {
     history: Tables<'history'>
 }
 
-const HistoryDetail = ({ history }: HistoryDetailProps) => {
-    const [action, setAction] = React.useState<'download' | 'print'>('download')
-    const { ref, takeScreenshot } = useScreenshot()
-    const { ref: printRef, printDiv } = usePrint()
+const HistoryDetail = async ({ history }: HistoryDetailProps) => {
 
   const type = history.type as keyof typeof EVENT_TYPE
 

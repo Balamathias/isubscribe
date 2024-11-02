@@ -102,6 +102,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
 
+        setDataAmount(payload.Data)
+
         const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
                 price: priceToInteger(payload.Price),
@@ -135,7 +137,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (error || (data?.status === 'fail')) {
             
             let meta_data: AirtimeDataMetadata = {
-                dataQty: dataAmount ?? 0,
+                dataQty: dataAmount ?? '0',
                 duration: null,
                 network: currentNetwork,
                 transId: data?.transid ?? null,
@@ -146,7 +148,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 phone: mobileNumber,
                 status: 'failed',
                 transaction_id: data?.["request-id"],
-                commission
+                commission: 0
             }
             
             const { data: _insertHistory } = await insertTransactionHistory({
@@ -159,7 +161,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 amount: price,
                 provider: 'n3t',
                 request_id: data?.['request-id'],
-                commission,
+                commission: 0,
             })
 
             setPurchasing(false)
@@ -353,7 +355,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 meta_data: JSON.stringify(meta_data),
                 updated_at: null,
                 user: profile?.id!,
-                amount: price
+                amount: price,
+                commission: 0
             })
 
             router.refresh()
@@ -413,7 +416,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             planType: null,
             phone: mobileNumber,
             status: 'success',
-            commission: commission
         }
 
         const res = await buyVTPassData({
@@ -526,7 +528,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         if (error || !values) return toast.error(error || 'An unknown error has occured, please try again.')
 
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
         setDataBonus(cashbackPrice)
 
         setPurchasing(true)
@@ -607,7 +609,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 user: profile?.id!,
                 amount: price,
                 provider: 'vtpass',
-                type: EVENT_TYPE.airtime_topup
+                type: EVENT_TYPE.airtime_topup,
+                commission
             })
             setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
             setHistoryId(_insertHistory.id)
