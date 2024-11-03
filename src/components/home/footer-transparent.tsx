@@ -11,7 +11,7 @@ const Footer = () => {
                     <MapPin />
                 </div>
                 <p className="text-white">
-                    Opposite Catholic Church Piwoyi, Lugbe Abuja.
+                    Opposite Catholic Church Piwoyi Lugbe Und St. FHA Phase 1
                 </p>
             </div>
 
