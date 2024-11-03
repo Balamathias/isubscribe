@@ -45,7 +45,7 @@ interface RawVariation {
   
       const unitPrice = parseFloat(plan.variation_amount);
       const unitCashback = unitPrice * 0.004;
-      const interest = 0.04 * unitPrice;
+      const interest = 0.1 * unitPrice;
   
       return {
         planId: plan.variation_code,
