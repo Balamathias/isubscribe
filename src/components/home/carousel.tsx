@@ -77,18 +77,18 @@ export default function CarouselComponent({ user }: { user: User | null }) {
     }}
      plugins={[
          Autoplay({
-          delay: 12000,
+          delay: 1200000000,
         }),
       ]}
      >
-      <CarouselContent className={"bg-inherit p-0 inset-0 min-h-screen"}>
+      <CarouselContent className={"bg-inherit p-0 inset-0 h-full"}>
         {heroData.map((data, index) => (
           <CarouselItem key={index}>
             <div className={cn("flex flex-col flex-1 inset-0 h-full w-full max-sm:bg-right bg-cover bg-no-repeat bg-blend-normal aspect-video p-0", 
               )}
               style={{ backgroundImage: `url("${data.img}")`}}
             >
-              <Card className={cn("flex items-center justify-between border-none flex-col shadow-none bg-inherit inset-0 h-full w-full p-4",
+              <Card className={cn("flex items-center border-none flex-col shadow-none bg-inherit inset-0 h-full w-full p-4 gap-y-12",
               "bg-gradient-to-r from-violet-950/90 dark:to-violet-700/20 to-violet-700/35 bg-blend-multiply rounded-none"
               )}
                 >
@@ -145,15 +145,15 @@ export default function CarouselComponent({ user }: { user: User | null }) {
                  </div>
                 </CardContent>
 
-                <div className="">
-                  <Footer />
-                </div>
               </Card>
             </div>
           </CarouselItem>
         ))}
       </CarouselContent>
     </Carousel>
+    <div className="">
+      <Footer />
+    </div>
      </div>
   )
 }

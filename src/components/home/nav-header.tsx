@@ -22,6 +22,12 @@ const NavHeader = ({ user }: { user: User | null }) => {
                 className={``}
               >About us</Link>
           </Button>
+          <Button asChild variant={'ghost'} className='hidden md:flex text-violet-50 hover:bg-white hover:opacity-75 hover:text-black'>
+              <Link 
+                href={'/privacy-policy'} 
+                className={``}
+              >Privacy</Link>
+          </Button>
           {
           user && 
             <Button asChild variant={'ghost'} className='text-violet-50 hidden md:flex hover:bg-white hover:opacity-75 hover:text-black'>
