@@ -3,6 +3,8 @@
 import axios from 'axios'
 import { VTPassBalanceResponse, VTPassTransactionResponse, VTPassVariationServiceResponse, VTPassTransactionRequest, VTPassServiceName, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY, VTPASS_API_KEY, VTPassAirtimeTransactionRequest, VTPassAirtimeTransactionResponse,   } from '.'
 
+import { redisIO } from '@/lib/redis'
+
 class VTPassError extends Error {
     constructor(message: string, public code: number) {
         super(message)
@@ -36,8 +38,16 @@ export const getVTPassBalance = async (): Promise<VTPassBalanceResponse | undefi
 }
 
 export const getServiceVariations = async (serviceID: VTPassServiceName): Promise<VTPassVariationServiceResponse | undefined> => {
-    const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
-    return res.data
+    const res = await redisIO.get(`service-variations-${serviceID}`)
+    if (res) {
+        return JSON.parse(res)
+    } else {
+        const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+
+        await redisIO.set(`service-variations-${serviceID}`, JSON.stringify(res.data), 'EX', 60 * 60 * 1)
+        
+        return res.data
+    }
 }
 
 export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
