@@ -16,5 +16,5 @@ We currently offer the following services:
 * WAEC/JAMB/NECO pins
 * and many more to come.
 
-Explore _isubscribe_ network and I bet you will chew the bone too.
+Explore _isubscribe_ network and I bet you will chew the bone too....
 ...
