@@ -1,9 +1,32 @@
 import React from 'react'
 import Link from 'next/link'
+import { MapPin } from 'lucide-react'
 
 const Footer = () => {
   return (
-    <footer className='bg-transparent py-8 px-4 md:px-8'>
+    <footer className='py-8 px-4 md:px-8 flex flex-col md:flex-row gap-x-4 justify-between gap-y-5 bg-violet-950 md:items-start'>
+        <div className='flex flex-col justify-center'>
+            <div className='flex flex-row gap-x-3 items-center'>
+                <div className='w-12 h-12 flex items-center justify-center rounded-full bg-secondary/20'>
+                    <MapPin />
+                </div>
+                <p className="text-white">
+                    Opposite Catholic Church Piwoyi Lugbe Und St. FHA Phase 1
+                </p>
+            </div>
+
+            <div className='flex flex-col gap-y-4 md:px-4 md:py-6'>
+                <Link href="/privacy-policy" className='text-violet-100 hover:text-primary transition-colors'>
+                    Privacy Policy
+                </Link>
+                <Link href="/terms-and-conditions" className='text-violet-100 hover:text-primary transition-colors'>
+                    Terms and Conditions
+                </Link>
+                <Link href="/about" className='text-violet-100 hover:text-primary transition-colors'>
+                    About us
+                </Link>
+            </div>
+        </div>
         <div className='max-w-7xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between md:items-start'>
             <div className='flex items-center mb-4 md:mb-0'>
                 <p className='ml-4 text-violet-100 max-sm:text-xs'>&copy; isubscribe {new Date().getFullYear()}. All rights reserved.</p>
@@ -25,7 +48,7 @@ const Footer = () => {
                 </svg>
                 </Link>
             </div>
-            </div>
+        </div>
     </footer>
   )
 }

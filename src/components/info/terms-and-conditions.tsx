@@ -115,8 +115,8 @@ const TermsAndConditions = () => {
             {...fadeIn}
             transition={{ delay: 0.2 }}
           >
-            <li>You must be at least 18 years old to use iSubscribe.</li>
-            <li>You are responsible for maintaining the security of your account.</li>
+            <li>You must be at least 13 years old to use iSubscribe.</li>
+            <li>You are responsible for maintaining the security of your account with respect to private details like PINs and password..</li>
             <li>We reserve the right to terminate accounts that violate our terms.</li>
             <li>We may update these terms from time to time. Continued use of iSubscribe after changes constitutes acceptance of the new terms.</li>
           </motion.ul>
