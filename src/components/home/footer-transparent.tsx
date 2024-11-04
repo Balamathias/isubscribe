@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { MapPin } from 'lucide-react'
+import { Mail, MapPin, Phone } from 'lucide-react'
 
 const Footer = () => {
   return (
@@ -14,6 +14,20 @@ const Footer = () => {
                     Opposite Catholic Church Piwoyi Lugbe Und St. FHA Phase 1
                 </p>
             </div>
+            <div className="flex items-center mb-4 mt-5 ml-4">
+                <Mail className="w-9 h-9 text-white mr-4" />
+                <div>
+                <h3 className="font-semibold text-white">Email Us</h3>
+                <p className="text-white">support@isubscribe.ng, isubscribenetwork@gmail.com</p>
+                </div>
+            </div>
+            <div className="flex items-center mb-4">
+                <Phone className="w-9 h-9 text-white  mr-4 ml-4" />
+                <div>
+                <h3 className="font-semibold text-white">Call Us</h3>
+                <p className="text-white">+234 915 402 9723</p>
+                </div>
+            </div>
 
             <div className='flex flex-col gap-y-4 md:px-4 md:py-6'>
                 <Link href="/privacy-policy" className='text-violet-100 hover:text-primary transition-colors'>
@@ -25,6 +39,7 @@ const Footer = () => {
                 <Link href="/about" className='text-violet-100 hover:text-primary transition-colors'>
                     About us
                 </Link>
+
             </div>
         </div>
         <div className='max-w-7xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between md:items-start'>

@@ -67,7 +67,7 @@ export default function CarouselComponent({ user }: { user: User | null }) {
     }, [api])
 
   return (
-    <div className=" flex flex-col inset-0">
+    <div className=" flex flex-col inset-0 ">
     <Carousel 
      className="w-full inset-0 p-0 m-0"
      setApi={setApi} 
@@ -81,7 +81,7 @@ export default function CarouselComponent({ user }: { user: User | null }) {
         }),
       ]}
      >
-      <CarouselContent className={"bg-inherit p-0 inset-0 h-full"}>
+      <CarouselContent className={"bg-inherit p-0 inset-0 h-full max-md:min-h-screen"}>
         {heroData.map((data, index) => (
           <CarouselItem key={index}>
             <div className={cn("flex flex-col flex-1 inset-0 h-full w-full max-sm:bg-right bg-cover bg-no-repeat bg-blend-normal aspect-video p-0", 
@@ -135,9 +135,14 @@ export default function CarouselComponent({ user }: { user: User | null }) {
                           <Link href={"/dashboard"}>Go to Dashboard</Link>
                         </Button>
                       ): (
+                        < >
                         <Button variant={'ghost'} asChild className='rounded-full hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
                           <Link href={"/sign-in"}>Get started.</Link>
                         </Button>
+                        <Button variant={'destructive'} asChild className='rounded-full mt-6 hover:bg-white hover:text-black w-full border-none bg-white text-black text-lg hover:opacity-75 transition-all' size={'lg'}>
+                          <Link href={"/about"}>About us.</Link>
+                        </Button>
+                        </>
                       )
                     }
 
@@ -151,7 +156,7 @@ export default function CarouselComponent({ user }: { user: User | null }) {
         ))}
       </CarouselContent>
     </Carousel>
-    <div className="">
+    <div className=" ">
       <Footer />
     </div>
      </div>
