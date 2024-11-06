@@ -5,8 +5,9 @@
 // import SplashScreen from "@/components/splash-screen"
 
 import HomePage from '@/components/home/HomePage'
+import { createVirtualAccount } from '@/lib/paystack/services'
 
-export default function Home({searchParams}: { searchParams: {[key: string]: string }}) {
+export default async function Home({searchParams}: { searchParams: {[key: string]: string }}) {
   // const router = useRouter()
   
   // useEffect(() => {
@@ -27,5 +28,16 @@ export default function Home({searchParams}: { searchParams: {[key: string]: str
   // }, [searchParams, router])
 
   // return <SplashScreen />
+
+  // const acct = await createVirtualAccount({
+  //   customerCode: 'CUS_8hce0g9mj3foj0g',
+  //   preferredBank: 'titan-paystack',
+  //   first_name: 'Mathias',
+  //   last_name: 'Bala',
+  //   phone: '08123456789',
+  // })
+
+  // console.log(acct)
+
   return <HomePage />
 }
