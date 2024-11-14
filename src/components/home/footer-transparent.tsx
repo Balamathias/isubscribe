@@ -11,6 +11,14 @@ const Footer = () => {
                     <MapPin />
                 </div>
                 <p className="text-white">
+                 AJAMI PLAZA 3 TAFAWA BALEWA RD AREA 3 GARKI, ABUJA, FCT
+                </p>
+            </div>
+            <div className='flex flex-row gap-x-3 items-center'>
+                <div className='w-12 h-12 flex items-center justify-center rounded-full bg-secondary/20'>
+                    <MapPin />
+                </div>
+                <p className="text-white">
                     Opposite Catholic Church Piwoyi Lugbe Und St. FHA Phase 1
                 </p>
             </div>
@@ -18,7 +26,7 @@ const Footer = () => {
                 <Mail className="w-9 h-9 text-white mr-4" />
                 <div>
                 <h3 className="font-semibold text-white">Email Us</h3>
-                <p className="text-white">support@isubscribe.ng, isubscribenetwork@gmail.com</p>
+                <p className="text-white">support@isubscribe.ng, teamisubscribe@gmail.com, isubscribenetwork@gmail.com</p>
                 </div>
             </div>
             <div className="flex items-center mb-4">
