@@ -55,6 +55,89 @@ interface CreateVirtualAccountResponse {
   };
 }
 
+interface VirtualAccount {
+  customer: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    customer_code: string;
+    phone: string;
+    risk_action: string;
+    international_format_phone: string | null;
+  };
+  bank: {
+    name: string;
+    id: number;
+    slug: string;
+  };
+  id: number;
+  account_name: string;
+  account_number: string;
+  created_at: string;
+  updated_at: string;
+  currency: string;
+  split_config: {
+    subaccount: string;
+  };
+  active: boolean;
+  assigned: boolean;
+}
+
+interface ListVirtualAccountsResponse {
+  status: boolean;
+  message: string;
+  data: VirtualAccount[];
+  meta: {
+    total: number;
+    skipped: number;
+    perPage: number;
+    page: number;
+    pageCount: number;
+  };
+}
+
+interface VirtualAccountDetails {
+  customer: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    customer_code: string;
+    phone: string;
+    metadata: {
+      calling_code: string;
+    };
+    risk_action: string;
+    international_format_phone: string | null;
+  };
+  bank: {
+    name: string;
+    id: number;
+    slug: string;
+  };
+  id: number;
+  account_name: string;
+  account_number: string;
+  created_at: string;
+  updated_at: string;
+  currency: string;
+  split_config: string;
+  active: boolean;
+  assigned: boolean;
+}
+
+interface GetVirtualAccountResponse {
+  status: boolean;
+  message: string;
+  data: VirtualAccountDetails;
+}
+
+interface RequeryVirtualAccountResponse {
+  status: boolean;
+  message: string;
+}
+
 const PAYSTACK_SECRET_KEY = process.env.NEXT_PAYSTACK_SECRET_KEY;
 const PAYSTACK_URL = process.env.NEXT_PAYSTACK_URL;
 
@@ -155,8 +238,19 @@ export async function validateCustomer(
  * @returns The response data containing virtual account details.
  */
 export async function createVirtualAccount(
-  customerCode: string,
-  preferredBank: 'test-bank' | 'wema-bank' | 'paystack-titan'
+  {
+    customerCode,
+    preferredBank,
+    first_name,
+    last_name,
+    phone
+  }:{
+    customerCode: string,
+    preferredBank: 'test-bank' | 'wema-bank' | 'titan-paystack',
+    first_name?: string,
+    last_name?: string,
+    phone?: string
+  }
 ): Promise<CreateVirtualAccountResponse> {
   if (!PAYSTACK_SECRET_KEY) {
     throw new Error("Paystack secret key is not defined");
@@ -168,6 +262,9 @@ export async function createVirtualAccount(
       {
         customer: customerCode,
         preferred_bank: preferredBank,
+        first_name,
+        last_name,
+        phone
       },
       {
         headers: {
@@ -181,5 +278,97 @@ export async function createVirtualAccount(
   } catch (error: any) {
     console.error("Error creating virtual account:", error.response?.data || error.message);
     throw new Error(error.response?.data?.message || "Failed to create virtual account");
+  }
+}
+
+
+/**
+ * Fetches all dedicated virtual accounts from Paystack.
+ * @returns The response data containing a list of virtual accounts.
+ */
+export async function listVirtualAccounts(): Promise<ListVirtualAccountsResponse> {
+  if (!PAYSTACK_SECRET_KEY) {
+    throw new Error("Paystack secret key is not defined");
+  }
+
+  try {
+    const response = await axios.get<ListVirtualAccountsResponse>(
+      `${PAYSTACK_URL}/dedicated_account`,
+      {
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching virtual accounts:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to fetch virtual accounts");
+  }
+}
+
+
+/**
+ * Fetches details of a specific dedicated virtual account from Paystack.
+ * @param dedicatedAccountId - The ID of the dedicated virtual account to fetch.
+ * @returns The response data containing details of the virtual account.
+ */
+export async function getVirtualAccount(
+  dedicatedAccountId: string
+): Promise<GetVirtualAccountResponse> {
+  try {
+    const response = await axios.get<GetVirtualAccountResponse>(
+      `${PAYSTACK_URL}/dedicated_account/${dedicatedAccountId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching virtual account:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to fetch virtual account");
+  }
+}
+
+/**
+ * Requeries a customer's dedicated virtual account for any unprocessed transactions.
+ * @param accountNumber - The account number of the dedicated virtual account.
+ * @param providerSlug - The slug of the bank provider (e.g., "wema-bank" or "titan-paystack").
+ * @param date - Optional: A specific date (in yyyy-mm-dd format) to check for transactions.
+ * @returns The response message indicating that the requery process has been triggered.
+ */
+export async function requeryVirtualAccount(
+  accountNumber: string,
+  providerSlug: string,
+  date?: string
+): Promise<RequeryVirtualAccountResponse> {
+  if (!PAYSTACK_SECRET_KEY) {
+    throw new Error("Paystack secret key is not defined");
+  }
+
+  try {
+    const response = await axios.get<RequeryVirtualAccountResponse>(
+      `${PAYSTACK_URL}/dedicated_account/requery`,
+      {
+        headers: {
+          Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          account_number: accountNumber,
+          provider_slug: providerSlug,
+          ...(date && { date }),
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Error requerying virtual account:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to requery virtual account");
   }
 }
