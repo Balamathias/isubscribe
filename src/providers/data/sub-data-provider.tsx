@@ -403,7 +403,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         setPurchasing(true)
 
         let meta_data: AirtimeDataMetadata = {
-            dataQty: dataAmount ?? 0,
+            dataQty: payload.detail?.dataQty! ?? 0,
             duration: null,
             network: currentNetwork,
             transId: null,
