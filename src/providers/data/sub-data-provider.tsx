@@ -103,7 +103,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
 
         setDataAmount(payload.Data)
-        console.log(payload?.Data)
 
         const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
