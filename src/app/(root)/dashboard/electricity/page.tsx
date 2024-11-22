@@ -3,6 +3,12 @@ import ElectricityContent from '@/components/dashboard/electricity/electricity-c
 import WidthWrapper from '@/components/WidthWrapper'
 import { getUser } from '@/lib/supabase/accounts'
 import ElectricityProvider from '@/providers/electricity/electricity-provider'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Electricity | isubscribe',
+  description: 'Pay for your cable TV subscription with ease. Get started today with isubscribe!',
+}
 
 
 const ElectricityCablePage = async () => {

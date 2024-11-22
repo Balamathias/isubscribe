@@ -6,7 +6,8 @@ import React from 'react'
 
 import { getUser } from '@/lib/supabase/accounts'
 export const metadata: Metadata = {
-  title: 'Buy Data | isubscribe'
+  title: 'Buy Data | isubscribe',
+  description: 'Buy data from your favourite network provider with ease. Get started today with isubscribe!',
 }
 
 const DataPage = async () => {

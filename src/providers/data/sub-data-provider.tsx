@@ -103,6 +103,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
 
         setDataAmount(payload.Data)
+        console.log(payload?.Data)
 
         const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
@@ -119,7 +120,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         setDataBonus(cashbackPrice)
 
         const networkId = networkIds[currentNetwork]
-        setDataAmount(payload.Data)
         setPurchasing(true)
 
         const { data, error } = await buyData({
@@ -137,7 +137,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         if (error || (data?.status === 'fail')) {
             
             let meta_data: AirtimeDataMetadata = {
-                dataQty: dataAmount ?? '0',
+                dataQty: payload?.Data ?? '0',
                 duration: null,
                 network: currentNetwork,
                 transId: data?.transid ?? null,
@@ -182,8 +182,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             return
         }
 
-        setPurchasing(false)
-
         if (data?.status === 'success') {
             
             const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
@@ -197,7 +195,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
 
             let meta_data: AirtimeDataMetadata = {
-                dataQty: dataAmount ?? 0,
+                dataQty: payload?.Data ?? 0,
                 duration: null,
                 network: currentNetwork,
                 transId: data?.transid ?? null,

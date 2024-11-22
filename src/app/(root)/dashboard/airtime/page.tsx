@@ -6,7 +6,8 @@ import { Metadata } from 'next'
 import React from 'react'
 
 export const metadata: Metadata = {
-  title: 'Airtime | isubscribe'
+  title: 'Airtime | isubscribe',
+  description: 'Buy airtime from your favourite network provider with ease. Get started today with isubscribe!',
 }
 
 const AirtimePage = async () => {

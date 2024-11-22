@@ -2,6 +2,12 @@ import EducationContent from '@/components/dashboard/education/education-content
 import WidthWrapper from '@/components/WidthWrapper'
 import { getUser } from '@/lib/supabase/accounts'
 import EducationProvider from '@/providers/education/education-provider'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Education | isubscribe',
+  description: 'Pay for your cable TV subscription with ease. Get started today with isubscribe!',
+}
 
 
 const EducationPage = async () => {

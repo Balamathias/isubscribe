@@ -1,8 +1,9 @@
+'use client'
+
 import React from "react"
 import { motion } from "framer-motion"
 import Status from "@/components/status"
 import { Card } from "@/components/ui/card"
-import { formatNigerianNaira } from "@/funcs/formatCurrency"
 import { formatDateTime } from "@/funcs/formatDate"
 import { Tables } from "@/types/database"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"

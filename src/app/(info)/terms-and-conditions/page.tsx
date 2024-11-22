@@ -4,7 +4,7 @@ import React from 'react'
 
 export const metadata: Metadata = {
   title: 'Terms and conditions | isubscribe',
-  description: 'Learn about our terms of usage and conditions.'
+  description: 'We are a utility payments platform that offer affordable data and airtime subscriptions. Buy data and airtime at cheaper rates on isubscribe today!'
 }
 const TermsPage = () => {
   return (
