@@ -25,10 +25,14 @@ export const getAccount = async (id?: string) => {
     return { data, error }
 }
 
-export const generateReservedAccount = async () => {
+export const generateReservedAccount = async (bvn?: string) => {
     const supabase = createClient()
 
     const { data: user, error } = await getUser()
+
+    if (bvn && user?.id) {
+        const { data, error } = await supabase.from('profile').update({}).eq('id', user?.id)
+    }
 
     const reservedAccount = await getReservedAccount({
         accountReference: nanoid(24),
@@ -37,12 +41,10 @@ export const generateReservedAccount = async () => {
         contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
         customerEmail: user?.email!,
         customerName: user?.full_name!,
-        // "bvn":"21212121212",
-        "getAllAvailableBanks": true,
+        bvn,
+        getAllAvailableBanks: true,
         // "preferredBanks": ["50515"]
     })
-
-    console.log("ACCTS: ", reservedAccount)
 
     const body = reservedAccount?.responseBody
     const successful = reservedAccount?.requestSuccessful
