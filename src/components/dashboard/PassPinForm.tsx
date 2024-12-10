@@ -109,7 +109,7 @@ const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void,
                     <div className='flex flex-col gap-y-2.5 items-center justify-center text-center py-2'>
                       <Avatar className='w-16 h-16'>
                         <AvatarImage src={profile?.data?.avatar!} />
-                        <AvatarFallback content={profile?.data?.full_name?.[0]} />
+                        <AvatarFallback>{profile?.data?.full_name?.[0]}</AvatarFallback>
                       </Avatar>
 
                       <p className='text-muted-foreground text-sm'>
