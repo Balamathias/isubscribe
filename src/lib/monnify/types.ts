@@ -60,6 +60,35 @@ export interface ReservedAccountApiResponse {
   responseBody: ReservedResponseBody;
 }
 
+export type ReservedAccountApiResponse_V2 = {
+  requestSuccessful: boolean;
+  responseMessage: string;
+  responseCode: string;
+  responseBody: {
+      contractCode: string;
+      accountReference: string;
+      accountName: string;
+      currencyCode: string;
+      customerEmail: string;
+      customerName: string;
+      accounts: Array<{
+          bankCode: string;
+          bankName: string;
+          accountNumber: string;
+          accountName: string;
+      }>;
+      collectionChannel: string;
+      reservationReference: string;
+      reservedAccountType: string;
+      status: string;
+      createdOn: string;
+      incomeSplitConfig: Array<any>;
+      bvn: string;
+      restrictPaymentSource: boolean;
+  };
+};
+
+
 
 interface InitiateTransferResponseBody {
   transactionReference: string;

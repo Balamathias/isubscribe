@@ -6,7 +6,7 @@ import React from 'react'
 
 export const metadata: Metadata = {
     title: 'Sign In',
-    description: 'Sign in to your account',
+    description: 'Sign in to your isubscribe account',
 }
 
 const SignInPage = async () => {

@@ -7,6 +7,7 @@ import Link from 'next/link'
 import CopyButton from '../CopyButton'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
 import PleaseSignIn from './please-sign-in.modal'
+import GenerateAccount from './generate-account'
 
 const AddmoneyModal = async () => {
 
@@ -25,64 +26,70 @@ const AddmoneyModal = async () => {
                         </Button>
                     }
                 >
-                    <div className='flex flex-col py-2 gap-y-3 items-center justify-center text-center w-full'>
-                        <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
-                            <LucidePiggyBank size={15} />
-                        </div>
-                        <h2 className='text-base tracking-tighter'>Fund your wallet.</h2>
-                        <div className='flex flex-col gap-y-4'>
+                    {
+                        account ? (
+                            <div className='flex flex-col py-2 gap-y-3 items-center justify-center text-center w-full'>
+                                <div className='h-10 w-10 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
+                                    <LucidePiggyBank size={15} />
+                                </div>
+                                <h2 className='text-base tracking-tighter'>Fund your wallet.</h2>
+                                <div className='flex flex-col gap-y-4'>
 
-                            <div className='flex flex-col gap-y-1.5 items-center justify-center'>
-                                <div className='flex flex-row items-center gap-x-1.5'>
-                                    <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
-                                        <LucideCalculator size={14} />
+                                    <div className='flex flex-col gap-y-1.5 items-center justify-center'>
+                                        <div className='flex flex-row items-center gap-x-1.5'>
+                                            <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
+                                                <LucideCalculator size={14} />
+                                            </div>
+                                            <p className='text-muted-foreground font-semibold'>Account Number</p>
+                                        </div>
+                                        <div className='flex gap-x-0.5 items-center'>
+                                            <h2 className='text-lg font-semibold'>{account?.account_number}</h2>
+                                            <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.account_number!} />
+                                        </div>
                                     </div>
-                                    <p className='text-muted-foreground font-semibold'>Account Number</p>
-                                </div>
-                                <div className='flex gap-x-0.5 items-center'>
-                                    <h2 className='text-lg font-semibold'>{account?.account_number}</h2>
-                                    <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.account_number!} />
-                                </div>
-                            </div>
 
-                            <div className='flex flex-col gap-y-1.5 items-center justify-center'>
-                                <div className='flex flex-row items-center gap-x-1.5'>
-                                    <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
-                                        <PiggyBank size={14} />
+                                    <div className='flex flex-col gap-y-1.5 items-center justify-center'>
+                                        <div className='flex flex-row items-center gap-x-1.5'>
+                                            <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
+                                                <PiggyBank size={14} />
+                                            </div>
+                                            <p className='text-muted-foreground font-semibold'>Bank Name</p>
+                                        </div>
+                                        <div className='flex gap-x-0.5 items-center'>
+                                            <h2 className='text-lg font-semibold'>{account?.bank_name}</h2>
+                                            <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.bank_name!} />
+                                        </div>
                                     </div>
-                                    <p className='text-muted-foreground font-semibold'>Bank Name</p>
-                                </div>
-                                <div className='flex gap-x-0.5 items-center'>
-                                    <h2 className='text-lg font-semibold'>{account?.bank_name}</h2>
-                                    <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.bank_name!} />
-                                </div>
-                            </div>
 
-                            <div className='flex flex-col gap-y-1.5 items-center justify-center'>
-                                <div className='flex flex-row items-center gap-x-1.5'>
-                                    <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
-                                        <LucideUser2 size={14} />
+                                    <div className='flex flex-col gap-y-1.5 items-center justify-center'>
+                                        <div className='flex flex-row items-center gap-x-1.5'>
+                                            <div className='h-8 w-8 rounded-full flex items-center justify-center bg-amber-600/20 text-amber-600'>
+                                                <LucideUser2 size={14} />
+                                            </div>
+                                            <p className='text-muted-foreground font-semibold'>Account Name</p>
+                                        </div>
+                                        <div className='flex gap-x-0.5 items-center'>
+                                            <h2 className='text-lg font-semibold'>{account?.account_name}</h2>
+                                            <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.account_name!} />
+                                        </div>
                                     </div>
-                                    <p className='text-muted-foreground font-semibold'>Account Name</p>
-                                </div>
-                                <div className='flex gap-x-0.5 items-center'>
-                                    <h2 className='text-lg font-semibold'>{account?.account_name}</h2>
-                                    <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.account_name!} />
-                                </div>
-                            </div>
 
-                            <div className='flex flex-col gap-y-2'>
-                                <p className='text-muted-foreground text-sm'>
-                                    Above is your iSubscribe account wallet details, use it to fund your isubscribe wallet.
-                                </p>
-                                <Button asChild className='rounded-full' variant={'link'}>
-                                    <Link href={`/dashboard/fund-wallet#more`}>
-                                        Learn more.
-                                    </Link>
-                                </Button>
+                                    <div className='flex flex-col gap-y-2'>
+                                        <p className='text-muted-foreground text-sm'>
+                                            Above is your iSubscribe account wallet details, use it to fund your isubscribe wallet.
+                                        </p>
+                                        <Button asChild className='rounded-full' variant={'link'}>
+                                            <Link href={`/dashboard/fund-wallet#more`}>
+                                                Learn more.
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        ): (
+                            <GenerateAccount />
+                        )
+                    }
                 </DynamicModal>
             ): (
                 <PleaseSignIn

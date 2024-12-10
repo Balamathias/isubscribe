@@ -5,7 +5,15 @@ import { createClient } from "@/utils/supabase/server";
 import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
 import { handleInvitation, upsertWallet } from "./wallets";
-import { getReservedAccount } from "../monnify/actions";
+import { deallocateAccount, getReservedAccount } from "../monnify/actions";
+
+const generateReference = () => {
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    return Array.from(
+        { length: 10 },
+        () => chars[Math.floor(Math.random() * chars.length)]
+    ).join('');
+};
 
 export const getAccount = async (id?: string) => {
     const { data: { user } } = await getCurrentUser()
@@ -25,12 +33,16 @@ export const generateReservedAccount = async () => {
     const reservedAccount = await getReservedAccount({
         accountReference: nanoid(24),
         accountName: user?.full_name!,
-        currencyCode: 'NGN',
+        currencyCode: "NGN",
         contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
         customerEmail: user?.email!,
         customerName: user?.full_name!,
-        getAllAvailableBanks: true,
+        // "bvn":"21212121212",
+        "getAllAvailableBanks": true,
+        // "preferredBanks": ["50515"]
     })
+
+    console.log("ACCTS: ", reservedAccount)
 
     const body = reservedAccount?.responseBody
     const successful = reservedAccount?.requestSuccessful
@@ -45,7 +57,7 @@ export const generateReservedAccount = async () => {
             reference: body?.accountReference,
             status: body?.status,
             updated_at: new Date().toISOString(),
-        }).single()
+        }).select().single()
         if (error) throw error
 
         return { data, error }
@@ -53,13 +65,26 @@ export const generateReservedAccount = async () => {
     } else return {data: null, error }
 }
 
+export const deAlloc = async () => {
+
+    const references: string[] = [
+            
+      ];
+      
+    
+    references.map(async (acc) => await deallocateAccount(acc!))
+    console.log(references)
+}
+
 export const deleteReservedAccount = async (id: string) => {
     const supabase = createClient()
-    const { status, error } = await supabase.from('account').delete().eq('id', id).single()
 
-    if (error) throw error
-
-    return { status, error }
+    const { data: account } = await supabase.from('account').select("reference").eq("id", id).single()
+    
+    if (account?.reference) {
+        await deallocateAccount(account?.reference)
+        const { status, error } = await supabase.from('account').delete().eq('id', id).single()
+    }
 }
 
 export const getUser = async (id?: string) => {

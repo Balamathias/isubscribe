@@ -26,7 +26,7 @@ const Page = async () => {
   try {
     await generateReservedAccount()
   } catch (error) {
-    console.log(error)
+    console.log("ACCTSERROR: ", error)
   }
 
   if (user?.onboarded) return redirect('/dashboard')
