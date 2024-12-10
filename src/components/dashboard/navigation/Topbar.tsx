@@ -17,6 +17,7 @@ import { cn, getGreeting } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { ArrowRight, LucideUserCheck, LucideInfo } from 'lucide-react'
 import InstallButton from '@/components/install-pwa-button'
+import { Button } from '@/components/ui/button'
 
 
 const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
@@ -48,6 +49,9 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
 
 
         <div className='flex flex-row gap-x-8 items-center'>
+          {!profile && <Button variant="secondary" className='rounded-full hidden md:block' asChild>
+              <Link href="/sign-in">Login</Link>
+            </Button>}
           {!profile && <InstallButton className={cn('flex', isInstallable && 'max-sm:text-xs')} onInstallable={setIsInstallable} />}
 
           <ModeToggle className='space-y-0 hidden md:flex' />
