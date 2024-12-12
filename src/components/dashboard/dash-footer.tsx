@@ -62,6 +62,7 @@ const DashFooter = ({ user }: Props) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
+              className='hidden'
             >
               <Link href="/dashboard" className="text-violet-500 hover:underline">
                 Go to Dashboard
