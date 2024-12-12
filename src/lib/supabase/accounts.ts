@@ -30,19 +30,7 @@ export const generateReservedAccount = async (bvn?: string) => {
 
     const { data: user, error } = await getUser()
 
-    // const reservedAccount = await getReservedAccount({
-    //     accountReference: nanoid(24),
-    //     accountName: user?.full_name!,
-    //     currencyCode: "NGN",
-    //     contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-    //     customerEmail: user?.email!,
-    //     customerName: user?.full_name!,
-    //     // "bvn":"21212121212",
-    //     "getAllAvailableBanks": true,
-    //     // "preferredBanks": ["50515"]
-    // })
-
-    const reservedAccount = await getReservedAccount_v2({
+    const reservedAccount = await getReservedAccount({
         accountReference: nanoid(24),
         accountName: user?.full_name!,
         currencyCode: "NGN",
@@ -52,7 +40,19 @@ export const generateReservedAccount = async (bvn?: string) => {
         getAllAvailableBanks: false,
         // "bvn":"21212121212",
         // "preferredBanks": ["50515"]
-      })
+    })
+
+    // const reservedAccount = await getReservedAccount_v2({
+    //     accountReference: nanoid(24),
+    //     accountName: user?.full_name!,
+    //     currencyCode: "NGN",
+    //     contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
+    //     customerEmail: user?.email!,
+    //     customerName: user?.full_name!,
+    //     getAllAvailableBanks: true,
+    //     // "bvn":"21212121212",
+    //     // "preferredBanks": ["50515"]
+    //   })
 
     console.log("ACCTS: ", reservedAccount)
 
@@ -62,9 +62,9 @@ export const generateReservedAccount = async (bvn?: string) => {
     if (successful) {
         const { data, error } = await supabase.from('account').insert({
             account_name: body?.accountName,
-            account_number: body?.accounts?.[0]?.accountNumber,
-            bank_name: body?.accounts?.[0]?.bankName,
-            bank_code: body?.accounts?.[0]?.bankCode,
+            account_number: body?.accountNumber,
+            bank_name: body?.bankName,
+            bank_code: body?.bankCode,
             user: user?.id!,
             reference: body?.accountReference,
             status: body?.status,
