@@ -12,6 +12,7 @@ import { getGreeting } from '@/lib/utils'
 import React, { Suspense } from 'react'
 
 import { Metadata } from 'next'
+import DashFooter from '@/components/dashboard/dash-footer'
 
 export const metadata: Metadata = {
   title: "isubscribe | dashboard ~ start paying your utility bills with ease.",
@@ -50,6 +51,8 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
         <Suspense fallback={<ActionBoxSkeleton isHome />}>
           <WelcomeBonusModal profile={profile!} wallet={wallet!} />
         </Suspense>
+
+        <DashFooter user={profile} />
       </div>
     </WidthWrapper>
   )
