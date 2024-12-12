@@ -12,6 +12,7 @@ import { getGreeting } from '@/lib/utils'
 import React, { Suspense } from 'react'
 
 import { Metadata } from 'next'
+import { getReservedAccount_v2 } from '../../../lib/monnify/actions'
 
 export const metadata: Metadata = {
   title: "isubscribe | dashboard ~ start paying your utility bills with ease.",
@@ -24,6 +25,18 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
       getWallet()
     ]
   )
+
+  const account = await getReservedAccount_v2({
+    accountName: 'isubscriber',
+    accountReference: 'isubscriber',
+    currencyCode: 'NGN',
+    contractCode: 'ISUBSCRIBEr',
+    customerEmail: 'isubg@gmail.com',
+    customerName: 'isubscriber',
+    getAllAvailableBanks: true
+  })
+
+  console.log(account)
 
   return (
     <WidthWrapper className='flex flex-col space-y-2.5 sm:space-y-4 !max-w-3xl md:py-12 mt-16 max-sm:mt-8'>

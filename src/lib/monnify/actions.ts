@@ -3,7 +3,7 @@
 import { baseURL, monnifyAPIKey, monnifyContractCode, monnifySecretKey } from ".";
 import { InitiateSingleTransfer, InitiateSingleTransferResponse, InitiateTransferApiResponse, InitiateTransferProps, MonnifyUserTokenResponse, ReservedAccountApiResponse, ReservedAccountApiResponse_V2, ReservedAccountProps } from "./types";
 
-const V2_URL = process.env.NEXT_MONNIFY_BASE_URL_V2 || 'https://sandbox.monnify.com/api/v2/bank-transfer/reserved-accounts'
+const V2_URL = process.env.NEXT_MONNIFY_BASE_URL_V2 || 'https://sandbox.monnify.com/api/v2'
 
 export async function getUserMonnifyToken(): Promise<MonnifyUserTokenResponse | undefined> {
     
@@ -40,6 +40,37 @@ export const getReservedAccount = async (payload: ReservedAccountProps): Promise
 
     try {
         const res = await fetch(baseURL + '/bank-transfer/reserved-accounts', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+          })
+
+          console.log(res.statusText, res.status,)
+          console.log("MONNIFY RESPONSE: ", res)
+          
+          if (!res.ok) {
+            console.error('Error fetching data')
+            throw new Error('Failed to fetch reserved account')
+        }
+        const data = await res.json()
+        return data
+    } catch (error: any) {
+        console.error("ERROR: ", error)
+    }
+}
+
+export const getReservedAccount_v2 = async (payload: ReservedAccountProps): Promise<ReservedAccountApiResponse_V2 | undefined> => {
+    const token = (await getUserMonnifyToken())?.data?.responseBody?.accessToken
+    const headers: HeadersInit = new Headers({
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    });
+
+    payload.contractCode = monnifyContractCode as string
+    console.log(payload)
+
+    try {
+        const res = await fetch(V2_URL + '/bank-transfer/reserved-accounts', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(payload)

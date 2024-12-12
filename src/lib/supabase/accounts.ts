@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
 import { handleInvitation, upsertWallet } from "./wallets";
-import { deallocateAccount, getReservedAccount } from "../monnify/actions";
+import { deallocateAccount, getReservedAccount, getReservedAccount_v2 } from "../monnify/actions";
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -30,21 +30,31 @@ export const generateReservedAccount = async (bvn?: string) => {
 
     const { data: user, error } = await getUser()
 
-    if (bvn && user?.id) {
-        const { data, error } = await supabase.from('profile').update({}).eq('id', user?.id)
-    }
+    // const reservedAccount = await getReservedAccount({
+    //     accountReference: nanoid(24),
+    //     accountName: user?.full_name!,
+    //     currencyCode: "NGN",
+    //     contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
+    //     customerEmail: user?.email!,
+    //     customerName: user?.full_name!,
+    //     // "bvn":"21212121212",
+    //     "getAllAvailableBanks": true,
+    //     // "preferredBanks": ["50515"]
+    // })
 
-    const reservedAccount = await getReservedAccount({
+    const reservedAccount = await getReservedAccount_v2({
         accountReference: nanoid(24),
         accountName: user?.full_name!,
         currencyCode: "NGN",
         contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
         customerEmail: user?.email!,
         customerName: user?.full_name!,
-        bvn,
-        getAllAvailableBanks: true,
+        getAllAvailableBanks: false,
+        // "bvn":"21212121212",
         // "preferredBanks": ["50515"]
-    })
+      })
+
+    console.log("ACCTS: ", reservedAccount)
 
     const body = reservedAccount?.responseBody
     const successful = reservedAccount?.requestSuccessful
@@ -52,9 +62,9 @@ export const generateReservedAccount = async (bvn?: string) => {
     if (successful) {
         const { data, error } = await supabase.from('account').insert({
             account_name: body?.accountName,
-            account_number: body?.accountNumber,
-            bank_name: body?.bankName,
-            bank_code: body?.bankCode,
+            account_number: body?.accounts?.[0]?.accountNumber,
+            bank_name: body?.accounts?.[0]?.bankName,
+            bank_code: body?.accounts?.[0]?.bankCode,
             user: user?.id!,
             reference: body?.accountReference,
             status: body?.status,
