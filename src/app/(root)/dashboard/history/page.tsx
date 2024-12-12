@@ -24,7 +24,7 @@ const HistoryPage = async () => {
           <div className='flex flex-col space-y-4 w-full'>
             <h1 className='md:text-2xl text-lg tracking-tighter font-bold'>Transaction History</h1>
             
-            <Suspense fallback={<ActionBoxSkeleton />}>
+            <Suspense fallback={<ActionBoxSkeleton isHome/>}>
                 <HistoryTabs />
             </Suspense>
           </div>

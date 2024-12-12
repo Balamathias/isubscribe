@@ -47,7 +47,7 @@ const DashboardPage = async ({}: { searchParams: {[key: string]: string} }) => {
 
         <Announcements />
         
-        <Suspense fallback={<ActionBoxSkeleton />}>
+        <Suspense fallback={<ActionBoxSkeleton isHome />}>
           <WelcomeBonusModal profile={profile!} wallet={wallet!} />
         </Suspense>
       </div>
