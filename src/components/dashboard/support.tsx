@@ -9,9 +9,9 @@ const Support = () => {
 
         <div className="flex flex-col space-y-4 text-xs tracking-tighter md:text-base">
             <div className='flex flex-row items-center gap-x-2'>
-                <LucideHeadphones className='text-green-600' />
-                <Link className="bg-green-600/5 text-green-600 py-1 px-3 rounded-full" href={'/dashboard/support/chat'}>
-                    Chat iSubscribe Support
+                <LucideMessageCircle className='text-lime-600' />
+                <Link className="bg-lime-600/5 text-lime-600 py-1 px-3 rounded-full" href={'https://wa.me/2347049597498?text=Hello+iSubscribe'}>
+                    WhatsApp 07049597498
                 </Link>
             </div>
             
@@ -25,21 +25,21 @@ const Support = () => {
             <div className='flex flex-row items-center gap-x-2'>
                 <LucidePhone className='text-pink-600' />
                 <Link className="bg-pink-600/5 text-pink-600 py-1 px-3 rounded-full" href={'tel:+2349154029724'}>
-                    Call 09154029724
+                    Call 07049597498
                 </Link>
             </div>
             
             <div className='flex flex-row items-center gap-x-2'>
-                <LucideMessageCircle className='text-lime-600' />
-                <Link className="bg-lime-600/5 text-lime-600 py-1 px-3 rounded-full" href={'https://wa.me/qr/YGRSMVYOMBDFH1?text=Hello+iSubscribe'}>
-                    WhatsApp 09154029724
+                <LucideMail className='text-purple-600' />
+                <Link className="bg-purple-600/5 text-purple-600 py-1 px-3 rounded-full md:text-base" href={'mailto:isubscribenetwork@gmail.com'}>
+                    Email isubscribenetwork@gmail.com
                 </Link>
             </div>
 
             <div className='flex flex-row items-center gap-x-2'>
-                <LucideMail className='text-purple-600' />
-                <Link className="bg-purple-600/5 text-purple-600 py-1 px-3 rounded-full md:text-base" href={'mailto:isubscribenetwork@gmail.com'}>
-                    Email isubscribenetwork@gmail.com
+                <LucideHeadphones className='text-green-600' />
+                <Link className="bg-green-600/5 text-green-600 py-1 px-3 rounded-full" href={'/dashboard/support/chat'}>
+                    Chat iSubscribe Support
                 </Link>
             </div>
 
