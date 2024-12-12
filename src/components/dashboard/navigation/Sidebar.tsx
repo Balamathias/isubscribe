@@ -6,6 +6,9 @@ import Logo from '@/components/Logo'
 import LinkItem from './LinkItem'
 import SignOutComponent from '@/components/auth/SignOutComponent'
 import { useGetProfile } from '@/lib/react-query/funcs/user'
+import { Button } from '@/components/ui/button'
+import { LucideArrowDown } from 'lucide-react'
+import Link from 'next/link'
 
 const Sidebar = () => {
   const { data: profile } = useGetProfile()
@@ -24,7 +27,21 @@ const Sidebar = () => {
         </div>
 
         <footer className="p-2 lg:p-2.5 flex gap-3 flex-col">
-          <SignOutComponent profile={profile?.data!} />
+          {
+            profile?.data ? (<SignOutComponent profile={profile?.data!} />): (
+              <Button
+                  className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1'
+                  variant={'secondary'}
+                  size={'lg'}
+                  asChild
+              >
+                  <Link href="/sign-in">
+                    Login
+                    <LucideArrowDown size={16} />
+                  </Link>
+              </Button>
+            )
+          }
         </footer>
     </div>
   )

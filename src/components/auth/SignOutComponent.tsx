@@ -35,10 +35,16 @@ const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile
         profile ? (
           <DynamicModal
             trigger={
-                trigger ? trigger : <Button className='w-full flex flex-row gap-x-1 items-center rounded-full text-xs md:text-sm' variant={'destructive'}>
-                  <span>Sign out</span>
-                  <LucideArrowRight size={18} />
-                </Button>
+                trigger ? trigger : (
+                  <Button
+                      className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1'
+                      variant={'secondary'}
+                      size={'lg'}
+                  >
+                      Logout
+                      <LucideArrowRight size={16} />
+                  </Button>
+                )
             }
             open={open}
             setOpen={setOpen}
@@ -54,8 +60,8 @@ const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile
               <p className='text-sm'>Hi <span className='text-primary/90 dark:text-sky-500/[0.9] font-semibold'>{profile?.full_name}</span>, Are you sure you want to logout?</p>
               <p className="text-xs text-muted-foreground">Once you click on that button, You will be signed out of this account, and you will need to sign in again to be able to carry on transactions. Proceed?</p>
               <div className='flex flex-row-reverse gap-x-2 float-right justify-between md:-mb-4'>
-                <Button variant={'destructive'} className='rounded-full' onClick={handleSignOut}>Yes, {"I'm"} sure</Button>
-                <Button variant={'secondary'} className='rounded-full' onClick={() => setOpen(false)}>No, Forget it</Button>
+                <Button variant={'destructive'} className='rounded-xl' onClick={handleSignOut}>Yes, {"I'm"} sure</Button>
+                <Button variant={'secondary'} className='rounded-xl' onClick={() => setOpen(false)}>No, Forget it</Button>
               </div>
             </div>
           </DynamicModal>

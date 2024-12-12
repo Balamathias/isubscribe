@@ -5,7 +5,7 @@ import { Button } from '../ui/button'
 import ClaimBonusModal from './claim-bonus-modal'
 import AddmoneyModal from './add-money-modal'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
-import PleaseSignIn from './please-sign-in.modal'
+import Link from 'next/link'
 
 const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) => {
   const { data: { user } } = await getCurrentUser()
@@ -23,15 +23,12 @@ const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) =
             }
           />
         ): (
-          <PleaseSignIn 
-            message='Please click `sign in` below to continue.'
-            trigger={
-              <Button variant={'ghost'} className='text-xs tracking-tight text-violet-50 p-0 rounded-full hover:opacity-70 hover:bg-inherit flex items-center space-x-0.5 md:space-x-1 hover:text-white'>
-                  <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Sign in</span>
-                  <CaretRightIcon className='h-7 w-7' />
-              </Button>
-            }
-          />
+          <Button asChild variant={'ghost'} className='text-xs tracking-tight text-violet-50 p-0 rounded-full hover:opacity-70 hover:bg-inherit flex items-center space-x-0.5 md:space-x-1 hover:text-white'>
+            <Link href="/sign-in">
+              <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Sign in</span>
+              <CaretRightIcon className='h-7 w-7' />
+            </Link>
+          </Button>
         )
       }
 

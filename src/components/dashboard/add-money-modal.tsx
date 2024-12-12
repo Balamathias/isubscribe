@@ -79,7 +79,7 @@ const AddmoneyModal = async () => {
                                             Above is your iSubscribe account wallet details, use it to fund your isubscribe wallet.
                                         </p>
                                         <Button asChild className='rounded-full' variant={'link'}>
-                                            <Link href={`/dashboard/fund-wallet#more`}>
+                                            <Link href={`/dashboard/fund-wallet#more`} className='bg-gradient-to-r from-violet-500 to-pink-500 dark:from-violet-400 dark:to-pink-400 text-transparent bg-clip-text font-semibold'>
                                                 Learn more.
                                             </Link>
                                         </Button>
