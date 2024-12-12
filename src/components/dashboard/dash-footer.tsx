@@ -23,7 +23,7 @@ const DashFooter = ({ user }: Props) => {
       <div className="flex flex-col items-center justify-center text-center">
 
         <motion.div
-          className="flex space-x-6 mt-6"
+          className="flex space-x-6 mt-6 flex-wrap justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
