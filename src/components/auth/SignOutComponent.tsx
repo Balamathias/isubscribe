@@ -9,10 +9,13 @@ import LoadingOverlay from '../loaders/LoadingOverlay'
 import { Tables } from '@/types/database'
 import { LogOut, LucideArrowRight } from 'lucide-react'
 import PleaseSignIn from '../dashboard/please-sign-in.modal'
+import { useQueryClient } from '@tanstack/react-query'
+import { QueryKeys } from '@/lib/react-query/query-keys'
 
 const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile?: Tables<'profile'> | null, trigger?: ReactNode, setOpenProfileActions?: (bool: boolean) => void }) => {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
     const handleSignOut = async () => {
         setOpen(false)
@@ -20,6 +23,7 @@ const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile
             setLoading(true)
             await signOut()
             setOpenProfileActions && setOpenProfileActions(false)
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.get_user]})
             toast.success('You have been signed out successfully')
         } catch (error: any) {
             toast.error(error.message)
