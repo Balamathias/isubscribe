@@ -12,6 +12,7 @@ import { parseNigerianPhoneNumber } from '@/lib/utils'
 
 import useContacts from '@/hooks/use-contacts'
 import { Tables } from '@/types/database'
+import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
