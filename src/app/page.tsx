@@ -5,9 +5,8 @@
 // import SplashScreen from "@/components/splash-screen"
 
 import HomePage from '@/components/home/HomePage'
-import { createVirtualAccount } from '@/lib/paystack/services'
 
-export default async function Home({searchParams}: { searchParams: {[key: string]: string }}) {
+export default function Home({searchParams}: { searchParams: {[key: string]: string }}) {
   // const router = useRouter()
   
   // useEffect(() => {

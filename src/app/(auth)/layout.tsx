@@ -1,11 +1,8 @@
 import AuthTestimonial from '@/components/auth/AuthTestimonials'
-import { getCurrentUser } from '@/lib/supabase/user.actions'
-import { redirect } from 'next/navigation'
 import React, { ReactNode } from 'react'
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
-  const { data: { user } } = await getCurrentUser()
-  if (user) return redirect('/dashboard')
+
   return (
     <main className="bg-[url('/images/slides/first-slide.jpg')] bg-cover bg-no-repeat inset-0 min-h-screen w-full flex flex-col flex-1">
         <div className='flex md:justify-between justify-between flex-col-reverse md:flex-row bg-background/80 inset-0'>

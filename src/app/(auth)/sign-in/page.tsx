@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'Sign in to your isubscribe account',
 }
 
-const SignInPage = async () => {
+const SignInPage = () => {
   return (
     <WidthWrapper className="min-h-screen">
         <div className='flex flex-col gap-4 items-center justify-center'>

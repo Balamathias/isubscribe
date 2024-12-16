@@ -1,7 +1,6 @@
 import Bottombar from '@/components/dashboard/navigation/Bottombar'
 import Sidebar from '@/components/dashboard/navigation/Sidebar'
 import Topbar from '@/components/dashboard/navigation/Topbar'
-import { getUser } from '@/lib/supabase/accounts'
 import { Metadata } from 'next'
 import React, { PropsWithChildren } from 'react'
 
@@ -10,19 +9,13 @@ export const metadata:Metadata = {
     description: 'Your home of affordable utility bills.',
 }
 
-const Layout = async ({ children }: PropsWithChildren) => {
-
-  const [
-    { data: profile }, 
-  ] = await Promise.all([
-    getUser(),
-  ])
+const Layout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className='bg-violet-50/90 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
           <div className="flex flex-col w-full relative overflow-auto custom-scrollbar ml-2 md:ml-[180px]">
-              <Topbar profile={profile!} />
+              <Topbar />
               { children }
           </div>
         <Bottombar />

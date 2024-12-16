@@ -18,18 +18,36 @@ import { motion } from 'framer-motion'
 import { ArrowRight, LucideUserCheck, LucideInfo } from 'lucide-react'
 import InstallButton from '@/components/install-pwa-button'
 import { Button } from '@/components/ui/button'
+import { useGetProfile } from '@/lib/react-query/funcs/user'
+import { Skeleton } from '@/components/ui/skeleton'
 
 
-const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
+const Topbar = () => {
   const pathname = usePathname()
   const [openSupport, setOpenSupport] = useState(false)
   const [openProfileActions, setOpenProfileActions] = useState(false)
   const [isInstallable, setIsInstallable] = useState(false)
+  const { data, isPending } = useGetProfile()
+  const profile = data?.data
 
   useEffect(() => { 
     setOpenSupport(false)
     setOpenProfileActions(false)
   }, [pathname])
+
+  if (isPending) return (
+    <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white/80 dark:bg-gray-900/80 shadow-sm border-b backdrop-blur-md'>
+      <div className='flex flex-row items-center justify-between p-3 w-full'>
+        <div className='md:ml-[220px] flex items-center'>
+          <Skeleton className="h-8 w-32 rounded-md" />
+        </div>
+        <div className='flex flex-row gap-x-8 items-center'>
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <Skeleton className="h-10 w-24 rounded-md" />
+        </div>
+      </div>
+    </div>
+  )
 
   return (
     <div className='flex fixed w-full top-0 right-0 left-0 z-10 md:h-20 h-16 items-center justify-center bg-white/80 dark:bg-gray-900/80 shadow-sm border-b backdrop-blur-md'>
