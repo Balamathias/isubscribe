@@ -72,8 +72,8 @@ const Topbar = () => {
             {
               isPending ? (
                 <div className='flex flex-row gap-x-8 items-center'>
+                  <Skeleton className="h-7 w-20 rounded-md md:block hidden" />
                   <Skeleton className="h-10 w-10 rounded-full" />
-                  <Skeleton className="h-10 w-24 rounded-md md:block hidden" />
                 </div>
               ): (
                 <DynamicModal
