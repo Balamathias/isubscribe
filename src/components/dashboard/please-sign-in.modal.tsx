@@ -42,7 +42,7 @@ const PleaseSignIn = ({ trigger, message }: { trigger: ReactNode, message?: stri
         <Link href="/sign-in" className='w-full'>
 
         <Button
-            className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1'
+            className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 w-full'
             variant={'secondary'}
             size={'lg'}
             asChild
