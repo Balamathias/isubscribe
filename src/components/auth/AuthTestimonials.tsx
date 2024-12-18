@@ -51,8 +51,8 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
                 <AuthSeparator separatorText="Testimonials" seperatorWrapperClassName="" />
                    
                 <p className="text-lg mb-4">{testimonial.comment}</p>
-                <div className="flex items-center">
-                  <Avatar className="h-12 w-12">
+                <div className="flex items-center gap-x-2">
+                  <Avatar className="h-12 w-12 ring-1 border">
                     <AvatarImage src={testimonial?.profile?.avatar ?? ''} />
                     <AvatarFallback>{testimonial?.profile?.full_name?.at(0)?.toUpperCase()}</AvatarFallback>
                   </Avatar>
