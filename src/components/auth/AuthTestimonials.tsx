@@ -10,8 +10,8 @@ import { useReviews } from "@/lib/react-query/funcs/ratings";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const { data: testimonials, isPending } = useReviews()
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
