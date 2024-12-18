@@ -1,6 +1,6 @@
 "use client";
 
-import { Quote } from "lucide-react";
+import { LucideLoader2, Quote } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import AuthSeparator from "./AuthSeparator";
 import Link from "next/link";
@@ -24,6 +24,10 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
   const handleIndicatorClick = (index:number) => {
     setCurrentTestimonial(index);
   };
+
+  if (isPending) {
+    return (<LucideLoader2 className="animate-spin") />
+  }
 
   return (
     <div className="flex flex-col relative max-w-[700px] items-center mx-auto w-full justify-center h-screen overflow-hidden">
