@@ -1,12 +1,13 @@
 "use client";
 
 import { Quote } from "lucide-react";
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import AuthSeparator from "./AuthSeparator";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useReviews } from "@/lib/react-query/funcs/ratings";
+
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -47,13 +48,10 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
                    
                 <p className="text-lg mb-4">{testimonial.comment}</p>
                 <div className="flex items-center">
-                  <Image
-                    height={1000}
-                    width={1000}
-                    className="w-12 h-12 rounded-full mr-4 object-cover"
-                    src={testimonial.profile?.avatar || ''}
-                    alt={testimonial.profile?.full_name || ''}
-                  />
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={testimonial?.profile?.avatar ?? ''} />
+                    <AvatarFallback>{testimonial?.profile?.full_name?.at(0)?.toUpperCase()}</AvatarFallback>
+                  </Avatar>
                   <div>
                     <p className="text-xl font-[500]">{testimonial?.profile?.full_name}</p>
                   </div>
