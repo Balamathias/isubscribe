@@ -3,8 +3,9 @@ import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import DynamicModal from "../DynamicModal";
 import ShareReciept from "./ShareReciept";
-import { LucideCheckCircle2, LucideXCircle } from "lucide-react";
+import { LucideCheckCircle2, LucideXCircle, LucideX } from "lucide-react";
 import { formatNigerianNaira } from "@/funcs/formatCurrency";
+import Confetti from 'react-confetti'
 
 const SubPurchaseStatus = ({
   closeModal,
@@ -42,6 +43,7 @@ const SubPurchaseStatus = ({
       dialogClassName="sm:max-w-[640px] md:max-w-[500px] rounded-2xl"
       dismissible={false}
     >
+      {!failed ? <Confetti className="w-full h-full" tweenDuration={3000} /> : null}
       <div className="flex flex-col gap-y-1 p-6 items-center justify-center">
         {failed ? (
           <motion.div
@@ -116,19 +118,27 @@ const SubPurchaseStatus = ({
         )}
 
         <motion.div
-          className="w-full"
+          className="w-full mt-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <Button
-            className={cn(
-              "w-full my-2 rounded-full text-white py-2",)}
-            size={"lg"}
-            onClick={closeModal}
+            className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 w-full'
+            variant={'secondary'}
+            size={'lg'}
+            asChild
+        >
+          <motion.button
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.35 }}
+            onClick={() => closeModal()}
           >
             Close
-          </Button>
+            <LucideX className="h-5 w-5" />
+          </motion.button>
+        </Button>
         </motion.div>
       </div>
     </DynamicModal>
