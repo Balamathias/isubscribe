@@ -26,7 +26,7 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
   };
 
   if (isPending) {
-    return (<LucideLoader2 className="animate-spin") />
+    return (<LucideLoader2 className="animate-spin" />)
   }
 
   return (
