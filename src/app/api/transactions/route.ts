@@ -122,7 +122,7 @@ export const POST = async (req: Request) => {
         await sendEmail({
             email: data.eventData.customer?.email,
             subject: 'Transfer successful',
-            message: 'Your wallet transfer to iSubscribe was successful.',
+            message: `Dear ${data.eventData.customer?.name},\n\nYour wallet has been credited with ${formatNigerianNaira(data.eventData.amountPaid)} successfully. This transaction was processed on ${new Date().toLocaleDateString()}.\n\nYour new wallet balance is ${walletBalance + data.eventData.amountPaid}.\n\nThank you for using our service.\n\nBest regards,\nTeam isubscribe.`,
         });
 
         return NextResponse.json({ message: 'Wallet credited successfully.' }, { status: 200 });
