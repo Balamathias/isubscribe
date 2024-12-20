@@ -33,8 +33,8 @@ const Email = ({
       <Head>
         <title>{ title || `Hello ${email}!` }</title>
       </Head>
-      <div className={clsx("bg-white p-4 rounded-md", wrapperStyle)}>
-        <h1 className={clsx("text-xl font-bold text-brand")}>Hello {email}</h1>
+      <div className={clsx("bg-white p-4 rounded-xl py-6 shadow-md", wrapperStyle)}>
+        <h1 className={clsx("text-lg font-semibold text-brand")}>Hello {email}</h1>
         {
           message?.split('\n\n').map((line, i) => (
             <p className="py-1.5 leading-5" key={i}>{line}</p>
@@ -55,7 +55,7 @@ const Email = ({
         )}
 
         <div className="flex flex-col gap-2">
-          <a href={process.env.NEXT_PUBLIC_SITE_URL} className="bg-brand px-4 rounded-md flex items-center justify-center shadow text-slate-50 py-2 mt-4">Visit our Home page.</a>
+          <a href={process.env.NEXT_PUBLIC_SITE_URL} className="text-brand rounded-md flex items-center justify-center shadow py-2 mt-4">Visit our Home page.</a>
         </div>
       </div>
       </html>

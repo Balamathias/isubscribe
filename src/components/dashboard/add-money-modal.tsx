@@ -11,8 +11,8 @@ import GenerateAccount from './generate-account'
 
 const AddmoneyModal = async () => {
 
-  const { data: account, error } = await getAccount()
-  const {data: { user }} = await getCurrentUser()
+    const {data: { user }} = await getCurrentUser()
+    const { data: account, error } = await getAccount()
 
   return (
     <div>

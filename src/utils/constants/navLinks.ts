@@ -37,15 +37,15 @@ export const quickActionsLinks = [
         icon: PhoneCall,
         label: "Airtime",
       },
+      {
+          href: "/dashboard/electricity",
+          icon: Lightbulb,
+          label: "Electricity",
+        },
     {
         href: "/dashboard/tv-cable",
         icon: Tv,
         label: "Tv Cable",
-      },
-    {
-        href: "/dashboard/electricity",
-        icon: Lightbulb,
-        label: "Electricity",
       },
     {
         href: "/dashboard/education?type=waec",

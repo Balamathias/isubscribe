@@ -134,15 +134,21 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
                 {
                   !profile && (
                     <Link href="/sign-in" className='w-full'>
-                      <motion.button
-                        className="flex items-center justify-center gap-2 py-2 px-3 bg-violet-600 text-white shadow-lg hover:bg-violet-700 dark:bg-violet-600 dark:hover:bg-violet-700 transition-all ease-in-out duration-300 rounded-full w-full"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.35 }}
+                      <Button
+                          className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 w-full'
+                          variant={'secondary'}
+                          size={'lg'}
+                          asChild
                       >
-                        Sign In
-                        <ArrowRight className="h-5 w-5" />
-                      </motion.button>
+                        <motion.button
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.35 }}
+                        >
+                          Sign In
+                          <ArrowRight className="h-5 w-5" />
+                        </motion.button>
+                      </Button>
                     </Link>
                   )
                 }

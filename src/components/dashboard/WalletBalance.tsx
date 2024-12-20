@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import useVibration from '@/hooks/use-vibration'
 import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
 import useWalletStore from '@/store/use-wallet-store'
 import { Tables } from '@/types/database'
@@ -13,7 +14,7 @@ import { toast } from 'sonner'
 const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
     const [hideBalance, setHideBalance] = useState(localStorage.getItem('hideBalance') === 'true' || false)
     const [hideCashbackBalance, setHideCashbackBalance] = useState(localStorage.getItem('hideCashbackBalance') === 'true' || false)
-
+    const vibrate = useVibration()
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
     const walletBalance = useWalletStore(state => state.balance)
@@ -44,9 +45,10 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
                     setWalletBalance(response.balance ?? 0)
                     
                     if (response.balance! > wallet?.balance!) {
-                        toast.success('Wallet funded successfully.')
+                        toast.info('Wallet funded successfully.')
                         const audio = new Audio('/audio/notification.wav')
                         audio.play()
+                        vibrate('info')
                     }
                 }
             }

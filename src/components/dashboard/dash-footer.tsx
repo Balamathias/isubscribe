@@ -4,13 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { Info, Lock, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Tables } from '@/types/database';
 
-interface Props {
-  user?: Tables<'profile'> | null;
-}
-
-const DashFooter = ({ user }: Props) => {
+const DashFooter = () => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -56,30 +51,6 @@ const DashFooter = ({ user }: Props) => {
           >
           &copy; {currentYear} isubscibe. All rights reserved.
         </motion.p>
-
-          {user ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className='hidden'
-            >
-              <Link href="/dashboard" className="text-violet-500 hover:underline">
-                Go to Dashboard
-              </Link>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <p className="text-muted-foreground">Please log in to access more features.</p>
-              <Link href="/sign-in" className="mt-2 text-violet-500 hover:underline">
-                Sign In
-              </Link>
-            </motion.div>
-          )}
       </div>
     </motion.footer>
   );

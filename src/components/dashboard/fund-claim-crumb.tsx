@@ -1,11 +1,13 @@
 import { Tables } from '@/types/database'
 import { CaretRightIcon } from '@radix-ui/react-icons'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Button } from '../ui/button'
 import ClaimBonusModal from './claim-bonus-modal'
 import AddmoneyModal from './add-money-modal'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
 import Link from 'next/link'
+
+import { LucidePlus } from 'lucide-react'
 
 const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) => {
   const { data: { user } } = await getCurrentUser()
@@ -32,7 +34,14 @@ const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) =
         )
       }
 
-      <AddmoneyModal />
+      <Suspense fallback={
+        <Button disabled className='text-xs tracking-tighter text-violet-950 flex items-center space-x-1 bg-white md:p-2.5 py-1.5 px-3 rounded-full md:px-5 w-fit hover:bg-violet-100 hover:transition-all'>
+            <LucidePlus size={18} />
+            <span>Add Money</span>
+        </Button>
+      }>
+        <AddmoneyModal />
+      </Suspense>
     </div>
   )
 }

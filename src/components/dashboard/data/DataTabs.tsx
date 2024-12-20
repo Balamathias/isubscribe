@@ -4,17 +4,15 @@ import React, { useState, useCallback, useMemo, lazy, Suspense, useEffect } from
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
-import { useGetProfile } from '@/lib/react-query/funcs/user'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import CustomInput from '../CustomInput'
-import DataTabsSkeleton from '@/components/skeletons/data-tabs'
-import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 import { Button } from '@/components/ui/button'
 import { UsersIcon } from 'lucide-react'
 import { parseNigerianPhoneNumber } from '@/lib/utils'
 
 import useContacts from '@/hooks/use-contacts'
 import { Tables } from '@/types/database'
+import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))

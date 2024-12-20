@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 import localFont from 'next/font/local'
 import "./globals.css";
 import Providers from "@/providers";
 import { cn } from "@/lib/utils";
-
-// const inter = Inter({ subsets: ["latin"] });
 
 const poppins = Poppins({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
 
@@ -15,11 +13,14 @@ const localPoppins = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "Isubscribe",
-  description: "A round trip VTU platform to ace your utility bills with a single click.",
+  title: "isubscribe",
+  description: "A round-trip Virtual Top up platform for all your utility bills. Buy amazing data plans, airtime and electricity and earn bonuses",
+  openGraph: {
+    images: ['/badge.png']
+  }
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

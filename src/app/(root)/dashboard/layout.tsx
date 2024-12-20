@@ -12,17 +12,13 @@ export const metadata:Metadata = {
 
 const Layout = async ({ children }: PropsWithChildren) => {
 
-  const [
-    { data: profile }, 
-  ] = await Promise.all([
-    getUser(),
-  ])
+  const { data: user } = await getUser()
 
   return (
     <div className='bg-violet-50/90 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
           <div className="flex flex-col w-full relative overflow-auto custom-scrollbar ml-2 md:ml-[180px]">
-              <Topbar profile={profile!} />
+              <Topbar profile={user} />
               { children }
           </div>
         <Bottombar />
