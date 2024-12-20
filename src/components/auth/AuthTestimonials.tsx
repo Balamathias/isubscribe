@@ -16,7 +16,7 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % (testimonials?.data?.length || 0));
-    }, 9000); // Change testimonial every 3 seconds
+    }, 9000);
 
     return () => clearInterval(interval);
   }, []);

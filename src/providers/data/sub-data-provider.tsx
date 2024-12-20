@@ -129,8 +129,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             phone: mobileNumber
         })
 
-        console.error(data)
-
         /** if (error) return, @example: You could uncomment this only in edge cases */
 
         if (error || (data?.status === 'fail')) {
