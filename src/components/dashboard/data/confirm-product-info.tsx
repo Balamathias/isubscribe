@@ -26,7 +26,7 @@ const ConfirmProductInfo = ({
 }: ConfirmProductInfoProps) => {
   return (
     <div className="flex flex-col gap-y-2.5 w-full">
-        <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-700 dark:text-violet-400 py-2">{title || 'Data Plan Details'}</h1>
+        <h1 className="md:text-lg text-base md:text-start text-center font-semibold hidden text-violet-700 dark:text-violet-400 py-2">{title || 'Data Plan Details'}</h1>
         
         <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 text-xs md:text-sm dark:bg-inherit'>
             <div className='flex flex-row justify-between items-center gap-x-2'>

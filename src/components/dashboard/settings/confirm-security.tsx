@@ -124,6 +124,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
     <div>
         <DynamicModal
             trigger={trigger}
+            hideDrawerCancel
         >
             <div className='h-10 w-10 rounded-full flex items-center justify-center bg-green-600/20 text-green-600 mx-auto'>
                 {

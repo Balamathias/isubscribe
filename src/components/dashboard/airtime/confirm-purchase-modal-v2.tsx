@@ -88,6 +88,7 @@ const ConfirmPurchaseModal = ({
             setOpen={setOpen}
             dismissible
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
+            title="Confirm product details"
         >
             <LoadingSpinner isPending={purchasing} />
             <div className="flex flex-col gap-y-2.5">

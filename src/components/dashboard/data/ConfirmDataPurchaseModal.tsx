@@ -94,6 +94,7 @@ const ConfirmDataPurchaseModal = ({
         <DynamicModal
             open={open}
             setOpen={setOpen}
+            title="Plan Information"
             dismissible={false}
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
         >

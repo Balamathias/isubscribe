@@ -88,6 +88,7 @@ const DataNetworkCard = () => {
                 setOpen={setOpenConfirmPurchaseModal}
                 dismissible
                 dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
+                title="Plan Information"
             >
                  {purchasing && 
                     <LoadingSpinner isPending={purchasing} />

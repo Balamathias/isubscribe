@@ -19,7 +19,7 @@ interface ClaimBonusModalProps {
 
 const ClaimBonusModal = ({ open, setOpen, trigger, wallet }: ClaimBonusModalProps) => {
   return (
-    <DynamicModal open={open} setOpen={setOpen} trigger={trigger}>
+    <DynamicModal open={open} setOpen={setOpen} trigger={trigger} title={<span className='md:hidden text-center'>Use data bonus</span>}>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}

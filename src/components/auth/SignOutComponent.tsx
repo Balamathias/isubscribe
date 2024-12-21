@@ -54,6 +54,7 @@ const SignOutComponent = ({ profile, trigger, setOpenProfileActions }: { profile
             setOpen={setOpen}
             drawerClassName='rounded-t-[2rem]'
             dialogClassName='rounded-[2rem]'
+            hideDrawerCancel
           >
             <div className='flex flex-col gap-y-4 py-2 text-center justify-center items-center'>
               <div className='h-10 w-10 rounded-full flex items-center justify-center bg-red-600/20 text-red-600 mx-auto'>

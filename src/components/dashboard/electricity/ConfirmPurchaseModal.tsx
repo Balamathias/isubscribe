@@ -67,12 +67,11 @@ const ConfirmPurchaseModal = ({
         setOpen={setOpen}
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
+        title="Electricity Plan Details"
     >
          
         <LoadingSpinner isPending={purchasing} />
-        <div className="flex flex-col gap-y-2.5">
-            <h1 className="md:text-lg text-base md:text-start text-center font-semibold text-violet-500 py-3">{title ? title : 'Electricity Plan Details'}</h1>
-            
+        <div className="flex flex-col gap-y-2.5">            
             <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-secondary text-xs md:text-sm'>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Product</p>

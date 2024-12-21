@@ -18,8 +18,9 @@ import {
 } from "@/components/ui/drawer"
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { cn } from '@/lib/utils'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import { DialogTitle } from './ui/dialog'
 import { LucideX } from 'lucide-react'
+import { Separator } from './ui/separator'
 
 interface DynamicModalProps {
     children: React.ReactNode,
@@ -33,7 +34,9 @@ interface DynamicModalProps {
     drawerOnly?: boolean,
     dismissible?: boolean,
     closeModal?: (open?: boolean) => void,
-    showDrawerCancel?: boolean
+    showDrawerCancel?: boolean,
+    hideDrawerCancel?: boolean,
+    title?: string | React.ReactNode
 }
 const DynamicModal = ({
   children, 
@@ -47,7 +50,9 @@ const DynamicModal = ({
   drawerOnly=false, 
   dismissible=true,
   showDrawerCancel=true,
-  closeModal
+  closeModal,
+  title,
+  hideDrawerCancel
 }: DynamicModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   if ((isDesktop || dialogOnly) && !drawerOnly) {
@@ -57,7 +62,18 @@ const DynamicModal = ({
           {trigger}
         </DialogTrigger>
         <DialogContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", dialogClassName)}>
-          <DialogTitle className="sr-only" />
+          {
+            title && (
+              <div className='text-muted-foreground'>
+                {
+                  typeof title === 'string' ? (
+                    <DialogTitle className='text-center font-semibold'>{title || 'This is a title'}</DialogTitle>
+                  ): title
+                }
+                <Separator className='w-full mt-1.5 hidden' />
+              </div>
+            )
+          }
           <div className="flex flex-col gap-3 p-2.5">
             {children}
           </div>
@@ -73,12 +89,27 @@ const DynamicModal = ({
       </DrawerTrigger>
       <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
 
-        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex')} asChild>
-          <DrawerClose asChild>
-            <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
-              <LucideX />
-            </Button>
-          </DrawerClose>
+        <DrawerTitle className={cn('bg-transparent flex items-center justify-between', hideDrawerCancel && 'hidden')} asChild>
+          <div>
+            <DrawerClose asChild>
+              <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
+                <LucideX />
+              </Button>
+            </DrawerClose>
+            {
+              title && (
+                <div className='text-muted-foreground -ml-10'>
+                  {
+                    typeof title === 'string' ? (
+                      <h2 className='text-center font-semibold text-muted-foreground text-sm md:text-base'>{title || 'This is a title'}</h2>
+                    ): title
+                  }
+                </div>
+              )
+            }
+
+            <div />
+          </div>
         </DrawerTitle>
 
         <div className="flex flex-col gap-3">

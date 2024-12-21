@@ -47,15 +47,16 @@ const ElectricityProviderSelector = () => {
           open={open}
           setOpen={setOpen}
           dismissible
-          dialogClassName={'sm:max-w-[640px] md:max-w-[550px] dark:bg-card'}
-          drawerClassName='dark:bg-card'
+          dialogClassName={'sm:max-w-[640px] md:max-w-[550px]'}
+          drawerClassName=''
+          title="Select your provider"
         >
           <div className='h-[450px] space-y-1 overflow-y-auto'>
             {electricServices.map(service => (
               <Card 
                 key={service.serviceID} 
                 onClick={() => handleCardClick(service)}
-                className='flex flex-row justify-between hover:border-b hover:border-b-violet-500 items-center cursor-pointer hover:opacity-90 space-y-3 dark:bg-card/60 border-b border-none rounded-none shadow-sm p-2 rounded-m outline-none hover:bg-secondary hover:transition-all hover:duration-300'
+                className='flex flex-row justify-between hover:border-b hover:border-b-violet-500 items-center cursor-pointer hover:opacity-90 space-y-3 border-b !bg-inherit border-none rounded-none shadow-sm p-2 rounded-m outline-none hover:bg-secondary hover:transition-all hover:duration-300'
               >
                 <div className="flex flex-row space-x-3 items-center">
                   <Image src={service.image} height={1000} width={1000} alt={service.fullName} className="h-10 w-10 rounded-full object-cover" />

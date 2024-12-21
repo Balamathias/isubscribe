@@ -44,6 +44,7 @@ const SecurityQuestion = ({ profile }: { profile?: Tables<'profile'> | null }) =
             setOpen={setOpenUpdateSecurityModal}
             dialogClassName='sm:max-w-max dark:bg-card !p-0'
             drawerClassName='dark:bg-card'
+            hideDrawerCancel
         >
             <ConfirmPin 
                 profile={profile}

@@ -24,6 +24,7 @@ const ResetPIN = () => {
                     setOpen={setConfirmPin}
                     dialogClassName='sm:max-w-max dark:bg-card !p-0'
                     drawerClassName="dark:bg-card"
+                    hideDrawerCancel
                     trigger={
                         <SettingItem 
                             icon={<Lock />}

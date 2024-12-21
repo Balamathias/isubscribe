@@ -151,6 +151,7 @@ const AirtimeCards = () => {
                 dismissible
                 dialogClassName={'sm:max-w-fit dark:bg-card'}
                 drawerClassName='dark:bg-card'
+                hideDrawerCancel
                 >
                 <ConfirmPin 
                     className='rounded-none' 

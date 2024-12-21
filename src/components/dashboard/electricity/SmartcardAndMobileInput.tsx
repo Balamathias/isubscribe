@@ -2,12 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { verifySmartcardNumber } from '@/lib/vtpass/services';
-import { Loader2, Check, X, Tv, User, Calculator, Currency, Coins } from 'lucide-react';
+import { Loader2, Check, X, Tv, User, Calculator, Currency, Coins, Phone } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useElectricity } from '@/providers/electricity/electricity-provider';
 import CustomInput from '../CustomInput';
 import { Tables } from '@/types/database';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
 
 const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const [loading, setLoading] = useState(false);
@@ -59,71 +62,82 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
   }, [meterNumber]);
 
   return (
-    <div className="space-y-4">
-      <Card className="dark:bg-card/60 flex flex-row gap-2 max-sm:justify-end justify-end items-center w-full border-none outline-none shadow-none rounded-lg">
-        <div className='flex flex-row items-center p-3 gap-2 rounded'>
-          <span>Prepaid</span>
-          <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid?.(true)} />
-        </div>
-        <div className='flex flex-row items-center p-3 gap-2 rounded-lg'>
-          <span>Postpaid</span>
-          <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid?.(false)} />
-        </div>
-      </Card>
+    <div className="space-y-5">
+      <div className="flex flex-col gap-y-5">
 
-      <Card className="p-4 px-1.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
-        <div className='flex flex-row gap-x-2 items-center justify-between w-full'>
-          <p className="text-red-600 bg-red-200 h-10 w-10 aspect-square rounded-full flex items-center justify-center">
-            <Calculator size={16}/>
-          </p>
+        <div className="flex flex-col gap-y-4">
+          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', isPrepaid && 'border border-primary')} role="button" onClick={() => setIsPrepaid?.(true)}>
+            <span>Prepaid</span>
+            <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid?.(true)} />
+          </Card>
+
+          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', !isPrepaid && 'border border-primary')} role='button' onClick={() => setIsPrepaid?.(false)}>
+            <span>Postpaid</span>
+            <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid?.(false)} />
+          </Card>
+        </div>
+      </div>
+
+      <Card className="p-4 px-2.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
+        <div className='flex flex-col gap-y-4 w-full'>
+          <Label className="flex flex-row items-center gap-x-1.5" htmlFor='meter'>
+            <Calculator size={20}/>
+            <span>Meter Number:</span>
+          </Label>
           <CustomInput
             onChange={handleMeterNumberChange}
             value={meterNumber}
             type="tel"
-            placeholder="Enter Meter Number here..."
-            className='w-[92%] max-sm:w-[85%]'
+            placeholder="Enter Meter Number here."
+            className='w-full bg-background border'
+            id='meter'
+            name='meter'
           />
         </div>
 
         {loading && (
-          <div className='flex flex-row gap-2 justify-center items-center'>
-            <p className="text-violet-600 rounded-full bg-white p-1 md:p-2">
-              <Loader2 className='animate-spin' />
-            </p>
-            <span className='h-8 w-full bg-gray-300 rounded-sm animate-pulse'></span>
-          </div>
+          <p className='flex items-center gap-x-1.5'>
+            <Loader2 className='animate-spin' /> <span className='text-muted-foreground animate-pulse'>Verifying...</span>
+          </p>
         )}
 
         {success && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 justify-center self-start items-center'>
-            <p className="text-violet-600 bg-green-100 h-10 w-10 rounded-full flex items-center justify-center">
-              <Check className='text-green-500' size={16} />
-            </p>
-            <span className='text-sm tracking-tighter'>{data?.Customer_Name}</span>
+            <span className="bg-green-600/15 text-green-600 h-10 w-10 rounded-full flex items-center justify-center">
+              <Check size={16} />
+            </span>
+            <span className='text-sm tracking-tighter text-muted-foreground'>{data?.Customer_Name}</span>
           </div>
         )}
 
         {error && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 self-start justify-center items-center'>
-            <p className="text-violet-600 bg-red-100 h-10 w-10 rounded-full flex items-center justify-center">
-              <X className='text-red-500' size={16} />
-            </p>
-            <span className='text-sm tracking-tighter'>{data?.error}</span>
+            <span className="bg-amber-600/15 text-amber-600 h-10 w-10 rounded-full flex items-center justify-center">
+              <X size={16} />
+            </span>
+            <span className='text-sm tracking-tighter text-muted-foreground'>{data?.error}</span>
           </div>
         )}
       </Card>
 
-      <Card className="bg-white p-4 px-1.5 flex flex-row gap-2 justify-center w-full rounded-sm border-none outline-none shadow-none">
-        <p className="text-white bg-violet-500 h-10 w-10 rounded-full flex items-center justify-center aspect-square">
-          <User size={16}/>
-        </p>
-        <CustomInput
-          onChange={(e) => setMobileNumber(e.target.value)}
-          type="tel"
-          value={mobileNumber}
-          placeholder="Enter Phone Number here..."
-          className='w-[92%] max-sm:w-[85%]'
-        />
+      <Card className="p-4 px-2.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
+        <div className='flex flex-col gap-y-4 w-full'>
+          <Label className="flex flex-row items-center gap-x-1.5" htmlFor='phone'>
+            <Phone size={20}/>
+            <span>Phone Number:</span>
+          </Label>
+          <CustomInput
+            onChange={(e) => setMobileNumber(e.target.value)}
+            type="tel"
+            value={mobileNumber}
+            placeholder="Enter Phone Number here."
+            className='w-full bg-background border'
+            id='phone'
+            name='phone'
+            min={11}
+            max={11}
+          />
+        </div>
       </Card>
 
      

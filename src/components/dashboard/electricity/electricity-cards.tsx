@@ -52,14 +52,13 @@ const ElectricityCards = ({ profile }: { profile?: Tables<'profile'> | null }) =
         {
           profile ? (
             <Button
-              className='w-full rounded-xl shadow-sm' 
+              className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 w-full' 
               size={'lg'}
-              
               onClick={handleProceed}
             >Continue</Button>
           ): (
             <PleaseSignIn
-              trigger={<Button className='w-full rounded-xl shadow-sm' size={'lg'}>Continue</Button>}
+              trigger={<Button className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 w-full' size={'lg'}>Continue</Button>}
               message='Please sign in to continue'
             />
           )
