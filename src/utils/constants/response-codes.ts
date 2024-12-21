@@ -15,4 +15,8 @@ export const RESPONSE_CODES = {
         code: '010',
         message: "It appears the Product you selected does not exist in stock, please choose another one."
     },
-}
+    PRODUCT_DOES_NOT_EXIST: {
+        code: '012',
+        message: "It appears the Product you selected does not exist, please choose another one."
+    },
+} as const

@@ -58,10 +58,11 @@ export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTra
     }
     try {
         const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
-        console.log(res.statusText)
+        console.log(res.statusText, res.status)
         if (res.status !== 200) {
             throw new Error('Failed to buy data')
         }
+        console.log(res.data)
         return res.data
     } catch (error) {
         console.log(error)
@@ -111,11 +112,11 @@ export const buyElectricity = async (data: VTPassTransactionRequest): Promise<VT
         'Content-Type': 'application/json'
     }
     const res = await axios.post(`${VTPASS_BASE_URL}/pay`, data, { headers })
-    console.log(res.statusText)
-    console.log("RESSSSS", res)
+    console.log(res.statusText, res?.status)
     if (res.status !== 200) {
         throw new Error('Failed to buy data')
     }
+    console.log(res, res.data)
     return res.data
 }
 

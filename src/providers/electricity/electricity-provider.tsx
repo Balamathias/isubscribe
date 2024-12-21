@@ -156,8 +156,6 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
     setResData(res as any)
 
     console.log("NEPPAAAAA", resData)
-    
-
 
     /** if (error) return, @example: You could uncomment this only in edge cases */
 
@@ -171,7 +169,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
           title: 'Meter Subscription',
           type: EVENT_TYPE.meter_topup,
           email: null,
-          meta_data: JSON.stringify(transRes),
+          meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
           updated_at: null,
           user: profile?.id!,
           amount: price,
@@ -205,7 +203,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         title: 'Meter Subscription',
         type: EVENT_TYPE.meter_topup,
         email: null,
-        meta_data: JSON.stringify(transRes),
+        meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
         updated_at: null,
         user: profile?.id!,
         amount: price
@@ -227,7 +225,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
 
 
 
-  if (res?.response_description === "TRANSACTION SUCCESSFULL" || transRes?.status === 'delivered') {
+  if (res?.response_description === "TRANSACTION SUCCESSFUL" || transRes?.status === 'delivered') {
             
     const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
         (balance - deductableAmount))
@@ -248,7 +246,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         title: 'Meter Subscription',
         type: EVENT_TYPE.meter_topup,
         email: null,
-        meta_data: JSON.stringify(transRes),
+        meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
         updated_at: null,
         user: profile?.id!,
         amount: price
