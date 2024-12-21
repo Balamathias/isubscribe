@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideLoader2, Quote } from "lucide-react";
+import { LucideLoader2, Quote, StarIcon } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import AuthSeparator from "./AuthSeparator";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { useReviews } from "@/lib/react-query/funcs/ratings";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
-  const { data: testimonials, isPending } = useReviews()
+  const { data: testimonials, isPending } = useReviews(7)
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   useEffect(() => {
@@ -51,13 +51,24 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
                 <AuthSeparator separatorText="Testimonials" seperatorWrapperClassName="" />
                    
                 <p className="text-lg mb-4">{testimonial.comment}</p>
-                <div className="flex items-center gap-x-2">
+                <div className="flex items-start gap-x-2">
                   <Avatar className="h-12 w-12 ring-1 border">
                     <AvatarImage src={testimonial?.profile?.avatar ?? ''} />
                     <AvatarFallback>{testimonial?.profile?.full_name?.at(0)?.toUpperCase()}</AvatarFallback>
                   </Avatar>
-                  <div>
+                  <div className=" space-y-2">
                     <p className="text-xl font-[500]">{testimonial?.profile?.full_name}</p>
+                    <div className="flex items-center mt-2">
+                    {[...Array(5)].map((_, i) => (
+                          <div key={i}>
+                            <StarIcon
+                              className={`text-base ${
+                                i < (testimonial.rating || 0) ? "text-amber-400" : "text-gray-400 dark:text-gray-600"
+                              }`}
+                            />
+                          </div>
+                        ))}
+                      </div>
                   </div>
                 </div>
               </div>
