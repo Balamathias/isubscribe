@@ -37,7 +37,7 @@ const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) =
       <Suspense fallback={
         <Button disabled className='text-xs tracking-tighter text-violet-950 flex items-center space-x-1 bg-white md:p-2.5 py-1.5 px-3 rounded-full md:px-5 w-fit hover:bg-violet-100 hover:transition-all'>
             <LucidePlus size={18} />
-            <span>Add Money</span>
+            <span>Fund Wallet</span>
         </Button>
       }>
         <AddmoneyModal />
