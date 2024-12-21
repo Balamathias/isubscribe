@@ -15,7 +15,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   const { data: user } = await getUser()
 
   return (
-    <div className='bg-violet-200/90 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
+    <div className='md:bg-violet-100/90 bg-violet-50 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
        <Sidebar />
           <div className="flex flex-col w-full relative overflow-auto custom-scrollbar ml-2 md:ml-[180px]">
               <Topbar profile={user} />
