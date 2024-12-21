@@ -554,7 +554,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         const res = await buyVTPassAirtime({
             ...payload,
-            phone: '08011111112',
+            phone: '08011111111',
             request_id: generateRequestId()
         })
 
