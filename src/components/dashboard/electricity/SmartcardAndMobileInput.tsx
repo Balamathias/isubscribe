@@ -66,12 +66,12 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
       <div className="flex flex-col gap-y-5">
 
         <div className="flex flex-col gap-y-4">
-          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', isPrepaid && 'border border-primary')} role="button" onClick={() => setIsPrepaid?.(true)}>
+          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', isPrepaid && '!border border-primary')} role="button" onClick={() => setIsPrepaid?.(true)}>
             <span>Prepaid</span>
             <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid?.(true)} />
           </Card>
 
-          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', !isPrepaid && 'border border-primary')} role='button' onClick={() => setIsPrepaid?.(false)}>
+          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', !isPrepaid && '!border border-primary')} role='button' onClick={() => setIsPrepaid?.(false)}>
             <span>Postpaid</span>
             <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid?.(false)} />
           </Card>

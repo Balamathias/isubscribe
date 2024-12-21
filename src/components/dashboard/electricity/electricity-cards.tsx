@@ -45,7 +45,7 @@ const ElectricityCards = ({ profile }: { profile?: Tables<'profile'> | null }) =
           name='amount'
           value={powerAmount}
           placeholder="₦ Enter Amount here..."
-          className=' p-8 rounded-md shadow-none max-md:p-6 text-lg md:w-1/2 self-center text-center'
+          className=' p-8 rounded-md shadow-none max-md:p-6 text-lg md:w-1/2 self-center text-center border ring-1'
         />
        </div>
 
