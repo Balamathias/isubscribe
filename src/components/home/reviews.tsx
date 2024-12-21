@@ -30,8 +30,8 @@ const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
   return (
     <DynamicSheet
       trigger={trigger || <></>}
-      sheetClassName='overflow-auto !w-[600px]'
-      drawerClassName=''
+      // sheetClassName='overflow-auto !w-[600px]'
+      // drawerClassName=''
     >
       {
         isError && (

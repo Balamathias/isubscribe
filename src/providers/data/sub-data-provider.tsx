@@ -384,6 +384,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         setDataAmount(payload.detail?.dataQty!)
 
+        const reqId = generateRequestId()
+
         const { data: values, error } = await computeServerTransaction({
             payload: {
                 price: (payload.amount as number),
@@ -415,7 +417,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         const res = await buyVTPassData({
             ...payload,
-            request_id: generateRequestId(),
+            request_id: reqId,
             billersCode: mobileNumber,
             phone: '08011111111',
         })
@@ -453,6 +455,15 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setOpenConfirmPurchaseModal(false)
             setErrorMessage(RESPONSE_CODES.NO_PRODUCT_VARIATION.message)
             await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: mobileNumber})
+            return
+        }
+
+        else if (res?.code === RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code) {
+            setPurchasing(false)
+            setPurchaseFailed(true)
+            setOpenConfirmPurchaseModal(false)
+            setErrorMessage(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message)
+            await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: mobileNumber})
             return
         }
         

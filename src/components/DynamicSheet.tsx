@@ -58,7 +58,7 @@ const DynamicSheet = ({
         <SheetTrigger asChild>
           {trigger}
         </SheetTrigger>
-        <SheetContent className={cn("rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", className, sheetClassName)}>
+        <SheetContent className={cn("rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900 ", className, sheetClassName)}>
           <SheetTitle className="sr-only" />
           <div className="flex flex-col gap-3 p-2.5">
             {children}

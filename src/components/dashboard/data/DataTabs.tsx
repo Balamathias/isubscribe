@@ -19,7 +19,7 @@ const DailyData = lazy(() => import('./DailyData'))
 
 const tabs = [
     {
-        name: 'Awoof',
+        name: 'Super',
         value: 'awoof',
         component: <DataNetworkCard />
     },
