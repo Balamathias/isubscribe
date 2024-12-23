@@ -105,6 +105,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
             dismissible
             dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
             drawerClassName='dark:bg-card'
+            hideDrawerCancel
         >
             <ConfirmPin 
                 className='rounded-none' 

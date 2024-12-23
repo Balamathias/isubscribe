@@ -25,7 +25,6 @@ const AddmoneyModal = async () => {
                             <span>Fund Wallet</span>
                         </Button>
                     }
-                    hideDrawerCancel
                     title="Zero Fees on Funding wallet."
                 >
                     {
@@ -33,10 +32,6 @@ const AddmoneyModal = async () => {
                             <div className='flex flex-col py-2 gap-y-3 items-center justify-center text-center w-full !bg-inherit/70 backdrop:blur-lg'>
                                 
                                 <div className='flex flex-col gap-y-4'>
-                                {/* <div className='h-10 w-10 rounded-full flex items-center justify-center bg-primary/20 text-primary'>
-                                    <LucidePiggyBank size={15} />
-                                </div>
-                                <h2 className='text-base tracking-tighter'>Fund your wallet.</h2> */}
                                     <div className='flex flex-col gap-y-1.5 items-center justify-center'>
                                         <div className='flex flex-row items-center gap-x-1.5'>
                                             <div className='h-8 w-8 rounded-full flex items-center justify-center bg-primary/20 text-primary'>
