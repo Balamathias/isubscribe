@@ -73,7 +73,7 @@ const AddmoneyModal = async () => {
 
                                     <div className='flex flex-col gap-y-2'>
                                         <p className='text-muted-foreground text-sm flex flex-wrap items-center gap-x-1.5'>
-                                            <LucideInfo size={14} />{' '}Use your isubscribe account details above to fund your isubscribe wallet-Tranfers usually take less than 10 seconds to arrive.
+                                            Use your isubscribe account details above to fund your isubscribe wallet-Tranfers usually take less than 10 seconds to arrive.
                                         </p>
                                         <Button asChild className='rounded-full' variant={'link'}>
                                             <Link href={`/dashboard/fund-wallet#more`} className='bg-gradient-to-r from-violet-500 to-pink-500 dark:from-violet-400 dark:to-pink-400 text-transparent bg-clip-text font-semibold'>
