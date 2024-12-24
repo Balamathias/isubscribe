@@ -8,6 +8,7 @@ import useWalletStore from '@/store/use-wallet-store'
 import { Tables } from '@/types/database'
 import { createClient } from '@/utils/supabase/client'
 import { Asterisk, Eye, EyeOff } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -18,6 +19,8 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
     const walletBalance = useWalletStore(state => state.balance)
+
+    const router = useRouter()
 
     useEffect(() => { setWalletBalance(wallet?.balance ?? 0) }, [wallet?.balance, setWalletBalance])
 
@@ -45,11 +48,13 @@ const WalletBalance = ({ wallet }: { wallet: Tables<'wallet'>}) => {
                     setWalletBalance(response.balance ?? 0)
                     
                     if (response.balance! > wallet?.balance!) {
+                        router.refresh()
                         toast.info('Wallet funded successfully.')
+                        vibrate('info')
                         const audio = new Audio('/audio/notification.wav')
                         audio.play()
-                        vibrate('info')
                     }
+                    router.refresh()
                 }
             }
         )

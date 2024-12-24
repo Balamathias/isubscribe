@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react"
-import { buyAirtime, buyData } from "@/lib/n3tdata"
+import { buyAirtime } from "@/lib/n3tdata"
 import { Tables } from "@/types/database"
 import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassAirtimePayload, VTPassDataPayload } from "@/types/networks"
 import { nanoid } from 'nanoid'
@@ -25,6 +25,7 @@ import { useGetProfile } from "@/lib/react-query/funcs/user"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 import useVibration from "@/hooks/use-vibration"
 import { computeServerTransaction } from "@/actions/compute.server"
+import { processData_n3t } from "@/actions/buy-data"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -104,134 +105,58 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
         setDataAmount(payload.Data)
 
-        const { data: values, error: computeError } = await computeServerTransaction({
-            payload: {
-                price: priceToInteger(payload.Price),
-                cashback: priceToInteger(payload.CashBack),
-                method: payload.method,
-                interest: payload?.commission
-            },
-        })
-
-        if (computeError || !values) return toast.error(computeError || 'An unknown error has occured, please try again.')
-
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
-        setDataBonus(cashbackPrice)
-
         const networkId = networkIds[currentNetwork]
         setPurchasing(true)
 
-        const { data, error } = await buyData({
-            "request-id": `Data_${generateRequestId()}`,
-            bypass: false,
+        let meta_data: AirtimeDataMetadata = {
+            dataQty: payload?.Data ?? 0,
+            duration: null,
+            network: currentNetwork,
+            status: 'success',
+        } as any
+
+        const {
+            data,
+            error,
+            extra
+        } = await processData_n3t({
+            payload: {
+                Price: (payload.Price),
+                CashBack: (payload.CashBack),
+                method: payload.method,
+                commission: payload?.commission,
+                Data: payload?.Data
+            },
             data_plan: payload.Plan_ID,
             network: networkId,
-            phone: mobileNumber
+            phone: mobileNumber,
+            currentNetwork,
+            meta_data,
         })
 
-        /** if (error) return, @example: You could uncomment this only in edge cases */
+        setDataBonus(extra?.cashbackPrice || 0)
 
-        if (error || (data?.status === 'fail')) {
-            
-            let meta_data: AirtimeDataMetadata = {
-                dataQty: payload?.Data ?? '0',
-                duration: null,
-                network: currentNetwork,
-                transId: data?.transid ?? null,
-                unitCashback: cashbackPrice,
-                unitPrice: price,
-                description: data?.message,
-                planType: data?.plan_type!,
-                phone: mobileNumber,
-                status: 'failed',
-                transaction_id: data?.["request-id"],
-                commission: 0
-            }
-            
-            const { data: _insertHistory } = await insertTransactionHistory({
-                description: `Data subscription for ${mobileNumber} failed.`,
-                status: 'failed',
-                title: 'Data Subscription',
-                type: EVENT_TYPE.data_topup,
-                meta_data: JSON.stringify(meta_data),
-                user: profile?.id!,
-                amount: price,
-                provider: 'n3t',
-                request_id: data?.['request-id'],
-                commission: 0,
-            })
+        if (error) {
 
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
 
-            const match = data?.message?.includes('Insufficient')
-
-            console.log(match)
-
-            if (match) {
-                return setErrorMessage('This service provider is temporarily unavailable, please try again later.')
-            }
-
-            setErrorMessage(data?.message ?? 'Data subscription failed. Please try again.')
+            setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
 
             router.refresh()
             return
         }
 
-        if (data?.status === 'success') {
-            
-            const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-                (balance - deductableAmount))
+        if (data) {
 
-            setWalletBalance(_walletBalance.balance ?? 0)
-
-            const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-                (cashbackBalance))
-
-            if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
-
-            let meta_data: AirtimeDataMetadata = {
-                dataQty: payload?.Data ?? 0,
-                duration: null,
-                network: currentNetwork,
-                transId: data?.transid ?? null,
-                unitCashback: cashbackPrice,
-                unitPrice: price,
-                description: data?.message,
-                planType: data?.plan_type,
-                phone: mobileNumber,
-                status: 'success',
-                transaction_id: data?.["request-id"],
-                commission
-            }
-
-            const { data: _insertHistory } = await insertTransactionHistory({
-                description: `Data subscription`,
-                status: 'success',
-                title: 'Data Subscription',
-                type: EVENT_TYPE.data_topup,
-                email: null,
-                meta_data: JSON.stringify(meta_data),
-                updated_at: null,
-                user: profile?.id!,
-                amount: price,
-                provider: 'n3t',
-                commission
-            })
             setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
-            setHistoryId(_insertHistory.id)
+            setHistoryId(extra?.historyId)
 
             router.refresh()
-            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
             vibrate('success')
-            await saveCashbackHistory({amount: cashbackPrice})
 
-            /** 
-             * @example: toast.success(`Congratulations!`, {
-            description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-            })
-            */
             queryClient.invalidateQueries({
                 queryKey: [QueryKeys.get_wallet]
             })
@@ -239,7 +164,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
            setPurchasing(false)
            setOpenConfirmPurchaseModal(false)
            setPurchaseSuccess(true)
-        } else {
+        } 
+        else {
             /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)

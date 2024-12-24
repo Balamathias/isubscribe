@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
 import { handleInvitation, upsertWallet } from "./wallets";
 import { deallocateAccount, getReservedAccount, getReservedAccount_v2 } from "../monnify/actions";
+import { redisIO } from '../redis'
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -99,7 +100,7 @@ export const deleteReservedAccount = async (id: string) => {
     }
 }
 
-export const getUser = async (id?: string) => {
+export const getUser = async (id?: string, useCache: boolean = false) => {
     const supabase = createClient()
     let ID;
     if (id) {
@@ -110,12 +111,32 @@ export const getUser = async (id?: string) => {
     }
     if (!ID) return { data: null, error: new Error('User not found') }
 
+    if (useCache) {
+        const cacheKey = `user:${ID}`
+        try {
+            const cachedUser = await redisIO.get(cacheKey)
+            if (cachedUser) {
+                return { data: JSON.parse(cachedUser), error: null }
+            }
+        } catch (error) {
+            console.error('Redis cache error:', error)
+        }
+    }
+
     const { data, error } = await supabase.from('profile').select('*').eq('id', ID).single()
 
     if (error) return { error, data }
 
-    return { data, error }
+    if (useCache && data) {
+        try {
+            const cacheKey = `user:${ID}`
+            await redisIO.set(cacheKey, JSON.stringify(data), 'EX', 300)
+        } catch (error) {
+            console.error('Redis cache set error:', error)
+        }
+    }
 
+    return { data, error }
 }
 
 export const upsertUser = async ({id, ...rest}: Pick<Tables<'profile'>, 'state' | 'email' | 'full_name' | 'id' | 'phone' | 'pin'>) => {
