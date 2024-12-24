@@ -112,9 +112,14 @@ export const processData_n3t = async ({
         meta_data = {
             ...meta_data,
             transId: data?.transid ?? null,
+            dataQty: payload?.Data ?? 0,
+            unitCashback: cashbackPrice,
+            unitPrice: price,
             description: data?.message,
+            planType: data?.plan_type || '',
             status: 'failed',
             transaction_id: data?.["request-id"],
+            commission,
         }
         
         const { data: _insertHistory } = await insertTransactionHistory({
