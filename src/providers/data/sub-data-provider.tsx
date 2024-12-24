@@ -25,7 +25,7 @@ import { useGetProfile } from "@/lib/react-query/funcs/user"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 import useVibration from "@/hooks/use-vibration"
 import { computeServerTransaction } from "@/actions/compute.server"
-import { processData_n3t } from "@/actions/buy-data"
+import { processData_n3t, processData_VTPass } from "@/actions/buy-data"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -173,6 +173,78 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
         }
     }
 
+    const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
+
+        setDataAmount(payload.detail?.dataQty!)
+
+        const networkId = networkIds[currentNetwork]
+        setPurchasing(true)
+
+        let meta_data: AirtimeDataMetadata = {
+            dataQty: payload?.detail?.dataQty ?? 0,
+            duration: null,
+            network: currentNetwork,
+            status: 'success',
+        } as any
+
+        const {
+            data,
+            error,
+            extra
+        } = await processData_VTPass({
+            payload: {
+                price: (payload.amount as number),
+                cashback: (payload?.cashback as number),
+                method,
+                commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
+            },
+            phone: mobileNumber,
+            currentNetwork,
+            meta_data,
+            serviceID: payload.serviceID,
+            variation_code: payload?.variation_code
+        })
+
+        setDataBonus(extra?.cashbackPrice || 0)
+
+        if (error) {
+
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
+
+            setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
+
+            router.refresh()
+            return
+        }
+
+        if (data) {
+
+            setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+            setHistoryId(extra?.historyId)
+
+            router.refresh()
+            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+            vibrate('success')
+
+            queryClient.invalidateQueries({
+                queryKey: [QueryKeys.get_wallet]
+            })
+            
+           setPurchasing(false)
+           setOpenConfirmPurchaseModal(false)
+           setPurchaseSuccess(true)
+        } 
+
+        else {
+            /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
+        }
+    }
+
     const handleSubAirtime = async (payload: SubAirtimeProps & { method?: PaymentMethod }) => {
 
         const { data: values, error: computeError } = await computeServerTransaction({
@@ -303,145 +375,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
-        }
-    }
-
-    const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
-
-        setDataAmount(payload.detail?.dataQty!)
-
-        const reqId = generateRequestId()
-
-        const { data: values, error } = await computeServerTransaction({
-            payload: {
-                price: (payload.amount as number),
-                cashback: (payload?.cashback as number),
-                method,
-                interest: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
-            },
-        })
-
-        if (error || !values) return toast.error(error || 'An unknown error has occured, please try again.')
-
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
-        setDataBonus(cashbackPrice)
-
-        setPurchasing(true)
-
-        let meta_data: AirtimeDataMetadata = {
-            dataQty: payload.detail?.dataQty! ?? 0,
-            duration: null,
-            network: currentNetwork,
-            transId: null,
-            unitCashback: cashbackPrice,
-            unitPrice: price,
-            description: '',
-            planType: null,
-            phone: mobileNumber,
-            status: 'success',
-        }
-
-        const res = await buyVTPassData({
-            ...payload,
-            request_id: reqId,
-            billersCode: mobileNumber,
-            phone: '08011111111',
-        })
-
-        if (!res) {
-            setErrorMessage('An unknown error has occured, please try again.')
-            await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseFailed(true)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.TIME_NOT_CORRECT.code) {
-            setErrorMessage(RESPONSE_CODES.TIME_NOT_CORRECT.message)
-            await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.TRANSACTION_FAILED.code) {
-            setErrorMessage(RESPONSE_CODES.TRANSACTION_FAILED.message)
-            await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.NO_PRODUCT_VARIATION.code) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            setErrorMessage(RESPONSE_CODES.NO_PRODUCT_VARIATION.message)
-            await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: mobileNumber})
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            setErrorMessage(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message)
-            await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: mobileNumber})
-            return
-        }
-        
-        else if (res?.code === RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code) {
-            const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-                (balance - deductableAmount))
-
-
-            const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-                (cashbackBalance))
-            
-                setWalletBalance(_walletBalance.balance ?? 0)
-
-            if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
-
-            const { data: _insertHistory } = await insertTransactionHistory({
-                description: `Data subscription topped-up for ${mobileNumber} successfully.`,
-                status: 'success',
-                title: 'Data Subscription.',
-                type: EVENT_TYPE.data_topup,
-                email: null,
-                meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
-                updated_at: null,
-                user: profile?.id!,
-                amount: price,
-                provider: 'vtpass',
-                commission: commission
-            })
-            setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
-            setHistoryId(_insertHistory.id)
-
-            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
-            vibrate('success')
-            await saveCashbackHistory({amount: cashbackPrice})
-            
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.get_wallet],
-            })
-            
-            setPurchaseSuccess(true)
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            router.refresh()
-        }
-
-        else {
-            setErrorMessage('An unknown error has occured, please try again.')
-            await saveDataErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: res ?? { ...meta_data, status: 'failed' }, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
         }
     }
 

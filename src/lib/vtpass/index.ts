@@ -36,7 +36,7 @@ export declare interface VTPassTransactionRequest {
     variation_code: string; 
     amount?: number;
     phone: number | string;
-    subscription_type?:"Change" | "Renew"
+    subscription_type?: "Change" | "Renew"
 }
 
 export declare interface VTPassAirtimeTransactionRequest {

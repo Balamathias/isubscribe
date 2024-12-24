@@ -24,7 +24,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
   const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
 
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
-    const { data: profile, isPending: profilePending } = useGetProfile()
+    const { data: profile, isPending: profilePending } = useGetProfile(undefined, true)
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim' 
 

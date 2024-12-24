@@ -13,7 +13,7 @@ export const useSetSecurityQ = () => useMutation({
     mutationFn: (data: {security_answer: string, security_question: string}) => updateSecurityQuestion(data),
 })
 
-export const useGetProfile = () => useQuery({
-    queryKey: [QueryKeys.get_user],
-    queryFn: () => getUser(),
+export const useGetProfile = (id?: string, useCache?: boolean) => useQuery({
+    queryKey: [QueryKeys.get_user, id, useCache],
+    queryFn: () => getUser(id, useCache),
 })
