@@ -185,6 +185,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             duration: null,
             network: currentNetwork,
             status: 'success',
+            phone: mobileNumber
         } as any
 
         const {
