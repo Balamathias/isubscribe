@@ -7,17 +7,14 @@ import { Networks, PaymentMethod, SubAirtimeProps, SubDataProps, VTPassAirtimePa
 import { nanoid } from 'nanoid'
 import { toast } from "sonner"
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from "@/lib/supabase/wallets"
-import { insertTransactionHistory, saveAirtimeErrorHistory, saveCashbackHistory, saveDataErrorHistory } from "@/lib/supabase/history"
+import { insertTransactionHistory, saveCashbackHistory, saveDataErrorHistory } from "@/lib/supabase/history"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { useRouter } from "next/navigation"
 import { networkIds } from "@/utils/networks"
 
-import { buyData as buyVTPassData, buyAirtime as buyVTPassAirtime } from "@/lib/vtpass/services"
-import generateRequestId from "@/funcs/generateRequestId"
 import SubPurchaseStatus from "@/components/dashboard/sub-purchase-status"
 import { AirtimeDataMetadata } from "@/types/airtime-data"
 import { priceToInteger } from "@/funcs/priceToNumber"
-import { RESPONSE_CODES } from "@/utils/constants/response-codes"
 import { useQueryClient } from "@tanstack/react-query"
 import { QueryKeys } from "@/lib/react-query/query-keys"
 import useWalletStore from "@/store/use-wallet-store"
@@ -25,7 +22,8 @@ import { useGetProfile } from "@/lib/react-query/funcs/user"
 import { DATA_MB_PER_NAIRA, formatDataAmount } from "@/lib/utils"
 import useVibration from "@/hooks/use-vibration"
 import { computeServerTransaction } from "@/actions/compute.server"
-import { processData_n3t, processData_VTPass } from "@/actions/buy-data"
+import { processData_n3t, processData_VTPass } from "@/actions/data"
+import { processAirtime_VTPass } from "@/actions/airtime"
 
 interface SubDataProviderProps {
     children?: React.ReactNode,
@@ -100,149 +98,251 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const [purchasing, setPurchasing] = React.useState(false)
     const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
 
-
     const handleSubData = async (payload: SubDataProps & { method?: PaymentMethod }) => {
 
-        setDataAmount(payload.Data)
+        try {
+            setDataAmount(payload.Data)
 
-        const networkId = networkIds[currentNetwork]
-        setPurchasing(true)
+            const networkId = networkIds[currentNetwork]
+            setPurchasing(true)
 
-        let meta_data: AirtimeDataMetadata = {
-            dataQty: payload?.Data ?? 0,
-            duration: null,
-            network: currentNetwork,
-            status: 'success',
-        } as any
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: payload?.Data ?? 0,
+                duration: null,
+                network: currentNetwork,
+                status: 'success',
+            } as any
 
-        const {
-            data,
-            error,
-            extra
-        } = await processData_n3t({
-            payload: {
-                Price: (payload.Price),
-                CashBack: (payload.CashBack),
-                method: payload.method,
-                commission: payload?.commission,
-                Data: payload?.Data
-            },
-            data_plan: payload.Plan_ID,
-            network: networkId,
-            phone: mobileNumber,
-            currentNetwork,
-            meta_data,
-        })
-
-        setDataBonus(extra?.cashbackPrice || 0)
-
-        if (error) {
-
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseFailed(true)
-
-            setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
-
-            router.refresh()
-            return
-        }
-
-        if (data) {
-
-            setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
-            setHistoryId(extra?.historyId)
-
-            router.refresh()
-            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
-            vibrate('success')
-
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.get_wallet]
+            const {
+                data,
+                error,
+                extra
+            } = await processData_n3t({
+                payload: {
+                    Price: (payload.Price),
+                    CashBack: (payload.CashBack),
+                    method: payload.method,
+                    commission: payload?.commission,
+                    Data: payload?.Data
+                },
+                data_plan: payload.Plan_ID,
+                network: networkId,
+                phone: mobileNumber,
+                currentNetwork,
+                meta_data,
             })
-            
-           setPurchasing(false)
-           setOpenConfirmPurchaseModal(false)
-           setPurchaseSuccess(true)
-        } 
-        else {
-            /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+
+            setDataBonus(extra?.cashbackPrice || 0)
+
+            if (error) {
+
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+
+                setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
+
+                router.refresh()
+                return
+            }
+
+            if (data) {
+
+                setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+                setHistoryId(extra?.historyId)
+
+                router.refresh()
+                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+                vibrate('success')
+
+                queryClient.invalidateQueries({
+                    queryKey: [QueryKeys.get_wallet]
+                })
+                
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseSuccess(true)
+            } 
+            else {
+                /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+            }
+        } catch (error: any) {
+            toast?.error(error?.message)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
+        } finally {
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
         }
     }
 
     const handleVTPassData = async (method: PaymentMethod, payload: VTPassDataPayload) => {
 
-        setDataAmount(payload.detail?.dataQty!)
+        try {
+            setDataAmount(payload.detail?.dataQty!)
 
-        const networkId = networkIds[currentNetwork]
-        setPurchasing(true)
+            const networkId = networkIds[currentNetwork]
+            setPurchasing(true)
 
-        let meta_data: AirtimeDataMetadata = {
-            dataQty: payload?.detail?.dataQty ?? 0,
-            duration: null,
-            network: currentNetwork,
-            status: 'success',
-            phone: mobileNumber
-        } as any
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: payload?.detail?.dataQty ?? 0,
+                duration: null,
+                network: currentNetwork,
+                status: 'success',
+                phone: mobileNumber
+            } as any
 
-        const {
-            data,
-            error,
-            extra
-        } = await processData_VTPass({
-            payload: {
-                price: (payload.amount as number),
-                cashback: (payload?.cashback as number),
-                method,
-                commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
-            },
-            phone: mobileNumber,
-            currentNetwork,
-            meta_data,
-            serviceID: payload.serviceID,
-            variation_code: payload?.variation_code
-        })
-
-        setDataBonus(extra?.cashbackPrice || 0)
-
-        if (error) {
-
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseFailed(true)
-
-            setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
-
-            router.refresh()
-            return
-        }
-
-        if (data) {
-
-            setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
-            setHistoryId(extra?.historyId)
-
-            router.refresh()
-            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
-            vibrate('success')
-
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.get_wallet]
+            const {
+                data,
+                error,
+                extra
+            } = await processData_VTPass({
+                payload: {
+                    price: (payload.amount as number),
+                    cashback: (payload?.cashback as number),
+                    method,
+                    commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
+                },
+                phone: mobileNumber,
+                currentNetwork,
+                meta_data,
+                serviceID: payload.serviceID,
+                variation_code: payload?.variation_code
             })
-            
-           setPurchasing(false)
-           setOpenConfirmPurchaseModal(false)
-           setPurchaseSuccess(true)
-        } 
 
-        else {
-            /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+            setDataBonus(extra?.cashbackPrice || 0)
+
+            if (error) {
+
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+
+                setErrorMessage(error?.message || 'Data subscription failed. Please try again.')
+
+                router.refresh()
+                return
+            }
+
+            if (data) {
+
+                setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+                setHistoryId(extra?.historyId)
+
+                router.refresh()
+                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+                vibrate('success')
+
+                queryClient.invalidateQueries({
+                    queryKey: [QueryKeys.get_wallet]
+                })
+                
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseSuccess(true)
+            } 
+
+            else {
+                /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+            }
+        } catch (error: any) {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
+            toast.error(error?.message)
+        } finally {
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+        }
+    }
+
+    const handleVTPassAirtime = async (method: PaymentMethod, payload: VTPassAirtimePayload) => {
+
+        try {
+            setDataAmount(payload.amount.toString()!)
+            setAirtimeAmount(payload.amount.toString())
+
+            const networkId = networkIds[currentNetwork]
+            setPurchasing(true)
+
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: payload.amount ?? 0,
+                duration: null,
+                network: currentNetwork,
+                status: 'success',
+                phone: mobileNumber
+            } as any
+
+            const {
+                data,
+                error,
+                extra
+            } = await processAirtime_VTPass({
+                payload: {
+                    price: (payload.amount as number),
+                    cashback: (payload?.cashback as number),
+                    method,
+                    commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
+                },
+                phone: mobileNumber,
+                currentNetwork,
+                meta_data,
+                serviceID: payload.serviceID,
+            })
+
+            setDataBonus(extra?.cashbackPrice || 0)
+
+            if (error) {
+
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+
+                setErrorMessage(error?.message || 'Airtime subscription failed. Please try again.')
+
+                router.refresh()
+                return
+            }
+
+            if (data) {
+
+                setSuccessMessage(data?.message ?? 'Airtime subscription successful. Thank you for choosing iSubscribe.')
+                setHistoryId(extra?.historyId)
+
+                router.refresh()
+                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+                vibrate('success')
+
+                queryClient.invalidateQueries({
+                    queryKey: [QueryKeys.get_wallet]
+                })
+                
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseSuccess(true)
+            } 
+
+            else {
+                /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseFailed(true)
+            }
+        } catch (error: any) {
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
+            setPurchaseFailed(true)
+            toast.error(error?.message)
+        } finally {
+            setPurchasing(false)
+            setOpenConfirmPurchaseModal(false)
         }
     }
 
@@ -376,132 +476,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
-        }
-    }
-
-    const handleVTPassAirtime = async (method: PaymentMethod, payload: VTPassAirtimePayload) => {
-
-        setAirtimeAmount(payload.amount.toString()!)
-
-        const { data: values, error } = await computeServerTransaction({
-            payload: {
-                price: (payload.amount as number),
-                cashback: (payload?.cashback as number),
-                method,
-                interest: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
-            },
-        })
-
-        if (error || !values) return toast.error(error || 'An unknown error has occured, please try again.')
-
-        const {balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission} = values
-        setDataBonus(cashbackPrice)
-
-        setPurchasing(true)
-
-        let meta_data: AirtimeDataMetadata = {
-            dataQty: dataAmount ?? 0,
-            duration: null,
-            network: currentNetwork,
-            transId: null,
-            unitCashback: cashbackPrice,
-            unitPrice: price,
-            description: '',
-            planType: null,
-            phone: mobileNumber,
-            status: 'success'
-        }
-
-        const res = await buyVTPassAirtime({
-            ...payload,
-            phone: '08011111111',
-            request_id: generateRequestId()
-        })
-
-        if (!res) {
-            setErrorMessage('An unknown error has occured, please try again.')
-            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: {...meta_data, transId: generateRequestId(), status: 'failed',} , price, mobile: mobileNumber})
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseFailed(true)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.TIME_NOT_CORRECT.code) {
-            setErrorMessage(RESPONSE_CODES.TIME_NOT_CORRECT.message)
-            await saveAirtimeErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.TRANSACTION_FAILED.code) {
-            setErrorMessage(RESPONSE_CODES.TRANSACTION_FAILED.message)
-            await saveAirtimeErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
-        }
-
-        else if (res?.code === RESPONSE_CODES.NO_PRODUCT_VARIATION.code) {
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            setErrorMessage(RESPONSE_CODES.NO_PRODUCT_VARIATION.message)
-            await saveAirtimeErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message, {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: mobileNumber})
-            return
-        }
-        
-        else if (res?.code === RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code) {
-            const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-                (balance - deductableAmount))
-
-            const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-                (cashbackBalance))
-            
-                setWalletBalance(_walletBalance.balance ?? 0)
-
-            if (_balanceError || _cashbackBalanceError) return setPurchasing(false)
-
-            const { data: _insertHistory } = await insertTransactionHistory({
-                description: `Airtime subscription topped-up for ${mobileNumber} successfully.`,
-                status: 'success',
-                title: 'Airtime Subscription.',
-                email: null,
-                meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
-                updated_at: null,
-                user: profile?.id!,
-                amount: price,
-                provider: 'vtpass',
-                type: EVENT_TYPE.airtime_topup,
-                commission
-            })
-            setSuccessMessage(RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message)
-            setHistoryId(_insertHistory.id)
-            
-            toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA)}`)
-            vibrate('success')
-            await saveCashbackHistory({amount: cashbackPrice})
-            
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.get_wallet],
-            })
-            
-            setPurchaseSuccess(true)
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            router.refresh()
-        }
-
-        else {
-            setErrorMessage('An unknown error has occured, please try again.')
-            await saveAirtimeErrorHistory('An unknown error has occured, please try again.', {profiledId: profile?.id, meta_data: {...meta_data, status: 'failed', transId: generateRequestId()}, price, mobile: mobileNumber})
-            setPurchasing(false)
-            setPurchaseFailed(true)
-            setOpenConfirmPurchaseModal(false)
-            return
         }
     }
 
