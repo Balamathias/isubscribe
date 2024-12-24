@@ -43,13 +43,6 @@ export const POST = async (req: Request) => {
 
     const computedHash = computeHash(rawBody);
 
-    console.log(
-        "ComputedHash: ",
-        computedHash,
-        "Signature: ",
-        signature
-    )
-
     if (computedHash !== signature) {
         return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
     }
@@ -79,8 +72,8 @@ export const POST = async (req: Request) => {
         .single()
 
     if (__hist?.transaction_id) 
-        return NextResponse.json({message: 'Transaction already processed.'}, {status: 400}) // Avoid duplicating value if monnify resends a notification that has been processed already.
-
+        return NextResponse.json({message: 'Transaction already processed.'}, {status: 400})
+    
     const { data: user, error } = await supabase
         .from('profile')
         .select('id, email, wallet(balance)')
