@@ -119,10 +119,12 @@ export const POST = async (req: Request) => {
 
         if (!success) return NextResponse.json({ message: 'Saving History data failed' }, { status: 500 });
 
-        await sendEmail({
+        const emailPromise = sendEmail({
             email: data.eventData.customer?.email,
             subject: 'Transfer successful',
             message: `Dear ${data.eventData.customer?.name},\n\nYour wallet has been credited with ${formatNigerianNaira(data.eventData.amountPaid)} successfully. This transaction was processed on ${new Date().toLocaleDateString()}.\n\nYour new wallet balance is ${walletBalance + data.eventData.amountPaid}.\n\nThank you for using our service.\n\nBest regards,\nTeam isubscribe.`,
+        }).catch(error => {
+            console.error('Failed to send email:', error);
         });
 
         return NextResponse.json({ message: 'Wallet credited successfully.' }, { status: 200 });
