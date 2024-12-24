@@ -38,15 +38,21 @@ export const getVTPassBalance = async (): Promise<VTPassBalanceResponse | undefi
 }
 
 export const getServiceVariations = async (serviceID: VTPassServiceName): Promise<VTPassVariationServiceResponse | undefined> => {
-    const res = await redisIO.get(`service-variations-${serviceID}`)
-    if (res) {
-        return JSON.parse(res)
-    } else {
-        const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+    try {
+        const res = await redisIO.get(`service-variations-${serviceID}`)
+        if (res) {
+            return JSON.parse(res)
+        } else {
+            const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
 
-        await redisIO.set(`service-variations-${serviceID}`, JSON.stringify(res.data), 'EX', 60 * 60 * 1)
-        
-        return res.data
+            await redisIO.set(`service-variations-${serviceID}`, JSON.stringify(res.data), 'EX', 60 * 60 * 1)
+            
+            return res.data
+        }
+    } catch (error) {
+            console.debug(error)
+            const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+            return res.data
     }
 }
 

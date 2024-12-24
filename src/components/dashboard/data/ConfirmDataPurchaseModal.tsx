@@ -83,11 +83,13 @@ const ConfirmDataPurchaseModal = ({
     if (isLoading) return <LoadingOverlay loader='1' />
 
     if (!wallet) {
-        return <Empty 
-            title='Error loading data' 
-            content='An error occurred while trying to load data, please try again' 
-            className='bg-inherit'
-        />
+        return (
+            <Empty 
+                title='Error loading data' 
+                content='An error occurred while trying to load data, please try again' 
+                className='bg-inherit'
+            />
+        )
     }
 
     return (

@@ -129,10 +129,9 @@ const ConfirmPurchaseModal = ({
                     balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number ?? 0)}
                     disabled={wallet?.data?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
                 />
-            </div>
-{/*             
+            </div>   
             <ComingSoon 
-                trigger={ */}
+                trigger={
                     <Button 
                         className='w-full rounded-xl' 
                         size={'lg'}
@@ -141,8 +140,8 @@ const ConfirmPurchaseModal = ({
                             setProceed(true)
                         }}
                     >Proceed</Button>
-                   {/* }
-              /> */}
+                }
+            />
         </div>
     </DynamicModal>
   )

@@ -15,6 +15,7 @@ import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import useBiometricAuth from '@/hooks/use-biometric-auth'
 import { toast } from 'sonner'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
+import ComingSoon from '../comig-soon'
 
 
 interface ConfirmPurchaseModal {
@@ -85,10 +86,10 @@ const ConfirmPurchaseModal = ({
     return (
         <DynamicModal
             open={open}
-            setOpen={setOpen}
-            dismissible
+            setOpen={() => setOpen()}
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
             title="Confirm product details"
+            dismissible={false}
         >
             <LoadingSpinner isPending={purchasing} />
             <div className="flex flex-col gap-y-2.5">
@@ -120,17 +121,21 @@ const ConfirmPurchaseModal = ({
                     />
                 </div>
 
-                <Button 
-                    className='w-full rounded-xl' 
-                    size={'lg'}
-                    disabled={
-                        wallet?.data?.balance! < selected?.amount && 
-                        wallet?.data?.cashback_balance! < selected?.amount
+               <ComingSoon 
+                    trigger={
+                        <Button 
+                            className='w-full rounded-xl' 
+                            size={'lg'}
+                            disabled={
+                                wallet?.data?.balance! < selected?.amount && 
+                                wallet?.data?.cashback_balance! < selected?.amount
+                            }
+                            // onClick={handlePurchase}
+                        >
+                            Proceed
+                        </Button>
                     }
-                    onClick={handlePurchase}
-                >
-                    Proceed
-                </Button>
+               />
             </div>
         </DynamicModal>
     )
