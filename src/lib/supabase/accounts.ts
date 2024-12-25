@@ -7,6 +7,8 @@ import { getCurrentUser } from "./user.actions";
 import { handleInvitation, upsertWallet } from "./wallets";
 import { deallocateAccount, getReservedAccount, getReservedAccount_v2 } from "../monnify/actions";
 import { redisIO } from '../redis'
+import { verifyNIN } from "@/actions/verify-nin";
+import { NINResponseBody } from "@/@types/nin";
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -26,56 +28,62 @@ export const getAccount = async (id?: string) => {
     return { data, error }
 }
 
-export const generateReservedAccount = async (bvn?: string) => {
+export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string }) => {
     const supabase = createClient()
 
     const { data: user, error } = await getUser()
 
-    const reservedAccount = await getReservedAccount({
-        accountReference: nanoid(24),
-        accountName: user?.full_name!,
-        currencyCode: "NGN",
-        contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-        customerEmail: user?.email!,
-        customerName: user?.full_name!,
-        getAllAvailableBanks: false,
-        // "bvn":"21212121212",
-        // "preferredBanks": ["50515"]
-    })
+    if (req?.nin || req?.bvn) {
 
-    // const reservedAccount = await getReservedAccount_v2({
-    //     accountReference: nanoid(24),
-    //     accountName: user?.full_name!,
-    //     currencyCode: "NGN",
-    //     contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-    //     customerEmail: user?.email!,
-    //     customerName: user?.full_name!,
-    //     getAllAvailableBanks: true,
-    //     // "bvn":"21212121212",
-    //     // "preferredBanks": ["50515"]
-    //   })
+        let NINData: NINResponseBody | null = null
 
-    console.log("ACCTS: ", reservedAccount)
+        if (req?.nin) {
+            const { data: verify, error } = await verifyNIN(req?.nin)
+            NINData = verify
+        }
 
-    const body = reservedAccount?.responseBody
-    const successful = reservedAccount?.requestSuccessful
+        if (!(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
+            return {
+                error: { message: `NIN verification failed, please input a valid NIN`, data: null }
+            }
+        }
 
-    if (successful) {
-        const { data, error } = await supabase.from('account').insert({
-            account_name: body?.accountName,
-            account_number: body?.accountNumber,
-            bank_name: body?.bankName,
-            bank_code: body?.bankCode,
-            user: user?.id!,
-            reference: body?.accountReference,
-            status: body?.status,
-            updated_at: new Date().toISOString(),
-        }).select().single()
-        if (error) throw error
+        const { firstName, lastName, middleName, nin } = NINData?.responseBody || {}
 
-        return { data, error }
-
-    } else return {data: null, error }
+        const reservedAccount = await getReservedAccount({
+            accountReference: nanoid(24),
+            accountName: user?.full_name,
+            currencyCode: "NGN",
+            contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
+            customerEmail: user?.email!,
+            customerName: `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' '),
+            getAllAvailableBanks: false,
+            nin,
+        })
+    
+        const body = reservedAccount?.responseBody
+        const successful = reservedAccount?.requestSuccessful
+    
+        if (successful) {
+            const { data, error } = await supabase.from('account').insert({
+                account_name: body?.accountName,
+                account_number: body?.accountNumber,
+                bank_name: body?.bankName,
+                bank_code: body?.bankCode,
+                user: user?.id!,
+                reference: body?.accountReference,
+                status: body?.status,
+                updated_at: new Date().toISOString(),
+            }).select().single()
+            
+            if (error) {
+                return { data, error }
+            }
+    
+            return { data, error }
+    
+        } else return {data: null, error }
+    }
 }
 
 export const deAlloc = async () => {

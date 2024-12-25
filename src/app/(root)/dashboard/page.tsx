@@ -10,13 +10,18 @@ import React, { Suspense } from 'react'
 import { Metadata } from 'next'
 import DashFooter from '@/components/dashboard/dash-footer'
 import Greeting, { GreetingSkeleton } from '@/components/dashboard/greeting'
+import { verifyNIN } from '@/actions/verify-nin'
 
 export const metadata: Metadata = {
   title: "isubscribe | dashboard ~ start paying your utility bills with ease.",
   description: "isubscribe is a subscription-based platform that allows you to pay for your utility bills with ease. Get started today!",
 }
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+
+  // const { data } = await verifyNIN("76099712258")
+  // console.log(data)
+
   return (
     <WidthWrapper className='flex flex-col space-y-2.5 sm:space-y-4 !max-w-3xl md:py-12 mt-16 max-sm:mt-8'>
 

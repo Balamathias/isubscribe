@@ -50,7 +50,7 @@ export const getServiceVariations = async (serviceID: VTPassServiceName): Promis
             return res.data
         }
     } catch (error) {
-            console.debug(error)
+            // console.debug(error)
             const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
             return res.data
     }

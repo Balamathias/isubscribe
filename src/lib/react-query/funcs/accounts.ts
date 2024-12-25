@@ -9,11 +9,11 @@ export const useGenerateAcount = () => {
         mutationKey: ['generate_reserved_account'],
         mutationFn: generateReservedAccount,
         onSuccess: (data) => {
-            if (data?.data) {
-                toast.success("Reserved account generated successfully.")
+            if (!data?.error) {
                 router.refresh()
+                toast.success("Reserved account generated successfully.")
             } else {
-                throw new Error("Virtual account creation attempt failed, please try again.")
+                throw new Error(data?.error?.message)
             }
         },
         onError: (err) => {
