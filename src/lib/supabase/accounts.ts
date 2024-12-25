@@ -42,7 +42,7 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
             NINData = verify
         }
 
-        if (!(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
+        if (NINData && !(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
             return {
                 error: { message: `NIN verification failed, please input a valid NIN`, data: null }
             }
@@ -59,6 +59,7 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
             customerName: `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' '),
             getAllAvailableBanks: false,
             nin,
+            bvn: req?.bvn
         })
     
         const body = reservedAccount?.responseBody
@@ -82,7 +83,7 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
     
             return { data, error }
     
-        } else return {data: null, error }
+        } else return {data: null, error: { message: `Account generation failed, please double-check your ${req?.bvn ? "BVN" : req?.nin ? "NIN" : ""}.` } }
     }
 }
 

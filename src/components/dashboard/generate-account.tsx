@@ -110,7 +110,7 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
               <p className="flex items-center gap-x-1.5 text-muted-foreground text-xs mt-2">
                 <LucideInfo /> Please provide your Bank Verification Number (BVN) for account verification.
               </p>
-              <RenderButton disabled={withBVN} />
+              <RenderButton disabled={isPending} />
             </TabsContent>
           )}
 
