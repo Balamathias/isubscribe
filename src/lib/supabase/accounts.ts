@@ -31,68 +31,80 @@ export const getAccount = async (id?: string) => {
 export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string }) => {
     const supabase = createClient()
 
-    const { data: user, error } = await getUser()
+    try {
+        const { data: user, error } = await getUser()
 
-    let NINData: NINResponseBody | null = null
+        let NINData: NINResponseBody | null = null
 
-    if (req?.nin) {
-        const { data: verify, error } = await verifyNIN(req?.nin)
-        NINData = verify
-    }
-
-    if (NINData && !(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
-        return {
-            error: { message: `NIN verification failed, please input a valid NIN`, data: null }
+        if (req?.nin) {
+            const { data: verify, error } = await verifyNIN(req?.nin)
+            NINData = verify
         }
-    }
 
-    const { firstName, lastName, middleName, nin } = NINData?.responseBody || {}
+        if (NINData && !(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
+            return {
+                error: { message: `NIN verification failed, please input a valid NIN`, data: null }
+            }
+        }
 
-    const reservedAccount = await getReservedAccount({
-        accountReference: nanoid(24),
-        accountName: user?.full_name!,
-        currencyCode: "NGN",
-        contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-        customerEmail: user?.email!,
-        customerName: req?.nin ? `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' ') : user?.full_name!,
-        getAllAvailableBanks: false,
-        nin,
-        bvn: req?.bvn
-    })
+        const { firstName, lastName, middleName, nin } = NINData?.responseBody || {}
 
-    const body = reservedAccount?.responseBody
-    const successful = reservedAccount?.requestSuccessful
+        const reservedAccount = await getReservedAccount({
+            accountReference: nanoid(24),
+            accountName: user?.full_name!,
+            currencyCode: "NGN",
+            contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
+            customerEmail: user?.email!,
+            customerName: req?.nin ? `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' ') : user?.full_name!,
+            getAllAvailableBanks: false,
+            nin,
+            bvn: req?.bvn
+        })
 
-     if (req?.nin || req?.bvn) {
-        await supabase.from('account').update({ nin, bvn }).eq('user', user?.id!)
-     }
+        const body = reservedAccount?.responseBody
+        const successful = reservedAccount?.requestSuccessful
 
-    if (successful) {
-        const { data, error } = await supabase.from('account').insert({
-            account_name: body?.accountName,
-            account_number: body?.accountNumber,
-            bank_name: body?.bankName,
-            bank_code: body?.bankCode,
-            user: user?.id!,
-            reference: body?.accountReference,
-            status: body?.status,
-            updated_at: new Date().toISOString(),
-        }).select().single()
-        
-        if (error) {
+        if (successful) {
+            const { data, error } = await supabase.from('account').insert({
+                account_name: body?.accountName,
+                account_number: body?.accountNumber,
+                bank_name: body?.bankName,
+                bank_code: body?.bankCode,
+                user: user?.id!,
+                reference: body?.accountReference,
+                status: body?.status,
+                updated_at: new Date().toISOString(),
+            }).select().single()
+            
+            if (error) {
+                return { data, error }
+            }
+
             return { data, error }
+
+        } else {
+            return {
+                data: null, 
+                error: { 
+                    message: `Account generation failed, please double-check your ${req?.bvn ? "BVN" : req?.nin ? "NIN" : ""}.` 
+                }
+            }
         }
-
-        return { data, error }
-
-    } else return {data: null, error: { message: `Account generation failed, please double-check your ${req?.bvn ? "BVN" : req?.nin ? "NIN" : ""}.` } }
+    } catch (error: any) {
+        return {
+            data: null,
+            error: {
+                message: error?.message
+            }
+        }
+    }
 }
 
 export const deAlloc = async () => {
 
     const references: string[] = [
             
-      ];
+    ];
       
     
     references.map(async (acc) => await deallocateAccount(acc!))
