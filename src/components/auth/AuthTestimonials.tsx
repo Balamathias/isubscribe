@@ -14,12 +14,14 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   useEffect(() => {
+    if (!testimonials?.data?.length) return;
+
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % (testimonials?.data?.length || 0));
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.data.length);
     }, 9000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [testimonials]);
 
   const handleIndicatorClick = (index:number) => {
     setCurrentTestimonial(index);
@@ -40,17 +42,28 @@ const AuthTestimonial = ({sheetOpen}:{sheetOpen?: boolean}) => {
       <div className="max-md:flex max-md:gap-5 max-md:flex-col-reverse self-center items-center gap-4 w-full">
         {/*  Testimonial Content */}
         <div className={`flex flex-col justify-center w-full gap-4 items-center ${sheetOpen ? " p-1" : "p-10"}`}>
-          <div className="overflow-auto relative self-center w-full shadow-none p-6 min-h-[300px] border-dashed dark:border-muted border-[2px] rounded-tl-[3rem] rounded-br-[3rem]">
+          <div className="overflow-hidden relative self-center w-full p-6 min-h-[300px] 
+            backdrop-blur-md bg-white/10 dark:bg-black/10 
+            border border-white/20 dark:border-gray-800/20
+            rounded-tl-[3rem] rounded-br-[3rem] 
+            shadow-[0_8px_32px_0_rgba(31,38,135,0.07)]">
             {testimonials?.data?.map((testimonial, index) => (
               <div
                 key={index}
-                className={`transition-opacity w-full duration-500 ease-in-out ${
-                  currentTestimonial === index ? "opacity-100" : "opacity-0"
-                } ${currentTestimonial === index ? "block" : "hidden"}`}
+                className={`transition-all transform duration-700 ease-in-out absolute w-full
+                  ${currentTestimonial === index 
+                    ? "opacity-100 translate-x-0" 
+                    : "opacity-0 translate-x-full"
+                  }`}
+                style={{
+                  transform: `translateX(${(index - currentTestimonial) * 100}%)`,
+                }}
               >
                 <AuthSeparator separatorText="Testimonials" seperatorWrapperClassName="" />
                    
-                <p className="text-lg mb-4">{testimonial.comment}</p>
+                <p className="text-lg mb-4 leading-relaxed line-clamp-4 break-words max-w-full overflow-hidden mr-4">
+                  {testimonial.comment}
+                </p>
                 <div className="flex items-start gap-x-2">
                   <Avatar className="h-12 w-12 ring-1 border">
                     <AvatarImage src={testimonial?.profile?.avatar ?? ''} />
