@@ -34,30 +34,15 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
     try {
         const { data: user, error } = await getUser()
 
-        let NINData: NINResponseBody | null = null
-
-        if (req?.nin) {
-            const { data: verify, error } = await verifyNIN(req?.nin)
-            NINData = verify
-        }
-
-        if (NINData && !(NINData?.responseMessage === 'success' || NINData?.responseCode === '0' || NINData?.requestSuccessful)) {
-            return {
-                error: { message: `NIN verification failed, please input a valid NIN`, data: null }
-            }
-        }
-
-        const { firstName, lastName, middleName, nin } = NINData?.responseBody || {}
-
         const reservedAccount = await getReservedAccount({
             accountReference: nanoid(24),
             accountName: user?.full_name!,
             currencyCode: "NGN",
             contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
             customerEmail: user?.email!,
-            customerName: req?.nin ? `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' ') : user?.full_name!,
+            customerName: user?.full_name!,
             getAllAvailableBanks: false,
-            nin,
+            nin: req?.nin,
             bvn: req?.bvn
         })
 
