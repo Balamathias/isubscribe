@@ -47,7 +47,17 @@ export const verifyNumber = async (phone: string): Promise<Networks | undefined>
         return carrier.toLowerCase() as Networks
 
     } catch (error) {
-        console.debug('Error verifying phone number:', error)
-        return undefined
+        try {
+            console.debug('Error verifying phone number:', error)
+            const req = await fetch(`${URL}?key=${API_KEY}&phone=${phone}&default_country=NG`)
+
+            if (!req.ok) return undefined
+
+            if (req.status === 402) console.log('You exhausted your limit')
+
+            const data = await req.json() as PhoneNumberInfo
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
