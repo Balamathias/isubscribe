@@ -4,11 +4,9 @@ import { Tables } from "@/types/database";
 import { createClient } from "@/utils/supabase/server";
 import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
-import { handleInvitation, upsertWallet } from "./wallets";
-import { deallocateAccount, getReservedAccount, getReservedAccount_v2 } from "../monnify/actions";
+import { upsertWallet } from "./wallets";
+import { deallocateAccount, getReservedAccount } from "../monnify/actions";
 import { redisIO } from '../redis'
-import { verifyNIN } from "@/actions/verify-nin";
-import { NINResponseBody } from "@/@types/nin";
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
