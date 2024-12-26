@@ -8,6 +8,7 @@ import { LucideInfo, LucideLoader, LucideSparkles } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import Link from 'next/link';
 
 interface Props {
   withBVN?: boolean;
@@ -86,8 +87,11 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
                 type="number"
                 placeholder="Enter your NIN Number to continue."
               />
-              <p className="flex items-center gap-x-1.5 text-muted-foreground text-xs mt-2">
-                <LucideInfo /> Please provide your National Identification Number (NIN) for account verification.
+              <p className="text-muted-foreground text-xs mt-2 flex items-center gap-x-1.5">
+                <LucideInfo /> 
+                <span>
+                    Please provide your National Identification Number (NIN) for account verification. Forgotten NIN? Click <Link href="tel:*346#" className="text-violet-500">here</Link> to retrieve it.
+                </span>
               </p>
                 <RenderButton disabled={isPending} />
             </TabsContent>
@@ -118,7 +122,7 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
 
           <p className="flex items-center gap-x-1.5 text-muted-foreground text-xs">
             <LucideInfo /> As part of the new CBN compliant requirement for reserved accounts, it is required that
-            merchants verify their customers BVN or NIN.
+            merchants verify their {"customer's"} BVN or NIN.
           </p>
         </form>
       </Tabs>
