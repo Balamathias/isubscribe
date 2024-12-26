@@ -26,6 +26,7 @@ const AddmoneyModal = async () => {
                         </Button>
                     }
                     title="Zero Fees on Funding wallet."
+                    drawerClassName='h-auto'
                 >
                     {
                         account ? (

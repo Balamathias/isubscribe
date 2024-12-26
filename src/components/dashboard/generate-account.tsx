@@ -26,12 +26,13 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
     generateAccount({ bvn, nin });
   };
 
-  const RenderButton = ({ disabled }: { disabled: boolean }) => (
+  const RenderButton = ({ disabled, onClick }: { disabled: boolean, onClick?: () => void }) => (
     <Button
       className="rounded-full bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1 mt-2.5 w-full"
       variant="secondary"
       size="lg"
       disabled={disabled}
+      onClick={onClick}
     >
       {isPending ? (
         <LucideLoader className="animate-spin" size={16} />
@@ -123,7 +124,7 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
       </Tabs>
     </DynamicModal>
   ) : (
-    <RenderButton disabled={isPending} />
+    <RenderButton onClick={() => generateAccount({})} disabled={isPending} />
   );
 };
 

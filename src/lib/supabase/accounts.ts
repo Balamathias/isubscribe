@@ -33,7 +33,7 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
 
     const { data: user, error } = await getUser()
 
-    if (req?.nin || req?.bvn) {
+    // if (req?.nin || req?.bvn) {
 
         let NINData: NINResponseBody | null = null
 
@@ -52,11 +52,11 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
 
         const reservedAccount = await getReservedAccount({
             accountReference: nanoid(24),
-            accountName: user?.full_name,
+            accountName: user?.full_name!,
             currencyCode: "NGN",
             contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
             customerEmail: user?.email!,
-            customerName: `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' '),
+            customerName: req?.nin ? `${firstName} ${ middleName ? middleName : '' } ${lastName}`.replaceAll('  ', ' ') : user?.full_name!,
             getAllAvailableBanks: false,
             nin,
             bvn: req?.bvn
@@ -84,7 +84,7 @@ export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string 
             return { data, error }
     
         } else return {data: null, error: { message: `Account generation failed, please double-check your ${req?.bvn ? "BVN" : req?.nin ? "NIN" : ""}.` } }
-    }
+    // }
 }
 
 export const deAlloc = async () => {
@@ -125,7 +125,7 @@ export const getUser = async (id?: string, useCache: boolean = false) => {
         try {
             const cachedUser = await redisIO.get(cacheKey)
             if (cachedUser) {
-                return { data: JSON.parse(cachedUser), error: null }
+                return { data: JSON.parse(cachedUser) as Tables<'profile'>, error: null }
             }
         } catch (error) {
             console.error('Redis cache error:', error)
