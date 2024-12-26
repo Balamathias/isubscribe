@@ -26,11 +26,11 @@ const AddmoneyModal = async () => {
                         </Button>
                     }
                     title="Zero Fees on Funding wallet."
-                    drawerClassName='h-auto'
+                    drawerClassName='max-h-[90vh] overflow-y-auto'
                 >
                     {
                         account ? (
-                            <div className='flex flex-col py-2 gap-y-3 items-center justify-center text-center w-full !bg-inherit/70 backdrop:blur-lg'>
+                            <div key={account.account_number} className='flex flex-col py-2 gap-y-3 items-center justify-center text-center w-full !bg-inherit/70 backdrop:blur-lg'>
                                 
                                 <div className='flex flex-col gap-y-4'>
                                     <div className='flex flex-col gap-y-1.5 items-center justify-center'>
