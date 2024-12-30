@@ -156,8 +156,6 @@ export const processData_n3t = async ({
 
         const match = data?.message?.includes('Insufficient')
 
-        console.log(match)
-
         if (match) {
             return {
                 error: {
