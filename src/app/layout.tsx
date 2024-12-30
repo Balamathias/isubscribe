@@ -5,6 +5,8 @@ import "./globals.css";
 import Providers from "@/providers";
 import { cn } from "@/lib/utils";
 
+import NextTopLoader from 'nextjs-toploader';
+
 const poppins = Poppins({ subsets: ["latin"], weight: ['200', '300', '400', '500', '700'], variable: '--font-mont' });
 
 const localPoppins = localFont({
@@ -31,6 +33,10 @@ export default function RootLayout({
         <meta name="google-site-verification" content="8sxVKkOiQZcmefzduMerO9nrQnbfXwpMUyeStsODBSM" />
       </head>
       <body className={cn('antialised', process.env.NODE_ENV === 'development' ? localPoppins.className : poppins.className)}>
+        <NextTopLoader 
+          showSpinner={false}
+          color="violet"
+        />
         <Providers>
           {children}
         </Providers>
