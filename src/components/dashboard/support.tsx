@@ -36,7 +36,7 @@ const Support = () => {
                 </Link>
             </div>
 
-            <div className='flex flex-row items-center gap-x-2'>
+            <div className=' hidden fle flex-row items-center gap-x-2'>
                 <LucideHeadphones className='text-green-600' />
                 <Link className="bg-green-600/5 text-green-600 py-1 px-3 rounded-full" href={'/dashboard/support/chat'}>
                     Chat iSubscribe Support

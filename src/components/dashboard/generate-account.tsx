@@ -90,7 +90,7 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
               <p className="text-muted-foreground text-xs mt-2 flex items-center gap-x-1.5">
                 <LucideInfo /> 
                 <span>
-                    Please provide your National Identification Number (NIN) for account verification. Forgotten NIN? Click <Link href="tel:*346#" className="text-violet-500">here</Link> to retrieve it.
+                    Please provide your National Identification Number (NIN) for account verification. Forgotten NIN? Click or Dial <Link href="tel:*346#" className="text-violet-500">*346#</Link> to retrieve it.
                 </span>
               </p>
                 <RenderButton disabled={isPending} />
@@ -112,8 +112,11 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
                 type="number"
                 placeholder="Enter your BVN Number to continue."
               />
-              <p className="flex items-center gap-x-1.5 text-muted-foreground text-xs mt-2">
-                <LucideInfo /> Please provide your Bank Verification Number (BVN) for account verification.
+              <p className="text-muted-foreground text-xs mt-2 flex items-center gap-x-1.5">
+                <LucideInfo /> 
+                <span>
+                Please provide your Bank Verification Number (BVN) for account verification. Forgotten BVN? Click or Dial <Link href="tel:*565*0#" className="text-violet-500">*565*0#</Link> to retrieve it.
+                </span>
               </p>
               <RenderButton disabled={isPending} />
             </TabsContent>
@@ -121,7 +124,7 @@ const GenerateAccount = ({ withBVN = true, withNIN = true }: Props) => {
 
 
           <p className="flex items-center gap-x-1.5 text-muted-foreground text-xs">
-            <LucideInfo /> As part of the new CBN compliant requirement for reserved accounts, it is required that
+            <LucideInfo /> As part of the new CBN compliance requirement for reserved accounts, it is required that
             merchants verify their {"customer's"} BVN or NIN.
           </p>
         </form>
