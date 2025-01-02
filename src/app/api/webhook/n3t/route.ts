@@ -19,15 +19,15 @@ export const POST = async (req: Request, res: Response) => {
             .single()
 
         if (transaction) {
-            const { error } = await supabase
-                .from('history')
-                .update({ status: 'success' })
-                .eq('id', transaction.id)
+            // const { error } = await supabase
+            //     .from('history')
+            //     .update({ status: 'success' })
+            //     .eq('id', transaction.id)
 
-            if (error) {
-                console.error("Failed to update transaction status:", error)
-                return NextResponse.json({ message: "Internal server error" }, { status: 500 })
-            }
+            // if (error) {
+            //     console.error("Failed to update transaction status:", error)
+            //     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+            // }
 
             console.log(transaction)
         } else {

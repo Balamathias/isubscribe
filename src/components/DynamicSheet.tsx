@@ -34,7 +34,8 @@ interface DynamicSheetProps {
     dismissible?: boolean,
     closeSheet?: (open?: boolean) => void,
     showDrawerCancel?: boolean,
-    className?: string
+    className?: string,
+    title?: string | React.ReactNode
 }
 const DynamicSheet = ({
   children, 
@@ -49,7 +50,8 @@ const DynamicSheet = ({
   dismissible=true,
   showDrawerCancel=true,
   className,
-  closeSheet
+  closeSheet,
+  title
 }: DynamicSheetProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   if ((isDesktop || sheetOnly) && !drawerOnly) {
@@ -75,12 +77,20 @@ const DynamicSheet = ({
       </DrawerTrigger>
       <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', className, drawerClassName)}>
 
-        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex')} asChild>
+        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex items-center justify-between')} asChild>
           <DrawerClose asChild>
             <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
               <LucideX />
             </Button>
           </DrawerClose>
+
+          {
+            typeof title === 'string' ? (
+              <h2 className="text-lg font-semibold -ml-10">{title}</h2>
+            ): <div className=''>{title}</div>
+          }
+
+          <div />
         </DrawerTitle>
 
         <div className="flex flex-col gap-3">
