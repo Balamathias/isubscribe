@@ -15,6 +15,7 @@ import { computeServerTransaction } from "./compute.server";
 import { Networks, PaymentMethod } from "@/types/networks";
 import { buyData as buyVTPassData } from '@/lib/vtpass/services'
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
+import { isNullOrUndefined } from "util";
 
 
 interface ProcessData_N3T {
@@ -312,7 +313,7 @@ export const processData_VTPass = async ({
     switch (res?.code) {
         case undefined:
             await saveDataErrorHistory('An unknown error has occured, please try again.', 
-                {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: phone}
+                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
             )
             return {
                 error: {
