@@ -253,6 +253,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 setPurchaseFailed(true)
             }
         } catch (error: any) {
+            console.error(error)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)

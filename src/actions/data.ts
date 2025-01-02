@@ -303,7 +303,7 @@ export const processData_VTPass = async ({
         ...payload,
         request_id: reqId,
         billersCode: phone,
-        phone: '08011111111',
+        phone,
         serviceID,
         variation_code,
     })
