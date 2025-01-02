@@ -3,7 +3,9 @@
 import axios from 'axios'
 import { VTPassBalanceResponse, VTPassTransactionResponse, VTPassVariationServiceResponse, VTPassTransactionRequest, VTPassServiceName, VTPASS_BASE_URL, VTPASS_SECRET_KEY, VTPASS_PUBLIC_KEY, VTPASS_API_KEY, VTPassAirtimeTransactionRequest, VTPassAirtimeTransactionResponse,   } from '.'
 
-import { redisIO } from '@/lib/redis'
+import { Redis } from '@upstash/redis';
+
+const redis = Redis.fromEnv();
 
 class VTPassError extends Error {
     constructor(message: string, public code: number) {
@@ -39,24 +41,90 @@ export const getVTPassBalance = async (): Promise<VTPassBalanceResponse | undefi
 
 export const getServiceVariations = async (serviceID: VTPassServiceName): Promise<VTPassVariationServiceResponse | undefined> => {
     try {
-        const res = await redisIO.get(`service-variations-${serviceID}`)
-        if (res) {
-            return JSON.parse(res)
+        const cacheKey = `service-variations-${serviceID}`;
+        
+        const cachedData = await redis.get<VTPassVariationServiceResponse>(cacheKey);
+        
+        if (cachedData) {
+            return cachedData;
         } else {
-            const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
-
-            await redisIO.set(`service-variations-${serviceID}`, JSON.stringify(res.data), 'EX', 60 * 60 * 1)
+            const response = await fetch(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`);
             
-            return res.data
+            if (!response.ok) {
+                throw new Error(`Error fetching data: ${response.statusText}`);
+            }
+            
+            const data = await response.json() as VTPassVariationServiceResponse;
+
+            await redis.set(cacheKey, data, { ex: 60 * 60 });
+
+            return data;
         }
     } catch (error) {
-            // console.debug(error)
-            const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
-            return res.data
+        console.error('Error fetching service variations:', error);
+
+        const response = await fetch(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`);
+
+        if (!response.ok) {
+            throw new Error(`Error fetching data: ${response.statusText}`);
+        }
+
+        const data = await response.json() as VTPassVariationServiceResponse;
+        return data;
     }
-}
+};
+
+
+// export const getServiceVariations_axios = async (serviceID: VTPassServiceName): Promise<VTPassVariationServiceResponse | undefined> => {
+//     try {
+//         const res = await redisIO.get(`service-variations-${serviceID}`)
+//         if (res) {
+//             return JSON.parse(res)
+//         } else {
+//             const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+
+//             await redisIO.set(`service-variations-${serviceID}`, JSON.stringify(res.data), 'EX', 60 * 60 * 1)
+            
+//             return res.data
+//         }
+//     } catch (error) {
+//             // console.debug(error)
+//             const res = await axios.get(`${VTPASS_BASE_URL}/service-variations?serviceID=${serviceID}`)
+//             return res.data
+//     }
+// }
 
 export const buyData = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
+    const headers = {
+        'api-key': VTPASS_API_KEY!,
+        'secret-key': VTPASS_SECRET_KEY!,
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        const response = await fetch(`${VTPASS_BASE_URL}/pay`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+
+        console.log(response.statusText, response.status);
+
+        if (!response.ok) {
+            throw new Error('Failed to buy data');
+        }
+
+        const responseData: VTPassTransactionResponse = await response.json();
+        console.log(responseData);
+        return responseData;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+
+export const buyData_axios = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
     const headers = {
         'api-key': VTPASS_API_KEY!,
         'secret-key': VTPASS_SECRET_KEY!,

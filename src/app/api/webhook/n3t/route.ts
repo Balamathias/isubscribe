@@ -1,3 +1,4 @@
+import { RequestId } from "@/@types/id"
 import { WebhookResponse_N3T } from "@/@types/webhooks"
 import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
@@ -8,9 +9,13 @@ export const POST = async (req: Request, res: Response) => {
     const supabase = createClient()
 
     if (response?.status === 'success') {
+
+        const [_, reqId, userId, amount, network, phone, dataAmt, commission] = (response?.["request-id"] as RequestId).split("_")
+
         const { data: transaction } = await supabase.from('history')
             .select('*')
-            .or(`request_id.eq.${response?.["request-id"]},meta_data->transId.eq.${response?.["request-id"]}`)
+            .or(`request_id.eq.${response?.["request-id"]}, meta_data->transId.eq.${response?.["request-id"]}`)
+            .eq('user', userId)
             .single()
 
         if (transaction) {
@@ -23,6 +28,19 @@ export const POST = async (req: Request, res: Response) => {
                 console.error("Failed to update transaction status:", error)
                 return NextResponse.json({ message: "Internal server error" }, { status: 500 })
             }
+
+            console.log(transaction)
+        } else {
+
+
+            // const { error } = await supabase.from('history').insert([{
+            //     user: userId,
+            //     amount: parseInt(amount),
+            //     status: 'success',
+            //     request_id: reqId,
+            //     meta_data: { transId: response?.["request-id"] }
+            // }])
+            console.log("ON ELSE: ", response)
         }
         
         console.log("Success: ", response)

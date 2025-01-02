@@ -4,6 +4,7 @@ export type Payload = {
     data_plan: number;
     bypass: boolean;
     'request-id': string;
+    metadata?: any;
   };
 
 export type Networks = 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'

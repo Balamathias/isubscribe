@@ -136,6 +136,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             if (error) {
 
+                console.error(error)
+
                 setPurchasing(false)
                 setOpenConfirmPurchaseModal(false)
                 setPurchaseFailed(true)
@@ -171,6 +173,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             }
         } catch (error: any) {
             toast?.error(error?.message)
+            console.error(error)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)

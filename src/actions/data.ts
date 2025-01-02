@@ -117,13 +117,14 @@ export const processData_n3t = async ({
     }
 
     const { data, error } = await buyData({
-        "request-id": `Data_${generateRequestId()}`,
+        "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
         bypass: false,
         data_plan,
         network,
         phone,
     })
 
+    console.log(data)
 
     if (error || (data?.status === 'fail')) {
 
