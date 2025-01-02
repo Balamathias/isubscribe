@@ -71,7 +71,7 @@ export const processAirtime_VTPass = async ({
 
     const res = await buyAirtime({
         ...payload, 
-        phone: '08011111111',
+        phone,
         request_id: reqId,
         serviceID,
         amount: payload.price
