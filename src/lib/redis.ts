@@ -10,8 +10,10 @@ export const redis = createClient({
     }
 });
 
-export const redisIO = new Redis({
-    password: process.env.REDIS_PASSWORD,
-    host: process.env.REDIS_HOST,
-    port: 19500
-})
+// export const redisIO = new Redis({
+//     password: process.env.REDIS_PASSWORD,
+//     host: process.env.REDIS_HOST,
+//     port: 19500
+// })
+
+export const redisIO = new Redis(process.env.REDIS_URL!);
