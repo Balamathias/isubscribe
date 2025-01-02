@@ -3,6 +3,7 @@ import Sidebar from '@/components/dashboard/navigation/Sidebar'
 import Topbar from '@/components/dashboard/navigation/Topbar'
 import { getUser } from '@/lib/supabase/accounts'
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import React, { PropsWithChildren } from 'react'
 
 export const metadata:Metadata = {
@@ -14,9 +15,13 @@ const Layout = async ({ children }: PropsWithChildren) => {
 
   const { data: user } = await getUser()
 
+  if (user && (!user?.onboarded || !user?.pin || user?.pin === '')) {
+    return redirect('/auth/pass-pin')
+  }
+
   return (
     <div className='md:bg-violet-100/90 bg-violet-50 dark:bg-gray-900 flex min-h-screen w-full overflow-hidden relative'>
-       <Sidebar />
+       <Sidebar profile={user!} />
           <div className="flex flex-col w-full relative overflow-auto custom-scrollbar ml-2 md:ml-[180px]">
               <Topbar profile={user} />
               { children }

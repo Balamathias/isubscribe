@@ -24,25 +24,40 @@ const URL = 'https://api.veriphone.io/v2/verify'
 
 
 export const verifyNumber = async (phone: string): Promise<Networks | undefined> => {
+    try {
+        const cached = await redisIO.get(`phone:${phone}`)
+        if (cached) {
+            const data = JSON.parse(cached) as PhoneNumberInfo
+            const carrier = data?.carrier as 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'
+            return carrier.toLowerCase() as Networks
+        }
 
-    const cached = await redisIO.get(`phone:${phone}`)
-    if (cached) {
-        const data = JSON.parse(cached) as PhoneNumberInfo
+        const req = await fetch(`${URL}?key=${API_KEY}&phone=${phone}&default_country=NG`)
+
+        if (!req.ok) return undefined
+
+        if (req.status === 402) console.log('You exhausted your limit')
+
+        const data = await req.json() as PhoneNumberInfo
+
+        await redisIO.set(`phone:${phone}`, JSON.stringify(data))
+
         const carrier = data?.carrier as 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'
+
         return carrier.toLowerCase() as Networks
+
+    } catch (error) {
+        try {
+            console.debug('Error verifying phone number:', error)
+            const req = await fetch(`${URL}?key=${API_KEY}&phone=${phone}&default_country=NG`)
+
+            if (!req.ok) return undefined
+
+            if (req.status === 402) console.log('You exhausted your limit')
+
+            const data = await req.json() as PhoneNumberInfo
+        } catch (error) {
+            console.error(error)
+        }
     }
-
-    const req = await fetch(`${URL}?key=${API_KEY}&phone=${phone}&default_country=NG`)
-
-    if (!req.ok) return undefined
-
-    if (req.status === 402) console.log('You exhausted your limit')
-
-    const data = await req.json() as PhoneNumberInfo
-
-    await redisIO.set(`phone:${phone}`, JSON.stringify(data))
-
-    const carrier = data?.carrier as 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'
-
-    return carrier.toLowerCase() as Networks
 }

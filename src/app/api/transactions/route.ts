@@ -43,13 +43,6 @@ export const POST = async (req: Request) => {
 
     const computedHash = computeHash(rawBody);
 
-    console.log(
-        "ComputedHash: ",
-        computedHash,
-        "Signature: ",
-        signature
-    )
-
     if (computedHash !== signature) {
         return NextResponse.json({ message: 'Unauthorized: Invalid signature' }, { status: 401 });
     }
@@ -79,8 +72,8 @@ export const POST = async (req: Request) => {
         .single()
 
     if (__hist?.transaction_id) 
-        return NextResponse.json({message: 'Transaction already processed.'}, {status: 400}) // Avoid duplicating value if monnify resends a notification that has been processed already.
-
+        return NextResponse.json({message: 'Transaction already processed.'}, {status: 400})
+    
     const { data: user, error } = await supabase
         .from('profile')
         .select('id, email, wallet(balance)')
@@ -119,10 +112,12 @@ export const POST = async (req: Request) => {
 
         if (!success) return NextResponse.json({ message: 'Saving History data failed' }, { status: 500 });
 
-        await sendEmail({
+        const emailPromise = sendEmail({
             email: data.eventData.customer?.email,
             subject: 'Transfer successful',
             message: `Dear ${data.eventData.customer?.name},\n\nYour wallet has been credited with ${formatNigerianNaira(data.eventData.amountPaid)} successfully. This transaction was processed on ${new Date().toLocaleDateString()}.\n\nYour new wallet balance is ${walletBalance + data.eventData.amountPaid}.\n\nThank you for using our service.\n\nBest regards,\nTeam isubscribe.`,
+        }).catch(error => {
+            console.error('Failed to send email:', error);
         });
 
         return NextResponse.json({ message: 'Wallet credited successfully.' }, { status: 200 });

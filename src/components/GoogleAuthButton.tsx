@@ -11,14 +11,13 @@ import LoadingOverlay from './loaders/LoadingOverlay'
 const GoogleAuthButton = () => {
   const [pending, setPending] = useState(false)
   const handleSignIn = async () => {
+    setPending(true)
     try {
       setPending(true)
       await signInWithOAuth('google')
     } catch (error) {
       console.error(error)
       toast.error('Sign In failed, please try again.')
-      setPending(false)
-    } finally {
       setPending(false)
     }
   }

@@ -1,6 +1,3 @@
-import { Card } from '@/components/ui/card'
-import { formatNigerianNaira } from '@/funcs/formatCurrency'
-import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { useTvCable } from '@/providers/tv-cable/tv-cable-provider'
 import { PaymentMethod } from '@/types/networks'

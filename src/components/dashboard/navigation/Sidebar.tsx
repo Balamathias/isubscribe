@@ -5,13 +5,13 @@ import { navLinks } from '@/utils/constants/navLinks'
 import Logo from '@/components/Logo'
 import LinkItem from './LinkItem'
 import SignOutComponent from '@/components/auth/SignOutComponent'
-import { useGetProfile } from '@/lib/react-query/funcs/user'
 import { Button } from '@/components/ui/button'
 import { LucideArrowDown } from 'lucide-react'
 import Link from 'next/link'
+import { Tables } from '@/types/database'
 
-const Sidebar = () => {
-  const { data: profile } = useGetProfile()
+const Sidebar = ({ profile }: { profile?: Tables<'profile'> }) => {
+
   return (
     <div className='h-screen md:flex flex-col bg-white dark:bg-background p-2 lg:p-2.5 hidden w-[180px] custom-scrollbar justify-between z-20 overflow-hidden left-0 bottom-0 fixed'>
         <div className="flex flex-col space-y-8">
@@ -28,7 +28,7 @@ const Sidebar = () => {
 
         <footer className="p-2 lg:p-2.5 flex gap-3 flex-col">
           {
-            profile?.data ? (<SignOutComponent profile={profile?.data!} />): (
+            profile ? (<SignOutComponent profile={profile!} />): (
               <Button
                   className='rounded-xl bg-gradient-to-r from-primary to-pink-600 text-white flex items-center gap-1'
                   variant={'secondary'}

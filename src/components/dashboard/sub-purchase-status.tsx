@@ -42,8 +42,9 @@ const SubPurchaseStatus = ({
       closeModal={closeModal}
       dialogClassName="sm:max-w-[640px] md:max-w-[500px] rounded-2xl"
       dismissible={false}
+      hideDrawerCancel
     >
-      {!failed ? <Confetti className="w-full h-full" tweenDuration={3000} /> : null}
+      {!failed ? <Confetti className="w-full h-full" tweenDuration={3000} recycle={false} /> : null}
       <div className="flex flex-col gap-y-1 p-6 items-center justify-center">
         {failed ? (
           <motion.div

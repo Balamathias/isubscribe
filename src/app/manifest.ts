@@ -14,13 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
         src: '/android-chrome-192x192.png',
         sizes: '192x192',
         type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/badge.png',
-        sizes: '32x32',
-        type: 'image/png',
-        purpose: 'badge',
+        purpose: 'maskable',
       },
       {
         src: '/android-chrome-512x512.png',
@@ -28,6 +22,15 @@ export default function manifest(): MetadataRoute.Manifest {
         type: 'image/png',
         purpose: 'maskable',
       },
+      {
+        src: '/badge.png',
+        sizes: '32x32',
+        type: 'image/png',
+        purpose: 'badge',
+      },
     ],
+    prefer_related_applications: false,
+    orientation: 'any',
+    categories: ['productivity']
   }
 }

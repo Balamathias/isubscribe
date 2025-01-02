@@ -105,20 +105,23 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
             dismissible
             dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
             drawerClassName='dark:bg-card'
+            hideDrawerCancel
         >
-            <ConfirmPin 
+            {/* <ConfirmPin 
                 className='rounded-none' 
                 func={() => {
                     handleVTPassData(paymentMethod, selected!)
                     setProceed(false)
                 }} 
                 profile={profile?.data!}
-            />
+            /> */}
+            <div className='p-4'>
+                <h2 className='text-xl font-semibold'>Coming soon!</h2>
+                <p className='text-muted-foreground'>We are bringing Regular plans to you soonest, in the meantime, stay tuned.</p>
+            </div>
         </DynamicModal>
     </div>
   )
 }
 
 export default DailyData
-
-// https://gb0wpg0l-3000.euw.devtunnels.ms/

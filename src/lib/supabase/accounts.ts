@@ -4,8 +4,9 @@ import { Tables } from "@/types/database";
 import { createClient } from "@/utils/supabase/server";
 import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
-import { handleInvitation, upsertWallet } from "./wallets";
-import { deallocateAccount, getReservedAccount, getReservedAccount_v2 } from "../monnify/actions";
+import { upsertWallet } from "./wallets";
+import { deallocateAccount, getReservedAccount } from "../monnify/actions";
+import { redisIO } from '../redis'
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -25,63 +26,68 @@ export const getAccount = async (id?: string) => {
     return { data, error }
 }
 
-export const generateReservedAccount = async (bvn?: string) => {
+export const generateReservedAccount = async (req?:{ bvn?: string, nin?: string }) => {
     const supabase = createClient()
 
-    const { data: user, error } = await getUser()
+    try {
+        const { data: user, error } = await getUser()
 
-    const reservedAccount = await getReservedAccount({
-        accountReference: nanoid(24),
-        accountName: user?.full_name!,
-        currencyCode: "NGN",
-        contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-        customerEmail: user?.email!,
-        customerName: user?.full_name!,
-        getAllAvailableBanks: false,
-        // "bvn":"21212121212",
-        // "preferredBanks": ["50515"]
-    })
+        const reservedAccount = await getReservedAccount({
+            accountReference: nanoid(24),
+            accountName: user?.full_name!,
+            currencyCode: "NGN",
+            contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
+            customerEmail: user?.email!,
+            customerName: user?.full_name!,
+            getAllAvailableBanks: false,
+            nin: req?.nin,
+            bvn: req?.bvn
+        })
 
-    // const reservedAccount = await getReservedAccount_v2({
-    //     accountReference: nanoid(24),
-    //     accountName: user?.full_name!,
-    //     currencyCode: "NGN",
-    //     contractCode: process.env.NEXT_MONNIFY_CONTRACT_CODE!,
-    //     customerEmail: user?.email!,
-    //     customerName: user?.full_name!,
-    //     getAllAvailableBanks: true,
-    //     // "bvn":"21212121212",
-    //     // "preferredBanks": ["50515"]
-    //   })
+        const body = reservedAccount?.responseBody
+        const successful = reservedAccount?.requestSuccessful
 
-    console.log("ACCTS: ", reservedAccount)
+        if (successful) {
+            const { data, error } = await supabase.from('account').insert({
+                account_name: body?.accountName,
+                account_number: body?.accountNumber,
+                bank_name: body?.bankName,
+                bank_code: body?.bankCode,
+                user: user?.id!,
+                reference: body?.accountReference,
+                status: body?.status,
+                updated_at: new Date().toISOString(),
+            }).select().single()
+            
+            if (error) {
+                return { data, error }
+            }
 
-    const body = reservedAccount?.responseBody
-    const successful = reservedAccount?.requestSuccessful
+            return { data, error }
 
-    if (successful) {
-        const { data, error } = await supabase.from('account').insert({
-            account_name: body?.accountName,
-            account_number: body?.accountNumber,
-            bank_name: body?.bankName,
-            bank_code: body?.bankCode,
-            user: user?.id!,
-            reference: body?.accountReference,
-            status: body?.status,
-            updated_at: new Date().toISOString(),
-        }).select().single()
-        if (error) throw error
-
-        return { data, error }
-
-    } else return {data: null, error }
+        } else {
+            return {
+                data: null, 
+                error: { 
+                    message: `Account generation failed, please double-check your ${req?.bvn ? "BVN" : req?.nin ? "NIN" : ""}.` 
+                }
+            }
+        }
+    } catch (error: any) {
+        return {
+            data: null,
+            error: {
+                message: error?.message
+            }
+        }
+    }
 }
 
 export const deAlloc = async () => {
 
     const references: string[] = [
             
-      ];
+    ];
       
     
     references.map(async (acc) => await deallocateAccount(acc!))
@@ -99,7 +105,7 @@ export const deleteReservedAccount = async (id: string) => {
     }
 }
 
-export const getUser = async (id?: string) => {
+export const getUser = async (id?: string, useCache: boolean = false) => {
     const supabase = createClient()
     let ID;
     if (id) {
@@ -110,12 +116,32 @@ export const getUser = async (id?: string) => {
     }
     if (!ID) return { data: null, error: new Error('User not found') }
 
+    if (useCache) {
+        const cacheKey = `user:${ID}`
+        try {
+            const cachedUser = await redisIO.get(cacheKey)
+            if (cachedUser) {
+                return { data: JSON.parse(cachedUser) as Tables<'profile'>, error: null }
+            }
+        } catch (error) {
+            console.error('Redis cache error:', error)
+        }
+    }
+
     const { data, error } = await supabase.from('profile').select('*').eq('id', ID).single()
 
     if (error) return { error, data }
 
-    return { data, error }
+    if (useCache && data) {
+        try {
+            const cacheKey = `user:${ID}`
+            await redisIO.set(cacheKey, JSON.stringify(data), 'EX', 300)
+        } catch (error) {
+            console.error('Redis cache set error:', error)
+        }
+    }
 
+    return { data, error }
 }
 
 export const upsertUser = async ({id, ...rest}: Pick<Tables<'profile'>, 'state' | 'email' | 'full_name' | 'id' | 'phone' | 'pin'>) => {

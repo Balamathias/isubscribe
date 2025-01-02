@@ -42,15 +42,12 @@ export const buyData = async (payload: Payload): Promise<{data: ResponseData | n
             headers: headers,
             body: JSON.stringify(payload),
           })
-          console.log(res.statusText, res)
           
           if (!res.ok) {
               const response = (await res.json()) as ResponseData
-              console.error(response)
             return {data: response, status: res.status, OK: false, error: res.statusText}
         }
         const data = await res.json()
-        console.log(data)
         return { data, status: res.status, OK: true }
     } catch (error: any) {
         const _error = new Error(error)

@@ -6,7 +6,7 @@ export const POST = async (req: Request) => {
     const { email, subject, message, title, links, ...rest } = await req.json() as EmailTemplateProps;
 
     const mailOptions = {
-        from: 'iSubscribe',
+        from: 'isubscribe',
         to: email,
         subject: subject,
         text: message,
@@ -19,14 +19,13 @@ export const POST = async (req: Request) => {
             user: process.env.NEXT_GMAIL_USER,
             pass: process.env.NEXT_GMAIL_PASSWORD,
         },
-    })
+    });
 
-    transporter.sendMail(mailOptions, (err, info) => {
-        
-        if (err) {
-          return NextResponse.json({message: 'Connection refused'}, {status: 404})
-        } 
-    })
-    
-    return NextResponse.json({message: 'Message delivered'}, {status: 250})
+    try {
+        await transporter.sendMail(mailOptions);
+        return NextResponse.json({message: 'Message delivered'}, {status: 250});
+    } catch (error) {
+        console.error('Email sending failed:', error);
+        return NextResponse.json({message: 'Connection refused'}, {status: 404});
+    }
 }

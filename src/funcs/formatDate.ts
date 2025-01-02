@@ -20,6 +20,7 @@ export const formatDateTime = (date: string) => {
 }
 
 export const formatTimestamp = (date: string) => { 
+    // Create date object in UTC
     const dateObj = new Date(date);
     
     const day = String(dateObj.getDate()).padStart(2, '0');
