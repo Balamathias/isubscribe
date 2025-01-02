@@ -60,6 +60,8 @@ const SignInComponent = () => {
 
             <Logo />
 
+            <h2 className='text-3xl font-semibold py-2 text-primary hidden'>Login</h2>
+
             <GoogleAuthButton />
 
             <AuthSeparator />
