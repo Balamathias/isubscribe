@@ -121,8 +121,8 @@ const ConfirmPurchaseModal = ({
                     />
                 </div>
 
-               <ComingSoon 
-                    trigger={
+               {/* <ComingSoon 
+                    trigger={ */}
                         <Button 
                             className='w-full rounded-xl' 
                             size={'lg'}
@@ -130,12 +130,12 @@ const ConfirmPurchaseModal = ({
                                 wallet?.data?.balance! < selected?.amount && 
                                 wallet?.data?.cashback_balance! < selected?.amount
                             }
-                            // onClick={handlePurchase}
+                            onClick={handlePurchase}
                         >
                             Proceed
                         </Button>
-                    }
-               />
+                    {/* }
+               /> */}
             </div>
         </DynamicModal>
     )
