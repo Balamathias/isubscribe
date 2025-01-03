@@ -171,7 +171,7 @@ export const processAirtime_VTPass = async ({
                     amount: price,
                     provider: 'vtpass',
                     type: EVENT_TYPE.airtime_topup,
-                    commission
+                    commission: commission
                 }),
         
                 await saveCashbackHistory({ amount: cashbackPrice })
