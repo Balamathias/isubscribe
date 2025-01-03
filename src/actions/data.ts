@@ -175,7 +175,7 @@ export const processData_n3t = async ({
         }
     }
 
-    if (data?.status === 'success') {
+    if (data?.status === 'success' || data?.status === 'pending') {
 
         const updateWallet = async (retries = 3) => {
             try {
@@ -219,7 +219,7 @@ export const processData_n3t = async ({
             description: data?.message,
             planType: data?.plan_type,
             phone,
-            status: 'success',
+            status: data?.status === 'success' ? 'success' : 'pending',
             transaction_id: data?.["request-id"],
             commission
         }
@@ -227,7 +227,7 @@ export const processData_n3t = async ({
         const [{ data: _insertHistory }, _] = await Promise.all([
             await insertTransactionHistory({
                 description: `Data subscription`,
-                status: 'success',
+                status: data?.status === 'success' ? 'success' : 'pending',
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
                 meta_data: JSON.stringify(meta_data),
@@ -247,6 +247,7 @@ export const processData_n3t = async ({
                 historyId: _insertHistory?.id,
                 cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
                 cashbackPrice,
+                status: data?.status as 'success' | 'pending'
             },
             error: null
         }

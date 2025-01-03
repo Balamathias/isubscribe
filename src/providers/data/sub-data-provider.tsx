@@ -154,16 +154,22 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 setHistoryId(extra?.historyId)
 
                 router.refresh()
-                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
-                vibrate('success')
+                
+                if (extra?.status === 'success') {
+                    vibrate('success')
+                    toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+                } else {
+                    toast.info("This transaction is pending, we will update you subsequently on the updates.")
+                    vibrate('info')
+                }
 
                 queryClient.invalidateQueries({
                     queryKey: [QueryKeys.get_wallet]
                 })
                 
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseSuccess(true)
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseSuccess(true)
             } 
             else {
                 /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
@@ -244,9 +250,9 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     queryKey: [QueryKeys.get_wallet]
                 })
                 
-            setPurchasing(false)
-            setOpenConfirmPurchaseModal(false)
-            setPurchaseSuccess(true)
+                setPurchasing(false)
+                setOpenConfirmPurchaseModal(false)
+                setPurchaseSuccess(true)
             } 
 
             else {

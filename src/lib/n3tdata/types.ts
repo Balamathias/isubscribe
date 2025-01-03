@@ -14,7 +14,7 @@ export interface ResponseData {
   'request-id': string
   amount: string,
   dataplan: string,
-  status: 'success' | 'fail',
+  status: 'success' | 'fail' | 'pending',
   transid: string,
   message: string,
   phone_number: string,

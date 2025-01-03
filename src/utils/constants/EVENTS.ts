@@ -7,5 +7,6 @@ export const EVENT_TYPE = {
     education_topup: 'education_topup',
     debit_funds: 'debit_funds',
     wallet_fund_failed: 'wallet_fund_failed',
-    cashback: 'cashback'
-}
+    cashback: 'cashback',
+    reverse_transaction: 'reverse_transaction',
+} as const
