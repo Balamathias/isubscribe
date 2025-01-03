@@ -16,6 +16,8 @@ import useBiometricAuth from '@/hooks/use-biometric-auth'
 import { toast } from 'sonner'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import ComingSoon from '../comig-soon'
+import { useWallet } from '@/hooks/use-wallet'
+import Empty from '@/components/Empty'
 
 
 interface ConfirmPurchaseModal {
@@ -40,7 +42,7 @@ const ConfirmPurchaseModal = ({
     func
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const { data: wallet, isPending: isLoading } = useGetWalletBalance()
+    const {  wallet, isLoading } = useWallet()
     const { isEnabled, authenticate } = useBiometricAuth()
     
     const handleAuth = useCallback(async () => {
@@ -66,8 +68,8 @@ const ConfirmPurchaseModal = ({
     const handlePurchase = useCallback(() => {
         const insufficientFunds = 
             paymentMethod === 'wallet' 
-                ? wallet?.data?.balance! < selected?.amount
-                : wallet?.data?.cashback_balance! < selected?.amount
+                ? wallet?.balance! < selected?.amount
+                : wallet?.cashback_balance! < selected?.amount
 
         if (insufficientFunds) {
             toast.error('Insufficient funds for this transaction')
@@ -80,12 +82,18 @@ const ConfirmPurchaseModal = ({
         }
 
         handleAuth()
-    }, [paymentMethod, wallet?.data, selected?.amount, handleAuth])
+    }, [paymentMethod, wallet, selected?.amount, handleAuth])
 
     if (isLoading) return <LoadingOverlay />
 
-    if (!wallet?.data || !wallet?.data?.balance) {
-        return toast.error("Error loading wallet, please refresh.")
+    if (!wallet) {
+        return (
+            <Empty 
+                title='Error loading data' 
+                content='An error occurred while trying to load data, please try again' 
+                className='bg-inherit'
+            />
+        )
     }
     
     return (
@@ -114,15 +122,15 @@ const ConfirmPurchaseModal = ({
                         active={paymentMethod === 'wallet'} 
                         handler={() => setPaymentMethod('wallet')} 
                         method='wallet'
-                        balance={formatNigerianNaira(wallet?.data?.balance as number)}
-                        disabled={wallet?.data?.balance! < selected?.amount}
+                        balance={formatNigerianNaira(wallet?.balance as number)}
+                        disabled={wallet?.balance! < selected?.amount}
                     />
                     <ActivePaymentMethodButton 
                         active={paymentMethod === 'cashback'} 
                         handler={() => setPaymentMethod('cashback')} 
                         method='cashback'
-                        balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number)}
-                        disabled={wallet?.data?.cashback_balance! < selected?.amount}
+                        balance={formatNigerianNaira(wallet?.cashback_balance! as number)}
+                        disabled={wallet?.cashback_balance! < selected?.amount}
                     />
                 </div>
 
@@ -132,8 +140,8 @@ const ConfirmPurchaseModal = ({
                             className='w-full rounded-xl' 
                             size={'lg'}
                             disabled={
-                                wallet?.data?.balance! < selected?.amount && 
-                                wallet?.data?.cashback_balance! < selected?.amount
+                                wallet?.balance! < selected?.amount && 
+                                wallet?.cashback_balance! < selected?.amount
                             }
                             onClick={handlePurchase}
                         >

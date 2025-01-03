@@ -14,6 +14,8 @@ const AddmoneyModal = async () => {
     const {data: { user }} = await getCurrentUser()
     const { data: account, error } = await getAccount()
 
+    const accountName = `iSubscribe Network Technology.-${account?.account_name}`
+
   return (
     <div>
         {
@@ -67,8 +69,8 @@ const AddmoneyModal = async () => {
                                             <p className='text-muted-foreground font-semibold'>Account Name</p>
                                         </div>
                                         <div className='flex gap-x-0.5 items-center'>
-                                            <h2 className='text-lg font-semibold'>{account?.account_name}</h2>
-                                            <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={account?.account_name!} />
+                                            <h2 className='text-lg font-semibold'>{accountName}</h2>
+                                            <CopyButton iconOnly className='bg-transparent text-inherit !p-0.5' content={accountName} />
                                         </div>
                                     </div>
 
