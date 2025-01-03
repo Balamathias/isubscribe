@@ -410,7 +410,7 @@ export const processData_VTPass = async ({
                     user: profile?.id!,
                     amount: price,
                     provider: 'vtpass',
-                    commission: commission,
+                    commission: commission + res?.content?.transactions?.commission || 0,
                     request_id: res?.requestId
                 }),
         
