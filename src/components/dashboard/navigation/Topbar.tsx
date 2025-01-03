@@ -18,6 +18,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, LucideUserCheck, LucideInfo } from 'lucide-react'
 import InstallButton from '@/components/install-pwa-button'
 import { Button } from '@/components/ui/button'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 
 const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
@@ -25,6 +26,8 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
   const [openSupport, setOpenSupport] = useState(false)
   const [openProfileActions, setOpenProfileActions] = useState(false)
   const [isInstallable, setIsInstallable] = useState(false)
+
+  const isDesktop = useMediaQuery("(min-width: 768px)")
 
   useEffect(() => { 
     setOpenSupport(false)
@@ -89,7 +92,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
                   </Avatar>
                   <div className='flex flex-col space-y-1'>
                     <p className='text-muted-foreground text-xs'>{profile?.full_name || 'Guest'}</p>
-                    <p className='text-muted-foreground text-sm'>{profile?.email || 'Please sign in to continue'}</p>
+                    <p className='text-muted-foreground dark:text-amber-500 text-sm'>{profile?.email || 'Please sign in to continue'}</p>
                   </div>
                 </Link>
 
@@ -160,7 +163,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
       </div>
 
       {
-        profile && (
+        (!isinstallable || isDesktop) && (
           <DynamicModal
             open={openSupport}
             setOpen={setOpenSupport}
