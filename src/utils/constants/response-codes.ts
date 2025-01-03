@@ -9,7 +9,7 @@ export const RESPONSE_CODES = {
     },
     TRANSACTION_SUCCESSFUL: {
         code: '000',
-        message: "Transaction completed successfully. Thank you for choosing iSubscribe!"
+        message: "Transaction completed successfully. Thank you for choosing isubscribe!"
     },
     NO_PRODUCT_VARIATION: {
         code: '010',

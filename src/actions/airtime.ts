@@ -81,7 +81,7 @@ export const processAirtime_VTPass = async ({
     switch (res?.code) {
         case undefined:
             await saveDataErrorHistory('An unknown error has occured, please try again.', 
-                {profiledId: profile?.id, meta_data: res ?? {}, price, mobile: phone}
+                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
             )
             return {
                 error: {

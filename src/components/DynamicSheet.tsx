@@ -77,20 +77,22 @@ const DynamicSheet = ({
       </DrawerTrigger>
       <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', className, drawerClassName)}>
 
-        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex items-center justify-between')} asChild>
-          <DrawerClose asChild>
-            <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
-              <LucideX />
-            </Button>
-          </DrawerClose>
+        <DrawerTitle className={cn('bg-transparent hidden', showDrawerCancel && 'flex items-center justify-between')}>
+          <>
+            <DrawerClose asChild>
+              <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>
+                <LucideX />
+              </Button>
+            </DrawerClose>
 
-          {
-            typeof title === 'string' ? (
-              <h2 className="text-lg font-semibold -ml-10">{title}</h2>
-            ): <div className=''>{title}</div>
-          }
+            {
+              typeof title === 'string' ? (
+                <h2 className="-ml-10 text-lg font-semibold relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-foreground/10 before:to-transparent before:translate-x-[-200%] before:animate-[shine_2s_ease-in-out_infinite] before:skew-x-[-45deg]">{title}</h2>
+              ): <div className=''>{title}</div>
+            }
 
-          <div />
+            <div />
+          </>
         </DrawerTitle>
 
         <div className="flex flex-col gap-3">

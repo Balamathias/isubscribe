@@ -1,61 +1,69 @@
 interface RawVariation {
-    variation_code: string;
-    name: string;
-    variation_amount: string;
-    fixedPrice: string;
-  }
-  
-  interface MappedPlan {
-    planId: string;
-    dataQty: string;
-    duration: string;
-    unitPrice: number;
-    unitCashback: number;
-    network: string;
-    interest: number;
-  }
+  variation_code: string;
+  name: string;
+  variation_amount: string;
+  fixedPrice: string;
+}
 
-  export const mapRawDataToPlans = (rawData: RawVariation[], network: string): MappedPlan[] => {
-    return rawData.map(plan => {
+interface MappedPlan {
+  planId: string;
+  dataQty: string;
+  duration: string;
+  unitPrice: number;
+  unitCashback: number;
+  network: string;
+  interest: number;
+  planName?: string;
+}
+
+export const mapRawDataToPlans = (rawData: RawVariation[], network: string): MappedPlan[] => {
+  const dataRegex = /(\d+(\.\d+)?)(\s*MB|\s*GB)/i;
+  const durationRegex = /(\d+)\s*(hrs?|hours?|days?|weeks?|months?)/i;
+  const fallbackDurationRegex = /(\d+)(day|days|week|weeks|month|months|hr|hrs|hour|hours)/i;
+
+  return rawData.map(plan => {
       const planName = plan.name;
-  
-      // Extract data quantity (e.g., "75GB", "1.5GB", "25MB")
-      let dataQtyMatch = planName.match(/(\d+(\.\d+)?)(\s*MB|\s*GB)/i);
-      let dataQty = dataQtyMatch ? `${dataQtyMatch[1]} ${dataQtyMatch[3].toUpperCase().trim()}` : "Unknown";
-  
+
+      const dataQtyMatch = planName.match(dataRegex);
+      let dataQty = dataQtyMatch
+          ? `${dataQtyMatch[1]} ${dataQtyMatch[3].toUpperCase().trim()}`
+          : "Unknown";
+
       if (dataQty === "Unknown") {
-        const fallbackQtyMatch = planName.match(/(\d+(\.\d+)?)/);
-        if (fallbackQtyMatch) {
-          const numericValue = parseFloat(fallbackQtyMatch[1]);
-          dataQty = numericValue < 1000 ? `${numericValue} MB` : `${(numericValue / 1000).toFixed(2)} GB`;
-        }
+          const fallbackQtyMatch = planName.match(/(\d+(\.\d+)?)/);
+          if (fallbackQtyMatch) {
+              const numericValue = parseFloat(fallbackQtyMatch[1]);
+              dataQty = numericValue < 1000
+                  ? `${numericValue} MB`
+                  : `${(numericValue / 1000).toFixed(2)} GB`;
+          }
       }
-  
-      // Extract duration (e.g., "30 Days", "1 Day")
-      let durationMatch = planName.match(/(\d+)\s*(hrs|hours|days|weeks|months)/i);
-      let duration = durationMatch ? `${durationMatch[1]} ${durationMatch[2].toLowerCase()}` : "Unknown";
-  
-      // If duration is still unknown, try to match common formats like "1Day" (without space)
+
+      const durationMatch = planName.match(durationRegex);
+      let duration = durationMatch
+          ? `${durationMatch[1]} ${durationMatch[2].toLowerCase()}`
+          : "Unknown";
+
       if (duration === "Unknown") {
-        const fallbackDurationMatch = planName.match(/(\d+)(day|days|week|weeks|month|months|hr|hrs|hour|hours)/i);
-        if (fallbackDurationMatch) {
-          duration = `${fallbackDurationMatch[1]} ${fallbackDurationMatch[2].toLowerCase()}`;
-        }
+          const fallbackDurationMatch = planName.match(fallbackDurationRegex);
+          if (fallbackDurationMatch) {
+              duration = `${fallbackDurationMatch[1]} ${fallbackDurationMatch[2].toLowerCase()}`;
+          }
       }
-  
+
       const unitPrice = parseFloat(plan.variation_amount);
-      const unitCashback = unitPrice * 0.004;
-      const interest = 0.1 * unitPrice;
-  
+      const unitCashback = Math.round(unitPrice * 0.004);
+      const interest = Math.round(0.1 * unitPrice);
+
       return {
-        planId: plan.variation_code,
-        dataQty: dataQty,
-        duration: duration === 'Unknown' ? "24 hrs" : duration,
-        unitPrice: Math.round(unitPrice > 500 ? unitPrice + interest : unitPrice),
-        unitCashback: unitCashback,
-        network: network,
-        interest: interest
+          planId: plan.variation_code,
+          dataQty: dataQty,
+          duration: duration === 'Unknown' ? "72 hrs" : duration,
+          unitPrice: Math.round(unitPrice > 300 ? unitPrice + interest : unitPrice),
+          unitCashback: unitCashback,
+          network: network,
+          interest: interest,
+          planName,
       };
-    });
-  };
-  
+  });
+};

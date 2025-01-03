@@ -74,6 +74,11 @@ const ConfirmPurchaseModal = ({
             return
         }
 
+        if (!mobileNumber || mobileNumber?.length < 10) {
+            toast.warning("Please enter a valid phone number")
+            return
+        }
+
         handleAuth()
     }, [paymentMethod, wallet?.data, selected?.amount, handleAuth])
 

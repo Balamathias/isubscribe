@@ -317,7 +317,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             if (data) {
 
-                setSuccessMessage(data?.message ?? 'Airtime subscription successful. Thank you for choosing iSubscribe.')
+                setSuccessMessage(data?.message ?? 'Airtime subscription successful. Thank you for choosing isubscribe.')
                 setHistoryId(extra?.historyId)
 
                 router.refresh()
