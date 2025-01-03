@@ -32,6 +32,7 @@ export interface VTPassDataPayload {
     phone?: string | number,
     cashback?: string | number,
     interest?: number,
+    planName?: string,
     detail?: {
         network: string;
         dataAmount?: string | number;

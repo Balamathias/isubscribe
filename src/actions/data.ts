@@ -87,287 +87,97 @@ export const processData_n3t = async ({
     currentNetwork
 }: ProcessData_N3T) => {
 
-    const { data: profile } = await getUser(undefined, true)
+    try {
+        const { data: profile } = await getUser(undefined, true)
 
-    const { data: values, error: computeError } = await computeServerTransaction({
-        payload: {
-            price: priceToInteger(payload.Price),
-            cashback: priceToInteger(payload.CashBack),
-            method: payload.method,
-            interest: payload?.commission
-        },
-    })
-
-    
-    if (computeError || !values) return {
-        error: {
-            message: computeError || 'An unknown error has occured, please try again.'
-        },
-        data: null
-    }
-
-    const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
-
-    if (!profile) {
-        return {
-            error: {
-                message: 'Failed to initiate transaction, please try again.'
+        const { data: values, error: computeError } = await computeServerTransaction({
+            payload: {
+                price: priceToInteger(payload.Price),
+                cashback: priceToInteger(payload.CashBack),
+                method: payload.method,
+                interest: payload?.commission
             },
-            data: null
-        }
-    }
-
-    const { data, error } = await buyData({
-        "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
-        bypass: false,
-        data_plan,
-        network,
-        phone,
-    })
-
-    console.log(data)
-
-    if (error || (data?.status === 'fail')) {
-
-        meta_data = {
-            ...meta_data,
-            transId: data?.transid ?? null,
-            dataQty: payload?.Data ?? 0,
-            unitCashback: cashbackPrice,
-            unitPrice: price,
-            description: data?.message,
-            planType: data?.plan_type || '',
-            status: 'failed',
-            transaction_id: data?.["request-id"],
-            commission,
-            phone
-        }
-        
-        const { data: _insertHistory } = await insertTransactionHistory({
-            description: `Data subscription for ${phone} failed.`,
-            status: 'failed', 
-            title: 'Data Subscription',
-            type: EVENT_TYPE.data_topup,
-            meta_data: JSON.stringify(meta_data),
-            user: profile?.id!,
-            amount: meta_data.unitPrice,
-            provider: 'n3t',
-            request_id: data?.['request-id'],
-            commission: meta_data.commission,
         })
-
-        const match = data?.message?.includes('Insufficient')
-
-        if (match) {
-            return {
-                error: {
-                    message: 'This service provider is temporarily unavailable, please try again later.'
-                },
-                data: null
-            }
-        }
-
-        return {
+    
+        
+        if (computeError || !values) return {
             error: {
-                message: data?.message ?? 'Data subscription failed. Please try again.'
+                message: computeError || 'An unknown error has occured, please try again.'
             },
             data: null
         }
-    }
-
-    if (data?.status === 'success' || data?.status === 'pending') {
-
-        const updateWallet = async (retries = 3) => {
-            try {
-                const [walletUpdate, cashbackUpdate] = await Promise.all([
-                    updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
-                    updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
-                ])
-                
-                return { walletUpdate, cashbackUpdate }
-            } catch (error) {
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    return updateWallet(retries - 1)
-                }
-                throw error
-            }
-        }
-
-        const { walletUpdate: { 
-            data: _walletBalance, error:_balanceError 
-        }, cashbackUpdate: {
-            data: _cashbackBalance, error:_cashbackBalanceError
-        } } = await updateWallet()
-
-        if (_balanceError || _cashbackBalanceError) {
+    
+        const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
+    
+        if (!profile) {
             return {
                 error: {
-                    message: `Failed to initiate transaction at this time, please try again.`
+                    message: 'Failed to initiate transaction, please try again.'
                 },
                 data: null
             }
         }
-
-        let meta_data: AirtimeDataMetadata = {
-            dataQty: payload?.Data ?? 0,
-            duration: null,
-            network: currentNetwork,
-            transId: data?.transid ?? null,
-            unitCashback: cashbackPrice,
-            unitPrice: price,
-            description: data?.message,
-            planType: data?.plan_type,
+    
+        const { data, error } = await buyData({
+            "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
+            bypass: false,
+            data_plan,
+            network,
             phone,
-            status: data?.status === 'success' ? 'success' : 'pending',
-            transaction_id: data?.["request-id"],
-            commission
-        }
-
-        const [{ data: _insertHistory }, _] = await Promise.all([
-            await insertTransactionHistory({
-                description: `Data subscription`,
-                status: data?.status === 'success' ? 'success' : 'pending',
+        })
+    
+        console.log(data)
+    
+        if (error || (data?.status === 'fail')) {
+    
+            meta_data = {
+                ...meta_data,
+                transId: data?.transid ?? null,
+                dataQty: payload?.Data ?? 0,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type || '',
+                status: 'failed',
+                transaction_id: data?.["request-id"],
+                commission,
+                phone
+            }
+            
+            const { data: _insertHistory } = await insertTransactionHistory({
+                description: `Data subscription for ${phone} failed.`,
+                status: 'failed', 
                 title: 'Data Subscription',
                 type: EVENT_TYPE.data_topup,
                 meta_data: JSON.stringify(meta_data),
                 user: profile?.id!,
-                amount: price,
+                amount: meta_data.unitPrice,
                 provider: 'n3t',
-                commission,
-                request_id: data?.["request-id"]
-            }),
+                request_id: data?.['request-id'],
+                commission: meta_data.commission,
+            })
     
-            await saveCashbackHistory({ amount: cashbackPrice })
-        ])
-
-        return {
-            data,
-            extra: {
-                historyId: _insertHistory?.id,
-                cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
-                cashbackPrice,
-                status: data?.status as 'success' | 'pending'
-            },
-            error: null
-        }
-    } else {
-        return {
-            error: {
-                message: `An attempt to initiate this transaction failed for unknown reasons, please try again.`
-            },
-            data: null
-        }
-    }
-}
-
-export const processData_VTPass = async ({
-    phone,
-    meta_data,
-    payload,
-    currentNetwork,
-    serviceID,
-    variation_code
-}: ProcessData_VTPass) => {
-
-    const { data: profile } = await getUser(undefined, true)
-
-    const { data: values, error: computeError } = await computeServerTransaction({
-        payload: {
-            price: payload.price,
-            cashback: payload.cashback,
-            method: payload.method,
-            interest: payload?.commission
-        },
-    })
-
+            const match = data?.message?.includes('Insufficient')
     
-    if (computeError || !values) return {
-        error: {
-            message: computeError || 'An unknown error has occured, please try again.'
-        },
-        data: null
-    }
-
-    const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
-
-    if (!profile) {
-        return {
-            error: {
-                message: 'Failed to initiate transaction, please try again.'
-            },
-            data: null
+            if (match) {
+                return {
+                    error: {
+                        message: 'This service provider is temporarily unavailable, please try again later.'
+                    },
+                    data: null
+                }
+            }
+    
+            return {
+                error: {
+                    message: data?.message ?? 'Data subscription failed. Please try again.'
+                },
+                data: null
+            }
         }
-    }
-
-    const reqId = generateRequestId()
-
-    const res = await buyVTPassData({
-        ...payload,
-        request_id: reqId,
-        billersCode: phone,
-        phone,
-        serviceID,
-        variation_code,
-    })
-
-    switch (res?.code) {
-        case undefined:
-            await saveDataErrorHistory('An unknown error has occured, please try again.', 
-                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
-            )
-            return {
-                error: {
-                    message: 'An unknown error has occured, please try again.',
-                },
-                data: null
-            }
-        
-        case RESPONSE_CODES.TIME_NOT_CORRECT.code:
-            await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message,
-                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: phone}
-            )
-            return {
-                error: {
-                    message: RESPONSE_CODES.TIME_NOT_CORRECT.message
-                },
-                data: null
-            }
-
-        case RESPONSE_CODES.TRANSACTION_FAILED.code:
-            await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message,
-                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: phone}
-            )
-            return {
-                error: {
-                    message: RESPONSE_CODES.TRANSACTION_FAILED.message
-                },
-                data: null
-            }
-
-        case RESPONSE_CODES.NO_PRODUCT_VARIATION.code:
-            await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message,
-                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: phone}
-            )
-            return {
-                error: {
-                    message: RESPONSE_CODES.NO_PRODUCT_VARIATION.message
-                },
-                data: null
-            }
-
-        case RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code:
-            await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message,
-                {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: phone}
-            )
-            return {
-                error: {
-                    message: RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message
-                },
-                data: null
-            }
-
-        case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:
+    
+        if (data?.status === 'success' || data?.status === 'pending') {
+    
             const updateWallet = async (retries = 3) => {
                 try {
                     const [walletUpdate, cashbackUpdate] = await Promise.all([
@@ -399,43 +209,265 @@ export const processData_VTPass = async ({
                     data: null
                 }
             }
-
+    
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: payload?.Data ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type,
+                phone,
+                status: data?.status === 'success' ? 'success' : 'pending',
+                transaction_id: data?.["request-id"],
+                commission
+            }
+    
             const [{ data: _insertHistory }, _] = await Promise.all([
                 await insertTransactionHistory({
-                    description: `Data subscription topped-up for ${phone} successfully.`,
-                    status: 'success',
-                    title: 'Data Subscription.',
+                    description: `Data subscription`,
+                    status: data?.status === 'success' ? 'success' : 'pending',
+                    title: 'Data Subscription',
                     type: EVENT_TYPE.data_topup,
-                    meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
+                    meta_data: JSON.stringify(meta_data),
                     user: profile?.id!,
                     amount: price,
-                    provider: 'vtpass',
-                    commission: commission + res?.content?.transactions?.commission || 0,
-                    request_id: res?.requestId
+                    provider: 'n3t',
+                    commission,
+                    request_id: data?.["request-id"]
                 }),
         
                 await saveCashbackHistory({ amount: cashbackPrice })
             ])
-
+    
             return {
-                data: {
-                    message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
-                },
+                data,
                 extra: {
                     historyId: _insertHistory?.id,
                     cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
                     cashbackPrice,
+                    status: data?.status as 'success' | 'pending'
                 },
                 error: null
             }
-
-        default: 
+        } else {
             return {
                 error: {
                     message: `An attempt to initiate this transaction failed for unknown reasons, please try again.`
                 },
                 data: null
             }
+        }
+    } catch (error: any) {
+        console.error(error)
+        return {
+            error: {
+                message: error?.message || `An attempt to initiate this transaction failed for unknown reasons, please try again.`
+            },
+            data: null
+        }
+        
+    }
+}
+
+export const processData_VTPass = async ({
+    phone,
+    meta_data,
+    payload,
+    currentNetwork,
+    serviceID,
+    variation_code
+}: ProcessData_VTPass) => {
+
+    try {
+        const { data: profile } = await getUser(undefined, true)
+
+        const { data: values, error: computeError } = await computeServerTransaction({
+            payload: {
+                price: payload.price,
+                cashback: payload.cashback,
+                method: payload.method,
+                interest: payload?.commission
+            },
+        })
+
+        
+        if (computeError || !values) return {
+            error: {
+                message: computeError || 'An unknown error has occured, please try again.'
+            },
+            data: null
+        }
+
+        const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
+
+        if (!profile) {
+            return {
+                error: {
+                    message: 'Failed to initiate transaction, please try again.'
+                },
+                data: null
+            }
+        }
+
+        const reqId = generateRequestId()
+
+        const res = await buyVTPassData({
+            ...payload,
+            request_id: reqId,
+            billersCode: phone,
+            phone,
+            serviceID,
+            variation_code,
+        })
+
+        switch (res?.code) {
+            case undefined:
+                await saveDataErrorHistory('An unknown error has occured, please try again.', 
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: 'An unknown error has occured, please try again.',
+                    },
+                    data: null
+                }
+            
+            case RESPONSE_CODES.TIME_NOT_CORRECT.code:
+                await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message,
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: RESPONSE_CODES.TIME_NOT_CORRECT.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.TRANSACTION_FAILED.code:
+                await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message,
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: RESPONSE_CODES.TRANSACTION_FAILED.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.NO_PRODUCT_VARIATION.code:
+                await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message,
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: RESPONSE_CODES.NO_PRODUCT_VARIATION.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code:
+                await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message,
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message
+                    },
+                    data: null
+                }
+                
+            case RESPONSE_CODES.LOW_WALLET_BALANCE.code:
+                await saveDataErrorHistory(RESPONSE_CODES.LOW_WALLET_BALANCE.message,
+                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.LOW_WALLET_BALANCE.message}, price, mobile: phone}
+                )
+                return {
+                    error: {
+                        message: RESPONSE_CODES.LOW_WALLET_BALANCE.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:
+                const updateWallet = async (retries = 3) => {
+                    try {
+                        const [walletUpdate, cashbackUpdate] = await Promise.all([
+                            updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
+                            updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
+                        ])
+                        
+                        return { walletUpdate, cashbackUpdate }
+                    } catch (error) {
+                        if (retries > 0) {
+                            await new Promise(resolve => setTimeout(resolve, 1000))
+                            return updateWallet(retries - 1)
+                        }
+                        throw error
+                    }
+                }
+        
+                const { walletUpdate: { 
+                    data: _walletBalance, error:_balanceError 
+                }, cashbackUpdate: {
+                    data: _cashbackBalance, error:_cashbackBalanceError
+                } } = await updateWallet()
+        
+                if (_balanceError || _cashbackBalanceError) {
+                    return {
+                        error: {
+                            message: `Failed to initiate transaction at this time, please try again.`
+                        },
+                        data: null
+                    }
+                }
+
+                const [{ data: _insertHistory }, _] = await Promise.all([
+                    await insertTransactionHistory({
+                        description: `Data subscription topped-up for ${phone} successfully.`,
+                        status: 'success',
+                        title: 'Data Subscription.',
+                        type: EVENT_TYPE.data_topup,
+                        meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
+                        user: profile?.id!,
+                        amount: price,
+                        provider: 'vtpass',
+                        commission: res?.content?.transactions?.commission || commission,
+                        request_id: res?.requestId
+                    }),
+            
+                    await saveCashbackHistory({ amount: cashbackPrice })
+                ])
+
+                return {
+                    data: {
+                        message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
+                    },
+                    extra: {
+                        historyId: _insertHistory?.id,
+                        cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
+                        cashbackPrice,
+                    },
+                    error: null
+                }
+
+            default: 
+                return {
+                    error: {
+                        message: `An attempt to initiate this transaction failed for unknown reasons, please try again.`
+                    },
+                    data: null
+                }
+        }
+    } catch (error: any) {
+        console.error(error)
+        return {
+            error: {
+                message: error?.message || `An attempt to initiate this transaction failed for unknown reasons, please try again.`
+            },
+            data: null
+        }
     }
         
 }

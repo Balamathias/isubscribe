@@ -122,7 +122,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     Price: (payload.Price),
                     CashBack: (payload.CashBack),
                     method: payload.method,
-                    commission: payload?.commission,
+                    commission: 0, // payload?.commission
                     Data: payload?.Data
                 },
                 data_plan: payload.Plan_ID,
@@ -214,7 +214,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     price: (payload.amount as number),
                     cashback: (payload?.cashback as number),
                     method,
-                    commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
+                    commission: 0 // (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
                 },
                 phone: mobileNumber,
                 currentNetwork,
@@ -299,7 +299,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     price: (payload.amount as number),
                     cashback: (payload?.cashback as number),
                     method,
-                    commission: (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
+                    commission: 0, // (payload?.amount! * 0.04) // 0.04 is the commission rate for every plan
                 },
                 phone: mobileNumber,
                 currentNetwork,
@@ -327,7 +327,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 setHistoryId(extra?.historyId)
 
                 router.refresh()
-                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
+                if (extra?.cashbackPrice)
+                    toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
                 vibrate('success')
 
                 queryClient.invalidateQueries({
@@ -340,7 +341,6 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             } 
 
             else {
-                /** @example: toast.error('Sorry, something went wrong! Top up failed. You may wish to try again.') */
                 setPurchasing(false)
                 setOpenConfirmPurchaseModal(false)
                 setPurchaseFailed(true)

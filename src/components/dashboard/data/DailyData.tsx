@@ -67,6 +67,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                             amount: d.unitPrice,
                             cashback: d.unitCashback,
                             interest: d?.interest,
+                            planName: d?.planName,
                             detail: {
                                 dataAmount: d.unitPrice,
                                 dataQty: d.dataQty,

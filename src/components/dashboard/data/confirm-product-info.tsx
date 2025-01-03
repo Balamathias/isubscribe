@@ -11,7 +11,8 @@ interface ConfirmProductInfoProps {
     dataDuration: string,
     cashBack: number,
     image: string,
-    title?: string
+    title?: string,
+    planName?: string
 }
 
 const ConfirmProductInfo = ({
@@ -22,7 +23,8 @@ const ConfirmProductInfo = ({
     dataDuration,
     cashBack,
     image,
-    title
+    title,
+    planName
 }: ConfirmProductInfoProps) => {
   return (
     <div className="flex flex-col gap-y-2.5 w-full">
@@ -61,13 +63,18 @@ const ConfirmProductInfo = ({
 
             <div className='flex flex-row justify-between items-center gap-x-2'>
                 <p className='font-semibold text-muted-foreground'>Duration</p>
-                <p>{dataDuration}</p>
+                <p>{dataDuration === '72 hrs' ? "-" : dataDuration}</p>
             </div>
 
             <div className='flex flex-row justify-between items-center gap-x-2'>
                 <p className='font-semibold text-muted-foreground'>Data Bonus</p>
                 <p className='px-2 py-1 rounded-full bg-violet-700/15'>+{formatDataAmount(cashBack * DATA_MB_PER_NAIRA)}</p>
             </div>
+
+            {planName && <div className='flex flex-row justify-between items-center gap-x-2'>
+                <p className='font-semibold text-muted-foreground'>Plan Name</p>
+                <p>{planName}</p>
+            </div>}
         </div>
     </div>
   )

@@ -96,7 +96,7 @@ const ConfirmDataPurchaseModal = ({
         <DynamicModal
             open={open}
             setOpen={setOpen}
-            title="Plan Information"
+            title={selected?.planName ? (<h2 className='max-md:-ml-10 line-clamp-1 text-sm md:text-base text-center'>{selected?.planName}</h2>) : "Plan Information"}
             dismissible={false}
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
         >
@@ -110,6 +110,7 @@ const ConfirmDataPurchaseModal = ({
                     dataDuration={selected?.detail?.duration!}
                     cashBack={selected?.cashback as number}
                     image={product[currentNetwork]?.image}
+                    planName={selected?.planName}
                 />
 
                 <div className='flex flex-col w-full gap-y-2.5'>

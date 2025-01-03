@@ -58,11 +58,11 @@ export const mapRawDataToPlans = (rawData: RawVariation[], network: string): Map
       return {
           planId: plan.variation_code,
           dataQty: dataQty,
-          duration: duration === 'Unknown' ? "72 hrs" : duration,
-          unitPrice: Math.round(unitPrice > 300 ? unitPrice + interest : unitPrice),
+          duration: duration === 'Unknown' ? "-" : duration,
+          unitPrice,
           unitCashback: unitCashback,
           network: network,
-          interest: interest,
+          interest: 0,
           planName,
       };
   });

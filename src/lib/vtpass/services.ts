@@ -144,7 +144,7 @@ export const buyData_axios = async (data: VTPassTransactionRequest): Promise<VTP
     }
 }
 
-export const buyAirtime = async (data: VTPassAirtimeTransactionRequest): Promise<VTPassAirtimeTransactionResponse | undefined> => {
+export const buyAirtime = async (data: VTPassAirtimeTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
     const headers = {
         'api-key': VTPASS_API_KEY!,
         'secret-key': VTPASS_SECRET_KEY!,

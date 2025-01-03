@@ -19,4 +19,8 @@ export const RESPONSE_CODES = {
         code: '012',
         message: "It appears the Product you selected does not exist, please choose another one."
     },
+    LOW_WALLET_BALANCE: {
+        code: '018',
+        message: `This service provider is currently unavailable, please try again later.`
+    }
 } as const
