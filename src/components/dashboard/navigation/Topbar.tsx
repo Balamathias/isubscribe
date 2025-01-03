@@ -163,7 +163,7 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
       </div>
 
       {
-        (!isinstallable || isDesktop) && (
+        (!isInstallable || isDesktop) && (
           <DynamicModal
             open={openSupport}
             setOpen={setOpenSupport}
