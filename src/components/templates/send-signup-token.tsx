@@ -2,6 +2,7 @@ import * as React from "react";
 import { Tailwind } from "@react-email/tailwind";
 import { render } from "@react-email/render";
 import Head from "next/head";
+import { Zap } from "lucide-react";
 
 interface Props {
   token: string;
@@ -28,26 +29,28 @@ const SendSignupToken = ({ token, name, site_url }: Props) => {
         <Head>
           <title>Sign Up Confirmation</title>
         </Head>
-        <body className="bg-foreground text-gray-200">
-          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6">
-            <header className="text-center mb-6">
-              <h1 className="text-3xl font-bold mb-2">Welcome, {name}!</h1>
-              <p className="text-lg">
-                Thank you for signing up for <a href={site_url} className="text-accent underline">{site_url}</a>
+        <body className="bg-foreground text-white min-h-screen rounded-lg">
+          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full flex flex-col gap-y-4">
+            <a href={site_url} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row">
+              <Zap /> <span>isubscribe</span>
+            </a>
+            <header className="mb-6">
+              <h1 className="text-lg mb-2">Hello, {name}!</h1>
+              <p className="text-base text-white">
+                Thank you for signing up for isubscribe. Please use the code below to confirm your account.
               </p>
             </header>
             <main>
-              <p className="text-lg mb-4">
-                Use the following code to confirm your sign-up:
-              </p>
-              <div className="bg-accent text-white rounded-lg text-center p-4 text-2xl font-mono font-semibold tracking-wider">
-                {token}
+              <div className="text">
+                <div className="inline-block bg-accent text-black px-6 py-3 rounded-xl font-bold text-lg w-full text-center font-mono">
+                  {token}
+                </div>
               </div>
-              <p className="text-sm mt-4 text-center">
-                If you {"didn’t"} request this, you can safely ignore this email.
+              <p className="text-sm mt-4 text-white">
+                If you {"didn't"} request this, you can safely ignore this email.
               </p>
             </main>
-            <footer className="text-center mt-6">
+            <footer className="mt-6">
               <p className="text-sm">
                 Need help? Contact us at{" "}
                 <a
@@ -58,7 +61,7 @@ const SendSignupToken = ({ token, name, site_url }: Props) => {
                 </a>
               </p>
               
-              <div className="flex justify-center gap-4 mt-4">
+              <div className="flex gap-4 mt-4">
                 <a
                   href="https://twitter.com/isubscribe"
                   className="text-white hover:text-accent"
@@ -113,6 +116,7 @@ const SendSignupToken = ({ token, name, site_url }: Props) => {
                   </svg>
                 </a>
               </div>
+              <p className="text-gray-500 mt-4">&copy; {new Date().getFullYear()} isubcribe.</p>
             </footer>
           </div>
         </body>

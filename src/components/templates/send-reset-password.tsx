@@ -2,6 +2,8 @@ import * as React from "react";
 import { Tailwind } from "@react-email/tailwind";
 import { render } from "@react-email/render";
 import Head from "next/head";
+import Logo from "../Logo";
+import { Zap } from "lucide-react";
 
 interface ResetPasswordProps {
   resetLink: string;
@@ -27,28 +29,31 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
         <Head>
           <title>Reset Password</title>
         </Head>
-        <body className="bg-foreground text-white">
-          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6">
-            <header className="text-center mb-6">
-              <h1 className="text-3xl font-bold mb-2">Hello, {name}!</h1>
-              <p className="text-lg text-white">
+        <body className="bg-foreground text-white min-h-screen rounded-lg">
+          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full flex flex-col gap-y-4">
+            <a href={process.env.NEXT_PUBLIC_SITE_URL} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row">
+              <Zap /> <span>isubscribe</span>
+            </a>
+            <header className="mb-6">
+              <h1 className="text-lg mb-2">Hello, {name}!</h1>
+              <p className="text-base text-white">
                 You requested a password reset. Click the button below to reset your password.
               </p>
             </header>
             <main>
-              <div className="text-center">
+              <div className="text">
                 <a
                   href={resetLink}
-                  className="inline-block bg-accent text-black px-6 py-3 rounded-lg font-bold text-lg hover:bg-yellow-500 transition-colors"
+                  className="inline-block bg-accent text-black px-6 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500/80 cursor-pointer transition-colors w-full text-center"
                 >
                   Reset Password
                 </a>
               </div>
-              <p className="text-sm mt-4 text-center text-white">
+              <p className="text-sm mt-4 text-white">
                 If you {"didn’t"} request this, you can safely ignore this email.
               </p>
             </main>
-            <footer className="text-center mt-6">
+            <footer className="mt-6">
               <p className="text-sm">
                 Need help? Contact us at{" "}
                 <a
@@ -59,7 +64,7 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
                 </a>
               </p>
               
-              <div className="flex justify-center gap-4 mt-4">
+              <div className="flex gap-4 mt-4">
                 <a
                   href="https://twitter.com/isubscribe"
                   className="text-white hover:text-accent"
@@ -114,6 +119,7 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
                   </svg>
                 </a>
               </div>
+              <p className="text-gray-500 mt-4">&copy; {new Date().getFullYear()} isubcribe.</p>
             </footer>
           </div>
         </body>
