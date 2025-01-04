@@ -27,7 +27,7 @@ export async function POST(req: Request) {
           from: "Welcome <no-reply@updates.isubscribe.ng>",
           to: [user.email],
           subject: "Verify Email",
-          text: sendSignupToken({
+          html: sendSignupToken({
             token: email_data.token,
             site_url: email_data.site_url,
             name: (user?.user_metadata as any)?.full_name || user.email,
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
           from: "Support <no-reply@updates.isubscribe.ng>",
           to: [user.email],
           subject: "Reset Your Password",
-          text: sendResetPasswordEmail({
+          html: sendResetPasswordEmail({
             resetLink: recoveryLink,
             name: (user?.user_metadata as any)?.full_name || user.email,
           }),
