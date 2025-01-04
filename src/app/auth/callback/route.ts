@@ -4,38 +4,36 @@ import { type CookieOptions, createServerClient } from '@supabase/ssr'
 import { supabaseKey, supabaseURL } from '@/lib/supabase'
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') || '/'
-
-  console.log(next, code)
+  const { searchParams } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") || "/";
+  const email = searchParams.get("email");
 
   if (code) {
-    const cookieStore = cookies()
-    const supabase = createServerClient(
-      supabaseURL!,
-      supabaseKey!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-          set(name: string, value: string, options: CookieOptions) {
-            cookieStore.set({ name, value, ...options })
-          },
-          remove(name: string, options: CookieOptions) {
-            cookieStore.delete({ name, ...options })
-          },
+    const cookieStore = cookies();
+    const supabase = createServerClient(supabaseURL!, supabaseKey!, {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
         },
-      }
-    )
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+        set(name: string, value: string, options: CookieOptions) {
+          cookieStore.set({ name, value, ...options });
+        },
+        remove(name: string, options: CookieOptions) {
+          cookieStore.delete({ name, ...options });
+        },
+      },
+    });
+
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // Redirect to the `next` parameter or default to root
+      const redirectTo = new URL(next, request.url);
+      if (email) redirectTo.searchParams.set("email", email);
+      return NextResponse.redirect(redirectTo.toString());
     }
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect("/auth/auth-code-error");
 }

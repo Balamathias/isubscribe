@@ -36,21 +36,10 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({}, { status: 200 });
 
-      case "reset_password":
-        const resetPasswordLink = `${site_url}/auth/callback?token=${email_data.token}&code=${email_data.token}&token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${site_url}/auth/confirm?email=${user?.email}`;
-        await resend.emails.send({
-          from: "isubscribe <no-reply@updates.isubscribe.ng>",
-          to: [user.email],
-          subject: "Reset Your Password",
-          text: sendResetPasswordEmail({
-            resetLink: resetPasswordLink,
-            name: (user?.user_metadata as any)?.full_name || user.email,
-          }),
-        });
-        return NextResponse.json({}, { status: 200 });
-
       case "recovery":
-        const recoveryLink = `${email_data?.site_url}/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${email_data?.redirect_to}/auth/callback?next=/auth/reset-password?email=${user?.email}`;
+        // const recoveryLink = `${email_data?.site_url}/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${email_data?.redirect_to}/auth/callback?next=/auth/reset-password?email=${user?.email}`;
+        // redirect_to=${encodeURIComponent(`${site_url}/auth/callback?next=/auth/reset-password&email=${user.email}`)}`;
+        const recoveryLink = `${site_url}/auth/confirm?token=${email_data.token_hash}&type=${email_data.email_action_type}&next=/auth/reset-password&email=${user.email}`
         await resend.emails.send({
           from: "isubscribe <no-reply@updates.isubscribe.ng>",
           to: [user.email],

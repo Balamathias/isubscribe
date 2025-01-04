@@ -1,3 +1,5 @@
+import { EmailOtpType } from "@supabase/supabase-js";
+
 type UserMetadata = {
     email: string;
     email_verified: boolean;
@@ -45,7 +47,7 @@ type EmailData = {
     token: string;
     token_hash: string;
     redirect_to: string;
-    email_action_type: "signup" | "login" | "reset_password" | "recovery";
+    email_action_type: EmailOtpType;
     site_url: string;
     token_new: string;
     token_hash_new: string;
