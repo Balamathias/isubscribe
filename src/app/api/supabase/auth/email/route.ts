@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       case "recovery":
         // const recoveryLink = `${email_data?.site_url}/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${email_data?.redirect_to}/auth/callback?next=/auth/reset-password?email=${user?.email}`;
         // redirect_to=${encodeURIComponent(`${site_url}/auth/callback?next=/auth/reset-password&email=${user.email}`)}`;
-        const recoveryLink = `${site_url}/auth/confirm?token=${email_data.token_hash}&type=${email_data.email_action_type}&next=/auth/reset-password&email=${user.email}`
+        const recoveryLink = `${site_url}/auth/confirm?token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&next=/auth/reset-password&email=${encodeURIComponent(user.email)}`
         await resend.emails.send({
           from: "isubscribe <no-reply@updates.isubscribe.ng>",
           to: [user.email],

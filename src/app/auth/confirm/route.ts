@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect("/auth/error");
+  return NextResponse.redirect(new URL("/auth/error", request.url));
 }
 
 
