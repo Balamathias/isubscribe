@@ -7,6 +7,7 @@ import { sendResetPasswordEmail } from "@/components/templates/send-reset-passwo
 
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 const hookSecret = process.env.SEND_EMAIL_HOOK_SECRET as string;
+const site_url = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 export async function POST(req: Request) {
   if (req.method !== "POST") {
@@ -29,14 +30,14 @@ export async function POST(req: Request) {
           subject: "Verify Email",
           html: sendSignupToken({
             token: email_data.token,
-            site_url: email_data.redirect_to,
+            site_url,
             name: (user?.user_metadata as any)?.full_name || user.email,
           }),
         });
         return NextResponse.json({}, { status: 200 });
 
       case "reset_password":
-        const resetPasswordLink = `${email_data.redirect_to}/auth/reset-password?token=${email_data.token}`;
+        const resetPasswordLink = `${site_url}/auth/confirm?token=${email_data.token}&token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&redirectTo=${email_data.redirect_to}/auth/reset-password?email=${user?.email}`;
         await resend.emails.send({
           from: "Support <no-reply@updates.isubscribe.ng>",
           to: [user.email],
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
         return NextResponse.json({}, { status: 200 });
 
       case "recovery":
-        const recoveryLink = `${email_data.redirect_to}/auth/reset-password?token=${email_data.token}&token_hash=${email_data.token_hash}`;
+        const recoveryLink = `${site_url}/auth/confirm?token=${email_data.token}&token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&redirectTo=${email_data.redirect_to}/auth/reset-password?email=${user?.email}`;
         await resend.emails.send({
           from: "Support <no-reply@updates.isubscribe.ng>",
           to: [user.email],
