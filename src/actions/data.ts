@@ -16,6 +16,7 @@ import { Networks, PaymentMethod } from "@/types/networks";
 import { buyData as buyVTPassData } from '@/lib/vtpass/services'
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
 import { isNullOrUndefined } from "util";
+import { updateWallet } from "./utils";
 
 
 interface ProcessData_N3T {
@@ -117,6 +118,38 @@ export const processData_n3t = async ({
         }
     }
 
+    // const updateWallet = async (retries = 3) => {
+    //     try {
+    //         const [walletUpdate, cashbackUpdate] = await Promise.all([
+    //             updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
+    //             updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
+    //         ])
+            
+    //         return { walletUpdate, cashbackUpdate }
+    //     } catch (error) {
+    //         if (retries > 0) {
+    //             await new Promise(resolve => setTimeout(resolve, 1000))
+    //             return updateWallet(retries - 1)
+    //         }
+    //         throw error
+    //     }
+    // }
+
+    const { walletUpdate: { 
+        data: _walletBalance, error:_balanceError 
+    }, cashbackUpdate: {
+        data: _cashbackBalance, error:_cashbackBalanceError
+    } } = await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount)
+
+    if (_balanceError || _cashbackBalanceError) {
+        return {
+            error: {
+                message: `Failed to initiate transaction at this time, please try again.`
+            },
+            data: null
+        }
+    }
+
     const { data, error } = await buyData({
         "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
         bypass: false,
@@ -127,87 +160,7 @@ export const processData_n3t = async ({
 
     console.log(data)
 
-    if (error || (data?.status === 'fail')) {
-
-        meta_data = {
-            ...meta_data,
-            transId: data?.transid ?? null,
-            dataQty: payload?.Data ?? 0,
-            unitCashback: cashbackPrice,
-            unitPrice: price,
-            description: data?.message,
-            planType: data?.plan_type || '',
-            status: 'failed',
-            transaction_id: data?.["request-id"],
-            commission,
-            phone
-        }
-        
-        const { data: _insertHistory } = await insertTransactionHistory({
-            description: `Data subscription for ${phone} failed.`,
-            status: 'failed', 
-            title: 'Data Subscription',
-            type: EVENT_TYPE.data_topup,
-            meta_data: JSON.stringify(meta_data),
-            user: profile?.id!,
-            amount: meta_data.unitPrice,
-            provider: 'n3t',
-            request_id: data?.['request-id'],
-            commission: meta_data.commission,
-        })
-
-        const match = data?.message?.includes('Insufficient')
-
-        if (match) {
-            return {
-                error: {
-                    message: 'This service provider is temporarily unavailable, please try again later.'
-                },
-                data: null
-            }
-        }
-
-        return {
-            error: {
-                message: data?.message ?? 'Data subscription failed. Please try again.'
-            },
-            data: null
-        }
-    }
-
     if (data?.status === 'success') {
-
-        const updateWallet = async (retries = 3) => {
-            try {
-                const [walletUpdate, cashbackUpdate] = await Promise.all([
-                    updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
-                    updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
-                ])
-                
-                return { walletUpdate, cashbackUpdate }
-            } catch (error) {
-                if (retries > 0) {
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    return updateWallet(retries - 1)
-                }
-                throw error
-            }
-        }
-
-        const { walletUpdate: { 
-            data: _walletBalance, error:_balanceError 
-        }, cashbackUpdate: {
-            data: _cashbackBalance, error:_cashbackBalanceError
-        } } = await updateWallet()
-
-        if (_balanceError || _cashbackBalanceError) {
-            return {
-                error: {
-                    message: `Failed to initiate transaction at this time, please try again.`
-                },
-                data: null
-            }
-        }
 
         let meta_data: AirtimeDataMetadata = {
             dataQty: payload?.Data ?? 0,
@@ -250,7 +203,58 @@ export const processData_n3t = async ({
             },
             error: null
         }
+    }
+
+    if (error || (data?.status === 'fail')) {
+
+        await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount, true)
+
+        meta_data = {
+            ...meta_data,
+            transId: data?.transid ?? null,
+            dataQty: payload?.Data ?? 0,
+            unitCashback: cashbackPrice,
+            unitPrice: price,
+            description: data?.message,
+            planType: data?.plan_type || '',
+            status: 'failed',
+            transaction_id: data?.["request-id"],
+            commission,
+            phone
+        }
+        
+        const { data: _insertHistory } = await insertTransactionHistory({
+            description: `Data subscription for ${phone} failed.`,
+            status: 'failed', 
+            title: 'Data Subscription',
+            type: EVENT_TYPE.data_topup,
+            meta_data: JSON.stringify(meta_data),
+            user: profile?.id!,
+            amount: meta_data.unitPrice,
+            provider: 'n3t',
+            request_id: data?.['request-id'],
+            commission: meta_data.commission,
+        })
+
+        const match = data?.message?.includes('Insufficient')
+
+        if (match) {
+            return {
+                error: {
+                    message: 'This service provider is temporarily unavailable, please try again later.'
+                },
+                data: null
+            }
+        }
+
+        return {
+            error: {
+                message: `${data?.message ?? 'Data subscription failed. Please try again.'}`
+            },
+            data: null
+        }
     } else {
+        
         return {
             error: {
                 message: `An attempt to initiate this transaction failed for unknown reasons, please try again.`
