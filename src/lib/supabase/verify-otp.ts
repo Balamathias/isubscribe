@@ -12,6 +12,7 @@ export async function verifyOtp(payload:any) {
   })
 
   if (error) {
+    console.log(error)
     return { error: error.message };
   }
 

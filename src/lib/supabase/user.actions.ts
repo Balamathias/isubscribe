@@ -95,6 +95,7 @@ export const updateAuthUser = async (password: string, metadata?: Record<string,
     const {data,error} = await supabase.auth.updateUser({
         password,
     })
+    console.error(error)
     if (error) throw error
     return { data }
 }

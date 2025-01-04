@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const wh = new Webhook(hookSecret);
 
     const { user, email_data } = wh.verify(payload, headers) as SupabaseAuthResponse;
+    console.log("user: ", user, "data: ", email_data)
 
     switch (email_data.email_action_type) {
       case "signup":
