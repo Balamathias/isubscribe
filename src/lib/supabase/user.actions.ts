@@ -94,7 +94,10 @@ export const updateAuthUser = async (password: string, metadata?: Record<string,
     const supabase = createClient()
     const {data,error} = await supabase.auth.updateUser({
         password,
+        email: metadata?.email,
+        
     })
+    console.error(error)
     if (error) throw error
     return { data }
 }
@@ -179,7 +182,7 @@ export const sendResetPinOTP = async () => {
         if (error) throw new Error(`Error storing OTP: ${error.message}`);
     }
 
-    sendOtpEmail(user?.email!, validOTP?.otp!, user?.email!)
+    sendOtpEmail(user?.email!, validOTP?.otp!, user?.user_metadata?.full_name || user?.email!)
 };
 
 export const resetPin = async (newPin: string) => {

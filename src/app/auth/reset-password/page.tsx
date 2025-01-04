@@ -6,7 +6,7 @@ const ResetPasswordPage = ({searchParams}: { searchParams: {[key: string]: strin
     const urlParams = new URLSearchParams(searchParams)
     const email = urlParams.get('email')
   return (
-    <WidthWrapper className="min-h-screen justify-center items-center px-2 md:px-6">
+    <WidthWrapper className="min-h-screen flex-1 justify-center items-center px-2 md:px-6 bg-background/80 w-full">
         <ResetPasswordComponent email={email!} />
     </WidthWrapper>
   )

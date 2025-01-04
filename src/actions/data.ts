@@ -16,6 +16,7 @@ import { Networks, PaymentMethod } from "@/types/networks";
 import { buyData as buyVTPassData } from '@/lib/vtpass/services'
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
 import { isNullOrUndefined } from "util";
+import { updateWallet } from "./utils";
 
 
 interface ProcessData_N3T {
