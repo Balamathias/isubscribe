@@ -27,14 +27,18 @@ const ForgotPassword = () => {
         } finally {setIsPending(false)}
    }
   return (
-    <div className='bg-violet-50/80 dark:bg-background'>
+    <div className='bg-violet-50/80 dark:bg-background/70'>
         <WidthWrapper className="min-h-screen items-center justify-center">
-            <Card className="flex flex-col p-5 py-6 drop-shadow-md shadow-lg border-none">
-                <h1 className="text-xl md:text-2xl text-primary py-2.5">Forgot password</h1>
+            <Card className="flex flex-col p-5 py-6 shadow-none border-none w-full md:max-w-[500px]">
+                <h1 className="text-xl md:text-2xl py-2.5">Forgot password</h1>
                 <Label className="text-sm py-2" htmlFor='email'>Enter your email address to reset your password.</Label>
                 <form className="flex flex-col gap-3" onSubmit={handle}>
                     <CustomInput type="email" onChange={(e) => setEmail(e.target.value)} name="email" placeholder="Email address" required id='email' Icon={LucideMail}/>
-                    <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Reset Password'}</Button>
+                    <Button 
+                        type="submit" 
+                        disabled={isPending}
+                        className='mt-2 w-full rounded-lg bg-gradient-to-tr from-violet-600 to-pink-600 text-white' 
+                        size={'lg'}>{isPending ? 'Processing...' : 'Reset Password'}</Button>
                 </form>
             </Card>
         </WidthWrapper>

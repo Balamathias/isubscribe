@@ -114,14 +114,14 @@ export const getUser = async (id?: string, useCache: boolean = false) => {
         const { data: { user } } = await getCurrentUser()
         ID = user?.id
     }
-    if (!ID) return { data: null, error: new Error('User not found') }
+    if (!ID) return { data: null, error: ('User not found') }
 
     if (useCache) {
         const cacheKey = `user:${ID}`
         try {
             const cachedUser = await redisIO.get(cacheKey)
             if (cachedUser) {
-                return { data: JSON.parse(cachedUser) as Tables<'profile'>, error: null }
+                return { data: JSON.parse(cachedUser || '{}') as Tables<'profile'>, error: null }
             }
         } catch (error) {
             console.error('Redis cache error:', error)

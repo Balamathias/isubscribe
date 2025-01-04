@@ -50,11 +50,11 @@ export default function ResetPasswordComponent({ email }: { email: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="max-w-sm border-none shadow-lg drop-shadow-lg w-full min-w-max md:w-[450px]">
+    <form onSubmit={handleSubmit} className="max-sm:w-full max-md:flex-1">
+      <Card className="w-full md:w-[500px] border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-2xl py-1 text-primary">Reset Password</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl py-1 font-normal">Reset Password</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Enter a new password for your account: <b>{email}</b>.
           </CardDescription>
         </CardHeader>
@@ -83,7 +83,7 @@ export default function ResetPasswordComponent({ email }: { email: string }) {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2">
-          <Button className="w-full rounded-lg" size={'lg'} disabled={isPending}>{isPending ? 'Processing...' : 'Reset'}</Button>
+          <Button className="w-full rounded-lg bg-gradient-to-tr from-violet-600 to-pink-600 data-[disabled:true]:opacity-70" size={'lg'} disabled={isPending}>{isPending ? 'Processing...' : 'Reset'}</Button>
         </CardFooter>
       </Card>
     </form>
