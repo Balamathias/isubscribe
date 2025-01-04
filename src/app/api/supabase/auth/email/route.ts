@@ -48,6 +48,19 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({}, { status: 200 });
 
+      case "recovery":
+        const recoveryLink = `${email_data.site_url}/auth/reset-password?token=${email_data.token}&token_hash=${email_data.token_hash}`;
+        await resend.emails.send({
+          from: "Support <no-reply@updates.isubscribe.ng>",
+          to: [user.email],
+          subject: "Reset Your Password",
+          text: sendResetPasswordEmail({
+            resetLink: recoveryLink,
+            name: (user?.user_metadata as any)?.full_name || user.email,
+          }),
+        });
+        return NextResponse.json({}, { status: 200 });
+
       default:
         return NextResponse.json({ error: "Invalid email action type" }, { status: 400 });
     }

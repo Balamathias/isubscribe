@@ -45,7 +45,7 @@ type EmailData = {
     token: string;
     token_hash: string;
     redirect_to: string;
-    email_action_type: "signup" | "login" | "reset_password";
+    email_action_type: "signup" | "login" | "reset_password" | "recovery";
     site_url: string;
     token_new: string;
     token_hash_new: string;
