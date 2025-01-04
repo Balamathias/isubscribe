@@ -49,8 +49,6 @@ export async function POST(req: Request) {
         });
         return NextResponse.json({}, { status: 200 });
 
-        // https://youoemwgqrmvpjfcvzua.supabase.co/auth/v1/verify?token=pkce_8bacdf3439799e9dc2a56a257a120e2a04cc14efddd545854fc18e33&type=recovery&redirect_to=https%3A%2F%2Fisubscribe.ng%2Fauth%2Fcallback%3Fnext%3D%2Fauth%2Freset-password
-
       case "recovery":
         const recoveryLink = `${email_data?.site_url}/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${email_data?.redirect_to}/auth/callback?next=/auth/reset-password?email=${user?.email}`;
         await resend.emails.send({
