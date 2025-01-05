@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import { getCurrentUser } from "./user.actions";
 import { upsertWallet } from "./wallets";
 import { deallocateAccount, getReservedAccount } from "../monnify/actions";
-import { redisIO } from '../redis'
+import { redis } from '../redis'
 
 const generateReference = () => {
     const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -119,9 +119,9 @@ export const getUser = async (id?: string, useCache: boolean = false) => {
     if (useCache) {
         const cacheKey = `user:${ID}`
         try {
-            const cachedUser = await redisIO.get(cacheKey)
+            const cachedUser = await redis.get<Tables<'profile'>>(cacheKey)
             if (cachedUser) {
-                return { data: JSON.parse(cachedUser || '{}') as Tables<'profile'>, error: null }
+                return { data: cachedUser, error: null }
             }
         } catch (error) {
             console.error('Redis cache error:', error)
@@ -135,7 +135,7 @@ export const getUser = async (id?: string, useCache: boolean = false) => {
     if (useCache && data) {
         try {
             const cacheKey = `user:${ID}`
-            await redisIO.set(cacheKey, JSON.stringify(data), 'EX', 300)
+            await redis.set(cacheKey, JSON.stringify(data), { ex: 300 })
         } catch (error) {
             console.error('Redis cache set error:', error)
         }

@@ -5,6 +5,8 @@ import SubDataProvider from '@/providers/data/sub-data-provider'
 import { Metadata } from 'next'
 import React from 'react'
 
+export const runtime = "edge"
+
 export const metadata: Metadata = {
   title: 'Airtime | isubscribe',
   description: 'Buy airtime from your favourite network provider with ease. Get started today with isubscribe! Airtime purchase on isubscribe just got easier... Grab it without a waste of time.',

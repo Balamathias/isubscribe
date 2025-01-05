@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { supabaseKey, supabaseURL } from '@/lib/supabase'
 
 export async function GET(request: Request) {
@@ -11,19 +12,22 @@ export async function GET(request: Request) {
 
   if (code) {
     const cookieStore = cookies();
-    const supabase = createServerClient(supabaseURL!, supabaseKey!, {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
+    const supabase = createServerClient(
+      createClient(supabaseURL!, supabaseKey!),
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            cookieStore.set({ name, value, ...options });
+          },
+          remove(name: string, options: CookieOptions) {
+            cookieStore.delete({ name, ...options });
+          },
         },
-        set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.delete({ name, ...options });
-        },
-      },
-    });
+      }
+    );
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 

@@ -1,6 +1,6 @@
 'use server'
 
-import { redisIO } from '@/lib/redis';
+import { redis } from '@/lib/redis';
 import { Networks } from '@/types/networks'
 
 interface PhoneNumberInfo {
@@ -25,9 +25,9 @@ const URL = 'https://api.veriphone.io/v2/verify'
 
 export const verifyNumber = async (phone: string): Promise<Networks | undefined> => {
     try {
-        const cached = await redisIO.get(`phone:${phone}`)
+        const cached = await redis.get(`phone:${phone}`)
         if (cached) {
-            const data = JSON.parse(cached) as PhoneNumberInfo
+            const data = cached as PhoneNumberInfo
             const carrier = data?.carrier as 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'
             return carrier.toLowerCase() as Networks
         }
@@ -40,7 +40,7 @@ export const verifyNumber = async (phone: string): Promise<Networks | undefined>
 
         const data = await req.json() as PhoneNumberInfo
 
-        await redisIO.set(`phone:${phone}`, JSON.stringify(data))
+        await redis.set(`phone:${phone}`, JSON.stringify(data))
 
         const carrier = data?.carrier as 'MTN' | 'GLO' | 'AIRTEL' | '9MOBILE'
 

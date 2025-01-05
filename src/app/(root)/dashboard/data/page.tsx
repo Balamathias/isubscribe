@@ -5,6 +5,10 @@ import { Metadata } from 'next'
 import React from 'react'
 
 import { getUser } from '@/lib/supabase/accounts'
+
+export const runtime = 'edge'
+
+
 export const metadata: Metadata = {
   title: 'Buy Data | isubscribe',
   description: 'Buy data from your favourite network provider with ease. Get started today with isubscribe... DO this in a few clicks!',
