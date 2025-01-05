@@ -30,7 +30,7 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
           <title>Reset Password</title>
         </Head>
         <body className="bg-foreground text-white min-h-screen rounded-lg">
-          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full flex flex-col gap-y-4">
+          <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full space-y-4">
             <a href={process.env.NEXT_PUBLIC_SITE_URL} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row">
               <Zap /> <span>isubscribe</span>
             </a>
