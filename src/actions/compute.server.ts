@@ -13,7 +13,10 @@ export const computeServerTransaction = async ({
   const price = (payload.price)
   const cashbackPrice = (payload.cashback!)
 
-  const commission: number = ((payload?.interest ?? 0) - cashbackPrice) - (price * 0.0161) /** @description: 1.5% monnify charges */
+  let commission: number = 0
+
+  if (payload.interest)
+    commission = ((payload?.interest ?? 0) - cashbackPrice) - (price * 0.0161) /** @description: 1.61% monnify charges */
 
   if (!wallet?.balance) {
       return {

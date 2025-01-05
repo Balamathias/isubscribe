@@ -30,3 +30,25 @@ export const updateWallet = async (
         throw error; // Throw error after retries exhausted
     }
 };
+
+
+
+
+
+
+// const updateWallet = async (retries = 3) => {
+//     try {
+//         const [walletUpdate, cashbackUpdate] = await Promise.all([
+//             updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
+//             updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
+//         ])
+        
+//         return { walletUpdate, cashbackUpdate }
+//     } catch (error) {
+//         if (retries > 0) {
+//             await new Promise(resolve => setTimeout(resolve, 1000))
+//             return updateWallet(retries - 1)
+//         }
+//         throw error
+//     }
+// }  

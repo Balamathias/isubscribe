@@ -88,36 +88,37 @@ export const processData_n3t = async ({
     currentNetwork
 }: ProcessData_N3T) => {
 
-    try {
-        const { data: profile } = await getUser(undefined, true)
+    const { data: profile } = await getUser(undefined, true)
 
-        const { data: values, error: computeError } = await computeServerTransaction({
-            payload: {
-                price: priceToInteger(payload.Price),
-                cashback: priceToInteger(payload.CashBack),
-                method: payload.method,
-                interest: payload?.commission
-            },
-        })
+    const { data: values, error: computeError } = await computeServerTransaction({
+        payload: {
+            price: priceToInteger(payload.Price),
+            cashback: priceToInteger(payload.CashBack),
+            method: payload.method,
+            interest: payload?.commission
+        },
+    })
+
     
-        
-        if (computeError || !values) return {
+    if (computeError || !values) return {
+        error: {
+            message: computeError || 'An unknown error has occured, please try again.'
+        },
+        data: null
+    }
+
+    const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
+
+    if (!profile) {
+        return {
             error: {
-                message: computeError || 'An unknown error has occured, please try again.'
+                message: 'Failed to initiate transaction, please try again.'
             },
             data: null
         }
-    
-        const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
-    
-        if (!profile) {
-            return {
-                error: {
-                    message: 'Failed to initiate transaction, please try again.'
-                },
-                data: null
-            }
-        }
+    }
+
+    try {
     
         const { data, error } = await buyData({
             "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
@@ -129,8 +130,70 @@ export const processData_n3t = async ({
     
         console.log(data)
     
-        if (error || (data?.status === 'fail')) {
+        if (data?.status === 'success' || data?.status === 'pending') {
     
+            let meta_data: AirtimeDataMetadata = {
+                dataQty: payload?.Data ?? 0,
+                duration: null,
+                network: currentNetwork,
+                transId: data?.transid ?? null,
+                unitCashback: cashbackPrice,
+                unitPrice: price,
+                description: data?.message,
+                planType: data?.plan_type,
+                phone,
+                status: data?.status === 'success' ? 'success' : 'pending',
+                transaction_id: data?.["request-id"],
+                commission
+            }
+    
+            const [
+                { walletUpdate: { 
+                    data: _walletBalance, error:_balanceError 
+                }, cashbackUpdate: {
+                    data: _cashbackBalance, error:_cashbackBalanceError
+                } },
+                { data: _insertHistory }, _] = await Promise.all([
+                await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
+
+                await insertTransactionHistory({
+                    description: `Data subscription`,
+                    status: data?.status === 'success' ? 'success' : 'pending',
+                    title: 'Data Subscription',
+                    type: EVENT_TYPE.data_topup,
+                    meta_data: JSON.stringify(meta_data),
+                    user: profile?.id!,
+                    amount: price,
+                    provider: 'n3t',
+                    commission,
+                    request_id: data?.["request-id"]
+                }),
+        
+                await saveCashbackHistory({ amount: cashbackPrice })
+            ])
+
+            if (_balanceError || _cashbackBalanceError) {
+                return {
+                    error: {
+                        message: `Failed to charge wallet, please stay tuned for updates.`
+                    },
+                    data: null
+                }
+            }
+    
+            return {
+                data,
+                extra: {
+                    historyId: _insertHistory?.id,
+                    cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
+                    cashbackPrice,
+                    status: data?.status as 'success' | 'pending'
+                },
+                error: null
+            }
+        }
+    
+        if (error || (data?.status === 'fail')) {    
             meta_data = {
                 ...meta_data,
                 transId: data?.transid ?? null,
@@ -175,84 +238,6 @@ export const processData_n3t = async ({
                 },
                 data: null
             }
-        }
-    
-        if (data?.status === 'success' || data?.status === 'pending') {
-    
-            const updateWallet = async (retries = 3) => {
-                try {
-                    const [walletUpdate, cashbackUpdate] = await Promise.all([
-                        updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
-                        updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
-                    ])
-                    
-                    return { walletUpdate, cashbackUpdate }
-                } catch (error) {
-                    if (retries > 0) {
-                        await new Promise(resolve => setTimeout(resolve, 1000))
-                        return updateWallet(retries - 1)
-                    }
-                    throw error
-                }
-            }
-    
-            const { walletUpdate: { 
-                data: _walletBalance, error:_balanceError 
-            }, cashbackUpdate: {
-                data: _cashbackBalance, error:_cashbackBalanceError
-            } } = await updateWallet()
-    
-            if (_balanceError || _cashbackBalanceError) {
-                return {
-                    error: {
-                        message: `Failed to initiate transaction at this time, please try again.`
-                    },
-                    data: null
-                }
-            }
-    
-            let meta_data: AirtimeDataMetadata = {
-                dataQty: payload?.Data ?? 0,
-                duration: null,
-                network: currentNetwork,
-                transId: data?.transid ?? null,
-                unitCashback: cashbackPrice,
-                unitPrice: price,
-                description: data?.message,
-                planType: data?.plan_type,
-                phone,
-                status: data?.status === 'success' ? 'success' : 'pending',
-                transaction_id: data?.["request-id"],
-                commission
-            }
-    
-            const [{ data: _insertHistory }, _] = await Promise.all([
-                await insertTransactionHistory({
-                    description: `Data subscription`,
-                    status: data?.status === 'success' ? 'success' : 'pending',
-                    title: 'Data Subscription',
-                    type: EVENT_TYPE.data_topup,
-                    meta_data: JSON.stringify(meta_data),
-                    user: profile?.id!,
-                    amount: price,
-                    provider: 'n3t',
-                    commission,
-                    request_id: data?.["request-id"]
-                }),
-        
-                await saveCashbackHistory({ amount: cashbackPrice })
-            ])
-    
-            return {
-                data,
-                extra: {
-                    historyId: _insertHistory?.id,
-                    cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
-                    cashbackPrice,
-                    status: data?.status as 'success' | 'pending'
-                },
-                error: null
-            }
         } else {
             return {
                 error: {
@@ -282,37 +267,37 @@ export const processData_VTPass = async ({
     variation_code
 }: ProcessData_VTPass) => {
 
-    try {
-        const { data: profile } = await getUser(undefined, true)
+    const { data: profile } = await getUser(undefined, true)
 
-        const { data: values, error: computeError } = await computeServerTransaction({
-            payload: {
-                price: payload.price,
-                cashback: payload.cashback,
-                method: payload.method,
-                interest: payload?.commission
-            },
-        })
+    const { data: values, error: computeError } = await computeServerTransaction({
+        payload: {
+            price: payload.price,
+            cashback: payload.cashback,
+            method: payload.method,
+            interest: payload?.commission
+        },
+    })
 
-        
-        if (computeError || !values) return {
+    
+    if (computeError || !values) return {
+        error: {
+            message: computeError || 'An unknown error has occured, please try again.'
+        },
+        data: null
+    }
+
+    const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
+
+    if (!profile) {
+        return {
             error: {
-                message: computeError || 'An unknown error has occured, please try again.'
+                message: 'Failed to initiate transaction, please try again.'
             },
             data: null
         }
+    }
 
-        const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
-
-        if (!profile) {
-            return {
-                error: {
-                    message: 'Failed to initiate transaction, please try again.'
-                },
-                data: null
-            }
-        }
-
+    try {
         const reqId = generateRequestId()
 
         const res = await buyVTPassData({
@@ -325,106 +310,18 @@ export const processData_VTPass = async ({
         })
 
         switch (res?.code) {
-            case undefined:
-                await saveDataErrorHistory('An unknown error has occured, please try again.', 
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: 'An unknown error has occured, please try again.',
-                    },
-                    data: null
-                }
-            
-            case RESPONSE_CODES.TIME_NOT_CORRECT.code:
-                await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message,
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: RESPONSE_CODES.TIME_NOT_CORRECT.message
-                    },
-                    data: null
-                }
 
-            case RESPONSE_CODES.TRANSACTION_FAILED.code:
-                await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message,
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: RESPONSE_CODES.TRANSACTION_FAILED.message
-                    },
-                    data: null
-                }
-
-            case RESPONSE_CODES.NO_PRODUCT_VARIATION.code:
-                await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message,
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: RESPONSE_CODES.NO_PRODUCT_VARIATION.message
-                    },
-                    data: null
-                }
-
-            case RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code:
-                await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message,
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message
-                    },
-                    data: null
-                }
+            case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:      
                 
-            case RESPONSE_CODES.LOW_WALLET_BALANCE.code:
-                await saveDataErrorHistory(RESPONSE_CODES.LOW_WALLET_BALANCE.message,
-                    {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.LOW_WALLET_BALANCE.message}, price, mobile: phone}
-                )
-                return {
-                    error: {
-                        message: RESPONSE_CODES.LOW_WALLET_BALANCE.message
-                    },
-                    data: null
-                }
+                const [
+                    { walletUpdate: { 
+                        data: _walletBalance, error:_balanceError 
+                    }, cashbackUpdate: {
+                        data: _cashbackBalance, error:_cashbackBalanceError
+                    } },
+                    { data: _insertHistory }, _] = await Promise.all([
+                    await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
 
-            case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:
-                const updateWallet = async (retries = 3) => {
-                    try {
-                        const [walletUpdate, cashbackUpdate] = await Promise.all([
-                            updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
-                            updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
-                        ])
-                        
-                        return { walletUpdate, cashbackUpdate }
-                    } catch (error) {
-                        if (retries > 0) {
-                            await new Promise(resolve => setTimeout(resolve, 1000))
-                            return updateWallet(retries - 1)
-                        }
-                        throw error
-                    }
-                }
-        
-                const { walletUpdate: { 
-                    data: _walletBalance, error:_balanceError 
-                }, cashbackUpdate: {
-                    data: _cashbackBalance, error:_cashbackBalanceError
-                } } = await updateWallet()
-        
-                if (_balanceError || _cashbackBalanceError) {
-                    return {
-                        error: {
-                            message: `Failed to initiate transaction at this time, please try again.`
-                        },
-                        data: null
-                    }
-                }
-
-                const [{ data: _insertHistory }, _] = await Promise.all([
                     await insertTransactionHistory({
                         description: `Data subscription topped-up for ${phone} successfully.`,
                         status: 'success',
@@ -441,6 +338,15 @@ export const processData_VTPass = async ({
                     await saveCashbackHistory({ amount: cashbackPrice })
                 ])
 
+                if (_balanceError || _cashbackBalanceError) {
+                    return {
+                        error: {
+                            message: `Failed to initiate transaction at this time, please try again.`
+                        },
+                        data: null
+                    }
+                }
+
                 return {
                     data: {
                         message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
@@ -453,6 +359,84 @@ export const processData_VTPass = async ({
                     error: null
                 }
 
+            case undefined:
+                Promise.all([
+                    await saveDataErrorHistory('An unknown error has occured, please try again.', 
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
+                    ),
+                ])
+                return {
+                    error: {
+                        message: 'An unknown error has occured, please try again.',
+                    },
+                    data: null
+                }
+            
+            case RESPONSE_CODES.TIME_NOT_CORRECT.code:
+                Promise.all([
+                    await saveDataErrorHistory(RESPONSE_CODES.TIME_NOT_CORRECT.message,
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TIME_NOT_CORRECT.message}, price, mobile: phone}
+                    )
+                ])
+                return {
+                    error: {
+                        message: RESPONSE_CODES.TIME_NOT_CORRECT.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.TRANSACTION_FAILED.code:
+                Promise.all([
+                    await saveDataErrorHistory(RESPONSE_CODES.TRANSACTION_FAILED.message,
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.TRANSACTION_FAILED.message}, price, mobile: phone}
+                    )
+                ])
+                return {
+                    error: {
+                        message: RESPONSE_CODES.TRANSACTION_FAILED.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.NO_PRODUCT_VARIATION.code:
+                Promise.all([
+                    await saveDataErrorHistory(RESPONSE_CODES.NO_PRODUCT_VARIATION.message,
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.NO_PRODUCT_VARIATION.message}, price, mobile: phone}
+                    )
+                ])
+                return {
+                    error: {
+                        message: RESPONSE_CODES.NO_PRODUCT_VARIATION.message
+                    },
+                    data: null
+                }
+
+            case RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.code:
+                Promise.all([
+                    await saveDataErrorHistory(RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message,
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message}, price, mobile: phone}
+                    )
+                ])
+                return {
+                    error: {
+                        message: RESPONSE_CODES.PRODUCT_DOES_NOT_EXIST.message
+                    },
+                    data: null
+                }
+                
+            case RESPONSE_CODES.LOW_WALLET_BALANCE.code:
+                Promise.all([
+                    await saveDataErrorHistory(RESPONSE_CODES.LOW_WALLET_BALANCE.message,
+                        {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: res?.response_description || RESPONSE_CODES.LOW_WALLET_BALANCE.message}, price, mobile: phone}
+                    )
+                ])
+                return {
+                    error: {
+                        message: RESPONSE_CODES.LOW_WALLET_BALANCE.message
+                    },
+                    data: null
+                }
+
             default: 
                 return {
                     error: {
@@ -463,6 +447,7 @@ export const processData_VTPass = async ({
         }
     } catch (error: any) {
         console.error(error)
+        await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount)
         return {
             error: {
                 message: error?.message || `An attempt to initiate this transaction failed for unknown reasons, please try again.`

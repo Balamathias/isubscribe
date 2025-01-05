@@ -14,6 +14,7 @@ import { Networks, PaymentMethod } from "@/types/networks";
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
 import { buyAirtime } from "@/lib/vtpass/services";
 import { VTPassAirtimeTransactionRequest } from "@/lib/vtpass";
+import { updateWallet } from "./utils";
 
 interface ProcessAirtime_VTPass {
     phone: string;
@@ -37,9 +38,10 @@ export const processAirtime_VTPass = async ({
     serviceID,
 }: ProcessAirtime_VTPass) => {
 
+    
     try {
         const { data: profile } = await getUser(undefined, true)
-
+    
         const { data: values, error: computeError } = await computeServerTransaction({
             payload: {
                 price: payload.price,
@@ -80,6 +82,56 @@ export const processAirtime_VTPass = async ({
     
     
         switch (res?.code) {
+
+            case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:            
+
+                const [
+                    { walletUpdate: { 
+                        data: _walletBalance, error:_balanceError 
+                    }, cashbackUpdate: {
+                        data: _cashbackBalance, error:_cashbackBalanceError
+                    } },
+                    { data: _insertHistory }, _] = await Promise.all([
+                    await updateWallet(profile?.id!, balance, deductableAmount, cashbackBalance),
+
+                    await insertTransactionHistory({
+                        description: `Airtime subscription topped-up for ${phone} successfully.`,
+                        status: 'success',
+                        title: 'Airtime Subscription.',
+                        email: null,
+                        meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
+                        updated_at: null,
+                        user: profile?.id!,
+                        amount: price,
+                        provider: 'vtpass',
+                        type: EVENT_TYPE.airtime_topup,
+                        commission: res?.content?.transactions?.commission || commission,
+                    }),
+            
+                    await saveCashbackHistory({ amount: cashbackPrice })
+                ])
+
+                if (_balanceError || _cashbackBalanceError) {
+                    return {
+                        error: {
+                            message: `Failed to charge wallet, stay tuned for transaction updates.`
+                        },
+                        data: null
+                    }
+                }
+
+                return {
+                    data: {
+                        message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
+                    },
+                    extra: {
+                        historyId: _insertHistory?.id,
+                        cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
+                        cashbackPrice,
+                    },
+                    error: null
+                }
+                
             case undefined:
                 await saveDataErrorHistory('An unknown error has occured, please try again.', 
                     {profiledId: profile?.id, meta_data: {...meta_data, transId: res?.requestId, status: 'failed', description: undefined}, price, mobile: phone}
@@ -136,69 +188,6 @@ export const processAirtime_VTPass = async ({
                         message: RESPONSE_CODES.LOW_WALLET_BALANCE.message
                     },
                     data: null
-                }
-    
-            case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:
-                const updateWallet = async (retries = 3) => {
-                    try {
-                        const [walletUpdate, cashbackUpdate] = await Promise.all([
-                            updateWalletBalanceByUser(profile?.id!, (balance - deductableAmount)),
-                            updateCashbackBalanceByUser(profile?.id!, cashbackBalance)
-                        ])
-                        
-                        return { walletUpdate, cashbackUpdate }
-                    } catch (error) {
-                        if (retries > 0) {
-                            await new Promise(resolve => setTimeout(resolve, 1000))
-                            return updateWallet(retries - 1)
-                        }
-                        throw error
-                    }
-                }
-        
-                const { walletUpdate: { 
-                    data: _walletBalance, error:_balanceError 
-                }, cashbackUpdate: {
-                    data: _cashbackBalance, error:_cashbackBalanceError
-                } } = await updateWallet()
-        
-                if (_balanceError || _cashbackBalanceError) {
-                    return {
-                        error: {
-                            message: `Failed to initiate transaction at this time, please try again.`
-                        },
-                        data: null
-                    }
-                }
-    
-                const [{ data: _insertHistory }, _] = await Promise.all([
-                    await insertTransactionHistory({
-                        description: `Airtime subscription topped-up for ${phone} successfully.`,
-                        status: 'success',
-                        title: 'Airtime Subscription.',
-                        email: null,
-                        meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'success', description: res?.response_description}),
-                        updated_at: null,
-                        user: profile?.id!,
-                        amount: price,
-                        provider: 'vtpass',
-                        type: EVENT_TYPE.airtime_topup,
-                        commission: res?.content?.transactions?.commission || commission,
-                    }),
-            
-                    await saveCashbackHistory({ amount: cashbackPrice })
-                ])
-    
-                return {
-                    data: {
-                        message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
-                    },
-                    extra: {
-                        historyId: _insertHistory?.id,
-                        cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
-                        cashbackPrice,
-                    },
-                    error: null
                 }
     
             default: 

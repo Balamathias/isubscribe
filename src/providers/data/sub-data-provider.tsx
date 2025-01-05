@@ -122,7 +122,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                     Price: (payload.Price),
                     CashBack: (payload.CashBack),
                     method: payload.method,
-                    commission: 0, // payload?.commission
+                    commission: payload?.commission,
                     Data: payload?.Data
                 },
                 data_plan: payload.Plan_ID,
