@@ -44,7 +44,7 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
               <div className="text">
                 <a
                   href={resetLink}
-                  className="inline-block bg-accent text-black px-6 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500/80 cursor-pointer transition-colors w-full text-center"
+                  className="inline-block bg-accent text-black px-6 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500/80 cursor-pointer transition-colors text-center"
                 >
                   Reset Password
                 </a>
