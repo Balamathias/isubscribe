@@ -28,12 +28,15 @@ export const computeServerTransaction = async ({
   let balance = wallet?.balance ?? 0.00
   let deductableAmount = 0.00
   
-  let cashbackBalance = wallet?.cashback_balance ?? 0.00
+  let cashbackBalance = wallet?.cashback_balance
   
   if (payload?.method === 'wallet') {
       balance = wallet?.balance ?? 0.00
       deductableAmount = price
-      cashbackBalance += cashbackPrice
+
+      if (cashbackBalance)
+        cashbackBalance += cashbackPrice
+
       if (balance < 0 || balance < price) {
         return {
           error: "Insufficient wallet balance, please fund your wallet!",
@@ -61,11 +64,11 @@ export const computeServerTransaction = async ({
   
   return { 
       data: {
-        balance, 
-        cashbackBalance, 
+        balance: balance > 0 ? balance : 0, 
+        cashbackBalance: Number(cashbackBalance) > 0 ?  Number(cashbackBalance) : 0, 
         cashbackPrice, 
         deductableAmount,
-        price, 
+        price: price > 0 ? price : 0, 
         commission: commission < 0 ? 0 : commission,
       },
       error: null

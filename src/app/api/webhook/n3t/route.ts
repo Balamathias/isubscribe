@@ -1,5 +1,6 @@
 import { RequestId } from "@/@types/id"
 import { WebhookResponse_N3T } from "@/@types/webhooks"
+import { AirtimeDataMetadata } from "@/types/airtime-data"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
@@ -102,6 +103,19 @@ export const POST = async (req: Request, res: Response) => {
                 await supabase.from('wallet')
                     .update({ balance: (userWallet?.data?.balance ?? 0) + (parseInt(amount))})
                     .eq('user', userId)
+
+                const metadata: AirtimeDataMetadata = {
+                    transId: response?.["request-id"],
+                    transaction_id: transaction.id?.toString(),
+                    status: transaction.status,
+                    network,
+                    dataQty: dataAmt,
+                    duration: null,
+                    phone,
+                    planType: null,
+                    unitCashback: null,
+                    unitPrice: Number(amount)
+                }
     
                 await supabase.from('history')
                     .insert({
@@ -115,15 +129,7 @@ export const POST = async (req: Request, res: Response) => {
                         request_id: `${reqId}_${userId}_${amount}_${network}_${phone}_${dataAmt}_${commission}`,
                         transaction_id: reqId,
                         user: userId,
-                        meta_data: {
-                            transId: response?.["request-id"],
-                            original_transaction: transaction.id,
-                            original_status: transaction.status,
-                            original_amount: transaction.amount,
-                            network,
-                            dataQty: dataAmt,
-    
-                        }
+                        meta_data: JSON.stringify(metadata)
                     })
             }
             
