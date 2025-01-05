@@ -29,7 +29,7 @@ const SendSignupToken = ({ token, name, site_url }: Props) => {
         <Head>
           <title>Sign Up Confirmation</title>
         </Head>
-        <body className="bg-foreground text-white min-h-screen rounded-lg">
+        <body className="bg-foreground text-white rounded-lg">
           <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full space-y-4">
             <a href={site_url} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row">
               <Zap /> <span>isubscribe</span>
