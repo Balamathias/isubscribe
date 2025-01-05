@@ -15,10 +15,29 @@ const localPoppins = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "isubscribe",
-  description: "A round-trip Virtual Top up platform for all your utility bills. Buy amazing data plans, airtime and electricity and earn bonuses",
+  title: "isubscribe Nigeria - Your One-Stop VTU Platform for Utility Bills & Airtime",
+  description: "Nigeria's trusted platform for instant utility bill payments, data plans, airtime recharge, electricity bills, and TV subscriptions. Earn cashback rewards on every transaction.",
+  keywords: "VTU, airtime recharge, data plans, utility bills, Nigeria, mobile top-up, bill payment, cashback rewards, electricity bills, TV subscription",
   openGraph: {
-    images: ['/badge.png']
+    title: "isubscribe Nigeria - Your One-Stop VTU Platform",
+    description: "Instantly pay bills, buy data plans & airtime with cashback rewards",
+    images: ['/badge.png'],
+    type: "website",
+    locale: "en_NG",
+    siteName: "isubscribe Nigeria"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "isubscribe Nigeria - Your One-Stop VTU Platform",
+    description: "Instantly pay bills, buy data plans & airtime with cashback rewards",
+    images: ['/badge.png'],
+  },
+  alternates: {
+    canonical: "https://isubscribe.ng"
+  },
+  robots: {
+    index: true,
+    follow: true
   }
 };
 
