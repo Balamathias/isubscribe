@@ -8,14 +8,11 @@ import { AirtimeDataMetadata } from "@/types/airtime-data";
 import { getUser } from "@/lib/supabase/accounts";
 import { DATA_MB_PER_NAIRA } from "@/lib/utils";
 import { formatDataAmount } from "@/lib/utils";
-import { updateCashbackBalanceByUser } from "@/lib/supabase/wallets";
-import { updateWalletBalanceByUser } from "@/lib/supabase/wallets";
 import { priceToInteger } from "@/funcs/priceToNumber";
 import { computeServerTransaction } from "./compute.server";
 import { Networks, PaymentMethod } from "@/types/networks";
 import { buyData as buyVTPassData } from '@/lib/vtpass/services'
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
-import { isNullOrUndefined } from "util";
 import { updateWallet } from "./utils";
 
 
@@ -128,7 +125,7 @@ export const processData_n3t = async ({
             phone,
         })
     
-        console.log(data)
+        console.log({data, values, payload})
     
         if (data?.status === 'success' || data?.status === 'pending') {
     
@@ -148,10 +145,7 @@ export const processData_n3t = async ({
             }
     
             const [
-                { walletUpdate: { 
-                    data: _walletBalance, error:_balanceError 
-                }, cashbackUpdate: {
-                    data: _cashbackBalance, error:_cashbackBalanceError
+                { walletUpdate: {error:_balanceError 
                 } },
                 { data: _insertHistory }, _] = await Promise.all([
                 await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
@@ -172,7 +166,7 @@ export const processData_n3t = async ({
                 await saveCashbackHistory({ amount: cashbackPrice })
             ])
 
-            if (_balanceError || _cashbackBalanceError) {
+            if (_balanceError) {
                 return {
                     error: {
                         message: `Failed to charge wallet, please stay tuned for updates.`
@@ -315,9 +309,7 @@ export const processData_VTPass = async ({
                 
                 const [
                     { walletUpdate: { 
-                        data: _walletBalance, error:_balanceError 
-                    }, cashbackUpdate: {
-                        data: _cashbackBalance, error:_cashbackBalanceError
+                        error:_balanceError 
                     } },
                     { data: _insertHistory }, _] = await Promise.all([
                     await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
@@ -338,7 +330,7 @@ export const processData_VTPass = async ({
                     await saveCashbackHistory({ amount: cashbackPrice })
                 ])
 
-                if (_balanceError || _cashbackBalanceError) {
+                if (_balanceError) {
                     return {
                         error: {
                             message: `Failed to initiate transaction at this time, please try again.`

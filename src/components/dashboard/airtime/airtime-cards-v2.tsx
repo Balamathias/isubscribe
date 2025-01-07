@@ -180,7 +180,7 @@ const AirtimeCards = () => {
             {
                 profile ? (
                     <Button 
-                        className={cn('rounded-full mt-4', {
+                        className={cn('rounded-lg mt-4 bg-gradient-to-r from-violet-600 to-pink-600', {
                             'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
                         })}
 
@@ -195,7 +195,7 @@ const AirtimeCards = () => {
                         message='Please sign in to buy airtime'
                         trigger={
                             <Button 
-                                className={cn('rounded-full mt-4', {
+                                className={cn('rounded-lg mt-4 bg-gradient-to-r from-violet-600 to-pink-600', {
                                     'opacity-50 cursor-not-allowed': AMOUNT_OUT_OF_RANGE
                                 })}
                             >

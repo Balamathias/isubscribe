@@ -60,7 +60,8 @@ export const processAirtime_VTPass = async ({
         }
     
         const { balance, cashbackBalance, cashbackPrice, deductableAmount, price, commission } = values
-    
+        console.log({values, payload})
+
         if (!profile) {
             return {
                 error: {
@@ -87,12 +88,10 @@ export const processAirtime_VTPass = async ({
 
                 const [
                     { walletUpdate: { 
-                        data: _walletBalance, error:_balanceError 
-                    }, cashbackUpdate: {
-                        data: _cashbackBalance, error:_cashbackBalanceError
-                    } },
+                        error:_balanceError 
+                    }},
                     { data: _insertHistory }, _] = await Promise.all([
-                    await updateWallet(profile?.id!, balance, deductableAmount, cashbackBalance),
+                    await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
 
                     await insertTransactionHistory({
                         description: `Airtime subscription topped-up for ${phone} successfully.`,
@@ -111,7 +110,7 @@ export const processAirtime_VTPass = async ({
                     await saveCashbackHistory({ amount: cashbackPrice })
                 ])
 
-                if (_balanceError || _cashbackBalanceError) {
+                if (_balanceError) {
                     return {
                         error: {
                             message: `Failed to charge wallet, stay tuned for transaction updates.`

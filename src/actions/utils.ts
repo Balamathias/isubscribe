@@ -1,6 +1,6 @@
-import { updateWalletBalanceByUser } from "@/lib/supabase/wallets";
+"use server"
 
-import { updateCashbackBalanceByUser } from "@/lib/supabase/wallets";
+import { updateWalletBalanceByUser } from "@/lib/supabase/wallets";
 
 export const updateWallet = async (
     userId: string,
@@ -11,23 +11,21 @@ export const updateWallet = async (
     retries: number = 3
 ): Promise<any> => {
     try {
-        // Determine the operation based on whether it's a refund or deduction
         const newBalance = isRefund
-            ? balance + deductableAmount // Refund increases balance
-            : balance - deductableAmount; // Deduction decreases balance
+            ? balance + deductableAmount
+            : balance - deductableAmount;
 
-        const [walletUpdate, cashbackUpdate] = await Promise.all([
-            updateWalletBalanceByUser(userId, newBalance),
-            updateCashbackBalanceByUser(userId, cashbackBalance) // Assume cashback balance is unaffected by refunds/deductions
+        const [walletUpdate] = await Promise.all([
+            updateWalletBalanceByUser(userId, newBalance, cashbackBalance),
         ]);
 
-        return { walletUpdate, cashbackUpdate };
+        return { walletUpdate };
     } catch (error) {
         if (retries > 0) {
-            await new Promise((resolve) => setTimeout(resolve, 500)); // Retry after delay
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             return updateWallet(userId, balance, cashbackBalance, deductableAmount, isRefund, retries - 1);
         }
-        throw error; // Throw error after retries exhausted
+        throw error;
     }
 };
 
