@@ -7,7 +7,7 @@ export const getRatings = async (limit=10) => {
   const { data, error } = await supabase.from('ratings')
   .select('*, profile (full_name, email, avatar)')
   .order('created_at', { ascending: false })
-  // .eq('status', 'published')
+  .eq('status', 'published')
   .limit(limit)
 
   if (error) {
