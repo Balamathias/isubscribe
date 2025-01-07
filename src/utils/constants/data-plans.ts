@@ -1,10 +1,10 @@
 export const mtn_data = [
     {"Plan_ID": 1, "Type": "SME", "Data": "500MB", "Price": "₦140.00", "Duration": "30 Days", "CashBack": "₦1.00", "profit":"₦10", "commission": 10},
-    {"Plan_ID": 69, "Type": "GIFTING", "Data": "500MB", "Price": "₦140.00", "Duration": "30 Days", "CashBack": "₦1.00", "profit":"₦80", "commission": 20},
-    {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦145.00", "Duration": "30 Days", "CashBack": "₦1.00","profit":"₦44", "commission": 15},
+    // {"Plan_ID": 69, "Type": "GIFTING", "Data": "500MB", "Price": "₦140.00", "Duration": "30 Days", "CashBack": "₦1.00", "profit":"₦80", "commission": 20},
+    // {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦145.00", "Duration": "30 Days", "CashBack": "₦1.00","profit":"₦44", "commission": 15},
     {"Plan_ID": 2, "Type": "SME", "Data": "1GB", "Price": "₦285.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦24", "commission": 25},
     {"Plan_ID": 78, "Type": "GIFTING", "Data": "1GB", "Price": "₦245.00", "Duration": "1 Day", "CashBack": "₦1.00", "profit":"₦80", "commission": 20},
-    {"Plan_ID": 68, "Type": "GIFTING", "Data": "1GB", "Price": "₦270.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30},
+    // {"Plan_ID": 68, "Type": "GIFTING", "Data": "1GB", "Price": "₦270.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30},
     {"Plan_ID": 51, "Type": "COOPERATE GIFTING", "Data": "1GB", "Price": "₦290.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30},
     {"Plan_ID": 3, "Type": "SME", "Data": "2GB", "Price": "₦570.00", "Duration": "30 Days", "CashBack": "₦4.00", "profit":"₦50", "commission": 50},
     {"Plan_ID": 67, "Type": "GIFTING", "Data": "2GB", "Price": "₦530.00", "Duration": "30 Days", "CashBack": "₦4.00", "profit":"₦50", "commission": 50},
