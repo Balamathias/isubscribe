@@ -1,37 +1,37 @@
 export const formatDate = (date: string) => {
-    const d = new Date(date)
-    return d.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-    })
-}
-
-export const formatDateTime = (date: string) => {
-    const d = new Date(date)
-    return d.toLocaleString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-    })
-}
-
-export const formatTimestamp = (date: string) => { 
-    // Create date object in UTC
-    const dateObj = new Date(date);
-    
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = String(dateObj.getFullYear()).slice(-2)
-
-    let hours = dateObj.getHours();
-    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12 || 12
-
-    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-};
+    const d = new Date(date);
+    return new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'Africa/Lagos',
+    }).format(d);
+  };
+  
+  export const formatDateTime = (date: string) => {
+    const d = new Date(date);
+    return new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+      timeZone: 'Africa/Lagos',
+    }).format(d);
+  };
+  
+  export const formatTimestamp = (date: string) => {
+    const d = new Date(date);
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Africa/Lagos',
+    });
+    return formatter.format(d);
+  };
+  
