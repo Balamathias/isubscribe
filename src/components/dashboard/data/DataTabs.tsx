@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useMemo, lazy, Suspense, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, lazy, Suspense, useEffect, useRef } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
@@ -13,7 +13,7 @@ import { parseNigerianPhoneNumber } from '@/lib/utils'
 import useContacts from '@/hooks/use-contacts'
 import { Tables } from '@/types/database'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
-import Beneficiaries from '../beneficiaries'
+import BeneficiariesDropdown from '../beneficiaries'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -37,6 +37,7 @@ const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
     const { contact, importContact } = useContacts()
 
     const [openSuggestions, setOpenSuggestions] = useState(false)
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleVerifyNumber = useCallback(async () => {
         if (mobileNumber.length === 11) {
@@ -76,19 +77,26 @@ const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
     return (
         <div className='flex-col gap-y-6 md:gap-y-10 max-sm:w-[90vw] w-[600px]'>
             <div className='flex flex-col gap-y-4 py-4'>
-                <div className='flex flex-row gap-x-2 items-center'>
+                <div className='flex flex-row gap-x-2 items-center relative'>
                     <SelectNetworkDropdown />
-                    <CustomInput 
-                        placeholder='Your Phone Number'
-                        value={mobileNumber}
-                        defaultValue={profile?.phone || ''}
-                        onChange={handleNumberChange}
-                        name='phone'
-                        className='shadow-sm'
-                        // onFocus={() => setOpenSuggestions(true)}
-                        // onBlur={() => setOpenSuggestions(false)}
-                    />
-                    <Beneficiaries open={openSuggestions} setOpen={setOpenSuggestions} />
+                    <div className='flex relative flex-col w-full'>
+                        <CustomInput
+                            placeholder="Your Phone Number"
+                            value={mobileNumber}
+                            defaultValue={profile?.phone || ""}
+                            onChange={handleNumberChange}
+                            name="phone"
+                            className="shadow-sm"
+                            onFocus={() => setOpenSuggestions(true)}
+                            ref={inputRef}
+                        />
+                        <BeneficiariesDropdown
+                            isOpen={openSuggestions}
+                            setIsOpen={setOpenSuggestions}
+                            inputRef={inputRef}
+                        />
+                    </div>
+
                     <Button 
                         variant={'ghost'} 
                         size={'icon'}
