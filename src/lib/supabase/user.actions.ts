@@ -92,13 +92,13 @@ export const resetPasswordForEmail = async (email: string) => {
 
 export const updateAuthUser = async (password: string, metadata?: Record<string, string>) => {
     const supabase = createClient()
+
     const {data,error} = await supabase.auth.updateUser({
         password,
         email: metadata?.email,
-        
     })
     console.error(error)
-    if (error) throw error
+    if (error) return { error: { message: error?.message } }
     return { data }
 }
 
@@ -129,7 +129,14 @@ export const validateResetPasswordOTP = async (token: string, email: string) => 
 
     const { data, error } = await supabase.auth.verifyOtp({token, email, type: 'recovery'})
 
-    return { data, error: { message: error?.message } }
+    console.error(error, token, email)
+
+    
+    if (error || !data) return { data: null, error: { message: error?.message } }
+    
+    await supabase.auth.setSession({ access_token: data?.session?.access_token!, refresh_token: data?.session?.refresh_token! })
+
+    return { data, error: null }
 }
 
 const getValidOtpForUser = async (userId: string) => {

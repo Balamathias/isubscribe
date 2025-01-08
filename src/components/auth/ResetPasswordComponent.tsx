@@ -32,16 +32,19 @@ export default function ResetPasswordComponent({ email }: { email: string }) {
     try {
       setIsPending(true)
 
-      const { data } = await updateAuthUser(fields.password)
+      const { data, error } = await updateAuthUser(fields.password)
+
+      if (error) return toast.error(error?.message)
+
       if (data) {
         toast.success('Password reset successful', {description: 'You have successfully reset your password.'})
         return router.replace('/auth/password-reset-success')
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
       setIsPending(false)
-      toast.error("An error occured.", {
+      toast.error(error?.message, {
         description: "Sorry, we could not reset your password by this time.",
       })
     } finally {

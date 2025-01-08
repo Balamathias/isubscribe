@@ -5,7 +5,6 @@ import { getCurrentUser } from '@/lib/supabase/user.actions'
 const authRoutes = [
   '/sign-in',
   '/sign-up',
-  '/auth/reset-password',
   '/auth/forgot-password',
   '/auth/verification-email-sent'
 ];
