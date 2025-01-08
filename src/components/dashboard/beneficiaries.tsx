@@ -24,7 +24,7 @@ const Beneficiaries = ({ open, setOpen }: Props) => {
   if (!beneficiaries?.length) return null
   
   return (
-    <Popover defaultOpen={open}>
+    <Popover open={open} onOpenChange={setOpen}>
       
       <PopoverContent className="w-80">
         <div className="flex flex-col gap-y-2">
