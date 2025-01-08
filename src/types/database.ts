@@ -15,8 +15,10 @@ export type Database = {
           account_number: string | null
           bank_code: string | null
           bank_name: string | null
+          bvn: string | null
           created_at: string
           id: number
+          nin: string | null
           reference: string | null
           status: string | null
           updated_at: string | null
@@ -27,8 +29,10 @@ export type Database = {
           account_number?: string | null
           bank_code?: string | null
           bank_name?: string | null
+          bvn?: string | null
           created_at?: string
           id?: number
+          nin?: string | null
           reference?: string | null
           status?: string | null
           updated_at?: string | null
@@ -39,8 +43,10 @@ export type Database = {
           account_number?: string | null
           bank_code?: string | null
           bank_name?: string | null
+          bvn?: string | null
           created_at?: string
           id?: number
+          nin?: string | null
           reference?: string | null
           status?: string | null
           updated_at?: string | null
@@ -51,6 +57,41 @@ export type Database = {
             foreignKeyName: "account_user_fkey"
             columns: ["user"]
             isOneToOne: true
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      beneficiaries: {
+        Row: {
+          created_at: string
+          frequency: number | null
+          id: string
+          last_used: string | null
+          phone: string | null
+          user: string | null
+        }
+        Insert: {
+          created_at?: string
+          frequency?: number | null
+          id?: string
+          last_used?: string | null
+          phone?: string | null
+          user?: string | null
+        }
+        Update: {
+          created_at?: string
+          frequency?: number | null
+          id?: string
+          last_used?: string | null
+          phone?: string | null
+          user?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "beneficiaries_user_fkey"
+            columns: ["user"]
+            isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["id"]
           },

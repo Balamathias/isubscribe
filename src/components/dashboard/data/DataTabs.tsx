@@ -13,6 +13,7 @@ import { parseNigerianPhoneNumber } from '@/lib/utils'
 import useContacts from '@/hooks/use-contacts'
 import { Tables } from '@/types/database'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
+import Beneficiaries from '../beneficiaries'
 
 const DataNetworkCard = lazy(() => import('./DataNetworkCard'))
 const DailyData = lazy(() => import('./DailyData'))
@@ -34,6 +35,8 @@ const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const { mobileNumber, setMobileNumber, setCurrentNetwork } = useNetwork()
     const { contact, importContact } = useContacts()
+
+    const [openSuggestions, setOpenSuggestions] = useState(false)
 
     const handleVerifyNumber = useCallback(async () => {
         if (mobileNumber.length === 11) {
@@ -82,7 +85,10 @@ const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
                         onChange={handleNumberChange}
                         name='phone'
                         className='shadow-sm'
+                        // onFocus={() => setOpenSuggestions(true)}
+                        // onBlur={() => setOpenSuggestions(false)}
                     />
+                    <Beneficiaries open={openSuggestions} setOpen={setOpenSuggestions} />
                     <Button 
                         variant={'ghost'} 
                         size={'icon'}

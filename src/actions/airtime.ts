@@ -15,6 +15,7 @@ import { RESPONSE_CODES } from "@/utils/constants/response-codes";
 import { buyAirtime } from "@/lib/vtpass/services";
 import { VTPassAirtimeTransactionRequest } from "@/lib/vtpass";
 import { updateWallet } from "./utils";
+import { saveBeneficiary } from "@/lib/supabase/beneficiaries";
 
 interface ProcessAirtime_VTPass {
     phone: string;
@@ -80,6 +81,8 @@ export const processAirtime_VTPass = async ({
             serviceID,
             amount: payload.price
         })
+
+        saveBeneficiary(phone)
     
     
         switch (res?.code) {

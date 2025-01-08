@@ -14,6 +14,7 @@ import { Networks, PaymentMethod } from "@/types/networks";
 import { buyData as buyVTPassData } from '@/lib/vtpass/services'
 import { RESPONSE_CODES } from "@/utils/constants/response-codes";
 import { updateWallet } from "./utils";
+import { saveBeneficiary } from "@/lib/supabase/beneficiaries";
 
 
 interface ProcessData_N3T {
@@ -114,6 +115,8 @@ export const processData_n3t = async ({
             data: null
         }
     }
+
+    saveBeneficiary(phone)
 
     try {
     
@@ -290,6 +293,8 @@ export const processData_VTPass = async ({
             data: null
         }
     }
+
+    saveBeneficiary(phone)
 
     try {
         const reqId = generateRequestId()

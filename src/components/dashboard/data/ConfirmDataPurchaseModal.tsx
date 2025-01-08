@@ -16,6 +16,7 @@ import { toast } from 'sonner'
 import Empty from '@/components/Empty'
 import { useSearchParams } from 'next/navigation'
 import useBiometricAuth from '@/hooks/use-biometric-auth'
+import { useInsertBeneficiary } from '@/lib/react-query/funcs/beneficiaries'
 
 interface ConfirmDataPurchaseModalProps {
     open: boolean
@@ -45,6 +46,7 @@ const ConfirmDataPurchaseModal = ({
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim'
     const { isEnabled, authenticate } = useBiometricAuth()
+    const { mutate: saveBeneficiary } = useInsertBeneficiary()
 
     const handleAuth = useCallback(async () => {
         try {

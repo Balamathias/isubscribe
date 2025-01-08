@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     console.log("user: ", user, "data: ", email_data)
 
     switch (email_data.email_action_type) {
+
       case "signup":
         await resend.emails.send({
           from: "Welcome <no-reply@updates.isubscribe.ng>",
@@ -37,15 +38,16 @@ export async function POST(req: Request) {
         return NextResponse.json({}, { status: 200 });
 
       case "recovery":
-        // const recoveryLink = `${email_data?.site_url}/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${email_data?.redirect_to}/auth/callback?next=/auth/reset-password?email=${user?.email}`;
-        // redirect_to=${encodeURIComponent(`${site_url}/auth/callback?next=/auth/reset-password&email=${user.email}`)}`;
-        const recoveryLink = `${site_url}/auth/confirm?token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&next=/auth/reset-password&email=${encodeURIComponent(user.email)}`
+
+        /** Should be handled differently following the fact that I switched to OTP instead of verification link */
+
+        // const recoveryLink = `${site_url}/auth/confirm?token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&next=/auth/reset-password&email=${encodeURIComponent(user.email)}`
         await resend.emails.send({
           from: "isubscribe <no-reply@updates.isubscribe.ng>",
           to: [user.email],
           subject: "Reset Your Password",
           html: sendResetPasswordEmail({
-            resetLink: recoveryLink,
+            token: email_data?.token,
             name: (user?.user_metadata as any)?.full_name || user.email,
           }),
         });

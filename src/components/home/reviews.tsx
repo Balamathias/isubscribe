@@ -15,7 +15,7 @@ const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
   return (
     <DynamicSheet
       trigger={trigger || <></>}
-      sheetClassName='overflow-auto !w-[600px]'
+      sheetClassName='rounded-none overflow-auto'
       drawerClassName=''
       title="Reviews"
     >
@@ -34,7 +34,7 @@ const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
         isPending ? (
           <SimpleLoader />
         ) : (
-          <div className='flex flex-col gap-4 h-full overflow-auto max-md:h-[60vh] md:w-[520px]'>
+          <div className='flex flex-col gap-4 h-full overflow-auto max-md:h-[60vh]'>
             <div className="grid grid-cols-1 gap-4 md:gap-5">
               {reviews?.data?.map((review, index) => (
                 <ReviewCard

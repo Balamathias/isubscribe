@@ -2,15 +2,14 @@ import * as React from "react";
 import { Tailwind } from "@react-email/tailwind";
 import { render } from "@react-email/render";
 import Head from "next/head";
-import Logo from "../Logo";
 import { Zap } from "lucide-react";
 
 interface ResetPasswordProps {
-  resetLink: string;
+  token: string;
   name: string;
 }
 
-const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
+const SendResetPasswordEmail = ({ token, name }: ResetPasswordProps) => {
   return (
     <Tailwind
       config={{
@@ -31,23 +30,22 @@ const SendResetPasswordEmail = ({ resetLink, name }: ResetPasswordProps) => {
         </Head>
         <body className="bg-foreground text-white rounded-lg">
           <div className="max-w-md mx-auto my-8 bg-brand text-white rounded-lg shadow-lg p-6 h-full space-y-4">
-            <a href={process.env.NEXT_PUBLIC_SITE_URL} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row">
+            <a href={process.env.NEXT_PUBLIC_SITE_URL} className="flex items-center gap-x-1.5 text-xl font-semibold flex-row text-accent">
               <Zap /> <span>isubscribe</span>
             </a>
             <header className="mb-6">
               <h1 className="text-lg mb-2">Hello, {name}!</h1>
               <p className="text-base text-white">
-                You requested a password reset. Click the button below to reset your password.
+                You requested a password reset OTP. Copy the code below to reset your password.
               </p>
             </header>
             <main>
               <div className="text">
-                <a
-                  href={resetLink}
-                  className="inline-block bg-accent text-black px-6 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500/80 cursor-pointer transition-colors text-center"
+                <span
+                  className="inline-block bg-accent text-white px-6 py-3 rounded-xl font-bold text-lg hover:bg-yellow-500/80 cursor-pointer transition-colors text-center"
                 >
-                  Reset Password
-                </a>
+                  { token }
+                </span>
               </div>
               <p className="text-sm mt-4 text-white">
                 If you {"didn’t"} request this, you can safely ignore this email.

@@ -180,8 +180,37 @@ export const buyTvCable = async (data: VTPassTransactionRequest): Promise<VTPass
     return res.data
 }
 
-
 export const buyElectricity = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
+    const headers = {
+        'api-key': VTPASS_API_KEY!,
+        'secret-key': VTPASS_SECRET_KEY!,
+        'Content-Type': 'application/json'
+    };
+
+    try {
+        const response = await fetch(`${VTPASS_BASE_URL}/pay`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+
+        console.log(response.statusText, response.status);
+
+        if (!response.ok) {
+            throw new Error('Failed to buy data');
+        }
+
+        const responseData: VTPassTransactionResponse = await response.json();
+        console.log(responseData);
+        return responseData;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+
+export const buyElectricity_axios = async (data: VTPassTransactionRequest): Promise<VTPassTransactionResponse | undefined> => {
     const headers = {
         'api-key': VTPASS_API_KEY!,
         'secret-key': VTPASS_SECRET_KEY!,

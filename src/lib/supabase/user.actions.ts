@@ -122,7 +122,14 @@ export const getUserPin = async () => {
     } else {
         return { data: null, pin: null }
     }
+}
 
+export const validateResetPasswordOTP = async (token: string, email: string) => {
+    const supabase = createClient()
+
+    const { data, error } = await supabase.auth.verifyOtp({token, email, type: 'recovery'})
+
+    return { data, error: { message: error?.message } }
 }
 
 const getValidOtpForUser = async (userId: string) => {

@@ -22,5 +22,9 @@ export const RESPONSE_CODES = {
     LOW_WALLET_BALANCE: {
         code: '018',
         message: `This service provider is currently unavailable, please try again later.`
-    }
+    },
+    TRANSACTION_PENDING: {
+        code: '099',
+        message: `This transaction is pending.`
+    },
 } as const

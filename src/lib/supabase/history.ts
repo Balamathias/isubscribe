@@ -67,6 +67,22 @@ export const saveDataErrorHistory = async (msg: string, data: Record<string, any
     })
 }
 
+export const saveElectricityErrorHistory = async (msg: string, data: Record<string, any>) => {
+    const { data: user } = await getUser()
+    const { data: _insertHistory } = await insertTransactionHistory({
+        description: `Meter subscription for ${data?.meterNumber} failed.\n${msg}`,
+        status: 'failed',
+        title: 'Meter Subscription Failed.',
+        type: EVENT_TYPE.meter_topup,
+        email: null,
+        meta_data: JSON.stringify(data?.meta_data),
+        updated_at: null,
+        user: user?.id,
+        amount: data?.price,
+        provider: 'vtpass'
+    })
+}
+
 export const saveAirtimeErrorHistory = async (msg: string, data: Record<string, any>) => {
     const { data: _insertHistory } = await insertTransactionHistory({
         description: `Airtime subscription for ${data?.mobile} failed.\n${msg}`,
