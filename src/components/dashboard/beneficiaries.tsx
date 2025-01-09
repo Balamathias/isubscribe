@@ -45,7 +45,7 @@ const BeneficiariesDropdown = ({ isOpen, setIsOpen, inputRef }: Props) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node) &&
@@ -56,7 +56,12 @@ const BeneficiariesDropdown = ({ isOpen, setIsOpen, inputRef }: Props) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, [isOpen, setIsOpen, inputRef]);
 
   if (!sortedBeneficiaries.length) return null;
@@ -68,12 +73,12 @@ const BeneficiariesDropdown = ({ isOpen, setIsOpen, inputRef }: Props) => {
       </PopoverTrigger>
       <PopoverContent
         ref={dropdownRef}
-        className="absolute z-10 max-h-60 w-[300px] overflow-auto bg-card shadow-lg rounded-xl border-none"
+        className="absolute z-50 max-h-60 w-full md:w-[300px] overflow-auto bg-card shadow-lg rounded-xl border-none"
         sideOffset={4}
         align="start"
         style={{
-          top: inputRef.current?.offsetTop! + inputRef.current?.offsetHeight!,
-          left: inputRef.current?.offsetLeft!,
+          top: inputRef.current?.offsetTop! + inputRef.current?.offsetHeight! || 0,
+          left: inputRef.current?.offsetLeft! || 0,
           position: "absolute",
         }}
       >
