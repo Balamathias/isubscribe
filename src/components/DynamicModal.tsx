@@ -36,7 +36,8 @@ interface DynamicModalProps {
     closeModal?: (open?: boolean) => void,
     showDrawerCancel?: boolean,
     hideDrawerCancel?: boolean,
-    title?: string | React.ReactNode
+    title?: string | React.ReactNode,
+    blurHeader?: boolean
 }
 const DynamicModal = ({
   children, 
@@ -52,7 +53,8 @@ const DynamicModal = ({
   showDrawerCancel=true,
   closeModal,
   title,
-  hideDrawerCancel
+  hideDrawerCancel,
+  blurHeader=false
 }: DynamicModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   if ((isDesktop || dialogOnly) && !drawerOnly) {
@@ -64,7 +66,7 @@ const DynamicModal = ({
         <DialogContent className={cn("max-sm:max-w-[425px] rounded-xl border-none drop-shadow-md shadow-md focus:border-none outline-none focus-within:border-none dark:bg-slate-900", dialogClassName)}>
           {
             title && (
-              <div className='text-muted-foreground'>
+              <div className={cn('text-muted-foreground', blurHeader && 'bg-transparent backdrop-blur')}>
                 {
                   typeof title === 'string' ? (
                     <DialogTitle className='text-center font-semibold'>{title || 'This is a title'}</DialogTitle>
@@ -89,7 +91,7 @@ const DynamicModal = ({
       </DrawerTrigger>
       <DrawerContent className={cn('flex flex-col  flex-1 gap-3 border-none focus:border-none p-4 max-sm:pb-8 outline-none dark:bg-slate-900', drawerClassName)}>
 
-        <DrawerTitle className={cn('bg-transparent flex items-center justify-between', hideDrawerCancel && 'hidden')} asChild>
+        <DrawerTitle className={cn('bg-transparent flex items-center justify-between', hideDrawerCancel && 'hidden', blurHeader && 'bg-transparent backdrop-blur')} asChild>
           <div>
             <DrawerClose asChild>
               <Button variant="ghost" className='rounded-full py-2 bg-secondary/25' size={'icon'}>

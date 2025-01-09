@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { motion } from 'framer-motion'
 import Status from "@/components/status"
@@ -20,6 +22,11 @@ interface MeterTopupProps {
 }
 
 const MeterTopup: React.FC<MeterTopupProps> = ({ data, history }) => {
+
+    const metadata = history?.meta_data as any
+
+    console.log(metadata)
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -52,29 +59,43 @@ const MeterTopup: React.FC<MeterTopupProps> = ({ data, history }) => {
                     <motion.div className='flex items-start justify-between' variants={itemVariants}>
                         <p className='text-muted-foreground basis-2/3'>Meter Number</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                            <p>{data?.meterNumber}</p>
+                            <p>{metadata?.meterNumber}</p>
+                        </div>
+                    </motion.div>
+
+                    <motion.div className='flex items-start justify-between' variants={itemVariants}>
+                        <p className='text-muted-foreground basis-2/3'>Token</p>
+                        <div className='flex flex-col space-y-1 justify-start basis-1/3 font-semibold'>
+                            <p>{metadata?.token}</p>
                         </div>
                     </motion.div>
 
                     <motion.div className='flex items-start justify-between' variants={itemVariants}>
                         <p className='text-muted-foreground basis-2/3'>Distribution Company</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                            <p>{data?.disco}</p>
+                            <p>{metadata?.customerAddress}</p>
                         </div>
                     </motion.div>
 
                     <motion.div className='flex items-start justify-between' variants={itemVariants}>
                         <p className='text-muted-foreground basis-2/3'>Meter Type</p>
                         <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                            <p>{data?.meterType}</p>
+                            <p>{metadata?.meterType}</p>
                         </div>
                     </motion.div>
 
-                    {data?.meterType === 'Prepaid' && data?.units && (
+                    {metadata?.tokenAmount && <motion.div className='flex items-start justify-between' variants={itemVariants}>
+                        <p className='text-muted-foreground basis-2/3'>Token Amount</p>
+                        <div className='flex flex-col space-y-1 justify-start basis-1/3'>
+                            <p>{metadata?.tokenAmount}</p>
+                        </div>
+                    </motion.div>}
+
+                    {metadata?.meterType?.toLowerCase() === 'prepaid' && metadata?.units && (
                         <motion.div className='flex items-start justify-between' variants={itemVariants}>
                             <p className='text-muted-foreground basis-2/3'>Units Purchased</p>
                             <div className='flex flex-col space-y-1 justify-start basis-1/3'>
-                                <p>{data?.units}</p>
+                                <p>{metadata?.units}</p>
                             </div>
                         </motion.div>
                     )}

@@ -18,7 +18,6 @@ interface HistoryDetailProps {
 const HistoryDetail = async ({ history }: HistoryDetailProps) => {
 
   const type = history.type as keyof typeof EVENT_TYPE
-
   
   switch (type) {
       

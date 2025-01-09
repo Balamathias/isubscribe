@@ -59,8 +59,10 @@ export const processElectricity = async (payload: ElectricityPayload) => {
             ...requestPayload as any,
             request_id: generateRequestId()
         })
+
+        console.log(res)
     
-        const metadata = {...res?.content?.transactions, transId: res?.requestId, requestId: res?.requestId}
+        const metadata = {...res, transId: res?.requestId, requestId: res?.requestId, meterNumber: payload?.meterNumber, meterType: payload.variation}
     
         switch (res?.code) {
     
@@ -84,6 +86,7 @@ export const processElectricity = async (payload: ElectricityPayload) => {
                         user: profile?.id!,
                         amount: price,
                         commission: res?.content?.transactions?.commission,
+                        provider: 'vtpass'
                     }),
             
                     cashbackPrice && await saveCashbackHistory({ amount: cashbackPrice })
@@ -100,7 +103,9 @@ export const processElectricity = async (payload: ElectricityPayload) => {
 
                 return {
                     data: {
-                        message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message
+                        message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message,
+                        status: 'success',
+                        token: res?.token || ''
                     },
                     extra: {
                         historyId: _insertSuccessHistory?.id,
@@ -146,7 +151,8 @@ export const processElectricity = async (payload: ElectricityPayload) => {
 
                 return {
                     data: {
-                        message: RESPONSE_CODES.TRANSACTION_PENDING.message
+                        message: RESPONSE_CODES.TRANSACTION_PENDING.message,
+                        status: 'pending'
                     },
                     extra: {
                         historyId: _insertHistory?.id,

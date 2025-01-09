@@ -1,21 +1,14 @@
 "use client"
 
+import { processElectricity } from '@/actions/electricity'
 import CopyButton from '@/components/CopyButton'
 import ShareReciept from '@/components/dashboard/ShareReciept'
 import DynamicModal from '@/components/DynamicModal'
 import { Button } from '@/components/ui/button'
-import { computeTransaction } from '@/funcs/computeTransaction'
-import generateRequestId from '@/funcs/generateRequestId'
-import { priceToInteger } from '@/funcs/priceToNumber'
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
-import { insertTransactionHistory } from '@/lib/supabase/history'
-import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { cn } from '@/lib/utils'
-import { buyElectricity } from '@/lib/vtpass/services'
 import { Tables } from '@/types/database'
 import { PaymentMethod } from '@/types/networks'
 import { SubTvPayload } from '@/types/tv-cable'
-import { EVENT_TYPE } from '@/utils/constants/EVENTS'
 import { LucideCheckCircle2, LucideXCircle, Share, Share2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -52,6 +45,7 @@ const SubTvContext = React.createContext<{
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyElectricity?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
+  historyId: string
 
 }>({
   currentProvider: '',
@@ -78,10 +72,10 @@ const SubTvContext = React.createContext<{
   fundSufficient: false,
   setFundSufficient: () => {},
   handleBuyElectricity: () => {},
+  historyId: ''
 })
 
 const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvProviderProps) => {
-  const { data: wallet, isPending } = useGetWalletBalance()
   const [currentProvider, setCurrentProvider] = React.useState('ikeja-electric')
   const [providerName, setProviderName] = React.useState('Ikeja Electric')
   const [providerImage, setProviderImage] = React.useState('/images/electricity/ikeja.jpeg')
@@ -94,174 +88,67 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
   const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
   const [purchaseFailed, setPurchaseFailed] = React.useState(false)
   const [purchasePending, setPurchasePending] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState<string>('')
-  const [successMessage, setSuccessMessage] = React.useState<string>('')
   const [cableAmount, setCableAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [powerAmount, setPowerAmount] = React.useState('') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
   const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState(false)
-  const [resData, setResData] = useState(null)
+  const [resData, setResData] = useState<string | null>(null)
   const router = useRouter()
+
+  const [historyId, setHistoryId] = useState('')
 
 
 
   const handleBuyElectricity = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
-    // console.log("PPPPPPP", "₦" + payload?.variation_amount + ".00")
-    const billerPayload = {
-      CashBack:payload?.cashBack,
-      Price:"₦" + payload?.variation_amount + ".00",
-      method:payload?.method
-    }
-
-    const requestPayload = {
-      billersCode: meterNumber,
-      phone: mobileNumber,
-      serviceID:currentProvider,
-      variation_code:isPrepaid ? "prepaid" : "postpaid",
-      amount:powerAmount,
-    }
-
-    const values = computeTransaction({
-        payload: {
-            cashback: 0,
-            price: priceToInteger(billerPayload.Price),
-            method: billerPayload.method
-        },
-        wallet: wallet?.data!
-    })
-    if (!values) return
-
-    const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
-
-    // console.log("mb", balance)
-    // console.log("cb", cashbackBalance)
-    // console.log("cp", cashbackPrice)
-    // console.log("dA", deductableAmount)
-    // console.log("p", price)
 
     setCableAmount(payload?.variation_amount)
-    setPurchasing(true)
 
-    const res = await buyElectricity({
-        ...requestPayload as any,
-        request_id: generateRequestId()
-    })
+    try {
+      setPurchasing(true)
 
-    if (!res) return toast.error('Transaction attempt failed!')
-    // const {} = res
-    setResData(res as any)
-
-    console.log("NEPPAAAAA", resData)
-
-    /** if (error) return, @example: You could uncomment this only in edge cases */
-
-    const transRes = res?.content?.transactions
-
-    if ( res?.response_description === "TRANSACTION FAILED"  || transRes?.status === 'failed') {
-      setPurchaseFailed(true)
-      const { data: insertHistory } = await insertTransactionHistory({
-          description: `Meter subscription for ${meterNumber} failed.`,
-          status: 'failed',
-          title: 'Meter Subscription',
-          type: EVENT_TYPE.meter_topup,
-          email: null,
-          meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
-          updated_at: null,
-          user: profile?.id!,
-          amount: price,
+      const {
+        data,
+        error,
+        extra
+      } = await processElectricity({
+        amount: powerAmount,
+        meterNumber: meterNumber,
+        method: payload.method || 'wallet',
+        phone: mobileNumber,
+        price: parseFloat(payload.variation_amount),
+        provider: currentProvider,
+        variation: isPrepaid ? "prepaid" : "postpaid",
+        cashback: 0
       })
+
+      console.log(data)
+
+      if (error && !data) {
+        toast.error(error?.message || 'Transaction attempt failed!')
+      }
+
+      if (data?.status === 'success') {
+        setPurchaseSuccess(true)
+        setResData(data?.token!)
+        toast.success(data?.message)
+      }
+
+      if (data?.status === 'pending') {
+        setPurchasePending(true)
+        toast.warning(data?.message)
+      }
+
+      setHistoryId(extra?.historyId?.toString()!)
+
+    } catch (error) {
+      console.error(error)
+    } finally {
       setPurchasing(false)
       setOpenConfirmPurchaseModal(false)
 
       router.refresh()
-      return
+    }
   }
-
-
-  if (res?.response_description === "TRANSACTION PROCESSING - PENDING" || transRes?.status === 'pending') {
-            
-    const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-        (balance - deductableAmount))
-    if (_balanceError) {
-        await updateWalletBalanceByUser(profile?.id!, 
-            (balance - deductableAmount))
-        return
-    }
-
-    const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-        (cashbackBalance))
-
-    if (_balanceError || _cashbackBalanceError) return
-
-    const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Meter subscription for ${meterNumber}`,
-        status: 'pending',
-        title: 'Meter Subscription',
-        type: EVENT_TYPE.meter_topup,
-        email: null,
-        meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
-        updated_at: null,
-        user: profile?.id!,
-        amount: price
-    })
-
-    router.refresh()
-
-    setPurchasePending(true)
-    /** 
-     * @example: toast.success(`Congratulations!`, {
-        description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-    })
-    */
-    setPurchasing(false)
-    setOpenConfirmPurchaseModal(false)
-
-}
-
-
-
-
-  if (res?.response_description === "TRANSACTION SUCCESSFUL" || transRes?.status === 'delivered') {
-            
-    const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-        (balance - deductableAmount))
-    if (_balanceError) {
-        await updateWalletBalanceByUser(profile?.id!, 
-            (balance - deductableAmount))
-        return
-    }
-
-    const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-        (cashbackBalance))
-
-    if (_balanceError || _cashbackBalanceError) return
-
-    const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Meter subscription for ${meterNumber}`,
-        status: 'success',
-        title: 'Meter Subscription',
-        type: EVENT_TYPE.meter_topup,
-        email: null,
-        meta_data: JSON.stringify({...transRes, transId: res?.requestId, requestId: res?.requestId}),
-        updated_at: null,
-        user: profile?.id!,
-        amount: price
-    })
-
-    router.refresh()
-    // setPurchasePending(false)
-
-    setPurchaseSuccess(true)
-    /** 
-     * @example: toast.success(`Congratulations!`, {
-        description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-    })
-    */
-    setPurchasing(false)
-    setOpenConfirmPurchaseModal(false)
-
-} 
-}
 
   return (
     <SubTvContext.Provider value={{
@@ -288,8 +175,8 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         setProviderName,
         purchasing,
         openConfirmPurchaseModal,
-        setOpenConfirmPurchaseModal
-       
+        setOpenConfirmPurchaseModal,
+        historyId
       }}
     >
        {children}
@@ -303,7 +190,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
                 phoneNumber={mobileNumber}
                 action={action}
                 meterNumber={meterNumber}
-                resData={resData}
+                token={resData!}
                 currentProvider={currentProvider}
             /> 
             <SubPurchaseStatus
@@ -341,23 +228,21 @@ export const useElectricity = () => {
   return React.useContext(SubTvContext)
 }
 
-
-
-
-
-const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNumber, meterNumber, failed, pending, action='electricity', powerAmount, resData}: {
+const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNumber, meterNumber, failed, pending, action='electricity', powerAmount, token}: {
   phoneNumber: string,
   meterNumber:string,
   fullName: string,
   currentProvider: string,
   open: boolean,
-  resData?:any,
+  token?:string,
   closeModal: () => void,
   failed?: boolean,
   pending?: boolean,
   action?: 'tv-cable' | 'electricity' | "education",
   powerAmount?: string | number
 }) => {
+
+  const { historyId } = useElectricity()
   return (
       <DynamicModal
           open={open}
@@ -388,12 +273,12 @@ const SubPurchaseStatus = ({closeModal, fullName, currentProvider, open, phoneNu
                       <div className=' flex flex-col gap-5  max-md:w-[94vw] '>
                        <div className='flex bg-violet-10 border-2 border-dashed dark:bg-secondary w-full self-center px-2 rounded-sm flex-row justify-between items-center justify-cente gap-x-2'>
                         <p className='font-semibol text-muted-foreground '>Meter Token:</p>
-                        <p className='font-[500px]  text-black dark:text-white '> {resData?.token || resData?.Token || resData?.mainToken} </p>
+                        <p className='font-[500px]  text-black dark:text-white '> {token} </p>
                         <div className=' self-end'>
-                        <CopyButton content={resData?.token || resData?.Token || resData?.mainToken} className=' self-en p-1 hover:bg-transparent' />
+                        <CopyButton content={token!} className=' self-en p-1 hover:bg-transparent' />
                         </div>
                        </div>
-                       <ShareReciept freeData={"100MB"} rLink={"#"} sLink={"#"}  />
+                       <ShareReciept freeData={"100MB"} rLink={"#"} sLink={"#"} historyId={historyId} />
                      </div>  
                     )
               }

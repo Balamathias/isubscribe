@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   description: 'Pay for your cable TV subscription with ease. Get started today with isubscribe!',
 }
 
+export const runtime = 'edge'
 
 const ElectricityCablePage = async () => {
   const { data: profile } = await getUser()
-
 
   return (
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 max-md:mt-10 mt-16 max-sm:px-1.5'>

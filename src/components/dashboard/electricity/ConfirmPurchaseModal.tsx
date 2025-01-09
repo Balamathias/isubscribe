@@ -67,12 +67,12 @@ const ConfirmPurchaseModal = ({
         setOpen={setOpen}
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
-        title="Electricity Plan Details"
+        title={`${providerName}-plan details`}
     >
          
         <LoadingSpinner isPending={purchasing} />
         <div className="flex flex-col gap-y-2.5">            
-            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-secondary text-xs md:text-sm'>
+            <div className='flex flex-col gap-y-2 p-3 rounded-lg bg-violet-100 dark:bg-inherit text-xs md:text-sm'>
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Product</p>
                     <p className='flex items-center flex-row gap-x-1'>{providerName}
@@ -130,8 +130,8 @@ const ConfirmPurchaseModal = ({
                     disabled={wallet?.data?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
                 />
             </div>   
-            <ComingSoon 
-                trigger={
+            {/* <ComingSoon 
+                trigger={ */}
                     <Button 
                         className='w-full rounded-xl' 
                         size={'lg'}
@@ -140,8 +140,8 @@ const ConfirmPurchaseModal = ({
                             setProceed(true)
                         }}
                     >Proceed</Button>
-                }
-            />
+                {/* }
+            /> */}
         </div>
     </DynamicModal>
   )

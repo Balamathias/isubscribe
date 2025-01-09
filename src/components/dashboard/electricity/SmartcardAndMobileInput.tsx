@@ -65,22 +65,22 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
     <div className="space-y-5">
       <div className="flex flex-col gap-y-5">
 
-        <div className="flex flex-col gap-y-4">
-          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', isPrepaid && '!border border-primary')} role="button" onClick={() => setIsPrepaid?.(true)}>
+        <Card className="h-20 items-center justify-between py-3 px-2.5 md:px-4 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none">
+          <div className={cn('flex items-center gap-1',)} role="button" onClick={() => setIsPrepaid?.(true)}>
             <span>Prepaid</span>
             <Switch checked={isPrepaid} onCheckedChange={() => setIsPrepaid?.(true)} />
-          </Card>
+          </div>
 
-          <Card className={cn('h-20 items-center justify-between py-3 px-2.5 cursor-pointer hover:opacity-75 hover:transition-all dark:bg-card/60 flex rounded-lg border-none', !isPrepaid && '!border border-primary')} role='button' onClick={() => setIsPrepaid?.(false)}>
+          <div className={cn('flex items-center gap-1',)} role='button' onClick={() => setIsPrepaid?.(false)}>
             <span>Postpaid</span>
             <Switch checked={!isPrepaid} onCheckedChange={() => setIsPrepaid?.(false)} />
-          </Card>
-        </div>
+          </div>
+        </Card>
       </div>
 
       <Card className="p-4 px-2.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
         <div className='flex flex-col gap-y-4 w-full'>
-          <Label className="flex flex-row items-center gap-x-1.5" htmlFor='meter'>
+          <Label className="flex flex-row items-center gap-x-1.5 text-muted-foreground" htmlFor='meter'>
             <Calculator size={20}/>
             <span>Meter Number:</span>
           </Label>
@@ -103,8 +103,8 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
 
         {success && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 justify-center self-start items-center'>
-            <span className="bg-green-600/15 text-green-600 h-10 w-10 rounded-full flex items-center justify-center">
-              <Check size={16} />
+            <span className="bg-green-600/15 text-green-600 h-8 w-8 rounded-full flex items-center justify-center">
+              <Check size={14} />
             </span>
             <span className='text-sm tracking-tighter text-muted-foreground'>{data?.Customer_Name}</span>
           </div>
@@ -112,8 +112,8 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
 
         {error && meterNumber?.length !== 0 && (
           <div className='flex flex-row gap-3 self-start justify-center items-center'>
-            <span className="bg-amber-600/15 text-amber-600 h-10 w-10 rounded-full flex items-center justify-center">
-              <X size={16} />
+            <span className="bg-amber-600/15 text-amber-600 h-8 w-8 rounded-full flex items-center justify-center">
+              <X size={14} />
             </span>
             <span className='text-sm tracking-tighter text-muted-foreground'>{data?.error}</span>
           </div>
@@ -122,7 +122,7 @@ const SmartcardAndMobileInput = ({ profile }: { profile?: Tables<'profile'> | nu
 
       <Card className="p-4 px-2.5 flex flex-col gap-y-3 justify-center w-full rounded-lg shadow-none border-none drop-shadow-none">
         <div className='flex flex-col gap-y-4 w-full'>
-          <Label className="flex flex-row items-center gap-x-1.5" htmlFor='phone'>
+          <Label className="flex flex-row items-center gap-x-1.5 text-muted-foreground" htmlFor='phone'>
             <Phone size={20}/>
             <span>Phone Number:</span>
           </Label>
