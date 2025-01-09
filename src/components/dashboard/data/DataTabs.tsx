@@ -87,7 +87,7 @@ const DataTabs = ({ profile }: { profile?: Tables<'profile'> | null }) => {
                             onChange={handleNumberChange}
                             name="phone"
                             className="shadow-sm"
-                            onFocus={() => setOpenSuggestions(true)}
+                            onFocus={() => {setOpenSuggestions(true)}}
                             ref={inputRef}
                         />
                         <BeneficiariesDropdown
