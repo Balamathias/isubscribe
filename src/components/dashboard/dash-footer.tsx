@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Info, Lock, FileText } from 'lucide-react';
+import { Info, Lock, FileText, LucideMapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const DashFooter = () => {
@@ -49,7 +49,16 @@ const DashFooter = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
           >
-          &copy; {currentYear} isubscibe. All rights reserved.
+          &copy; {currentYear} isubscribe. All rights reserved.
+        </motion.p>
+
+        <motion.p
+          className="mt-3 mb-3 text-xs text-muted-foreground flex items-center gap-x-1.5 flex-wrap"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          >
+          <LucideMapPin /><span>Area 3, Garki, Abuja. +234 915 4029 723, +234 915 4029 724.</span>
         </motion.p>
       </div>
     </motion.footer>

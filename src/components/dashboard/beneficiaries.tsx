@@ -73,7 +73,7 @@ const BeneficiariesDropdown = ({ isOpen, setIsOpen, inputRef }: Props) => {
       </PopoverTrigger>
       <PopoverContent
         ref={dropdownRef}
-        className="absolute z-50 max-h-60 w-full md:w-[300px] overflow-auto bg-card shadow-lg rounded-xl border-none"
+        className="absolute z-50 max-h-60 w-[220px] md:w-[300px] overflow-auto bg-card shadow-lg rounded-xl border-none no-scrollbar"
         sideOffset={4}
         align="start"
         style={{
