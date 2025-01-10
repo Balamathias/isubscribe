@@ -51,7 +51,7 @@ export default function RootLayout({
       <head>
         <meta name="google-site-verification" content="8sxVKkOiQZcmefzduMerO9nrQnbfXwpMUyeStsODBSM" />
       </head>
-      <body className={cn('antialised', process.env.NODE_ENV === 'development' ? localPoppins.className : poppins.className)}>
+      <body className={cn('antialised selection:bg-sky-600/20 selection:text-sky-500', process.env.NODE_ENV === 'development' ? localPoppins.className : poppins.className)}>
         <NextTopLoader 
           showSpinner={false}
           color="violet"
