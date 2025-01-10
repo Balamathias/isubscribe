@@ -4,9 +4,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Info, Lock, FileText, LucideMapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useGetProfile } from '@/lib/react-query/funcs/user';
 
 const DashFooter = () => {
   const currentYear = new Date().getFullYear();
+
+  const { data: user, isPending } = useGetProfile()
+
+  if (user?.data || isPending) return null
 
   return (
     <motion.footer
