@@ -100,6 +100,7 @@ export const POST = async (req: Request) => {
             .update({
                 balance: walletBalance + data?.eventData?.amountPaid,
                 meta_data: JSON.stringify(data?.eventData),
+                updated_at: new Date().toISOString()
             })
             .eq('user', user.id)
 
