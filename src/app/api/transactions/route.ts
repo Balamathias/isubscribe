@@ -5,6 +5,7 @@ import sendEmail from "@/utils/sendMail";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 import { sha512 } from 'js-sha512';
+import { Json } from "@/types/database";
 
 export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
