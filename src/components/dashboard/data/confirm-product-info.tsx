@@ -90,7 +90,7 @@ const ConfirmProductInfo = ({
                         <span className='basis-[20%]'>
                             <AlertTriangle />
                         </span>
-                        <span>Confirm that the receiver of this plan does not owe airtel in anyway as Airtel will not credit the receiver for &#39;{planType}&#39; plan type.</span>
+                        <span>Confirm that the receiver of this plan does not owe airtel in anyway as Airtel will not credit the receiver for &#39;{planType}&#39; plan type. This only happens on airtel {planType} plan.</span>
                     </div>
                 )
             }
