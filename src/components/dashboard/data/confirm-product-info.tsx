@@ -1,5 +1,6 @@
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
+import { AlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -12,7 +13,8 @@ interface ConfirmProductInfoProps {
     cashBack: number,
     image: string,
     title?: string,
-    planName?: string
+    planName?: string,
+    planType?: string
 }
 
 const ConfirmProductInfo = ({
@@ -24,7 +26,8 @@ const ConfirmProductInfo = ({
     cashBack,
     image,
     title,
-    planName
+    planName,
+    planType
 }: ConfirmProductInfoProps) => {
   return (
     <div className="flex flex-col gap-y-2.5 w-full">
@@ -75,6 +78,22 @@ const ConfirmProductInfo = ({
                 <p className='font-semibold text-muted-foreground'>Plan Name</p>
                 <p>{planName}</p>
             </div>}
+
+            {planType && <div className='flex flex-row justify-between items-center gap-x-2'>
+                <p className='font-semibold text-muted-foreground'>Plan Type</p>
+                <p>{planType}</p>
+            </div>}
+
+            {
+                (currentNetwork === 'airtel' && planType === 'GIFTING') && (
+                    <div className='p-4 rounded-xl border border-amber-500 flex items-center justify-center text-amber-500'>
+                        <span className='basis-[20%]'>
+                            <AlertTriangle />
+                        </span>
+                        <span>Confirm that the receiver of this plan does not owe airtel in anyway as Airtel will not credit the receiver for &#39;{planType}&#39; plan type.</span>
+                    </div>
+                )
+            }
         </div>
     </div>
   )

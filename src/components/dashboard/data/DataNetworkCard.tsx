@@ -88,7 +88,7 @@ const DataNetworkCard = () => {
                 setOpen={setOpenConfirmPurchaseModal}
                 dismissible
                 dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
-                title="Plan Information"
+                title={"Plan Information - " + selected?.Type}
             >
                  {purchasing && 
                     <LoadingSpinner isPending={purchasing} />
@@ -105,6 +105,7 @@ const DataNetworkCard = () => {
                                 image={product[currentNetwork].image}
                                 mobileNumber={mobileNumber}
                                 price={priceToInteger(selected.Price || '0.00')}
+                                planType={selected?.Type}
                             />
                         </Suspense>
                     )}
