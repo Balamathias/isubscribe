@@ -138,7 +138,7 @@ const ConfirmDataPurchaseModal = ({
                     className='w-full rounded-xl' 
                     size={'lg'}
                     disabled={
-                        wallet?.balance! < (selected?.amount || 0) && 
+                        paymentMethod === 'wallet' ? wallet?.balance! < (selected?.amount || 0) : 
                         wallet?.cashback_balance! < (selected?.amount || 0)
                     }
                     onClick={handlePurchase}

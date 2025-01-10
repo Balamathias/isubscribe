@@ -130,7 +130,10 @@ const DataNetworkCard = () => {
                     <Button 
                         className='w-full rounded-xl' 
                         size={'lg'}
-                        disabled={wallet?.balance! < priceToInteger(selected?.Price || '0.00')}
+                        disabled={
+                            paymentMethod === 'wallet' ? wallet?.balance! < priceToInteger(selected?.Price || '0.00') : 
+                            wallet?.cashback_balance! < priceToInteger(selected?.Price || '0.00')
+                        }
                         onClick={() => {
                             isEnabled && !error ? handleAuth() : setProceed(true)
                         }}
