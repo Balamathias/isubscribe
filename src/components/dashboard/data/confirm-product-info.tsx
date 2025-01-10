@@ -86,7 +86,7 @@ const ConfirmProductInfo = ({
 
             {
                 (currentNetwork === 'airtel' && planType === 'GIFTING') && (
-                    <div className='p-4 rounded-xl border border-amber-500 flex items-center justify-center text-amber-500'>
+                    <div className='p-4 rounded-xl border border-amber-500 flex items-center justify-center text-amber-500 gap-x-1.5'>
                         <span className='basis-[20%]'>
                             <AlertTriangle />
                         </span>
