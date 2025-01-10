@@ -97,8 +97,8 @@ const SignInComponent = () => {
               <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Sign up'}</Button>
             </form>
             
-            <div className="flex flex-col space-y-2 text-xs">
-              <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline text-primary">Sign In</Link></p>
+            <div className="flex flex-col space-y-2 text-base">
+              <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline dark:text-violet-400 text-primary">Sign In</Link></p>
             </div>
 
             <DynamicModal 

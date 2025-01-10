@@ -16,7 +16,7 @@ const ShareReciept = ({ freeData, historyId: incomingId }: { freeData: string, s
             <span className="text-green-600 rounded-full bg-green-600/20 w-8 h-8 flex items-center justify-center">
               <Share2 size={15} />
             </span>
-            <span className=' text-nowrap max-sm:text-sm'>Share Reciept</span>
+            <span className=' text-nowrap max-sm:text-sm'>View Reciept</span>
         </Link>
         <Feedback 
           trigger={
