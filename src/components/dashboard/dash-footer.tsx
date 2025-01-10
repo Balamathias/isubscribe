@@ -53,12 +53,13 @@ const DashFooter = () => {
         </motion.p>
 
         <motion.p
-          className="mt-3 mb-3 text-xs text-muted-foreground flex items-center gap-x-1.5 flex-wrap"
+          className="mt-3 mb-3 text-xs text-muted-foreground flex items-center gap-x-1.5 flex-wrap flex-col justify-center gap-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
           >
-          <LucideMapPin /><span>Area 3, Garki, Abuja. +234 915 4029 723, +234 915 4029 724.</span>
+          <LucideMapPin />
+          <span>Area 3, Garki, Abuja. <Link href={`tel:+2349154029723`} className='underline'>+234 915 4029 723</Link>, <Link href={`tel:+2349154029724`} className='underline'>+234 915 4029 724</Link>.</span>
         </motion.p>
       </div>
     </motion.footer>
