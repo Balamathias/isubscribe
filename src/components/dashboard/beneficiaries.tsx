@@ -15,6 +15,7 @@ interface Props {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   inputRef: React.RefObject<HTMLInputElement>;
+  setter?: (x: string) => any
 }
 
 const calculateSimilarity = (input: string, target: string): number => {
