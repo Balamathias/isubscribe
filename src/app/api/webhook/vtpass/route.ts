@@ -3,6 +3,8 @@ import { createClient } from "@/utils/supabase/server"
 import { NextResponse } from "next/server"
 import { Resend } from "resend";
 
+export const runtime = 'edge'
+
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export const POST = async (req: Request, res: Response) => {

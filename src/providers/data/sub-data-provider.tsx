@@ -86,7 +86,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
     const [purchaseFailed, setPurchaseFailed] = React.useState(false)
 
     const [errorMessage, setErrorMessage] = React.useState<string>('')
-    const [_successMessage, setSuccessMessage] = React.useState<string>('')
+    const [successMessage, setSuccessMessage] = React.useState<string>('')
     const [dataAmount, setDataAmount] = React.useState('0.00GB') /* @note: could be temporary. I hate too much useStates! */
     const [airtimeAmount, setAirtimeAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
 
@@ -150,7 +150,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             if (data) {
 
-                setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+                setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing isubscribe.')
                 setHistoryId(extra?.historyId)
 
                 router.refresh()
@@ -239,12 +239,18 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             if (data) {
 
-                setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+                if (data?.status === 'success') {
+                    setSuccessMessage(data?.message ?? 'Data subscription successful. Thank you for choosing iSubscribe.')
+                    vibrate('success')
+                } else {
+                    setSuccessMessage(data?.message ?? 'Airtime subscription is pending, We will email you once the transaction is successful, stay tuned.')
+                    vibrate('info')
+                }
+                
                 setHistoryId(extra?.historyId)
-
+                
+                extra?.cashbackPrice && toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
                 router.refresh()
-                toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
-                vibrate('success')
 
                 queryClient.invalidateQueries({
                     queryKey: [QueryKeys.get_wallet]
@@ -323,13 +329,20 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
 
             if (data) {
 
-                setSuccessMessage(data?.message ?? 'Airtime subscription successful. Thank you for choosing isubscribe.')
-                setHistoryId(extra?.historyId)
+                if (data?.status === 'success') {
+                    setSuccessMessage(data?.message ?? 'Airtime subscription successful. Thank you for choosing isubscribe.')
+                    vibrate('success')
+                } else {
+                    setSuccessMessage(data?.message ?? 'Airtime subscription is pending, We will email you once the transaction is successful, stay tuned.')
+                    vibrate('info')
+                }
 
+                setHistoryId(extra?.historyId)
                 router.refresh()
+
                 if (extra?.cashbackPrice)
                     toast.info(`Congratulations! You have received a data bonus of ${formatDataAmount(extra?.cashbackPrice * DATA_MB_PER_NAIRA)}`)
-                vibrate('success')
+                
 
                 queryClient.invalidateQueries({
                     queryKey: [QueryKeys.get_wallet]
@@ -521,6 +534,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 phoneNumber={mobileNumber}
                 action={action}
                 airtimeAmount={airtimeAmount}
+                successMessage={successMessage}
             />
 
             <SubPurchaseStatus

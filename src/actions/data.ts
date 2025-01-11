@@ -356,6 +356,54 @@ export const processData_VTPass = async ({
                     error: null
                 }
 
+            case RESPONSE_CODES.TRANSACTION_PENDING.code:
+
+                const [
+                    { walletUpdate: { 
+                        error: pendingBalanceError 
+                    }},
+                    { data: pendingInsertHistory }] = await Promise.all([
+                    await updateWallet(profile?.id!, balance, cashbackBalance, deductableAmount),
+                    
+                    await insertTransactionHistory({
+                        description: `Data subscription for ${phone} is pending please stay tuned for updates.`,
+                        status: 'pending',
+                        title: 'Data Subscription.',
+                        email: null,
+                        meta_data: JSON.stringify({...meta_data, transId: res?.requestId, status: 'pending', description: res?.response_description}),
+                        updated_at: null,
+                        user: profile?.id!,
+                        amount: price,
+                        provider: 'vtpass',
+                        type: EVENT_TYPE.data_topup,
+                        commission: res?.content?.transactions?.commission || commission,
+                    }),
+            
+                    // cashbackPrice && await saveCashbackHistory({ amount: cashbackPrice })
+                ])
+                
+                if (pendingBalanceError) {
+                    return {
+                        error: {
+                            message: `Failed to charge wallet, stay tuned for transaction updates.`
+                        },
+                        data: null
+                    }
+                }
+
+                return {
+                    data: {
+                        message: pendingInsertHistory?.description ?? RESPONSE_CODES.TRANSACTION_PENDING.message,
+                        status: 'pending'
+                    },
+                    extra: {
+                        historyId: pendingInsertHistory?.id,
+                        cashbackQuantity: formatDataAmount(cashbackPrice * DATA_MB_PER_NAIRA),
+                        cashbackPrice,
+                    },
+                    error: null
+                }
+
             case undefined:
                 Promise.all([
                     await saveDataErrorHistory('An unknown error has occured, please try again.', 
