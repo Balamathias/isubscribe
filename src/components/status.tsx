@@ -22,6 +22,7 @@ const Status = ({ className, status, type = 'text', message=status }: StatusProp
                     'bg-yellow-600/10 text-yellow-600': status === 'pending',
                     'bg-green-600/10 text-green-600': status === 'success',
                     'bg-red-600/10 text-red-600': status === 'failed',
+                    'bg-sky-600/10 text-sky-600': status === 'reversed',
                     'py-2': message && message !== ''
                 }, 
                 className,
@@ -39,6 +40,7 @@ const Status = ({ className, status, type = 'text', message=status }: StatusProp
                     'bg-yellow-600/10 text-yellow-600': status === 'pending',
                     'bg-green-600/10 text-green-600': status === 'success',
                     'bg-red-600/10 text-red-600': status === 'failed',
+                    'bg-sky-600/10 text-sky-600': status === 'reversed',
                 }, 
                 className,
             )
@@ -63,6 +65,7 @@ const Status = ({ className, status, type = 'text', message=status }: StatusProp
                     'bg-yellow-600/10 text-yellow-600': status === 'pending',
                     'bg-green-600/10 text-green-600': status === 'success',
                     'bg-red-600/20 text-red-600': status === 'failed',
+                    'bg-sky-600/10 text-sky-600': status === 'reversed',
                 }, 
                 className,
             )
@@ -75,6 +78,9 @@ const Status = ({ className, status, type = 'text', message=status }: StatusProp
         }
         {
             status === 'failed' && <LucideX size={16} />
+        }
+        {
+            status === 'reversed' && <LucideRefreshCcw size={16} />
         }
     </span>
 )
