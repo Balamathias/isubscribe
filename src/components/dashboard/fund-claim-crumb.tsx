@@ -27,7 +27,7 @@ const FundClaimCrumb = async ({ wallet }: { wallet: Tables<'wallet'> | null }) =
         ): (
           <Button asChild variant={'ghost'} className='text-xs tracking-tight text-violet-50 p-0 rounded-full hover:opacity-70 hover:bg-inherit flex items-center space-x-0.5 md:space-x-1 hover:text-white'>
             <Link href="/sign-in">
-              <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Sign in</span>
+              <span className='text-xs md:text-sm tracking-tighter animate-pulse'>Log in</span>
               <CaretRightIcon className='h-7 w-7' />
             </Link>
           </Button>

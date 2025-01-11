@@ -15,7 +15,7 @@ const MoreActions = async () => {
                 <Link href='/sign-up'>
                     <ActionItem 
                         icon={<UserPlus />}
-                        title='Sign up'
+                        title='Create account'
                         description='Create an account to start using iSubscribe'
                         iconClassName='bg-violet-600/15 text-violet-600'
                         indicator={

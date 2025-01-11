@@ -94,11 +94,11 @@ const SignInComponent = () => {
               <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
               <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
 
-              <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Sign up'}</Button>
+              <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Create Account'}</Button>
             </form>
             
             <div className="flex flex-col space-y-2 text-base">
-              <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline dark:text-violet-400 text-primary">Sign In</Link></p>
+              <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline dark:text-violet-400 text-primary">Log In</Link></p>
             </div>
 
             <DynamicModal 
