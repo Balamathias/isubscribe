@@ -37,14 +37,18 @@ const SignInComponent = () => {
       async function onSubmit(values: z.infer<typeof AuthSchema>) {
         setIsPending(true)
         try {
-            const {status, message} = await signIn({
+            const {status, message, error} = await signIn({
                 email: values.email!,
                 password: values.password!
             })
-            if (status === 200)
+            if (status === 200) {
               toast.success(message)
-            router.push('/dashboard')
-            return
+              return router.push('/dashboard')
+            }
+            
+            if (error) {
+             return toast.error(error?.message)
+            }
         }
         catch (error: any) {
             console.error(error)

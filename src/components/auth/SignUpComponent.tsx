@@ -48,7 +48,7 @@ const SignInComponent = () => {
         }
         setIsPending(true)
         try {
-            const {data, status, error} = await signUp({
+            const { status, error } = await signUp({
                 email: values.email!,
                 password: values.password!,
                 metadata: {
@@ -62,11 +62,11 @@ const SignInComponent = () => {
               return toast.error(error?.message)
             }
 
-            if (status === 200)
-             localStorage?.setItem("userReg", JSON.stringify(data?.user?.user_metadata))
+            if (status === 200) {
               toast.success('Success!', { description: 'Verification OTP sent to ' + values.email, duration: 5000 })
               form.reset()
-            return router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
+              return router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
+            }
         }
         catch (error: any) {
             console.error(error)
