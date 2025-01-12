@@ -15,6 +15,8 @@ export const computeServerTransaction = async ({
   const walletBalance = wallet?.balance ?? 0.0;
   let cashbackBalance = wallet?.cashback_balance ?? 0.0;
 
+  let deductableAmount = price
+
   let commission = Math.max(
     ((payload?.interest ?? 0) - cashbackPrice) - price * 0.0161,
     0
@@ -38,6 +40,7 @@ export const computeServerTransaction = async ({
   } else if (payload?.method === "cashback") {
     cashbackBalance = cashbackBalance - price + cashbackPrice;
 
+    deductableAmount = 0;
     if (cashbackBalance < 0) {
       return {
         error: "Insufficient cashback balance, please fund your wallet!",
@@ -56,7 +59,7 @@ export const computeServerTransaction = async ({
       balance: Math.max(walletBalance, 0),
       cashbackBalance: Math.max(cashbackBalance, 0),
       cashbackPrice,
-      deductableAmount: price,
+      deductableAmount,
       price: Math.max(price, 0),
       commission,
     },

@@ -4,6 +4,20 @@ import { NINRequestBody, NINResponseBody } from "@/@types/nin";
 import { ServerActionResponse } from "@/@types/nin";
 import { getUserMonnifyToken } from "@/lib/monnify/actions";
 
+/**
+ * Dear Coder,
+ * 
+ * This function will charge not less than `N60` for every successful request. In other words,
+ * This function is super-expensive, and you should only call it when you have made it.
+ * It had cost us a good amount of revenue before we found out that it was a super-expensive function.
+ * Call it with great care Dear coder.
+ * 
+ * Regards,
+ * Mathias - Original author of this function
+ * 
+ * @docs
+ * @params - nin (string): the NIN (National Identification Number) to be verified.
+ */
 export const verifyNIN = async (nin: string): Promise<ServerActionResponse> => {
   try {
     const token = (await getUserMonnifyToken())?.data?.responseBody?.accessToken;
