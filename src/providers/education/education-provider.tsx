@@ -1,5 +1,6 @@
 "use client"
 
+import { processEducation } from '@/actions/education'
 import DynamicModal from '@/components/DynamicModal'
 import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
@@ -8,6 +9,7 @@ import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
 import { priceToInteger } from '@/funcs/priceToNumber'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
+import { QueryKeys } from '@/lib/react-query/query-keys'
 import { insertTransactionHistory } from '@/lib/supabase/history'
 import { updateCashbackBalanceByUser, updateWalletBalanceByUser } from '@/lib/supabase/wallets'
 import { cn } from '@/lib/utils'
@@ -103,164 +105,245 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
   const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
   const router = useRouter()
 
+  const handleBuyEducation = async (method: PaymentMethod, payload: SubTvPayload & { method?: PaymentMethod }) => {
+    try {
+        const requestPayload = {
+            billersCode: profileCode,
+            phone: mobileNumber,
+            serviceID: currentProvider === "jamb" ? "jamb" : "waec",
+            variation_code: currentProvider === "jamb" ? (isUTME ? "utme" : "de") : "waecdirect",
+            amount: educationAmount,
+        };
 
+        const billerPayload = {
+            cashback: payload?.cashBack,
+            price: educationAmount,
+            method: method,
+        };
 
-  const handleBuyEducation = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
-    // console.log("PPPPPPP", "₦" + payload?.variation_amount + ".00")
-    const billerPayload = {
-      CashBack:payload?.cashBack,
-      Price:"₦" + payload?.variation_amount,
-      method:payload?.method
+        const metadata: Record<string, any> = {
+            billersCode: profileCode,
+            phone: mobileNumber,
+            serviceID: requestPayload.serviceID,
+            variation_code: requestPayload.variation_code,
+        };
+
+        setPurchasing(true);
+
+        const { data, error, extra } = await processEducation({
+            currentProvider: requestPayload?.serviceID,
+            educationAmount: parseFloat(educationAmount),
+            method: billerPayload?.method,
+            mobileNumber,
+            profileCode: requestPayload?.billersCode,
+            variation_amount: parseFloat(educationAmount),
+            cashBack: parseFloat(billerPayload?.cashback??'0'),
+            isUTME,
+        });
+
+        if (error) {
+            setPurchasing(false);
+            setOpenConfirmPurchaseModal(false);
+            setPurchaseFailed(true);
+            setErrorMessage(error?.message || "Education subscription failed. Please try again.");
+            router.refresh();
+            return;
+        }
+
+        if (data) {
+            if (data?.status === "success") {
+                setSuccessMessage(data?.message || "Education subscription successful. Thank you for choosing isubscribe.");
+                vibrate("success");
+            } else {
+                setSuccessMessage(data?.message || "Education subscription is pending. We will notify you once completed.");
+                vibrate("info");
+            }
+
+            if (extra?.cashbackPrice) {
+                toast.info(`You have received a cashback bonus of ₦${extra.cashbackPrice}`);
+            }
+
+            setHistoryId(extra?.historyId);
+            router.refresh();
+
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.get_wallet] });
+
+            setPurchasing(false);
+            setOpenConfirmPurchaseModal(false);
+            setPurchaseSuccess(true);
+        } else {
+            setPurchasing(false);
+            setOpenConfirmPurchaseModal(false);
+            setPurchaseFailed(true);
+        }
+    } catch (error: any) {
+        setPurchasing(false);
+        setOpenConfirmPurchaseModal(false);
+        setPurchaseFailed(true);
+        toast.error(error?.message || "An unexpected error occurred.");
+    } finally {
+        setPurchasing(false);
+        setOpenConfirmPurchaseModal(false);
     }
-
-    setAmount(payload?.amount?.toString()!)
-
-    const requestPayload = {
-      billersCode: profileCode,
-      phone: mobileNumber,
-      serviceID:currentProvider === "jamb" ? "jamb" : "waec",
-      variation_code:currentProvider === "jamb" ? isUTME ? "utme" : "de" : "waecdirect",
-      amount:educationAmount,
-    }
-
-    console.log("CCPPPP", currentProvider)
-    console.log("REQQQPPPP", requestPayload)
-
-    const values = computeTransaction({
-        payload: {
-            cashback: 0,
-            price: priceToInteger(billerPayload.Price),
-            method: billerPayload.method
-        },
-        wallet: wallet?.data!
-    })
-    if (!values) return
-
-    const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+};
 
 
-    setPurchasing(true)
+//   const handleBuyEducation = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
+//     // console.log("PPPPPPP", "₦" + payload?.variation_amount + ".00")
+//     const billerPayload = {
+//       CashBack:payload?.cashBack,
+//       Price:"₦" + payload?.variation_amount,
+//       method:payload?.method
+//     }
 
-    const res: any = await buyEducation({
-        ...requestPayload as any,
-        request_id: generateRequestId()
-    })
+//     setAmount(payload?.amount?.toString()!)
 
-    if (!res) return toast.error('Transaction attempt failed!')
-    setResData(res as any)
+//     const requestPayload = {
+//       billersCode: profileCode,
+//       phone: mobileNumber,
+//       serviceID:currentProvider === "jamb" ? "jamb" : "waec",
+//       variation_code:currentProvider === "jamb" ? isUTME ? "utme" : "de" : "waecdirect",
+//       amount:educationAmount,
+//     }
 
-    console.log("Eduuuuuu", res)
+//     console.log("CCPPPP", currentProvider)
+//     console.log("REQQQPPPP", requestPayload)
+
+//     const values = computeTransaction({
+//         payload: {
+//             cashback: 0,
+//             price: priceToInteger(billerPayload.Price),
+//             method: billerPayload.method
+//         },
+//         wallet: wallet?.data!
+//     })
+//     if (!values) return
+
+//     const {balance, cashbackBalance, cashbackPrice, deductableAmount, price} = values
+
+
+//     setPurchasing(true)
+
+//     const res: any = await buyEducation({
+//         ...requestPayload as any,
+//         request_id: generateRequestId()
+//     })
+
+//     if (!res) return toast.error('Transaction attempt failed!')
+//     setResData(res as any)
+
+//     console.log("Eduuuuuu", res)
     
 
 
-    /** if (error) return, @example: You could uncomment this only in edge cases */
+//     /** if (error) return, @example: You could uncomment this only in edge cases */
 
-    const transRes = {...res?.content?.transactions, pin: res?.cards?.[0]?.Pin, serial: res?.cards?.[0]?.Serial, profile_code: profileCode}
+//     const transRes = {...res?.content?.transactions, pin: res?.cards?.[0]?.Pin, serial: res?.cards?.[0]?.Serial, profile_code: profileCode}
 
-    if ( res?.response_description === "TRANSACTION FAILED"  || transRes?.status === 'failed') {
-      setPurchaseFailed(true)
-      const { data: insertHistory } = await insertTransactionHistory({
-          description: `Education subscription for ${profileCode} failed.`,
-          status: 'failed',
-          title: 'Education Subscription',
-          type: EVENT_TYPE.education_topup,
-          email: null,
-          meta_data: JSON.stringify(transRes),
-          updated_at: null,
-          user: profile?.id!,
-          amount: price,
-      })
-      router.refresh()
-      setPurchasing(false)
-      setOpenConfirmPurchaseModal(false)
+//     if ( res?.response_description === "TRANSACTION FAILED"  || transRes?.status === 'failed') {
+//       setPurchaseFailed(true)
+//       const { data: insertHistory } = await insertTransactionHistory({
+//           description: `Education subscription for ${profileCode} failed.`,
+//           status: 'failed',
+//           title: 'Education Subscription',
+//           type: EVENT_TYPE.education_topup,
+//           email: null,
+//           meta_data: JSON.stringify(transRes),
+//           updated_at: null,
+//           user: profile?.id!,
+//           amount: price,
+//       })
+//       router.refresh()
+//       setPurchasing(false)
+//       setOpenConfirmPurchaseModal(false)
 
-      return
-  }
+//       return
+//   }
 
 
-  if (res?.response_description === "TRANSACTION PROCESSING - PENDING" || transRes?.status === 'pending') {
+//   if (res?.response_description === "TRANSACTION PROCESSING - PENDING" || transRes?.status === 'pending') {
             
-    const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-        (balance - deductableAmount))
-    if (_balanceError) {
-        await updateWalletBalanceByUser(profile?.id!, 
-            (balance - deductableAmount))
-        return
-    }
+//     const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
+//         (balance - deductableAmount))
+//     if (_balanceError) {
+//         await updateWalletBalanceByUser(profile?.id!, 
+//             (balance - deductableAmount))
+//         return
+//     }
 
-    const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-        (cashbackBalance))
+//     const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
+//         (cashbackBalance))
 
-    if (_balanceError || _cashbackBalanceError) return
+//     if (_balanceError || _cashbackBalanceError) return
 
-    const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Education subscription for profile cod: ${profileCode} failed.`,
-        status: 'pending',
-        title: 'Education Subscription',
-        type: EVENT_TYPE.education_topup,
-        email: null,
-        meta_data: JSON.stringify(transRes),
-        updated_at: null,
-        user: profile?.id!,
-        amount: price
-    })
+//     const { data: _insertHistory } = await insertTransactionHistory({
+//         description: `Education subscription for profile cod: ${profileCode} failed.`,
+//         status: 'pending',
+//         title: 'Education Subscription',
+//         type: EVENT_TYPE.education_topup,
+//         email: null,
+//         meta_data: JSON.stringify(transRes),
+//         updated_at: null,
+//         user: profile?.id!,
+//         amount: price
+//     })
 
-    router.refresh()
+//     router.refresh()
 
-    setPurchasePending(true)
-    /** 
-     * @example: toast.success(`Congratulations!`, {
-        description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-    })
-    */
-    setPurchasing(false)
-    setOpenConfirmPurchaseModal(false)
-}
-
-
+//     setPurchasePending(true)
+//     /** 
+//      * @example: toast.success(`Congratulations!`, {
+//         description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
+//     })
+//     */
+//     setPurchasing(false)
+//     setOpenConfirmPurchaseModal(false)
+// }
 
 
-  if (res?.response_description === "TRANSACTION SUCCESSFULL" || transRes?.status === 'delivered') {
+
+
+//   if (res?.response_description === "TRANSACTION SUCCESSFULL" || transRes?.status === 'delivered') {
             
-    const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
-        (balance - deductableAmount))
-    if (_balanceError) {
-        await updateWalletBalanceByUser(profile?.id!, 
-            (balance - deductableAmount))
-        return
-    }
+//     const { data: _walletBalance, error:_balanceError } = await updateWalletBalanceByUser(profile?.id!, 
+//         (balance - deductableAmount))
+//     if (_balanceError) {
+//         await updateWalletBalanceByUser(profile?.id!, 
+//             (balance - deductableAmount))
+//         return
+//     }
 
-    const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
-        (cashbackBalance))
+//     const { data: _cashbackBalance, error:_cashbackBalanceError } = await updateCashbackBalanceByUser(profile?.id!, 
+//         (cashbackBalance))
 
-    if (_balanceError || _cashbackBalanceError) return
+//     if (_balanceError || _cashbackBalanceError) return
 
-    const { data: _insertHistory } = await insertTransactionHistory({
-        description: `Education subscription for profile code: ${profileCode} was successful`,
-        status: 'success',
-        title: 'Education Subscription',
-        type: EVENT_TYPE.education_topup,
-        email: null,
-        meta_data: JSON.stringify(transRes),
-        updated_at: null,
-        user: profile?.id!,
-        amount: price,
-    })
+//     const { data: _insertHistory } = await insertTransactionHistory({
+//         description: `Education subscription for profile code: ${profileCode} was successful`,
+//         status: 'success',
+//         title: 'Education Subscription',
+//         type: EVENT_TYPE.education_topup,
+//         email: null,
+//         meta_data: JSON.stringify(transRes),
+//         updated_at: null,
+//         user: profile?.id!,
+//         amount: price,
+//     })
 
-    router.refresh()
-    // setPurchasePending(false)
+//     router.refresh()
+//     // setPurchasePending(false)
 
-    setPurchaseSuccess(true)
-    /** 
-     * @example: toast.success(`Congratulations!`, {
-        description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
-    })
-    */
-    setPurchasing(false)
-    setOpenConfirmPurchaseModal(false)
-} 
+//     setPurchaseSuccess(true)
+//     /** 
+//      * @example: toast.success(`Congratulations!`, {
+//         description: `You have successfully topped-up ${payload.Data} for ${mobileNumber}`
+//     })
+//     */
+//     setPurchasing(false)
+//     setOpenConfirmPurchaseModal(false)
+// } 
 
-}
+// }
 
   return (
     <SubTvContext.Provider value={{
