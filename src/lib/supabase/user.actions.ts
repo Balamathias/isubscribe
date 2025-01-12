@@ -14,10 +14,15 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export const signUp = async ({ email, password, metadata={} }: { email: string, password: string, metadata?: Record<string, string> }) => {
     const supabase = createClient()
 
-    const { data: _user, error: _error } = await supabase.from('profile').select('id').eq('email', email).single()
+    const { data: _user, error: _error } = await supabase.from('profile').select('id, onboarded').eq('email', email).single()
 
     if (_user?.id) {
         return { error: { message: `User with this email - ${email} already exists.` } }
+    }
+
+    if (!_user?.onboarded) {
+        await supabase.auth.resend({ email, type: "signup" })
+        return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: null}
     }
 
     const {data, error } = await supabase.auth.signUp({
@@ -27,7 +32,9 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
             data: metadata
         }
     })
-    if (error) throw error
+
+    if (error) return { error: { message: error?.message }}
+
     revalidatePath('/', 'layout')
     return { message: 'Account created successfully.', status: 200, statusText: 'OK', data:data}
 }
@@ -38,7 +45,7 @@ export const signIn = async ({ email, password }: { email: string, password: str
             email,
             password,
         })
-        if (error) throw error
+        if (error) return { error: { message: error?.message }}
         revalidatePath('/', 'layout')
         return { message: 'Signed in successfully.', status: 200, statusText: 'OK' }
 }
