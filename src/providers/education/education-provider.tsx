@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { computeTransaction } from '@/funcs/computeTransaction'
 import generateRequestId from '@/funcs/generateRequestId'
 import { priceToInteger } from '@/funcs/priceToNumber'
+import useVibration from '@/hooks/use-vibration'
 import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
 import { QueryKeys } from '@/lib/react-query/query-keys'
 import { insertTransactionHistory } from '@/lib/supabase/history'
@@ -18,6 +19,7 @@ import { Tables } from '@/types/database'
 import { PaymentMethod } from '@/types/networks'
 import { SubTvPayload, TvCables } from '@/types/tv-cable'
 import { EVENT_TYPE } from '@/utils/constants/EVENTS'
+import { useQueryClient } from '@tanstack/react-query'
 import { LucideCheckCircle2, LucideXCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -54,6 +56,7 @@ const SubTvContext = React.createContext<{
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyEducation?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
+  historyId: string,
 
 }>({
   currentProvider: '',
@@ -80,10 +83,10 @@ const SubTvContext = React.createContext<{
   fundSufficient: false,
   setFundSufficient: () => {},
   handleBuyEducation: () => {},
+  historyId: ''
 })
 
 const EducationProvider = ({ children, profile, action='education' }: SubTvProviderProps) => {
-  const { data: wallet, isPending } = useGetWalletBalance()
   const [currentProvider, setCurrentProvider] = React.useState('waec')
   const [providerName, setProviderName] = React.useState('WASSCE/GCE Result Checker PIN')
   const [providerImage, setProviderImage] = React.useState('/images/electricity/ikeja.jpeg')
@@ -96,8 +99,6 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
   const [purchaseSuccess, setPurchaseSuccess] = React.useState(false)
   const [purchaseFailed, setPurchaseFailed] = React.useState(false)
   const [purchasePending, setPurchasePending] = React.useState(false)
-  const [errorMessage, setErrorMessage] = React.useState<string>('')
-  const [successMessage, setSuccessMessage] = React.useState<string>('')
   const [smount, setAmount] = React.useState('0.00') /* @note: could be temporary. I hate too much useStates! */
   const [educationAmount, setEducationAmount] = React.useState('3500.00') /* @note: could be temporary. I hate too much useStates! */
   const [purchasing, setPurchasing] = React.useState(false)
@@ -105,7 +106,15 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
   const [openConfirmPurchaseModal, setOpenConfirmPurchaseModal] = React.useState<boolean>(false)
   const router = useRouter()
 
-  const handleBuyEducation = async (method: PaymentMethod, payload: SubTvPayload & { method?: PaymentMethod }) => {
+  const [historyId, setHistoryId] = useState('')
+
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  const vibrate = useVibration()
+  const queryClient = useQueryClient()
+
+  const handleBuyEducation = async (payload: SubTvPayload & { method?: PaymentMethod }) => {
     try {
         const requestPayload = {
             billersCode: profileCode,
@@ -118,14 +127,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
         const billerPayload = {
             cashback: payload?.cashBack,
             price: educationAmount,
-            method: method,
-        };
-
-        const metadata: Record<string, any> = {
-            billersCode: profileCode,
-            phone: mobileNumber,
-            serviceID: requestPayload.serviceID,
-            variation_code: requestPayload.variation_code,
+            method: payload.method,
         };
 
         setPurchasing(true);
@@ -133,7 +135,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
         const { data, error, extra } = await processEducation({
             currentProvider: requestPayload?.serviceID,
             educationAmount: parseFloat(educationAmount),
-            method: billerPayload?.method,
+            method: billerPayload?.method ?? 'wallet',
             mobileNumber,
             profileCode: requestPayload?.billersCode,
             variation_amount: parseFloat(educationAmount),
@@ -159,11 +161,11 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
                 vibrate("info");
             }
 
-            if (extra?.cashbackPrice) {
-                toast.info(`You have received a cashback bonus of ₦${extra.cashbackPrice}`);
-            }
+            // if (extra?.cashbackPrice) {
+            //     toast.info(`You have received a cashback bonus of ${extra.cashbackPrice}`);
+            // }
 
-            setHistoryId(extra?.historyId);
+            setHistoryId(extra?.historyId?.toString());
             router.refresh();
 
             queryClient.invalidateQueries({ queryKey: [QueryKeys.get_wallet] });
@@ -371,8 +373,7 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
         setProviderName,
         openConfirmPurchaseModal,
         setOpenConfirmPurchaseModal,
-        
-       
+        historyId
       }}
     >
        {children}
@@ -400,8 +401,6 @@ const EducationProvider = ({ children, profile, action='education' }: SubTvProvi
                 profileCode={profileCode}
                 currentProvider={currentProvider}
                 isUTME={isUTME}
-
-
             />
 
             <SubPurchaseStatus

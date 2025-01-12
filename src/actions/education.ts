@@ -74,7 +74,7 @@ export const processEducation = async (payload: EducationPayload) => {
 
         switch (res?.code) {
             case RESPONSE_CODES.TRANSACTION_SUCCESSFUL.code:
-                await handleSuccessCase({
+                const response = await handleSuccessCase({
                     profileId: profile?.id!,
                     metadata,
                     price,
@@ -90,12 +90,12 @@ export const processEducation = async (payload: EducationPayload) => {
                     },
                     error: null,
                     extra: {
-                        historyId: 
+                        historyId: response.id,
                     }
                 };
 
             case RESPONSE_CODES.TRANSACTION_PENDING.code:
-                await handlePendingCase({
+                const pendingResponse = await handlePendingCase({
                     profileId: profile?.id!,
                     metadata,
                     price,
@@ -110,11 +110,14 @@ export const processEducation = async (payload: EducationPayload) => {
                         status: "pending",
                     },
                     error: null,
+                    extra: {
+                        historyId: pendingResponse.id
+                    }
                 };
 
             case RESPONSE_CODES.TRANSACTION_FAILED.code:
             default:
-                await handleErrorCase({
+                const errorResponse = await handleErrorCase({
                     metadata,
                     price,
                     description: "Education subscription failed.",
@@ -122,6 +125,9 @@ export const processEducation = async (payload: EducationPayload) => {
                 return {
                     error: { message: "Transaction attempt failed. Please try again." },
                     data: null,
+                    extra: {
+                        historyId: errorResponse?.id
+                    }
                 };
         }
     } catch (error: any) {
@@ -170,7 +176,7 @@ const handlePendingCase = async ({
     cashbackPrice,
     deductableAmount,
 }: any) => {
-    await Promise.all([
+    const [_, { data }] = await Promise.all([
         updateWallet(profileId, balance, cashbackBalance, deductableAmount),
         insertTransactionHistory({
             description: `Education subscription for ${metadata.profileCode}`,
@@ -185,10 +191,12 @@ const handlePendingCase = async ({
         }),
         cashbackPrice && saveCashbackHistory({ amount: cashbackPrice }),
     ]);
+
+    return data
 };
 
 const handleErrorCase = async ({ metadata, price, description }: any) => {
-    await insertTransactionHistory({
+    const { data } = await insertTransactionHistory({
         description,
         status: "failed",
         title: "Education Subscription",
@@ -199,4 +207,6 @@ const handleErrorCase = async ({ metadata, price, description }: any) => {
         user: metadata.user,
         amount: price,
     });
+
+    return data
 };
