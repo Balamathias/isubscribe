@@ -141,6 +141,7 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
       setHistoryId(extra?.historyId?.toString()!)
 
     } catch (error) {
+      toast.error(error?.message?.includes('fetch failed') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message)
       console.error(error)
     } finally {
       setPurchasing(false)

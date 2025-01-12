@@ -178,7 +178,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
                 setPurchaseFailed(true)
             }
         } catch (error: any) {
-            toast?.error(error?.message)
+            toast.error(error?.message?.includes('fetch failed') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message)
             console.error(error)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
@@ -272,7 +272,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
-            toast.error(error?.message)
+            toast.error(error?.message?.includes('fetch failed') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message)
         } finally {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
@@ -362,7 +362,7 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
-            toast.error(error?.message)
+            toast.error(error?.message?.includes('fetch failed') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message)
         } finally {
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
