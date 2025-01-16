@@ -105,7 +105,7 @@ export const processElectricity = async (payload: ElectricityPayload) => {
                     data: {
                         message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message,
                         status: 'success',
-                        token: res?.token || ''
+                        token: res?.token || res?.Token || res?.MainToken || res?.mainToken || ''
                     },
                     extra: {
                         historyId: _insertSuccessHistory?.id,

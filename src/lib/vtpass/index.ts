@@ -98,5 +98,8 @@ export interface VTPassTransactionResponse {
     amount: string;
     transaction_date: TransactionDate;
     purchased_code: string;
-    token?: string
+    token?: string;
+    Token?: string;
+    MainToken?: string;
+    mainToken?: string;
 }
