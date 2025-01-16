@@ -16,11 +16,11 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
 
     const { data: _user, error: _error } = await supabase.from('profile').select('id, onboarded').eq('email', email).single()
 
-    if (_user?.id) {
+    if (_user && _user?.id) {
         return { error: { message: `User with this email - ${email} already exists.` } }
     }
 
-    if (!_user?.onboarded) {
+    if (_user && !_user?.onboarded) {
         await supabase.auth.resend({ email, type: "signup" })
         return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: null}
     }
@@ -29,14 +29,14 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
         email,
         password,
         options: {
-            data: metadata
+            data: metadata,
         }
     })
 
     if (error) return { error: { message: error?.message }}
 
     revalidatePath('/', 'layout')
-    return { message: 'Account created successfully.', status: 200, statusText: 'OK', data:data}
+    return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: data}
 }
 
 export const signIn = async ({ email, password }: { email: string, password: string }) => {
