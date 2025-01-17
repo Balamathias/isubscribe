@@ -120,13 +120,16 @@ export const processData_n3t = async ({
 
     try {
     
-        const { data, error } = await buyData({
+        const _req = await buyData({
             "request-id": `Data_${generateRequestId()}_${profile?.id}_${price}_${currentNetwork}_${phone}_${payload.Data}_${commission}`,
             bypass: false,
             data_plan,
             network,
             phone,
         })
+
+        const data = _req?.data
+        const error = _req?.error
     
         console.log({data, values, payload})
     
