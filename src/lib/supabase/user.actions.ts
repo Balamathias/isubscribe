@@ -17,12 +17,11 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
     const { data: _user, error: _error } = await supabase.from('profile').select('id, onboarded').eq('email', email).single()
 
     if (_user && _user?.id) {
+        if (!_user?.onboarded) {
+            await supabase.auth.resend({ email, type: "signup" })
+            return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: null}
+        }
         return { error: { message: `User with this email - ${email} already exists.` } }
-    }
-
-    if (_user && !_user?.onboarded) {
-        await supabase.auth.resend({ email, type: "signup" })
-        return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: null}
     }
 
     const {data, error } = await supabase.auth.signUp({

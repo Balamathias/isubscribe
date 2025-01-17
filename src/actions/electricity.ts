@@ -61,8 +61,10 @@ export const processElectricity = async (payload: ElectricityPayload) => {
         })
 
         console.log(res)
+
+        const token = res?.token || res?.Token || res?.MainToken || res?.mainToken || ''
     
-        const metadata = {...res, transId: res?.requestId, requestId: res?.requestId, meterNumber: payload?.meterNumber, meterType: payload.variation}
+        const metadata = {...res, token, transId: res?.requestId, requestId: res?.requestId, meterNumber: payload?.meterNumber, meterType: payload.variation}
     
         switch (res?.code) {
     
