@@ -33,7 +33,9 @@ export const signUp = async ({ email, password, metadata={} }: { email: string, 
         }
     })
 
-    if (error) return { error: { message: error?.message }}
+    console.error(error);
+
+    if (error) return { error: { message: `An unknown error occurred, please try again` }}
 
     revalidatePath('/', 'layout')
     return { message: 'Account created successfully.', status: 200, statusText: 'OK', data: data}
