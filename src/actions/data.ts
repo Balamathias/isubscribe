@@ -250,7 +250,7 @@ export const processData_n3t = async ({
         console.error(error)
         return {
             error: {
-                message: error?.message || `An attempt to initiate this transaction failed for unknown reasons, please try again.`
+                message: `An attempt to initiate this transaction could not be completed for unknown reasons, please confirm that the transaction was not successful and try again.`
             },
             data: null
         }
