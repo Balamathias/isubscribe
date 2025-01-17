@@ -1,10 +1,8 @@
 'use client'
 
 import React, { useRef, useState } from 'react'
-import { Input } from '../../ui/input'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import SelectNetworkDropdown from '../SelectNetworkDropdown'
-import LoadingOverlay from '../../loaders/LoadingOverlay'
 import { verifyNumber } from '@/funcs/verifyNumber'
 import AirtimeCards from './airtime-cards-v2'
 import { useCallback, useEffect } from 'react'
@@ -84,7 +82,7 @@ const AirtimeContent = ({ profile }: { profile?: Tables<'profile'> | null }) => 
             {contact?.name && <span className='text-muted-foreground text-xs'>@{contact?.name}</span>}
         </div>
       <section className="flex flex-col space-y">
-        <AirtimeCards />
+        <AirtimeCards profile={profile!} />
       </section>
     </div>
   )

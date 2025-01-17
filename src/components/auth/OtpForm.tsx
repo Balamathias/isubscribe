@@ -136,7 +136,7 @@ const OtpForm = () => {
 
     return (
         <div className='flex flex-col gap-3 max-sm:w-[96vw] md:w-[400px] shadow-md p-4 py-6 rounded-2xl bg-card dark:bg-inherit'>
-            <h1 className='text-center text-sm text-muted-foreground py-2'>Enter the OTP sent to your email below. Cannot find it? Check your spam folder or click on {"\"Resend\""} below.</h1>
+            <h1 className='text-center text-base text-muted-foreground py-2 tracking-normal'>Enter the OTP sent to your email below. Cannot find it? Check your spam folder or click on {"\"Resend OTP\""} below.</h1>
             <div className="flex justify-center mb-3 space-x-2">
                 {otp.map((data, index) => (
                     <input
@@ -151,7 +151,7 @@ const OtpForm = () => {
                         onFocus={() => setFocusedIndex(index)} // Set focused index
                         onBlur={() => setFocusedIndex(null)} // Clear focused index on blur
                         onPaste={index === 0 ? handlePaste : undefined}
-                        className={`w-9 h-9 text-center text-2xl p-2 border-2 rounded-2xl focus:outline-none focus:border-none bg-secondary ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
+                        className={`w-9 h-9 text-center text-2xl p-2 ring-1 rounded-xl focus:outline-none focus:border-none bg-secondary ${focusedIndex === index ? 'border-violet-500' : 'border-secondary'}`}
                         style={{ color: 'transparent', textShadow: '0 0 0 violet' }}
                     />
                 ))}
@@ -179,7 +179,7 @@ const OtpForm = () => {
                     Clear
                 </Button>
             </div>
-            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 bg-violet-700/20'>
+            <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 hover:bg-violet-700/20'>
                 {loading ? 'Verifying...' : 'Verify'}
             </Button>
             <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20  text-green-600 rounded-full h-10'>

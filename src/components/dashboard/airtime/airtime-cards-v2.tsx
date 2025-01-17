@@ -18,6 +18,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import PleaseSignIn from '../please-sign-in.modal'
 import { useQueryClient } from '@tanstack/react-query'
 import { QueryKeys } from '@/lib/react-query/query-keys'
+import { Tables } from '@/types/database'
 
 const ConfirmPurchaseModal = lazy(() => import('./confirm-purchase-modal-v2'))
 
@@ -38,10 +39,10 @@ const quickPlans = [
 const MAX_THRESHHOLD = 500_000
 const MIN_THRESHHOLD = 50
 
-const AirtimeCards = () => {
+const AirtimeCards = ({ profile }: { profile?: Tables<'profile'> }) => {
     const { currentNetwork, handleVTPassAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
     const [selected, setSelected] = useState<VTPassAirtimePayload | null>(null)
-    const { data: profile, isPending: _profilePending } = useGetProfile()
+    // const { data: profile, isPending: _profilePending } = useGetProfile()
     const [amount, setAmount] = useState<number | null>(null)
 
     const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -159,7 +160,7 @@ const AirtimeCards = () => {
                         handleVTPassAirtime(paymentMethod, {...selected!})
                         setProceed(false)
                     }} 
-                    profile={profile?.data!}
+                    profile={profile!}
                 />
             </DynamicModal>
         </div>

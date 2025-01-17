@@ -20,7 +20,7 @@ const AirtimePage = async () => {
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 mt-16'>
       <SubDataProvider action='airtime' profile={profile!}>
         <h2 className='text-lg font-semibold py-3'>Buy Airtime</h2>
-        <AirtimeContent />
+        <AirtimeContent profile={profile}/>
       </SubDataProvider>
     </WidthWrapper>
   )
