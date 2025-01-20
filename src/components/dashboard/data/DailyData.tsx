@@ -7,7 +7,6 @@ import React, { lazy, Suspense, useState } from 'react'
 import { toast } from 'sonner'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
-import { useGetProfile } from '@/lib/react-query/funcs/user'
 import PlaceHolder from '@/components/place-holder-component'
 import NetworkCardItem from './NetworkCardItem'
 import { useServices } from '@/lib/react-query/funcs/data'
@@ -21,10 +20,10 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const services = useServices()
 
-  const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useNetwork()
+  const { currentNetwork, mobileNumber, handleVTPassData, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, profile } = useNetwork()
 
     const [selected, setSelected] = useState<VTPassDataPayload | null>(null)
-    const { data: profile, isPending: profilePending } = useGetProfile()
+
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim' 
 
@@ -32,9 +31,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
 
-    if (profilePending || services.isLoading) return (
-        <NetworkCardSkeleton />
-    )
+    if (services?.isLoading) return <NetworkCardSkeleton />
 
     if (!services[currentNetwork] || !services[currentNetwork]?.length) {
         return (
@@ -54,7 +51,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                 dataQty={d.dataQty}
                 dataDuration={d.duration}
                 dataPrice={d.unitPrice}
-                profile={profile?.data}
+                profile={profile}
                 handler={
                     () => {
                         if (!mobileNumber) return toast.warning('Please enter a mobile number, it can\'t be empty!')
@@ -114,7 +111,7 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
                     handleVTPassData(paymentMethod, selected!)
                     setProceed(false)
                 }} 
-                profile={profile?.data!}
+                profile={profile!}
             />
             {/* <div className='p-4'>
                 <h2 className='text-xl font-semibold'>Coming soon!</h2>

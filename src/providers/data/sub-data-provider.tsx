@@ -50,6 +50,7 @@ const SubDatContext = React.createContext<{
     setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
     historyId?: string | number,
     wallet?: Tables<'wallet'> | null
+    profile?: Tables<'profile'> | null
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
@@ -69,15 +70,15 @@ const SubDatContext = React.createContext<{
 })
 
 
-const SubDataProvider = ({ children, action='data', wallet }: SubDataProviderProps) => {
+const SubDataProvider = ({ children, action='data', wallet, profile }: SubDataProviderProps) => {
 
     const queryClient = useQueryClient()
 
     const setWalletBalance = useWalletStore(state => state.setBalance)
     const vibrate = useVibration()
 
-    const { data: _profile } = useGetProfile()
-    const profile  = _profile?.data
+    // const { data: _profile } = useGetProfile()
+    // const profile  = _profile?.data
 
     const [currentNetwork, setCurrentNetwork] = React.useState<Networks>('mtn')
     const [mobileNumber, setMobileNumber] = React.useState<string>(profile?.phone || '')
@@ -522,7 +523,8 @@ const SubDataProvider = ({ children, action='data', wallet }: SubDataProviderPro
             openConfirmPurchaseModal,
             setOpenConfirmPurchaseModal,
             historyId,
-            wallet
+            wallet,
+            profile
         }}>
             { children }
 

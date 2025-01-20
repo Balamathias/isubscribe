@@ -19,7 +19,7 @@ const DataPage = async () => {
   const [{ data: profile }, { data: wallet }] = await Promise.all([getUser(), getWallet()])
   return (
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 mt-16'>
-      <SubDataProvider>
+      <SubDataProvider profile={profile!} wallet={wallet}>
         <DataTabs profile={profile} />
       </SubDataProvider>
     </WidthWrapper>

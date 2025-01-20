@@ -30,15 +30,10 @@ const object = {
 
 
 const DataNetworkCard = () => {
-    const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing } = useNetwork()
+    const { currentNetwork, handleSubData, mobileNumber, setOpenConfirmPurchaseModal, openConfirmPurchaseModal, purchasing, profile, wallet } = useNetwork()
     const [selected, setSelected] = useState<SubDataProps | null>(null)
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim'
-
-    const { wallet, isLoading } = useWallet()
-    
-    const { data: profile, isPending: profilePending } = useGetProfile()
-
     const [proceed, setProceed] = React.useState(false)
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
@@ -57,9 +52,9 @@ const DataNetworkCard = () => {
         }
     }
 
-    if (isLoading || profilePending) return (
-        <NetworkCardSkeleton />
-    )
+    // if (isLoading || profilePending) return (
+    //     <NetworkCardSkeleton />
+    // )
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
@@ -77,7 +72,7 @@ const DataNetworkCard = () => {
                 dataQty={d.Data}
                 dataDuration={d.Duration}
                 dataPrice={priceToInteger(d.Price)}
-                profile={profile?.data}
+                profile={profile}
             />
         ))}
 
@@ -157,7 +152,7 @@ const DataNetworkCard = () => {
                         handleSubData?.({...selected!, method: paymentMethod})
                         setProceed(false)
                     }} 
-                    profile={profile?.data!}
+                    profile={profile!}
                 />
             </DynamicModal>
         }
