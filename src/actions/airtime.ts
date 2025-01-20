@@ -83,6 +83,8 @@ export const processAirtime_VTPass = async ({
         })
 
         saveBeneficiary(phone)
+
+        console.log({res})
     
     
         switch (res?.code) {

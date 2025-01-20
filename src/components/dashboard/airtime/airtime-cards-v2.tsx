@@ -37,7 +37,7 @@ const quickPlans = [
 ]
 
 const MAX_THRESHHOLD = 500_000
-const MIN_THRESHHOLD = 50
+const MIN_THRESHHOLD = 25
 
 const AirtimeCards = ({ profile }: { profile?: Tables<'profile'> }) => {
     const { currentNetwork, handleVTPassAirtime, mobileNumber, openConfirmPurchaseModal, setOpenConfirmPurchaseModal  } = useNetwork()
