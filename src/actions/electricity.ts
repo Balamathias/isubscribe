@@ -18,7 +18,8 @@ interface ElectricityPayload {
     amount: string,
     cashback?: string | number,
     price: number,
-    method: PaymentMethod
+    method: PaymentMethod,
+    fee: number
 }
 
 export const processElectricity = async (payload: ElectricityPayload) => {
@@ -43,7 +44,7 @@ export const processElectricity = async (payload: ElectricityPayload) => {
         const { error: computeError, data: computeData } = await computeServerTransaction({
               payload: {
                   cashback: 0,
-                  price: parseFloat(billerPayload.Price),
+                  price: (parseFloat(billerPayload.Price) + payload.fee),
                   method: billerPayload.method
               },
         })

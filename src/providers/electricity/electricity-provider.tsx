@@ -123,7 +123,8 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         price: parseFloat(payload.variation_amount),
         provider: currentProvider,
         variation: isPrepaid ? "prepaid" : "postpaid",
-        cashback: 0
+        cashback: 0,
+        fee
       })
 
       console.log(data)

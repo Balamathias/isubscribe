@@ -68,7 +68,7 @@ const ConfirmPurchaseModal = ({
   return (
     <DynamicModal
         open={open}
-        setOpen={setOpen}
+        // setOpen={setOpen}
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
         title={`${providerName}-plan details`}
@@ -136,19 +136,25 @@ const ConfirmPurchaseModal = ({
                     balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number ?? 0)}
                     disabled={wallet?.data?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
                 />
-            </div>   
-            {/* <ComingSoon 
-                trigger={ */}
-                    <Button 
-                        className='w-full rounded-xl' 
-                        size={'lg'}
-                        disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
-                        onClick={() => {
-                            setProceed(true)
-                        }}
-                    >Proceed</Button>
-                {/* }
-            /> */}
+            </div>
+            <Button 
+                className='w-full rounded-xl' 
+                size={'lg'}
+                disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
+                onClick={() => {
+                    setProceed(true)
+                }}
+            >Proceed</Button>
+
+            <Button 
+                className='w-full rounded-xl' 
+                size={'lg'}
+                onClick={() => {
+                    setOpen(false)
+                }}
+                variant="secondary"
+                disabled={purchasing}
+            >Cancel</Button>
         </div>
     </DynamicModal>
   )
