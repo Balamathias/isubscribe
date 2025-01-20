@@ -99,7 +99,7 @@ const ConfirmPurchaseModal = ({
     return (
         <DynamicModal
             open={open}
-            setOpen={() => setOpen()}
+            setOpen={purchasing ? undefined : () => setOpen()}
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
             title="Confirm product details"
             dismissible={false}
@@ -133,22 +133,17 @@ const ConfirmPurchaseModal = ({
                         disabled={wallet?.cashback_balance! < selected?.amount}
                     />
                 </div>
-
-               {/* <ComingSoon 
-                    trigger={ */}
-                        <Button 
-                            className='w-full rounded-xl' 
-                            size={'lg'}
-                            disabled={
-                                wallet?.balance! < selected?.amount && 
-                                wallet?.cashback_balance! < selected?.amount
-                            }
-                            onClick={handlePurchase}
-                        >
-                            Proceed
-                        </Button>
-                    {/* }
-               /> */}
+                <Button 
+                    className='w-full rounded-xl' 
+                    size={'lg'}
+                    disabled={
+                        wallet?.balance! < selected?.amount && 
+                        wallet?.cashback_balance! < selected?.amount
+                    }
+                    onClick={handlePurchase}
+                >
+                    Proceed
+                </Button>
             </div>
         </DynamicModal>
     )

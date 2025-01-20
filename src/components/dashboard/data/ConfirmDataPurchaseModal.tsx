@@ -97,7 +97,7 @@ const ConfirmDataPurchaseModal = ({
     return (
         <DynamicModal
             open={open}
-            setOpen={setOpen}
+            setOpen={purchasing ? undefined : setOpen}
             title={selected?.planName ? (<h2 className='max-md:-ml-10 line-clamp-1 text-sm md:text-base text-center'>{selected?.planName}</h2>) : "Plan Information"}
             dismissible={false}
             dialogClassName="sm:max-w-[640px] md:max-w-[550px]"

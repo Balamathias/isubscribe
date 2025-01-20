@@ -85,7 +85,7 @@ const DataNetworkCard = () => {
             
             <DynamicModal
                 open={openConfirmPurchaseModal}
-                setOpen={setOpenConfirmPurchaseModal}
+                setOpen={purchasing ? undefined : setOpenConfirmPurchaseModal}
                 dismissible
                 dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
                 title={"Plan Information - " + selected?.Type}
