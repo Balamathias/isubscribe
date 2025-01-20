@@ -10,12 +10,9 @@ import ConfirmPin from '../ConfirmPin';
 import { priceToInteger } from '@/funcs/priceToNumber';
 import ActivePaymentMethodButton from './ActivePaymentMethodButton';
 import { product } from '@/utils/constants/product';
-import { useGetProfile } from '@/lib/react-query/funcs/user';
 import NetworkCardItem from './NetworkCardItem';
 import LoadingSpinner from '@/components/loaders/LoadingSpinner';
-import { useWallet } from '@/hooks/use-wallet';
 import { useSearchParams } from 'next/navigation';
-import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton';
 import SimpleLoader from '@/components/loaders/simple-loader';
 import useBiometricAuth from '@/hooks/use-biometric-auth';
 
@@ -51,10 +48,6 @@ const DataNetworkCard = () => {
             setProceed(true)
         }
     }
-
-    // if (isLoading || profilePending) return (
-    //     <NetworkCardSkeleton />
-    // )
 
   return (
     <div className="grid grid-flow-row grid-cols-5 max-md:grid-cols-3 gap-2 gap-y-4">
