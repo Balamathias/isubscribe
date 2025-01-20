@@ -59,16 +59,12 @@ const ConfirmPurchaseModal = ({
     fee,
     totalAmount
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing } = useElectricity()
-    
-    const { data: wallet, isPending } = useGetWalletBalance()
-    
-    if (isPending) return <LoadingOverlay />
+    const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing, wallet } = useElectricity()
 
   return (
     <DynamicModal
         open={open}
-        // setOpen={setOpen}
+        setOpen={purchasing ? undefined : setOpen}
         dialogClassName="sm:max-w-[640px] md:max-w-[550px] "
         drawerClassName=''
         title={`${providerName}-plan details`}
@@ -126,35 +122,25 @@ const ConfirmPurchaseModal = ({
                     active={paymentMethod === 'wallet'} 
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
-                    balance={formatNigerianNaira(wallet?.data?.balance! as number ?? 0)}
-                    disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00')  }
+                    balance={formatNigerianNaira(wallet?.balance! as number ?? 0)}
+                    disabled={wallet?.balance! < parseInt(selected?.variation_amount || '0.00')  }
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
-                    balance={formatNigerianNaira(wallet?.data?.cashback_balance! as number ?? 0)}
-                    disabled={wallet?.data?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
+                    balance={formatNigerianNaira(wallet?.cashback_balance! as number ?? 0)}
+                    disabled={wallet?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
                 />
             </div>
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={wallet?.data?.balance! < parseInt(selected?.variation_amount || '0.00') }
+                disabled={wallet?.balance! < parseInt(selected?.variation_amount || '0.00') }
                 onClick={() => {
                     setProceed(true)
                 }}
             >Proceed</Button>
-
-            <Button 
-                className='w-full rounded-xl' 
-                size={'lg'}
-                onClick={() => {
-                    setOpen(false)
-                }}
-                variant="secondary"
-                disabled={purchasing}
-            >Cancel</Button>
         </div>
     </DynamicModal>
   )

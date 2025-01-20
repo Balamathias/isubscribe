@@ -17,7 +17,8 @@ import { toast } from 'sonner'
 interface SubTvProviderProps {
   children?: React.ReactNode,
   profile?: Tables<'profile'>,
-  action?: 'tv-cable' | 'electricity' | "education"
+  action?: 'tv-cable' | 'electricity' | "education",
+  wallet?: Tables<'wallet'> | null
 }
 
 const SubTvContext = React.createContext<{
@@ -48,6 +49,7 @@ const SubTvContext = React.createContext<{
   historyId: string,
   fee: number,
   totalAmount: number,
+  wallet?: Tables<'wallet'> | null
 
 }>({
   currentProvider: '',
@@ -79,7 +81,7 @@ const SubTvContext = React.createContext<{
   totalAmount: 0
 })
 
-const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvProviderProps) => {
+const ElectricityProvider = ({ children, profile, action='electricity', wallet }: SubTvProviderProps) => {
   const [currentProvider, setCurrentProvider] = React.useState('ikeja-electric')
   const [providerName, setProviderName] = React.useState('Ikeja Electric')
   const [providerImage, setProviderImage] = React.useState('/images/electricity/ikeja.jpeg')
@@ -185,7 +187,8 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         setOpenConfirmPurchaseModal,
         historyId,
         fee,
-        totalAmount
+        totalAmount,
+        wallet
       }}
     >
        {children}

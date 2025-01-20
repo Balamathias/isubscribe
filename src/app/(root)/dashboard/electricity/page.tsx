@@ -2,6 +2,7 @@
 import ElectricityContent from '@/components/dashboard/electricity/electricity-content'
 import WidthWrapper from '@/components/WidthWrapper'
 import { getUser } from '@/lib/supabase/accounts'
+import { getWallet } from '@/lib/supabase/wallets'
 import ElectricityProvider from '@/providers/electricity/electricity-provider'
 import { Metadata } from 'next'
 
@@ -13,11 +14,11 @@ export const metadata: Metadata = {
 export const runtime = 'edge'
 
 const ElectricityCablePage = async () => {
-  const { data: profile } = await getUser()
+  const [{ data: profile }, { data: wallet }] = await Promise.all([getUser(), getWallet()])
 
   return (
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 max-md:mt-10 mt-16 max-sm:px-1.5'>
-    <ElectricityProvider action='tv-cable' profile={profile!}>
+    <ElectricityProvider action='tv-cable' profile={profile!} wallet={wallet}>
       <h2 className='text-muted-foreground md:text-2xl text-lg py-2 font-semibold'>Select Provider</h2>
       <ElectricityContent />
     </ElectricityProvider>
