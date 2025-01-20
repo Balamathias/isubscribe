@@ -41,8 +41,7 @@ const ConfirmPurchaseModal = ({
     setProceed,
     func
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const {  wallet, isLoading } = useWallet()
+    const { mobileNumber, currentNetwork, purchasing, wallet } = useNetwork()
     const { isEnabled, authenticate } = useBiometricAuth()
     
     const handleAuth = useCallback(async () => {
@@ -83,8 +82,6 @@ const ConfirmPurchaseModal = ({
 
         handleAuth()
     }, [paymentMethod, wallet, selected?.amount, handleAuth])
-
-    if (isLoading) return <LoadingOverlay />
 
     if (!wallet) {
         return (

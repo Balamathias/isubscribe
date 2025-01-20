@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import React from 'react'
 
 import { getUser } from '@/lib/supabase/accounts'
+import { getWallet } from '@/lib/supabase/wallets'
 
 export const runtime = 'edge'
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 }
 
 const DataPage = async () => {
-  const { data: profile } = await getUser()
+  const [{ data: profile }, { data: wallet }] = await Promise.all([getUser(), getWallet()])
   return (
     <WidthWrapper className='flex flex-col !max-w-3xl md:py-12 mt-16'>
       <SubDataProvider>

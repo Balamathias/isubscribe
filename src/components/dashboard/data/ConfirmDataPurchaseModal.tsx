@@ -41,8 +41,7 @@ const ConfirmDataPurchaseModal = ({
     isDailyData,
     func
 }: ConfirmDataPurchaseModalProps) => {
-    const { mobileNumber, currentNetwork, purchasing } = useNetwork()
-    const { wallet, isLoading } = useWallet()
+    const { mobileNumber, currentNetwork, purchasing, wallet } = useNetwork()
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim'
     const { isEnabled, authenticate } = useBiometricAuth()
@@ -81,8 +80,6 @@ const ConfirmDataPurchaseModal = ({
 
         handleAuth()
     }, [paymentMethod, wallet, selected?.amount, handleAuth])
-
-    if (isLoading) return <LoadingOverlay loader='1' />
 
     if (!wallet) {
         return (

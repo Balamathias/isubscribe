@@ -28,7 +28,8 @@ import { processAirtime_VTPass } from "@/actions/airtime"
 interface SubDataProviderProps {
     children?: React.ReactNode,
     profile?: Tables<'profile'>,
-    action?: 'airtime' | 'data'
+    action?: 'airtime' | 'data',
+    wallet?: Tables<'wallet'> | null
 }
 
 const SubDatContext = React.createContext<{
@@ -47,7 +48,8 @@ const SubDatContext = React.createContext<{
     purchasing?:boolean,
     openConfirmPurchaseModal?: boolean,
     setOpenConfirmPurchaseModal?: React.Dispatch<React.SetStateAction<boolean>>,
-    historyId?: string | number
+    historyId?: string | number,
+    wallet?: Tables<'wallet'> | null
 }>({
     currentNetwork: 'mtn',
     setCurrentNetwork: () => {},
@@ -63,11 +65,11 @@ const SubDatContext = React.createContext<{
     purchasing:false,
     openConfirmPurchaseModal: false,
     setOpenConfirmPurchaseModal: () => {},
-    handleVTPassAirtime: () => {}
+    handleVTPassAirtime: () => {},
 })
 
 
-const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
+const SubDataProvider = ({ children, action='data', wallet }: SubDataProviderProps) => {
 
     const queryClient = useQueryClient()
 
@@ -519,7 +521,8 @@ const SubDataProvider = ({ children, action='data' }: SubDataProviderProps) => {
             purchasing,
             openConfirmPurchaseModal,
             setOpenConfirmPurchaseModal,
-            historyId
+            historyId,
+            wallet
         }}>
             { children }
 
