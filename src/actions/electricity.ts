@@ -63,8 +63,15 @@ export const processElectricity = async (payload: ElectricityPayload) => {
 
         console.log(res)
 
-        const token = res?.token || res?.Token || res?.MainToken || res?.mainToken || ''
-    
+        let token = (res?.token || res?.Token || res?.MainToken || res?.mainToken || '').replace(/token:/gi, '').trim()
+
+        // Split token into pieces separated by hyphens into groups, where each group is 4 characters long. If the last group is less than 4 characters, it should be attached to the penultimate group.
+
+        if (token.length > 4) {
+            const tokenGroups = token.match(/.{1,4}/g)
+            token = tokenGroups?.join('-') || token
+        }
+
         const metadata = {...res, token, transId: res?.requestId, requestId: res?.requestId, meterNumber: payload?.meterNumber, meterType: payload.variation}
     
         switch (res?.code) {
@@ -84,7 +91,7 @@ export const processElectricity = async (payload: ElectricityPayload) => {
                         title: 'Meter Subscription',
                         type: EVENT_TYPE.meter_topup,
                         email: null,
-                        meta_data: metadata,
+                        meta_data: JSON.stringify(metadata),
                         updated_at: null,
                         user: profile?.id!,
                         amount: price,
@@ -108,7 +115,7 @@ export const processElectricity = async (payload: ElectricityPayload) => {
                     data: {
                         message: RESPONSE_CODES.TRANSACTION_SUCCESSFUL.message,
                         status: 'success',
-                        token: res?.token || res?.Token || res?.MainToken || res?.mainToken || ''
+                        token,
                     },
                     extra: {
                         historyId: _insertSuccessHistory?.id,

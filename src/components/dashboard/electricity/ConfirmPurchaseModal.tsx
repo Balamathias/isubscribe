@@ -56,10 +56,8 @@ const ConfirmPurchaseModal = ({
     setPaymentMethod,
     title,
     setProceed,
-    fee,
-    totalAmount
 }: ConfirmPurchaseModal) => {
-    const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing, wallet } = useElectricity()
+    const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing, wallet, fee, totalAmount } = useElectricity()
 
   return (
     <DynamicModal
@@ -113,7 +111,7 @@ const ConfirmPurchaseModal = ({
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
                     <p className='font-semibold text-muted-foreground'>Amount to pay</p>
-                    <p>{formatNigerianNaira(totalAmount)}</p>
+                    <p className='text-amber-500'>{formatNigerianNaira(totalAmount)}</p>
                 </div>
             </div>
 
@@ -123,20 +121,20 @@ const ConfirmPurchaseModal = ({
                     handler={() => {setPaymentMethod('wallet')}} 
                     method='wallet'
                     balance={formatNigerianNaira(wallet?.balance! as number ?? 0)}
-                    disabled={wallet?.balance! < parseInt(selected?.variation_amount || '0.00')  }
+                    disabled={wallet?.balance! < totalAmount  }
                 />
                 <ActivePaymentMethodButton 
                     active={paymentMethod === 'cashback'} 
                     handler={() => {setPaymentMethod('cashback')}} 
                     method='cashback'
                     balance={formatNigerianNaira(wallet?.cashback_balance! as number ?? 0)}
-                    disabled={wallet?.cashback_balance! < parseInt(selected?.variation_amount || '0.00') }
+                    disabled={wallet?.cashback_balance! < totalAmount }
                 />
             </div>
             <Button 
                 className='w-full rounded-xl' 
                 size={'lg'}
-                disabled={wallet?.balance! < parseInt(selected?.variation_amount || '0.00') }
+                disabled={wallet?.balance! < totalAmount }
                 onClick={() => {
                     setProceed(true)
                 }}
