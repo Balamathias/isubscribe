@@ -43,7 +43,9 @@ interface ConfirmPurchaseModal {
     selected?: SubTvPayload,
     paymentMethod: PaymentMethod,
     setPaymentMethod: (method: PaymentMethod) => void,
-    setProceed: (proceed: boolean) => void
+    setProceed: (proceed: boolean) => void,
+    fee: number,
+    totalAmount: number
 }
 
 const ConfirmPurchaseModal = ({
@@ -53,7 +55,9 @@ const ConfirmPurchaseModal = ({
     setOpen,
     setPaymentMethod,
     title,
-    setProceed
+    setProceed,
+    fee,
+    totalAmount
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing } = useElectricity()
     
@@ -102,16 +106,19 @@ const ConfirmPurchaseModal = ({
                 </div>
 
                 <div className='flex flex-row justify-between items-center gap-x-2'>
-                    <p className='font-semibold text-muted-foreground'>Amount to pay</p>
+                    <p className='font-semibold text-muted-foreground'>Fee</p>
+                    <p>{formatNigerianNaira(fee)}</p>
+                </div>
+
+                <div className='flex flex-row justify-between items-center gap-x-2'>
+                    <p className='font-semibold text-muted-foreground'>Power Amount</p>
                     <p>{formatNigerianNaira(selected?.variation_amount as any)}</p>
                 </div>
 
-               
-
-                {/* <div className='flex flex-row justify-between items-center gap-x-2'>
-                    <p className='font-semibold text-muted-foreground'>Cashback</p>
-                    <p className='px-2 py-1 rounded-full bg-violet-200 text-violet-800'>+{selected?.cashBack}</p>
-                </div> */}
+                <div className='flex flex-row justify-between items-center gap-x-2'>
+                    <p className='font-semibold text-muted-foreground'>Amount to pay</p>
+                    <p>{formatNigerianNaira(totalAmount)}</p>
+                </div>
             </div>
 
             <div className='flex flex-col w-full gap-y-2.5'>

@@ -17,8 +17,8 @@ const ElectricityCards = ({ profile }: { profile?: Tables<'profile'> | null }) =
     const [proceed, setProceed] = React.useState(false)
     
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('wallet')
-    const { powerAmount, meterNumber, mobileNumber, currentProvider, isPrepaid, setPowerAmount, handleBuyElectricity, openConfirmPurchaseModal, setOpenConfirmPurchaseModal } = useElectricity()
-    
+    const { powerAmount, meterNumber, mobileNumber, currentProvider, isPrepaid, setPowerAmount, handleBuyElectricity, openConfirmPurchaseModal, setOpenConfirmPurchaseModal, fee, totalAmount } = useElectricity()
+
     const selected ={
       billersCode: meterNumber,
       phone: mobileNumber,
@@ -72,7 +72,9 @@ const ElectricityCards = ({ profile }: { profile?: Tables<'profile'> | null }) =
                 setPaymentMethod={setPaymentMethod}
                 setProceed={setProceed}
                 key={'electricity'}
-                title='Electricity Purchase details...'
+                title='Electricity Purchase details.'
+                fee={fee}
+                totalAmount={totalAmount}
             />
         }
        {

@@ -45,7 +45,9 @@ const SubTvContext = React.createContext<{
   fundSufficient: boolean,
   setFundSufficient: React.Dispatch<React.SetStateAction<boolean>>,
   handleBuyElectricity?: (payload: SubTvPayload & { method?: PaymentMethod }) => void,
-  historyId: string
+  historyId: string,
+  fee: number,
+  totalAmount: number,
 
 }>({
   currentProvider: '',
@@ -72,7 +74,9 @@ const SubTvContext = React.createContext<{
   fundSufficient: false,
   setFundSufficient: () => {},
   handleBuyElectricity: () => {},
-  historyId: ''
+  historyId: '',
+  fee: 0,
+  totalAmount: 0
 })
 
 const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvProviderProps) => {
@@ -97,7 +101,8 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
 
   const [historyId, setHistoryId] = useState('')
 
-
+  const fee = React.useMemo(() => parseFloat(powerAmount) * (3/100), [powerAmount])
+  const totalAmount = React.useMemo(() => parseFloat(powerAmount) + fee, [powerAmount, fee])
 
   const handleBuyElectricity = async ( payload: SubTvPayload & { method?: PaymentMethod }) => {
 
@@ -177,7 +182,9 @@ const ElectricityProvider = ({ children, profile, action='electricity' }: SubTvP
         purchasing,
         openConfirmPurchaseModal,
         setOpenConfirmPurchaseModal,
-        historyId
+        historyId,
+        fee,
+        totalAmount
       }}
     >
        {children}
