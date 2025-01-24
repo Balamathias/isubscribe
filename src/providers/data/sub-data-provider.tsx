@@ -181,8 +181,10 @@ const SubDataProvider = ({ children, action='data', wallet, profile }: SubDataPr
                 setPurchaseFailed(true)
             }
         } catch (error: any) {
-            toast.error(error?.message?.includes('fetch failed') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message)
+            const msg = error?.message?.includes('fetch failed') || error?.message?.includes('destructure') ? `Network error, please confirm that you were debited before performing another transaction` : error?.message
+            toast.error(msg)
             console.error(error)
+            setErrorMessage(msg)
             setPurchasing(false)
             setOpenConfirmPurchaseModal(false)
             setPurchaseFailed(true)
