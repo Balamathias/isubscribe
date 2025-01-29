@@ -1,4 +1,6 @@
-export type Json =
+Need to install the following packages:
+supabase@2.9.6
+Ok to proceed? (y) export type Json =
   | string
   | number
   | boolean
@@ -360,6 +362,51 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referred: string | null
+          referrer: string | null
+          reward: number | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referred?: string | null
+          referrer?: string | null
+          reward?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referred?: string | null
+          referrer?: string | null
+          reward?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_fkey"
+            columns: ["referred"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_fkey"
+            columns: ["referrer"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wallet: {
         Row: {
           balance: number | null
@@ -409,12 +456,41 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_total_cashback_amount: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: number
+      }
+      get_total_deposits: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_total_transactions_amount: {
         Args: {
           start_date?: string
           end_date?: string
         }
         Returns: number
+      }
+      get_total_wallet_balance: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: number
+      }
+      get_wallet_fund_totals: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: {
+          total_settlement_amount: number
+          total_amount_paid: number
+          net_amount: number
+        }[]
       }
     }
     Enums: {

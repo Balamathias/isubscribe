@@ -15,6 +15,7 @@ const OtpForm = () => {
     const user = JSON.parse(localStorage?.getItem("userReg") || "{}");
     const searchParams = useSearchParams()
     const email = searchParams.get('email')
+    const referrer = searchParams.get('referrer')
 
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const OtpForm = () => {
         }
 
         try {
-            const { data, error } = await verifyOtp(payload);
+            const { data, error } = await verifyOtp({...payload, referrer});
             if (error) {
                 setError(error || "An error occurred");
                 return toast.error('Invalid code or code has expired.')

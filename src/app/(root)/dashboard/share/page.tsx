@@ -27,7 +27,7 @@ const ShareAndEarnPage = async () => {
         {
           user ? (
             <ShareModal
-              url={`${process.env.NEXT_PUBLIC_SITE_URL}/register?referral=${user.id}`}
+              url={`${process.env.NEXT_PUBLIC_SITE_URL}/sign-up?referral=${user.id}`}
               trigger={
                 <Button size={'lg'} className='bg-white text-black rounded-full hover:opacity-70 hover:bg-white'>
                   Share Now

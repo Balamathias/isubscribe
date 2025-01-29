@@ -29,6 +29,7 @@ const SignInComponent = () => {
     const searchParams = useSearchParams()
     const urlParams = new URLSearchParams(searchParams.toString())
     const [status, setStatus] = useState(urlParams.get('status') === 'email-sent')
+    const referrer = searchParams.get('referral')
 
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
@@ -65,7 +66,7 @@ const SignInComponent = () => {
             if (status === 200) {
               toast.success('Success!', { description: 'Verification OTP sent to ' + values.email, duration: 5000 })
               form.reset()
-              return router.push('/auth/verify-otp?email=' + encodeURIComponent(values?.email))
+              return router.push(`/auth/verify-otp?email=${encodeURIComponent(values?.email)}&referrer=${referrer}`)
             }
         }
         catch (error: any) {

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from "@/utils/supabase/server";
+import { createReferral } from "./share";
 
 export async function verifyOtp(payload:any) {
   const supabase = createClient()
@@ -14,6 +15,10 @@ export async function verifyOtp(payload:any) {
   if (error) {
     console.log(error)
     return { error: error.message };
+  }
+
+  if (data && data?.user?.id && payload?.referrer) {
+    await createReferral({ referrer: payload?.referrer, referred: data?.user?.id, status: 'pending', reward: 100 })
   }
 
   console.log("ddddd", data)
