@@ -81,6 +81,9 @@ export const POST = async (req: Request) => {
         .eq('email', data.eventData?.customer?.email)
         .single();
 
+    // const totalUserTransactions = await supabase.from('history')
+    //     .select()
+
     if (error || !user) {
         return NextResponse.json({ message: 'Error fetching user' }, { status: 500 });
     }
