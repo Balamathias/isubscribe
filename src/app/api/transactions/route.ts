@@ -122,23 +122,23 @@ export const POST = async (req: Request) => {
             console.error('Failed to send email:', error);
         });
 
-        const isNewUser = user?.created_at && 
-        (new Date().getTime() - new Date(user.created_at).getTime()) <= 3 * 24 * 60 * 60 * 1000
+        if (user) {
+            const { data: referral } = await supabase.from('referrals')
+                .select()
+                .eq('referred', user.id)
+                .single()
 
-        if (user && isNewUser) {
-            const { count: transactionCount } = await supabase.from('history')
-                .select('*', { count: 'exact', head: true })
-                .eq('user', user.id)
+            if (referral?.id && referral.status !== 'pending') {
+                const { count } = await supabase.from('history')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user', user.id)
 
-            if (transactionCount === 1) {
-                const { data: referral } = await supabase.from('referrals')
-                    .select()
-                    .eq('referred', user.id)
-                    .single()
-
-                if (referral?.id) {
+                if (count === 1) {
                     await supabase.from('referrals')
-                        .update({ status: 'verified', updated_at: new Date().toISOString() })
+                        .update({ 
+                            status: 'verified',
+                            updated_at: new Date().toISOString()
+                        })
                         .eq('id', referral.id)
                 }
             }
