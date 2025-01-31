@@ -29,6 +29,8 @@ const AddmoneyModal = async () => {
                     }
                     title="Zero Fees on Funding wallet."
                     drawerClassName='max-h-[90vh] overflow-y-auto'
+                    dialogOnly
+                    dialogClassName='!max-w-[90vw]'
                 >
                     {
                         account ? (
