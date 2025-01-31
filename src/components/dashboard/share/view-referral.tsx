@@ -18,8 +18,10 @@ const ViewReferral = ({ referral }: Props) => {
   return (
     <DynamicModal
         trigger={
-            <Button className='bg-pink-100 text-black rounded-full hover:opacity-70 hover:bg-white'>
-                View
+            <Button className={cn('bg-pink-100 text-black rounded-full hover:opacity-70 hover:bg-white', {
+                'bg-sky-300': referral?.status === 'verified'
+            })}>
+                {referral?.status === 'verified' ? "Claim" : "View"}
             </Button>
         }
         hideDrawerCancel
@@ -55,8 +57,16 @@ const ViewReferral = ({ referral }: Props) => {
                     disabled={!(referral.status === 'verified') || isPending}
                     onClick={() => claimReferral(referral.id)}
                 >
-                    {isPending ? 'Claiming...' : `Claim My ${formatDataAmount((referral?.reward || 0) * DATA_MB_PER_NAIRA)}`}
-                    <Sparkles size={16} />
+                    {referral.status === 'claimed' ? (
+                        'Claimed'
+                    ) : isPending ? (
+                        'Claiming...'
+                    ) : (
+                        <>
+                            {`Claim My ${formatDataAmount((referral?.reward || 0) * DATA_MB_PER_NAIRA)}`}
+                            <Sparkles size={16} />
+                        </>
+                    )}
                 </Button>
             </div>
       </div>
