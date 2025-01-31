@@ -23,7 +23,7 @@ const ShareAndEarnPage = async () => {
             <h2 className='text-2xl font-semibold leading-normal'>Share and Earn.</h2>
           )
         }
-        <p className='text-sm lg:text-lg font-normal leading-normal text-gray-100'>Share your referral link with your friends and earn rewards when they sign up and make a purchase. You can earn up to <b className='font-bold'>300 MB</b> data bonus on every user invited. Read our <ShareTerms /> to understand how it works</p>
+        <p className='text-sm lg:text-lg font-normal leading-normal text-gray-100'>Share your referral link with your friends and earn rewards when they sign up and make a purchase. You can earn up to <b className='font-bold'>300MB</b> data bonus on every user invited. Read our <ShareTerms /> to understand how it works</p>
 
         {
           user ? (
