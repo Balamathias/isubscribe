@@ -1,23 +1,23 @@
-import SubsComponent from '@/components/dashboard/subs/sub-component'
+import TransferComponent from '@/components/dashboard/transfer/transfer-component'
 import ActionBoxSkeleton from '@/components/skeletons/ActionBoxSkeleton'
 import WidthWrapper from '@/components/WidthWrapper'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: "Services | isubscribe"
+  title: "Send money | isubscribe"
 }
 
-const SubsPage = () => {
+const TransferPage = () => {
   return (
     <WidthWrapper className='!max-w-3xl mt-16 md:py-12'>
-        <h2 className='text-xl font-semibold py-2 tracking-normal'>Services</h2>
+        <h2 className='text-xl font-semibold py-2 tracking-normal'>Transfer Money</h2>
 
         <Suspense fallback={<ActionBoxSkeleton />}>
-          <SubsComponent />
+          <TransferComponent />
         </Suspense>
     </WidthWrapper>
   )
 }
 
-export default SubsPage
+export default TransferPage

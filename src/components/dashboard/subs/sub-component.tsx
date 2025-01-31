@@ -2,7 +2,7 @@
 
 import DynamicModal from '@/components/DynamicModal'
 import { cn } from '@/lib/utils'
-import { LucideBook, LucideHelpCircle, LucideLamp, LucideNetwork, LucideTv, LucideWifi } from 'lucide-react'
+import { LucideBook, LucideHelpCircle, LucideLamp, LucideNetwork, LucideSend, LucideShare2, LucideTv, LucideWifi } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import Support from '../support'
@@ -42,6 +42,20 @@ const services = [
         icon: <LucideBook />,
         className: 'text-rose-600 bg-rose-600/10',
         url: '/dashboard/education'
+    },
+    {
+        service: 'share',
+        label: 'Share & Earn',
+        icon: <LucideShare2 />,
+        className: 'text-indigo-600 bg-indigo-600/10',
+        url: '/dashboard/share'
+    },
+    {
+        service: 'transfer',
+        label: 'Transfer Money', 
+        icon: <LucideSend />,
+        className: 'text-orange-600 bg-orange-600/10',
+        url: '/dashboard/transfer'
     },
     {
         service: 'support',

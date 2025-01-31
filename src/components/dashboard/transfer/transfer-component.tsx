@@ -1,0 +1,175 @@
+'use client'
+
+import React, { useCallback, useState } from 'react'
+import { StyledInput } from "@/components/ui/styled-input"
+import { User2, Wallet } from "lucide-react"
+import { useDebouncedCallback } from 'use-debounce'
+import { searchAccounts } from '@/lib/actions/search-accounts'
+import { Tables } from '@/types/database'
+import { Card } from '@/components/ui/card'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { formatNigerianNaira } from '@/funcs/formatCurrency'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+
+const MIN_AMOUNT = 100
+const MAX_AMOUNT = 1000000
+
+const TransferComponent = () => {
+  const [accountNumber, setAccountNumber] = useState('')
+  const [amount, setAmount] = useState('')
+  const [searching, setSearching] = useState(false)
+  const [account, setAccount] = useState<Tables<'account'> & { profile?: Tables<'profile'> | null } | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const searchAccount = useDebouncedCallback(async (query: string) => {
+    if (!query || query.length < 3) {
+      setAccount(null)
+      setError(null)
+      return
+    }
+
+    try {
+      setSearching(true)
+      setError(null)
+      
+      const { data, error } = await searchAccounts(query)
+      
+      if (error) {
+        setError(error)
+        toast.error(error)
+        return
+      }
+
+      if (data && data[0]) {
+        setAccount(data[0])
+      } else {
+        setAccount(null)
+        setError('No account found')
+      }
+    } catch (err) {
+      setError('Failed to search account')
+      toast.error('Failed to search account')
+    } finally {
+      setSearching(false)
+    }
+  }, 500)
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setAccountNumber(value)
+    searchAccount(value)
+  }, [searchAccount])
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    // Only allow numbers
+    if (!/^\d*$/.test(value)) return
+    setAmount(value)
+  }
+
+  const validateAmount = (amount: string): boolean => {
+    const numAmount = Number(amount)
+    if (isNaN(numAmount)) {
+      toast.error('Please enter a valid amount')
+      return false
+    }
+    if (numAmount < MIN_AMOUNT) {
+      toast.error(`Minimum transfer amount is ${formatNigerianNaira(MIN_AMOUNT)}`)
+      return false
+    }
+    if (numAmount > MAX_AMOUNT) {
+      toast.error(`Maximum transfer amount is ${formatNigerianNaira(MAX_AMOUNT)}`)
+      return false
+    }
+    return true
+  }
+
+  const handleSubmit = async () => {
+    if (!account) {
+      toast.error('Please select a valid recipient')
+      return
+    }
+
+    if (!validateAmount(amount)) {
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      // TODO: Implement transfer logic
+      toast.success('Transfer initiated')
+    } catch (err) {
+      toast.error('Transfer failed')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col space-y-4 w-full">
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">Enter recipient&apos;s account number</p>
+      </div>
+
+      <StyledInput 
+        icon={User2}
+        placeholder="Enter account number..." 
+        value={accountNumber}
+        onChange={handleInputChange}
+        error={!!error}
+      />
+
+      {searching && (
+        <div className="text-sm text-muted-foreground animate-pulse">
+          Searching...
+        </div>
+      )}
+
+      {error && (
+        <div className="text-sm text-red-500">
+          {error}
+        </div>
+      )}
+
+      {account && (
+        <Card className="p-4 space-y-2 bg-secondary/50">
+          <div className="flex items-center gap-4">
+            <Avatar>
+              <AvatarFallback>
+                {account?.profile?.full_name?.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <h3 className="font-medium text-foreground">{account?.profile?.full_name}</h3>
+              <p className="text-sm text-muted-foreground">{account.account_number}</p>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">Enter amount to transfer</p>
+        <StyledInput 
+          icon={Wallet}
+          placeholder={`Amount (${formatNigerianNaira(MIN_AMOUNT)} - ${formatNigerianNaira(MAX_AMOUNT)})`}
+          value={amount}
+          onChange={handleAmountChange}
+          type="text"
+          inputMode="numeric"
+        />
+      </div>
+
+      <Button 
+        onClick={handleSubmit}
+        disabled={!account || !amount || isSubmitting}
+        className="w-full h-12 rounded-lg bg-gradient-to-r from-violet-600 to-pink-600 text-white hover:from-violet-700 hover:to-pink-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSubmitting ? 'Processing...' : 'Transfer Funds'}
+      </Button>
+    </div>
+  )
+}
+
+export default TransferComponent

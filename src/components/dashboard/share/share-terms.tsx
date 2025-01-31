@@ -3,7 +3,7 @@ import React from 'react'
 
 const ShareTerms = () => {
   return (
-    <DynamicModal trigger={<button className='font-semibold hover:text-primary underline'>Terms</button>} title='Share Terms'>
+    <DynamicModal trigger={<button className='font-semibold hover:text-primary underline'>Terms</button>} title='Share Terms' dialogClassName='!max-w-[60vw]'>
         <div className="flex flex-col gap-4 text-sm max-h-[70vh] overflow-y-auto pr-4 w-full">
             <section>
                 <h3 className="text-lg font-semibold mb-2">How Share &amp; Earn Works</h3>
