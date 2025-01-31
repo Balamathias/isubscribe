@@ -86,6 +86,29 @@ export const POST = async (req: Request) => {
     }
 
     if (data.eventType === 'SUCCESSFUL_TRANSACTION') {
+
+        const isNewUser = user?.created_at && 
+        (new Date().getTime() - new Date(user.created_at).getTime()) <= 3 * 24 * 60 * 60 * 1000
+
+        if (isNewUser) {
+            const { count: transactionCount } = await supabase.from('history')
+                .select('*', { count: 'exact', head: true })
+                .eq('user', user.id)
+
+            if (!transactionCount) {
+                const { data: referral } = await supabase.from('referrals')
+                    .select()
+                    .eq('referred', user.id)
+                    .single()
+
+                if (referral?.id) {
+                    await supabase.from('referrals')
+                        .update({ status: 'verified', updated_at: new Date().toISOString() })
+                        .eq('id', referral.id)
+                }
+            }
+        }
+
         const { data: wallet, error: walletError } = await supabase.from('wallet')
             .select('balance')
             .eq('user', user?.id)
@@ -121,28 +144,6 @@ export const POST = async (req: Request) => {
         }).catch(error => {
             console.error('Failed to send email:', error);
         });
-
-        const isNewUser = user?.created_at && 
-        (new Date().getTime() - new Date(user.created_at).getTime()) <= 3 * 24 * 60 * 60 * 1000
-
-        if (user && isNewUser) {
-            const { count: transactionCount } = await supabase.from('history')
-                .select('*', { count: 'exact', head: true })
-                .eq('user', user.id)
-
-            if (transactionCount === 1 && isNewUser) {
-                const { data: referral } = await supabase.from('referrals')
-                    .select()
-                    .eq('referred', user.id)
-                    .single()
-
-                if (referral?.id) {
-                    await supabase.from('referrals')
-                        .update({ status: 'verified', updated_at: new Date().toISOString() })
-                        .eq('id', referral.id)
-                }
-            }
-        }
 
         return NextResponse.json({ message: 'Wallet credited successfully.' }, { status: 200 });
     }
