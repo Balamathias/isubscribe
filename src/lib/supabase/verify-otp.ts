@@ -17,10 +17,6 @@ export async function verifyOtp(payload:any) {
     return { error: error.message };
   }
 
-  if (data && data?.user?.id && payload?.referrer) {
-    await createReferral({ referrer: payload?.referrer, referred: data?.user?.id, status: 'pending', reward: 100 })
-  }
-
   console.log("ddddd", data)
   console.log("errrr", error)
 

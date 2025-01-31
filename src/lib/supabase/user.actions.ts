@@ -64,12 +64,12 @@ export const signOut = async () => {
     }
 }
 
-export const signInWithOAuth = async (provider?: Provider) => {
+export const signInWithOAuth = async (provider?: Provider, referral?: string) => {
     const supabase = createClient()
     const {data, error} = await supabase.auth.signInWithOAuth({
         provider: provider || 'google',
         options: {
-            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL!}/auth/callback?next=/auth/pass-pin`,
+            redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL!}/auth/callback?next=/auth/pass-pin${referral ? `?referral=${encodeURIComponent(referral)}` : ''}`,
         },
     })
 

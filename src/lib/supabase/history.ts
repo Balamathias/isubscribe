@@ -100,13 +100,14 @@ export const saveAirtimeErrorHistory = async (msg: string, data: Record<string, 
 
 export const saveCashbackHistory = async ({amount, ...rest}: {
     amount: number,
+    [key: string]: any
 }) => {
     const { data: user } = await getUser()
 
     const { data: _insertHistory } = await insertTransactionHistory({
         description: `You have successfully received a cashback of ${formatDataAmount(amount * DATA_MB_PER_NAIRA)}.`,
         status: 'success',
-        title: 'Cashback',
+        title: rest?.title ?? 'Cashback',
         type: EVENT_TYPE.cashback,
         email: null,
         meta_data: JSON.stringify({

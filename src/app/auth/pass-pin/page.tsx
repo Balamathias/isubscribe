@@ -1,6 +1,7 @@
 import WidthWrapper from '@/components/WidthWrapper'
 import PassPinForm from '@/components/dashboard/PassPinForm'
 import { generateReservedAccount, getUser } from '@/lib/supabase/accounts'
+import { createReferral } from '@/lib/supabase/share'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Set your pass pin.'
 }
 
-const Page = async () => {
+const Page = async ({ searchParams: { referral } }: { searchParams: { referral?: string }}) => {
 
   const [
     { data: user },
@@ -30,6 +31,12 @@ const Page = async () => {
   }
 
   if (user?.onboarded) return redirect('/dashboard')
+  
+  if (user && !user?.onboarded) {
+    if (referral) {
+      await createReferral({referrer: referral , referred: user?.id, status: 'pending', reward: 100 })
+    }
+  }
     
   return (
     <WidthWrapper className='min-h-screen flex flex-col items-center justify-center'>

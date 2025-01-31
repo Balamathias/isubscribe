@@ -77,12 +77,31 @@ export const POST = async (req: Request) => {
     
     const { data: user, error } = await supabase
         .from('profile')
-        .select('id, email, wallet(balance)')
+        .select('id, email, created_at, wallet(balance)')
         .eq('email', data.eventData?.customer?.email)
         .single();
 
-    // const totalUserTransactions = await supabase.from('history')
-    //     .select()
+    const isNewUser = user?.created_at && 
+        (new Date().getTime() - new Date(user.created_at).getTime()) <= 3 * 24 * 60 * 60 * 1000
+
+    if (user && isNewUser) {
+        const { count: transactionCount } = await supabase.from('history')
+            .select('*', { count: 'exact', head: true })
+            .eq('user', user.id)
+
+        if (transactionCount === 1 && isNewUser) {
+            const { data: referral } = await supabase.from('referrals')
+                .select()
+                .eq('referred', user.id)
+                .single()
+
+            if (referral?.id) {
+                await supabase.from('referrals')
+                    .update({ status: 'verified', updated_at: new Date().toISOString() })
+                    .eq('id', referral.id)
+            }
+        }
+    }
 
     if (error || !user) {
         return NextResponse.json({ message: 'Error fetching user' }, { status: 500 });
