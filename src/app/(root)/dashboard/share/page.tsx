@@ -5,7 +5,13 @@ import ShareTerms from '@/components/dashboard/share/share-terms'
 import { Button } from '@/components/ui/button'
 import { getUser } from '@/lib/supabase/accounts'
 import { LucideShare } from 'lucide-react'
+import { Metadata } from 'next'
 import React, { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: "Share and Earn on isubcribe",
+  description: "Share your referral link with friends and earn rewards. Get up to 300MB data bonus for each successful referral on isubscribe."
+}
 
 const ShareAndEarnPage = async () => {
 
