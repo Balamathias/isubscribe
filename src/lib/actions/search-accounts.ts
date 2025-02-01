@@ -1,10 +1,13 @@
 'use server'
 
 import { createClient } from "@/utils/supabase/server"
-import { Tables } from "@/types/database"
 import { getAccount } from "../supabase/accounts"
+import { redis } from "../redis"
+import { Tables } from "@/types/database";
 
-export async function searchAccounts(query: string) {
+const ONE_DAY_IN_SECONDS = 5 * 24 * 60 * 60; // 1 day in seconds
+
+export async function searchAccounts(query: string): Promise<{ data: (Tables<'account'> & { profile: Tables<'profile'> | null })[] | null, error: string | null }> {
   if (!query || query.length < 3) {
     return { data: null, error: null }
   }
@@ -18,6 +21,12 @@ export async function searchAccounts(query: string) {
   }
 
   try {
+    const cachedResult = await redis.get<(Tables<'account'> & { profile: Tables<'profile'> | null })[] | null>(query);
+    if (cachedResult) {
+      console.log("cached result", cachedResult)
+      return { data: cachedResult, error: null };
+    }
+
     const { data, error } = await supabase
       .from('account')
       .select(`*, profile (*)`)
@@ -27,8 +36,10 @@ export async function searchAccounts(query: string) {
       return { data: null, error: error.message }
     }
 
+    await redis.set(query, (data), { ex: ONE_DAY_IN_SECONDS });
+
     return { data: data, error: null }
   } catch (error) {
     return { data: null, error: 'Failed to search accounts' }
   }
-} 
+}

@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { StyledInput } from "@/components/ui/styled-input"
-import { User2, Wallet } from "lucide-react"
+import { User2, Wallet, ArrowRight, AlertCircle } from "lucide-react"
 import { useDebouncedCallback } from 'use-debounce'
 import { searchAccounts } from '@/lib/actions/search-accounts'
 import { Tables } from '@/types/database'
@@ -13,6 +13,10 @@ import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import DynamicModal from '@/components/DynamicModal'
 import ConfirmPin from '../ConfirmPin'
+import LoadingSpinner from '@/components/loaders/LoadingSpinner'
+import { useSendMoney } from '@/lib/react-query/funcs/transfer'
+import Confetti from 'react-confetti';
+import { LucideCheckCircle } from 'lucide-react';
 
 const MIN_AMOUNT = 10
 const MAX_AMOUNT = 1000000
@@ -30,6 +34,17 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [proceed, setProceed] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
+
+  const [success, setSuccess] = useState(false)
+  const [confettiShown, setConfettiShown] = useState(false);
+
+  const { mutateAsync: sendMoney, isPending: transferring, data } = useSendMoney()
+
+  useEffect(() => {
+    if (success && !confettiShown) {
+      setConfettiShown(true);
+    }
+  }, [success, confettiShown]);
 
   const searchAccount = useDebouncedCallback(async (query: string) => {
     if (!query || query.length < 3) {
@@ -113,20 +128,20 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
   }
 
   const handleConfirm = () => {
-    setShowConfirmation(false)
+    // setShowConfirmation(false)
     setProceed(true)
   }
 
   const handleTransfer = async () => {
-    setIsSubmitting(true)
-    try {
-      // TODO: Implement transfer logic
-      toast.success('Transfer initiated')
-    } catch (err) {
-      toast.error('Transfer failed')
-    } finally {
-      setIsSubmitting(false)
-    }
+    setProceed(false)
+    await sendMoney({ amount: Number(amount), accountNumber: accountNumber }, {
+      onSuccess: () => {
+        setSuccess(true)
+        setAccountNumber('')
+        setShowConfirmation(false)
+        toast.success(`You have successfully transferred ${formatNigerianNaira(Number(amount))} to ${account?.profile?.full_name}`)
+      }
+    })
   }
 
   return (
@@ -142,6 +157,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
         onChange={handleInputChange}
         error={!!error}
         name='account_number'
+        className='bg-white dark:bg-secondary/50'
       />
 
       {searching && (
@@ -157,7 +173,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
       )}
 
       {account && (
-        <Card className="p-4 space-y-2 bg-secondary/50">
+        <Card className="p-4 space-y-2 dark:bg-secondary/50">
           <div className="flex items-center gap-4">
             <Avatar>
               <AvatarFallback>
@@ -182,12 +198,13 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
           type="text"
           inputMode="numeric"
           name='amount'
+          className='bg-white dark:bg-secondary/50'
         />
       </div>
 
       <Button 
         onClick={handleSubmit}
-        disabled={!account || !amount || isSubmitting}
+        disabled={!account || !amount || isSubmitting || transferring}
         className="w-full h-12 rounded-lg bg-gradient-to-r from-violet-600 to-pink-600 text-white hover:from-violet-700 hover:to-pink-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isSubmitting ? 'Processing...' : 'Transfer Funds'}
@@ -195,56 +212,83 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
 
       <DynamicModal
         open={showConfirmation}
-        setOpen={setShowConfirmation}
-        dialogClassName='w-full'
+        setOpen={transferring ? undefined : setShowConfirmation}
+        dialogClassName={'sm:max-w-md dark:bg-card'}
+        drawerClassName="dark:bg-card"
       >
-        <div className="p-6 space-y-6 w-full">
-          <h2 className="text-xl font-semibold">Confirm Transfer</h2>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Recipient</p>
-              <p className="font-medium">{account?.profile?.full_name}</p>
-              <p className="text-sm text-muted-foreground">{account?.account_number}</p>
+        {transferring && 
+          <LoadingSpinner isPending={transferring} />
+        }
+        <Card className="border-none shadow-none">
+          <div className="p-6 space-y-6">
+            {/* Header Section */}
+            <div className="text-center space-y-2">
+              <div className="h-12 w-12 mx-auto rounded-full flex items-center justify-center bg-violet-600/20 text-violet-600">
+                <ArrowRight size={20} />
+              </div>
+              <h2 className="text-xl font-medium text-primary dark:text-violet-400">Transfer Details</h2>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Amount</p>
-              <p className="font-medium">{formatNigerianNaira(Number(amount))}</p>
+
+            {/* Details Section */}
+            <div className="space-y-4 bg-secondary/50 rounded-xl p-4">
+              {/* Recipient Info */}
+              <div className="flex justify-between items-center pb-3 border-b border-border/50">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Sending to</p>
+                  <p className="font-medium">{account?.profile?.full_name}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-muted-foreground">{account?.account_number}</p>
+                </div>
+              </div>
+
+              {/* Amount Info */}
+              <div className="flex justify-between items-center pb-3 border-b border-border/50">
+                <p className="text-sm text-muted-foreground">Amount</p>
+                <p className="font-semibold text-lg">{formatNigerianNaira(Number(amount))}</p>
+              </div>
+
+              {/* Balance Info */}
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-muted-foreground">Available Balance</p>
+                <p className="font-medium">{formatNigerianNaira(wallet?.balance || 0)}</p>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-sm text-muted-foreground">Available Balance</p>
-              <p className="font-medium">{formatNigerianNaira(wallet?.balance || 0)}</p>
-            </div>
+
+            {/* Insufficient Funds Warning */}
             {isInsufficientFunds() && (
-              <div className="p-4 bg-destructive/10 rounded-2xl space-y-2">
-                <div className="flex items-center justify-between text-destructive">
-                  <p className="font-medium">Insufficient Funds</p>
-                  <p className="font-medium">
-                    Deficit: {formatNigerianNaira(Number(amount) - (wallet?.balance || 0))}
+              <div className="rounded-xl bg-red-500/10 p-4 space-y-2">
+                <div className="flex items-center gap-2 text-red-600">
+                  <AlertCircle size={18} />
+                  <p className="font-medium">Insufficient Balance</p>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <p className="text-muted-foreground">Amount Needed</p>
+                  <p className="text-red-600 font-medium">
+                    {formatNigerianNaira(Number(amount) - (wallet?.balance || 0))}
                   </p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Your current balance is not enough to complete this transfer.
-                </p>
               </div>
             )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-2">
+              <Button
+                className="flex-1 rounded-xl bg-gradient-to-r from-gray-50 to-violet-100 dark:from-gray-800 dark:to-violet-900/40 hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-800"
+                onClick={() => setShowConfirmation(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1 rounded-xl bg-gradient-to-r from-violet-500 to-pink-600 hover:from-violet-600 hover:to-violet-700 disabled:from-violet-500/50 disabled:to-violet-600/50"
+                onClick={handleConfirm}
+                disabled={isInsufficientFunds()}
+              >
+                Proceed
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => setShowConfirmation(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="flex-1"
-              onClick={handleConfirm}
-              disabled={isInsufficientFunds()}
-            >
-              Confirm
-            </Button>
-          </div>
-        </div>
+        </Card>
       </DynamicModal>
 
       <DynamicModal
@@ -260,6 +304,23 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
           func={handleTransfer}
           profile={account?.profile!}
         />
+      </DynamicModal>
+
+      <DynamicModal
+        open={success}
+        setOpen={setSuccess}
+      >
+        {confettiShown && <Confetti recycle={false} className='w-full'/>}
+        <div className="flex flex-col items-center p-4">
+          <div className='w-12 h-12 bg-green-600/20 rounded-full flex items-center justify-center text-green-600'>
+            <LucideCheckCircle size={20} />
+          </div>
+          <h2 className="text-xl font-semibold">Transaction Successful!</h2>
+          <p className="mt-2 text-xs">
+            You have successfully transferred {formatNigerianNaira(Number(amount))} to {account?.profile?.full_name}
+          </p>
+          <p className='mt-4 text-xs text-muted-foreground'>Secured by isubscribe</p>
+        </div>
       </DynamicModal>
     </div>
   )

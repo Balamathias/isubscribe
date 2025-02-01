@@ -26,6 +26,8 @@ const HistoryItem = ({item, className}: { item: Tables<'history'>, className?: s
                 return product[EVENT_TYPE.tv_topup].image
             case EVENT_TYPE.cashback:
                 return product[EVENT_TYPE.cashback].image
+            case EVENT_TYPE.money_transfer:
+                return product[EVENT_TYPE.money_transfer].image
             default:
                 return product[(JSON.parse(
                     item.meta_data?.toString() ?? '{}'
