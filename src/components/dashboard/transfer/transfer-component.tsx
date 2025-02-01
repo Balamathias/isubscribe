@@ -138,6 +138,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
       onSuccess: () => {
         setSuccess(true)
         setAccountNumber('')
+        setAmount('')
         setShowConfirmation(false)
         toast.success(`You have successfully transferred ${formatNigerianNaira(Number(amount))} to ${account?.profile?.full_name}`)
       }
@@ -317,7 +318,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
           </div>
           <h2 className="text-xl font-semibold">Transaction Successful!</h2>
           <p className="mt-2 text-xs">
-            You have successfully transferred {formatNigerianNaira(Number(amount))} to {account?.profile?.full_name}
+            You have successfully transferred {formatNigerianNaira(Number(data?.data?.amount))} to {account?.profile?.full_name}
           </p>
           <p className='mt-4 text-xs text-muted-foreground'>Secured by isubscribe</p>
         </div>

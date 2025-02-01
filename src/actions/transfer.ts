@@ -5,6 +5,7 @@ import { getUser } from "@/lib/supabase/accounts"
 import { getWallet } from "@/lib/supabase/wallets"
 import { EVENT_TYPE } from "@/utils/constants/EVENTS"
 import { createClient } from "@/utils/supabase/server"
+import { nanoid } from 'nanoid'
 
 export const sendMoney = async (payload: { amount: number, accountNumber: string }) => {
 
@@ -14,7 +15,7 @@ export const sendMoney = async (payload: { amount: number, accountNumber: string
         return { error: 'Wallet not found or insufficient funds' }
     }
 
-    if (wallet?.balance < payload.amount) {
+    if (!wallet?.balance || (wallet?.balance < payload.amount)) {
         return { error: 'Insufficient balance' }
     }
 
@@ -22,7 +23,7 @@ export const sendMoney = async (payload: { amount: number, accountNumber: string
         const supabase = createClient()
 
         const { error } = await supabase.from('wallet').update({
-            balance: wallet.balance - payload.amount
+            balance: Math.max((wallet.balance - payload.amount), 0)
         }).eq('id', wallet.id).select()
 
         if (error) {
@@ -66,8 +67,8 @@ export const sendMoney = async (payload: { amount: number, accountNumber: string
                 user: wallet.user,
                 meta_data: JSON.stringify({ amount: payload.amount, recipient: recipient.id, recipient_name: recipient?.profile?.full_name, recipient_email: recipient?.profile?.email }),
                 amount: payload.amount!,
-                transaction_id: Math.random().toString(36).substring(7),
-            }).select(),
+                transaction_id: nanoid(24),
+            }).select().single(),
 
             await supabase.from('history').insert({
                 type: EVENT_TYPE.money_transfer,
@@ -77,7 +78,7 @@ export const sendMoney = async (payload: { amount: number, accountNumber: string
                 user: recipient.user,
                 meta_data: JSON.stringify({ amount: payload.amount, sender: wallet.user, sender_name: user?.full_name, sender_email: user?.email }),
                 amount: payload.amount!,
-                transaction_id: Math.random().toString(36).substring(7),
+                transaction_id: nanoid(24),
             }).select()
         ])
 
