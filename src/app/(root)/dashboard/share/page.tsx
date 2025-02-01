@@ -3,7 +3,8 @@ import MyShares from '@/components/dashboard/share/my-shares'
 import ShareModal from '@/components/dashboard/share/share-modal'
 import ShareTerms from '@/components/dashboard/share/share-terms'
 import { Button } from '@/components/ui/button'
-import { getUser } from '@/lib/supabase/accounts'
+import { getAccount, getUser } from '@/lib/supabase/accounts'
+import { createClient } from '@/utils/supabase/server'
 import { LucideShare } from 'lucide-react'
 import { Metadata } from 'next'
 import React, { Suspense } from 'react'
@@ -15,7 +16,12 @@ export const metadata: Metadata = {
 
 const ShareAndEarnPage = async () => {
 
-  const { data: user } = await getUser()
+  const supabase = createClient()
+
+  const [{ data: user }, { data: account }] = await Promise.all([
+    getUser(),
+    getAccount()
+  ])
 
   return (
     <div className='flex flex-col gap-y-4 md:py-12 mt-16 sm:px-12 px-2 py-4'>
@@ -32,15 +38,11 @@ const ShareAndEarnPage = async () => {
         <p className='text-sm lg:text-lg font-normal leading-normal text-gray-100'>Share your referral link with your friends and earn rewards when they sign up and make a purchase. You can earn up to <b className='font-bold'>300MB</b> data bonus on every user invited. Read our <ShareTerms /> to understand how it works</p>
 
         {
-          user ? (
+          (user) ? (
             <ShareModal
-              url={`${process.env.NEXT_PUBLIC_SITE_URL}/sign-up?referral=${user.id}`}
-              trigger={
-                <Button size={'lg'} className='bg-white text-black rounded-full hover:opacity-70 hover:bg-white'>
-                  Share Now
-                  <LucideShare className='ml-2 text-gray-600' size={24} />  
-                </Button>
-              } />
+              url={`${process.env.NEXT_PUBLIC_SITE_URL}/sign-up?referral=${user.unique_code}`}
+              unique_code={account?.account_number!}  
+            />
           ): (
             <PleaseSignIn
               trigger={
@@ -56,7 +58,7 @@ const ShareAndEarnPage = async () => {
       </div>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <MyShares userId={user?.id!} />
+        <MyShares userId={user?.unique_code!} />
       </Suspense>
     </div>
   )

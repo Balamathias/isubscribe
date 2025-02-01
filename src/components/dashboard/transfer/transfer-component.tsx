@@ -11,17 +11,25 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import DynamicModal from '@/components/DynamicModal'
+import ConfirmPin from '../ConfirmPin'
 
-const MIN_AMOUNT = 100
+const MIN_AMOUNT = 10
 const MAX_AMOUNT = 1000000
 
-const TransferComponent = () => {
+interface TransferComponentProps {
+    wallet: Tables<'wallet'> | null
+}
+
+const TransferComponent = ({ wallet }: TransferComponentProps) => {
   const [accountNumber, setAccountNumber] = useState('')
   const [amount, setAmount] = useState('')
   const [searching, setSearching] = useState(false)
   const [account, setAccount] = useState<Tables<'account'> & { profile?: Tables<'profile'> | null } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [proceed, setProceed] = useState(false)
+  const [showConfirmation, setShowConfirmation] = useState(false)
 
   const searchAccount = useDebouncedCallback(async (query: string) => {
     if (!query || query.length < 3) {
@@ -86,6 +94,11 @@ const TransferComponent = () => {
     return true
   }
 
+  const isInsufficientFunds = useCallback(() => {
+    const numAmount = Number(amount)
+    return !wallet?.balance || numAmount > wallet.balance
+  }, [amount, wallet?.balance])
+
   const handleSubmit = async () => {
     if (!account) {
       toast.error('Please select a valid recipient')
@@ -96,6 +109,15 @@ const TransferComponent = () => {
       return
     }
 
+    setShowConfirmation(true)
+  }
+
+  const handleConfirm = () => {
+    setShowConfirmation(false)
+    setProceed(true)
+  }
+
+  const handleTransfer = async () => {
     setIsSubmitting(true)
     try {
       // TODO: Implement transfer logic
@@ -110,7 +132,7 @@ const TransferComponent = () => {
   return (
     <div className="flex flex-col space-y-4 w-full">
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">Enter recipient&apos;s account number</p>
+        <p className="text-sm text-muted-foreground">Enter recipient&apos;s isubscribe account number</p>
       </div>
 
       <StyledInput 
@@ -119,6 +141,7 @@ const TransferComponent = () => {
         value={accountNumber}
         onChange={handleInputChange}
         error={!!error}
+        name='account_number'
       />
 
       {searching && (
@@ -158,6 +181,7 @@ const TransferComponent = () => {
           onChange={handleAmountChange}
           type="text"
           inputMode="numeric"
+          name='amount'
         />
       </div>
 
@@ -168,6 +192,75 @@ const TransferComponent = () => {
       >
         {isSubmitting ? 'Processing...' : 'Transfer Funds'}
       </Button>
+
+      <DynamicModal
+        open={showConfirmation}
+        setOpen={setShowConfirmation}
+        dialogClassName='w-full'
+      >
+        <div className="p-6 space-y-6 w-full">
+          <h2 className="text-xl font-semibold">Confirm Transfer</h2>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Recipient</p>
+              <p className="font-medium">{account?.profile?.full_name}</p>
+              <p className="text-sm text-muted-foreground">{account?.account_number}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Amount</p>
+              <p className="font-medium">{formatNigerianNaira(Number(amount))}</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Available Balance</p>
+              <p className="font-medium">{formatNigerianNaira(wallet?.balance || 0)}</p>
+            </div>
+            {isInsufficientFunds() && (
+              <div className="p-4 bg-destructive/10 rounded-2xl space-y-2">
+                <div className="flex items-center justify-between text-destructive">
+                  <p className="font-medium">Insufficient Funds</p>
+                  <p className="font-medium">
+                    Deficit: {formatNigerianNaira(Number(amount) - (wallet?.balance || 0))}
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Your current balance is not enough to complete this transfer.
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setShowConfirmation(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="flex-1"
+              onClick={handleConfirm}
+              disabled={isInsufficientFunds()}
+            >
+              Confirm
+            </Button>
+          </div>
+        </div>
+      </DynamicModal>
+
+      <DynamicModal
+        open={proceed}
+        setOpen={setProceed}
+        dismissible
+        dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
+        drawerClassName="dark:bg-card"
+        hideDrawerCancel
+      >
+        <ConfirmPin 
+          className='rounded-none' 
+          func={handleTransfer}
+          profile={account?.profile!}
+        />
+      </DynamicModal>
     </div>
   )
 }

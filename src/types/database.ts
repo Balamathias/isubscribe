@@ -283,6 +283,7 @@ export type Database = {
           security_answer: string | null
           security_question: string | null
           state: string | null
+          unique_code: string | null
           updated_at: string | null
           username: string | null
         }
@@ -300,6 +301,7 @@ export type Database = {
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
+          unique_code?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -317,6 +319,7 @@ export type Database = {
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
+          unique_code?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -363,6 +366,7 @@ export type Database = {
       referrals: {
         Row: {
           created_at: string
+          email: string | null
           id: string
           referred: string | null
           referrer: string | null
@@ -372,6 +376,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email?: string | null
           id?: string
           referred?: string | null
           referrer?: string | null
@@ -381,6 +386,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email?: string | null
           id?: string
           referred?: string | null
           referrer?: string | null
@@ -401,7 +407,7 @@ export type Database = {
             columns: ["referrer"]
             isOneToOne: false
             referencedRelation: "profile"
-            referencedColumns: ["id"]
+            referencedColumns: ["unique_code"]
           },
         ]
       }

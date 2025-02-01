@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../query-keys";
 import { setPassPin } from "@/lib/supabase/pass-pin";
 import { getUser, updateSecurityQuestion } from "@/lib/supabase/accounts";
-import { validateResetPasswordOTP } from "@/lib/supabase/user.actions";
+import { updateUniqueCode, validateResetPasswordOTP } from "@/lib/supabase/user.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -32,6 +32,22 @@ export const useValidateResetPassword = () => {
             if (error) throw error
             toast.success(`OTP verified successfully, redirecting...`)
             router.replace(`/auth/reset-password?email=${data?.user?.email}`)
+        },
+        onError: (error) => {
+            console.error(error)
+            toast.error(error?.message)
+        }
+    })
+}
+
+export const useUpdateUniqueCode = () => {
+    const router = useRouter()
+    return useMutation({
+        mutationKey: [QueryKeys.update_unique_code],
+        mutationFn: async (data: {unique_code: string}) => updateUniqueCode(data?.unique_code),
+        onSuccess: ({ data, error }) => {
+            if (error) throw error
+            router.refresh()
         },
         onError: (error) => {
             console.error(error)

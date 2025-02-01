@@ -1,6 +1,8 @@
 'use client'
 
 import DynamicModal from '@/components/DynamicModal';
+import { Button } from '@/components/ui/button';
+import { useUpdateUniqueCode } from '@/lib/react-query/funcs/user';
 import { Check, Copy, LucideShare } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react'
@@ -17,11 +19,14 @@ import {
 
 interface Props {
     url: string,
-    trigger: React.ReactNode
+    trigger?: React.ReactNode,
+    unique_code: string
 }
 
-const ShareModal = ({ trigger, url }: Props) => {
+const ShareModal = ({ trigger, url, unique_code }: Props) => {
   const [copied, setCopied] = useState(false);
+
+  const { mutate: updateUniqueCode, isPending } = useUpdateUniqueCode()
 
   const handleCopy = async () => {
     try {
@@ -35,10 +40,38 @@ const ShareModal = ({ trigger, url }: Props) => {
 
   return (
     <DynamicModal
-        trigger={trigger}
+        trigger={
+          trigger || (
+            <span>
+              <Button 
+                size={'lg'} 
+                className='bg-white text-black rounded-full hover:opacity-70 hover:bg-white'
+                onClick={() => updateUniqueCode({ unique_code })}
+                disabled={isPending}
+              >
+                  {isPending ? (
+                    <div className="flex items-center">
+                      <span className="animate-spin mr-2">⭘</span>
+                      Processing...
+                    </div>
+                  ) : (
+                    <>
+                      Share Now
+                      <LucideShare className='ml-2 text-gray-600' size={24} />  
+                    </>
+                  )}
+              </Button>
+            </span>
+          )
+        }
         title='Share and Earn'
     >
-        <div className='flex flex-col gap-4 w-full'>
+        {isPending ? (
+          <div className="flex items-center justify-center py-8">
+            <span className="animate-spin text-2xl">⭘</span>
+          </div>
+        ) : (
+          <div className='flex flex-col gap-4 w-full'>
             <div className='flex items-center gap-2 w-full bg-secondary rounded-full p-2 px-3.5'>
                 <input 
                     type="text" 
@@ -80,6 +113,7 @@ const ShareModal = ({ trigger, url }: Props) => {
             </EmailShareButton>
           </div>
         </div>
+        )}
     </DynamicModal>
   )
 }

@@ -30,12 +30,12 @@ const AddmoneyModal = async () => {
                     title="Zero Fees on Funding wallet."
                     drawerClassName='max-h-[90vh] overflow-y-auto'
                     dialogOnly
-                    dialogClassName='!max-sm:max-w-[90vw]'
+                    dialogClassName='max-sm:!max-w-[90vw] rounded-3xl'
                 >
                     {
                         account ? (
                             <div key={account.account_number} className='flex flex-col p-2 gap-y-6 items-center justify-center w-full'>
-                                <div className='w-full max-w-md bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 p-6 rounded-2xl shadow-xl relative overflow-hidden'>
+                                <div className='w-full bg-gradient-to-br from-violet-600 via-purple-600 to-pink-500 p-6 rounded-2xl shadow-xl relative overflow-hidden'>
                                     <div className='absolute inset-0 opacity-10'>
                                         <div className='absolute top-0 left-0 right-0 h-full w-full'
                                             style={{
@@ -101,7 +101,7 @@ const AddmoneyModal = async () => {
                                     </div>
                                 </div>
 
-                                <div className='max-w-md space-y-4'>
+                                <div className='space-y-4 text-center w-full'>
                                     <p className='text-muted-foreground text-sm'>
                                         Use your isubscribe account details above to fund your isubscribe wallet. Transfers usually take less than 10 seconds to arrive.
                                     </p>

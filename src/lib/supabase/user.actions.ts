@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 import { Resend } from 'resend'
+import { getUser } from "./accounts"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -285,4 +286,30 @@ export const setUserRating = async (rating: number, comment: string) => {
     }
 
     return { data, error }
+}
+
+export const updateUniqueCode = async (uniqueCode: string) => {
+    const supabase = createClient()
+
+    const { data: user } = await getUser()
+
+    if (!user) {
+        return {
+            error: {
+                message: 'User not found, please log in'
+            },
+            data: null
+        }
+    }
+
+    if (!user?.unique_code) {
+        const { data, error } = await supabase.from('profile').update({ unique_code: uniqueCode }).eq('id', user.id).single()
+
+        if (error) {
+            console.log(error)
+        }
+        return { data, error }
+    }
+
+    return { data: null }
 }

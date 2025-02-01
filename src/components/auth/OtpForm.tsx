@@ -181,10 +181,20 @@ const OtpForm = () => {
                 </Button>
             </div>
             <Button onClick={handleVerifyOtp} disabled={loading} className='rounded-full h-10 hover:bg-violet-700/20'>
-                {loading ? 'Verifying...' : 'Verify'}
+                {loading ? (
+                    <>
+                        <span className="animate-spin mr-2">⭘</span>
+                        Verifying...
+                    </>
+                ) : 'Verify'}
             </Button>
             <Button variant={'secondary'} onClick={handleResendOtp} disabled={resending} className='bg-green-700/20  text-green-600 rounded-full h-10'>
-                {resending ? 'Resending..' : 'Resend OTP'}
+                {resending ? (
+                    <>
+                        <span className="animate-spin mr-2">⭘</span>
+                        Resending...
+                    </>
+                ) : 'Resend OTP'}
             </Button>
         </div>
     );
