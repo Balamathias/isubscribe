@@ -1,4 +1,4 @@
-import { Book, Clock, Gift, GraduationCap, HomeIcon, Lightbulb, MoreHorizontal, Pen, PhoneCall, Settings2, Tv, Wifi } from "lucide-react";
+import { Book, Clock, Gift, GraduationCap, HomeIcon, Lightbulb, LucideArrowUpDown, MoreHorizontal, Pen, PhoneCall, Settings2, Tv, Wifi } from "lucide-react";
 
 export const navLinks = [
     {
@@ -7,7 +7,7 @@ export const navLinks = [
         tooltip: "Home",
       },
     {
-        href: "/dashboard/subs"||"/dashboard/data" || "/dashboard/airtime" || "/dashboard/tv-cable" || "/dashboard/electricity" || "/dashboard/education" || "/dashboard/print-recharge-card" || "/dashboard/print-data-card",
+        href: "/dashboard/subs",
         icon: Gift,
         tooltip: "Subs",
       },
@@ -50,17 +50,17 @@ export const quickActionsLinks = [
     {
         href: "/dashboard/education?type=waec",
         icon: GraduationCap,
-        label: "WAEC Pin",
+        label: "Education",
       },
     {
-        href: "/dashboard/education?type=gce",
-        icon: Pen,
-        label: "GCE Pin ",
+        href: "/dashboard/transfer",
+        icon: LucideArrowUpDown,
+        label: "Transfer",
       },
     {
-        href: "/dashboard/education?type=jamb",
-        icon: Book,
-        label: "JAMB Pin",
+        href: "/dashboard/share",
+        icon: Gift,
+        label: "Share & Earn",
       },
     {
         href: "/dashboard/subs",

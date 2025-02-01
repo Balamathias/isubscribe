@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Link from 'next/link'
 import { Tables } from '@/types/database'
 import { usePathname } from 'next/navigation'
-import { LucideBadgeHelp, LucideHeadphones, LucideSettings2, LucideShare2 } from 'lucide-react'
+import { LucideBadgeHelp, LucideGift, LucideHeadphones, LucideSettings2 } from 'lucide-react'
 import Logo from '@/components/Logo'
 import SignOutComponent from '@/components/auth/SignOutComponent'
 import DynamicModal from '@/components/DynamicModal'
@@ -121,12 +121,9 @@ const Topbar = ({ profile }: { profile?: Tables<'profile'> | null }) => {
 
                   <div className='flex items-center gap-x-2 text-muted-foreground cursor-pointer hover:text-foreground hover:transition-all peer peer-hover:opacity-65'>
                     <span className='w-10 h-10 flex items-center justify-center rounded-full bg-secondary/20 text-foreground'>
-                      <LucideShare2 size={17} strokeWidth={1.5} className='' />
+                      <LucideGift size={17} strokeWidth={1.5} className='' />
                     </span>
-                    <ComingSoon 
-                      trigger={<Link href={'#'}>Share and earn</Link>}
-                      message='We are working very hard to bring this feature to you. Very soon, you will be able to share and earn.'
-                    />
+                    <Link href={'/dashboard/share'}>Share and earn</Link>
                   </div>
 
                 </div>

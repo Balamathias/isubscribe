@@ -216,6 +216,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
         setOpen={transferring ? undefined : setShowConfirmation}
         dialogClassName={'sm:max-w-md dark:bg-card'}
         drawerClassName="dark:bg-card"
+        hideDrawerCancel
       >
         {transferring && 
           <LoadingSpinner isPending={transferring} />
@@ -310,6 +311,7 @@ const TransferComponent = ({ wallet }: TransferComponentProps) => {
       <DynamicModal
         open={success}
         setOpen={setSuccess}
+        hideDrawerCancel
       >
         {confettiShown && <Confetti recycle={false} className='w-full'/>}
         <div className="flex flex-col items-center p-4">
