@@ -55,33 +55,35 @@ export const sendMoney = async (payload: { amount: number, accountNumber: string
 
         if (recipientUpdateError) {
             return { error: recipientUpdateError.message }
-        }
+        } 
 
-        const { data: transaction, error: transactionError } = await supabase.from('history').insert({
-            type: EVENT_TYPE.money_transfer,
-            description:`You transferred ${formatNigerianNaira(payload.amount)} to ${recipient?.profile?.full_name}`,
-            status: 'success',
-            title: 'Money transfer',
-            user: wallet.user,
-            meta_data: JSON.stringify({ amount: payload.amount, recipient: recipient.id, recipient_name: recipient?.profile?.full_name, recipient_email: recipient?.profile?.email }),
-            amount: payload.amount!,
-            transaction_id: Math.random().toString(36).substring(7),
-        }).select()
+        const [{ data: transaction, error: transactionError }, { data: recipientTransaction, error: recipientTransactionError }] = await Promise.all([
+            await supabase.from('history').insert({
+                type: EVENT_TYPE.money_transfer,
+                description:`You transferred ${formatNigerianNaira(payload.amount)} to ${recipient?.profile?.full_name}`,
+                status: 'success',
+                title: 'Money transfer',
+                user: wallet.user,
+                meta_data: JSON.stringify({ amount: payload.amount, recipient: recipient.id, recipient_name: recipient?.profile?.full_name, recipient_email: recipient?.profile?.email }),
+                amount: payload.amount!,
+                transaction_id: Math.random().toString(36).substring(7),
+            }).select(),
+
+            await supabase.from('history').insert({
+                type: EVENT_TYPE.money_transfer,
+                description:`You have received ${formatNigerianNaira(payload.amount)} from ${user?.full_name}`,
+                status: 'success',
+                title: 'Money transfer',
+                user: recipient.user,
+                meta_data: JSON.stringify({ amount: payload.amount, sender: wallet.user, sender_name: user?.full_name, sender_email: user?.email }),
+                amount: payload.amount!,
+                transaction_id: Math.random().toString(36).substring(7),
+            }).select()
+        ])
 
         if (transactionError) {
             return { error: transactionError.message }
         }
-
-        const { data: recipientTransaction, error: recipientTransactionError } = await supabase.from('history').insert({
-            type: EVENT_TYPE.money_transfer,
-            description:`You have received ${formatNigerianNaira(payload.amount)} from ${user?.full_name}`,
-            status: 'success',
-            title: 'Money transfer',
-            user: recipient.user,
-            meta_data: JSON.stringify({ amount: payload.amount, sender: wallet.user, sender_name: user?.full_name, sender_email: user?.email }),
-            amount: payload.amount!,
-            transaction_id: Math.random().toString(36).substring(7),
-        }).select()
 
         if (recipientTransactionError) {
             return { error: recipientTransactionError.message }
