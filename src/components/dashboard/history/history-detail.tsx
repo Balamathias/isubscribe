@@ -10,6 +10,7 @@ import TVTopup from './tv-topup'
 import MeterTopup from './meter-topup'
 import Education from './education'
 import CashbackHistory from './cashback.history'
+import TransferHistory from './transfer'
 
 interface HistoryDetailProps {
     history: Tables<'history'>
@@ -25,6 +26,13 @@ const HistoryDetail = async ({ history }: HistoryDetailProps) => {
         const walletFund = JSON.parse(history?.meta_data?.toString()! ?? '{}') as TransactionEvent['eventData']
         return <WalletFund 
             data={walletFund}
+            history={history!}
+        />
+
+    case 'money_transfer':
+        const transfer = JSON.parse(history?.meta_data?.toString()! ?? '{}') as any
+        return <TransferHistory 
+            data={transfer}
             history={history!}
         />
           
