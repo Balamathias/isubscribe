@@ -50,14 +50,11 @@ const FloatingGiftingButton = () => {
   }, [isExpanded]);
 
   return (
-    // Fixed container for the floating button and its panel.
-    <div ref={containerRef} className="fixed bottom-20 right-6 z-50">
+    <div ref={containerRef} className="fixed bottom-20 right-2 md:right-6 z-50">
       <div className="relative">
-        {/* Expandable Panel */}
         <AnimatePresence>
           {isExpanded && (
             <motion.div
-              // Position the panel absolutely so it does not push the floating button.
               className={cn(
                 "absolute bottom-20 right-0 p-4 w-72 rounded-xl shadow-lg",
                 {
