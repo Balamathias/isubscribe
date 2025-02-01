@@ -12,7 +12,7 @@ const MyShares = async ({ userId }: { userId: string }) => {
     return (
         <Empty
             title='No Referrals'
-            content='You have not referred anyone yet.'
+            content='You have not referred anyone yet. Anyone whom you refer will appear here.'
             icon={<GiftIcon />}
             color='blue'
             className='bg-inherit'
