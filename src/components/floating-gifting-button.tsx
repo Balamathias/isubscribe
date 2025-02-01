@@ -146,7 +146,7 @@ const FloatingGiftingButton = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           // Change button gradient based on activeOption.
-          className={`flex items-center justify-center w-16 h-16 rounded-full shadow-xl focus:outline-none animate-pulse ${
+          className={`flex items-center justify-center w-16 h-16 rounded-full shadow-xl focus:outline-none ${
             activeOption === 'gift'
               ? "bg-gradient-to-r from-violet-500 to-violet-600 dark:from-violet-400 dark:to-violet-500 text-white"
               : "bg-gradient-to-r from-orange-500 to-red-500 text-white"
