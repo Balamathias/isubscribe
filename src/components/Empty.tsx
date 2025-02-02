@@ -6,7 +6,7 @@ import React, { ReactNode } from 'react'
 declare interface EmptyProps {
     icon?: React.ReactNode;
     content?: string | ReactNode;
-    color?: 'red' | 'green' | 'blue' | 'yellow' | 'indigo' | 'purple' | 'pink' | 'gray',
+    color?: 'red' | 'green' | 'blue' | 'yellow' | 'indigo' | 'purple' | 'pink' | 'gray' | 'amber' | 'orange',
     className?: string;
     title?: string;
 }
