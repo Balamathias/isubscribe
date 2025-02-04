@@ -16,6 +16,7 @@ import {
     WhatsappShareButton,
     EmailIcon
   } from "react-share";
+import { toast } from 'sonner';
 
 interface Props {
     url: string,
@@ -46,7 +47,9 @@ const ShareModal = ({ trigger, url, unique_code }: Props) => {
               <Button 
                 size={'lg'} 
                 className='bg-white text-black rounded-full hover:opacity-70 hover:bg-white'
-                onClick={() => updateUniqueCode({ unique_code })}
+                onClick={
+                  unique_code ? () => updateUniqueCode({ unique_code }) : () => toast.warning('Please ensure you have generated an isubscribe account before sharing.')
+                }
                 disabled={isPending}
               >
                   {isPending ? (
