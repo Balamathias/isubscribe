@@ -18,5 +18,7 @@ export enum QueryKeys {
     delete_chat = 'delete_chat',
 
     get_service_variations = "get_service_variations",
-    sq = "sq"
+    sq = "sq",
+
+    update_unique_code = "update_unique_code",
 }

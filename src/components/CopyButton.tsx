@@ -7,7 +7,7 @@ import { LucideCopy, LucideCopyCheck } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-const CopyButton = ({ className, content, iconOnly=false }: { className?: string, content: string, iconOnly?: boolean }) => {
+const CopyButton = ({ className, content, iconOnly=false, iconClassName }: { className?: string, content: string, iconOnly?: boolean, iconClassName?: string }) => {
     const { handler, copied } = useCopyToClipboard()
   return (
     <Link 
@@ -18,12 +18,12 @@ const CopyButton = ({ className, content, iconOnly=false }: { className?: string
         {
             copied ? (
                 <>
-                    <LucideCopyCheck size={18} />
+                    <LucideCopyCheck size={18} className={iconClassName} />
                     {!iconOnly && <span>Copied</span>}
                 </>
             ) : (
                 <>
-                    <LucideCopy size={18} />
+                    <LucideCopy size={18} className={iconClassName} />
                     {!iconOnly && <span>Copy</span>}
                 </>
             )

@@ -283,6 +283,7 @@ export type Database = {
           security_answer: string | null
           security_question: string | null
           state: string | null
+          unique_code: string | null
           updated_at: string | null
           username: string | null
         }
@@ -300,6 +301,7 @@ export type Database = {
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
+          unique_code?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -317,6 +319,7 @@ export type Database = {
           security_answer?: string | null
           security_question?: string | null
           state?: string | null
+          unique_code?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -357,6 +360,54 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          referred: string | null
+          referrer: string | null
+          reward: number | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          referred?: string | null
+          referrer?: string | null
+          reward?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          referred?: string | null
+          referrer?: string | null
+          reward?: number | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_fkey"
+            columns: ["referred"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_fkey"
+            columns: ["referrer"]
+            isOneToOne: false
+            referencedRelation: "profile"
+            referencedColumns: ["unique_code"]
           },
         ]
       }
@@ -409,12 +460,41 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_total_cashback_amount: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: number
+      }
+      get_total_deposits: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_total_transactions_amount: {
         Args: {
           start_date?: string
           end_date?: string
         }
         Returns: number
+      }
+      get_total_wallet_balance: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: number
+      }
+      get_wallet_fund_totals: {
+        Args: {
+          start_date?: string
+          end_date?: string
+        }
+        Returns: {
+          total_settlement_amount: number
+          total_amount_paid: number
+          net_amount: number
+        }[]
       }
     }
     Enums: {

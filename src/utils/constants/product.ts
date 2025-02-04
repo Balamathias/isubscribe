@@ -37,4 +37,8 @@ export const product = {
         name: 'Cashback',
         image: '/images/giftbox.png'
     },
+    [EVENT_TYPE.money_transfer]: {
+        name: 'Transfer',
+        image: '/images/transfer.png'
+    },
 }

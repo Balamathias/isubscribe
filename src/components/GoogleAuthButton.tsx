@@ -7,14 +7,20 @@ import { toast } from 'sonner'
 import { LoaderIcon } from 'lucide-react'
 import { signInWithOAuth } from '@/lib/supabase/user.actions'
 import LoadingOverlay from './loaders/LoadingOverlay'
+import { useSearchParams } from 'next/navigation'
 
 const GoogleAuthButton = () => {
   const [pending, setPending] = useState(false)
+
+  const searchParams = useSearchParams()
+
+  const referral = searchParams.get('referral')
+
   const handleSignIn = async () => {
     setPending(true)
     try {
       setPending(true)
-      await signInWithOAuth('google')
+      await signInWithOAuth('google', referral!)
     } catch (error) {
       console.error(error)
       toast.error('Sign In failed, please try again.')

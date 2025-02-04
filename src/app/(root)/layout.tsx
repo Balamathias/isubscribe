@@ -1,3 +1,4 @@
+import FloatingGiftingButton from '@/components/floating-gifting-button'
 import { Metadata } from 'next'
 import React, { PropsWithChildren } from 'react'
 
@@ -10,6 +11,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       {children}
+      <FloatingGiftingButton />
     </>
   )
 }

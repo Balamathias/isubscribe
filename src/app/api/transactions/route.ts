@@ -77,7 +77,7 @@ export const POST = async (req: Request) => {
     
     const { data: user, error } = await supabase
         .from('profile')
-        .select('id, email, wallet(balance)')
+        .select('id, email, created_at, wallet(balance)')
         .eq('email', data.eventData?.customer?.email)
         .single();
 
@@ -114,6 +114,45 @@ export const POST = async (req: Request) => {
 
         if (!success) return NextResponse.json({ message: 'Saving History data failed' }, { status: 500 });
 
+        if (user) {
+            const threeDaysAgo = new Date();
+            threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+            const isNewUser = new Date(user.created_at) > threeDaysAgo;
+
+            if (isNewUser) {
+                const { data: referral, error: referralError } = await supabase.from('referrals')
+                    .select()
+                    .eq('referred', user.id)
+                    .single()
+                
+                if (referralError) {
+                    console.error('Failed to fetch referral:', referralError)
+                } else if (referral?.id && referral.status === 'pending') {
+                    console.log("I count")
+                    const { count, error: countError } = await supabase.from('history')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('user', user.id)
+                    
+                    console.log("Count: ", count)
+
+                    if (countError) {
+                        console.error('Failed to get history count:', countError)
+                    } else if (count === 1) {
+                        const { error: updateError } = await supabase.from('referrals')
+                            .update({ 
+                                status: 'verified',
+                                updated_at: new Date().toISOString()
+                            })
+                            .eq('id', referral.id)
+
+                        if (updateError) {
+                            console.error('Failed to update referral status:', updateError)
+                        }
+                    }
+                }
+            }
+        }
+
         const emailPromise = sendEmail({
             email: data.eventData.customer?.email,
             subject: 'Transfer successful',
@@ -121,7 +160,7 @@ export const POST = async (req: Request) => {
         }).catch(error => {
             console.error('Failed to send email:', error);
         });
-
+        
         return NextResponse.json({ message: 'Wallet credited successfully.' }, { status: 200 });
     }
 
