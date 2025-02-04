@@ -14,7 +14,8 @@ import {
     TelegramShareButton,
     TwitterShareButton,
     WhatsappShareButton,
-    EmailIcon
+    EmailIcon,
+    LinkedinIcon
   } from "react-share";
 import { toast } from 'sonner';
 
@@ -109,7 +110,7 @@ const ShareModal = ({ trigger, url, unique_code }: Props) => {
                 <Image src='/glass/icons/Telegram.png' width={40} height={40} alt='Telegram'/>
             </TelegramShareButton>
             <LinkedinShareButton url={url}>
-                <Image src='/glass/icons/Linkedin.png' width={40} height={40} alt='Linkedin'/>
+                <LinkedinIcon size={40} round={true} />
             </LinkedinShareButton>
             <EmailShareButton url={url}>
                 <EmailIcon size={40} round={true} />
