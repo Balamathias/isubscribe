@@ -6,6 +6,7 @@ import { Gift, Share2, LucideArrowUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ComingSoon from './dashboard/comig-soon';
 
 type Options = 'gift' | 'transfer';
 
@@ -86,12 +87,16 @@ const FloatingGiftingButton = () => {
                     Invite your friends to join isubscribe and get exclusive rewards.
                     Your friend gets a discount, and you earn data bonuses!
                   </p>
-                  <Link
-                    href="/dashboard/share"
-                    className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-violet-400 to-violet-500 hover:from-violet-500 hover:to-violet-600 text-white rounded-md focus:outline-none"
-                  >
-                    Share Now <Share2 size={18} className="ml-2" />
-                  </Link>
+                  <ComingSoon
+                    trigger={
+                      <Link
+                        href="#!/dashboard/share"
+                        className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white rounded-md focus:outline-none"
+                      >
+                        Share Now <Share2 size={18} className="ml-2" />
+                      </Link>
+                    }
+                  />
                 </>
               ) : (
                 <>
@@ -110,12 +115,17 @@ const FloatingGiftingButton = () => {
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                     Easily transfer funds to other users on isubscribe. Enjoy seamless transactions and instant notifications.
                   </p>
-                  <Link
-                    href="/dashboard/transfer"
-                    className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-md focus:outline-none"
-                  >
-                    Transfer Now <LucideArrowUpDown size={18} className="ml-2" />
-                  </Link>
+                  <ComingSoon
+
+                    trigger={
+                      <Link
+                        href="#!/dashboard/transfer"
+                        className="mt-4 flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-md focus:outline-none"
+                      >
+                        Transfer Now <LucideArrowUpDown size={18} className="ml-2" />
+                      </Link>
+                    }
+                  />
                 </>
               )}
 

@@ -53,12 +53,12 @@ export const quickActionsLinks = [
         label: "Education",
       },
     {
-        href: "/dashboard/transfer",
+        href: "#!/dashboard/transfer",
         icon: LucideArrowUpDown,
         label: "Transfer",
       },
     {
-        href: "/dashboard/share",
+        href: "#!/dashboard/share",
         icon: Gift,
         label: "Share & Earn",
       },
