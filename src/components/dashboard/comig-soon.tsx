@@ -38,7 +38,7 @@ const ComingSoon = ({ trigger, message }: { trigger: ReactNode, message?: string
         </motion.p>
 
         <motion.button
-          className="flex items-center justify-center gap-2 px-4 py-3 bg-violet-500 text-white shadow-lg hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-600 transition-all ease-in-out duration-300 rounded-full w-full"
+          className="flex items-center justify-center gap-2 px-4 py-3 bg-violet-500 text-white shadow-lg hover:bg-violet-600 dark:bg-violet-500 dark:hover:bg-violet-600 transition-all ease-in-out duration-300 rounded-full w-full bg-gradient-to-r from-violet-600 to-pink-600"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, ease: 'easeInOut', delay: 0.4 }}

@@ -29,14 +29,14 @@ const ShareAndEarnPage = async () => {
         className='h-96 w-full rounded-xl relative overflow-hidden flex items-center justify-center text-center text-white flex-col gap-y-4 px-2.5 py-4'
       >
         {/* Gradient background layer */}
-        <div className="absolute inset-0 bg-gradient-to-l from-pink-600 via-fuchsia-600 to-sky-600 opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-l from-pink-500 via-fuchsia-500 to-sky-500 opacity-90"></div>
         {/* Pattern overlay layer */}
         <div 
           className="absolute inset-0 bg-[url('/patterns/diagonal-lines.svg')] bg-repeat opacity-30"
           style={{ backgroundSize: '150px 150px' }}
         ></div>
         {/* Content Layer */}
-        <div className="relative z-10">
+        <div className="relative z-10 space-y-4">
           {
             user ? (
               <h2 className='text-xl lg:text-2xl font-semibold leading-normal'>
