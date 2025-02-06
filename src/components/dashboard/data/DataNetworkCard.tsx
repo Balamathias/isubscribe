@@ -72,7 +72,7 @@ const DataNetworkCard = () => {
         {
             
             <DynamicModal
-                open={openConfirmPurchaseModal}
+                open={purchasing ? undefined : openConfirmPurchaseModal}
                 setOpen={purchasing ? undefined : setOpenConfirmPurchaseModal}
                 dialogClassName="sm:max-w-[640px] md:max-w-[550px]"
                 title={"Plan Information - " + selected?.Type}

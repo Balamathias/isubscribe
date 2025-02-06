@@ -100,7 +100,6 @@ const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'n
         <DynamicModal
             open={proceed}
             setOpen={setProceed}
-            dismissible
             dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
             drawerClassName='dark:bg-card'
             hideDrawerCancel
