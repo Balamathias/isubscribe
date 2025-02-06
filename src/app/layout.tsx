@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "isubscribe Nigeria - Your One-Stop VTU Platform",
     description: "Instantly pay bills, buy data plans & airtime with cashback rewards",
-    images: ['/badge.png'],
+    images: ['/opengraph/og-1.jpeg', '/opengraph/og-2.jpeg',  '/opengraph/og-3.jpeg'],
     type: "website",
     locale: "en_NG",
     siteName: "isubscribe Nigeria"
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "isubscribe Nigeria - Your One-Stop VTU Platform",
     description: "Instantly pay bills, buy data plans & airtime with cashback rewards",
-    images: ['/badge.png'],
+    images: ['/opengraph/og-1.jpeg', '/opengraph/og-2.jpeg',  '/opengraph/og-3.jpeg'],
   },
   alternates: {
     canonical: "https://isubscribe.ng"

@@ -5,7 +5,10 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sign up | Create Your Account',
-  description: 'Sign up today on isubscribe to get started with Bill Payments, it is easy and simple on isubscribe.'
+  description: 'Sign up today on isubscribe to get started with Bill Payments, it is easy and simple on isubscribe.',
+  openGraph: {
+    images: ['/opengraph/og-2.jpeg', '/opengraph/og-4.jpeg',  '/opengraph/og-1.jpeg'],
+  }
 }
 
 const SignUpPage = () => {

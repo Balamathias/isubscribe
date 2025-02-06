@@ -9,6 +9,9 @@ import React, { PropsWithChildren } from 'react'
 export const metadata:Metadata = {
     title: 'isubscribe | Dashboard.',
     description: 'Your home of affordable utility bills.',
+    openGraph: {
+      images: ['/opengraph/og-2.jpeg', '/opengraph/og-3.jpeg',  '/opengraph/og-4.jpeg'],
+    }
 }
 
 const Layout = async ({ children }: PropsWithChildren) => {
