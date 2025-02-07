@@ -46,7 +46,7 @@ export const insertTransactionHistory = async ({...rest}: Record<string, any>) =
         }).select('*').single()
 
     if (error) {
-        console.error(error)
+        throw error
     }
 
     return { data }
