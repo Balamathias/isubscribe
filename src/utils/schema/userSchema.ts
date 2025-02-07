@@ -24,6 +24,6 @@ export const SignUpSchema = z.object({
     email: z.string().email({message: 'Please enter a valid email address.'}),
     password: z.string().min(6, {message: 'Password must be at least 6 characters long.'}),
     confirm_password: z.string().min(6, {message: 'Password must be at least 6 characters long.'}).optional(),
-    full_name: z.string({message: "Your full Name is required."}),
+    full_name: z.string({message: "Your full Name is required."}).optional(),
     phone: z.string({message: "Your phone number is required"}).min(11, {message: "Make sure your phone number is exactly 11 characters"}).max(11, {message: "Make sure your phone number is exactly 11 characters"}).optional()
 })
