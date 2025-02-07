@@ -17,7 +17,7 @@ import { signUp } from '@/lib/supabase/user.actions'
 import Link from 'next/link'
 import { Card } from '../ui/card'
 import GoogleAuthButton from '../GoogleAuthButton'
-import { LucideArrowLeft, LucideLock, LucideMail, LucidePhone, UserCircle2 } from 'lucide-react'
+import { LucideArrowLeft, LucideLock, LucideMail, LucidePhone, TriangleAlert, UserCircle2 } from 'lucide-react'
 import Logo from '../Logo'
 import AuthSeparator from './AuthSeparator'
 import DynamicModal from '../DynamicModal'
@@ -98,14 +98,37 @@ const SignInComponent = () => {
 
             {!preferEmail && <AuthSeparator />}
 
-            {!preferEmail && <Button 
-              className='rounded-lg w-full h-14 ring-1' 
-              variant='outline' 
-              onClick={() => setPreferEmail(true)}
-            >
-              <LucideMail className='mr-2' />
-              Continue with Email
-            </Button>}
+            {!preferEmail && (
+              <DynamicModal
+                hideDrawerCancel
+                trigger={
+                  <Button 
+                    className='rounded-lg w-full h-14 ring-1' 
+                    variant='outline' 
+                  >
+                    <LucideMail className='mr-2' />
+                    Continue with Email
+                  </Button>
+                }>
+                  <div className='flex flex-col gap-2.5 items-center'>
+                    <div className='w-12 h-12 rounded-full flex items-center justify-center text-amber-500 bg-amber-600/20'>
+                      <TriangleAlert className='w-5 h-5' />
+                    </div>
+                    <h2 className='text-lg font-semibold text-muted-foreground'>Recommended?</h2>
+                    <p className='text-sm text-center text-muted-foreground'>We recommend you sign up with the <span className='font-semibold'>continue with google option</span> owing to probable delays in mail carriers in delivering One Time Passwords to certain emails. Our core team remain committed to making email sign ups completely stable soon.</p>
+
+                    <Button 
+                      className='rounded-xl w-full h-12' 
+                      size="lg"
+                      variant='secondary' 
+                      onClick={() => setPreferEmail(true)}
+                    >
+                      <LucideMail className='mr-2' />
+                      Continue with Email anyway
+                    </Button>
+                  </div>
+                </DynamicModal>
+            )}
 
             {
               preferEmail && (

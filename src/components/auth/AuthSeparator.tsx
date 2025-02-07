@@ -15,7 +15,7 @@ const AuthSeparator = ({rightSeparatorClassName, leftSeparatorClassName, seperat
             <div className={cn("w-full border-t border-gray-300 dark:border-muted", leftSeparatorClassName)}></div>
         </div>
         <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500 dark:bg-secondary dark:text-muted-foreground">{separatorText ? separatorText : 'Or with Email and Password'}</span>
+            <span className="px-2 bg-white text-gray-500 dark:bg-secondary dark:text-muted-foreground rounded-lg">{separatorText ? separatorText : 'Or'}</span>
         </div>
     </div>
   )
