@@ -114,7 +114,7 @@ const SignInComponent = () => {
                     <div className='w-12 h-12 rounded-full flex items-center justify-center text-amber-500 bg-amber-600/20'>
                       <TriangleAlert className='w-5 h-5' />
                     </div>
-                    <h2 className='text-lg font-semibold text-muted-foreground'>Recommended?</h2>
+                    <h2 className='text-lg font-semibold text-muted-foreground'>Attention!</h2>
                     <p className='text-sm text-center text-muted-foreground'>We recommend you sign up with the <span className='font-semibold'>continue with google option</span> owing to probable delays in mail carriers in delivering One Time Passwords to certain emails. Our core team remain committed to making email sign ups completely stable soon.</p>
 
                     <Button 

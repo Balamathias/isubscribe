@@ -17,15 +17,61 @@ export const POST = async (req: Request, res: Response) => {
     if (response?.["request-id"]?.startsWith('Data')) {
         if (response?.status === 'success') {
 
-            // const [_, reqId, userId, amount, network, phone, dataAmt, commission] = (response?.["request-id"] as RequestId).split("_")
+            const [_, reqId, userId, amount, network, phone, dataAmt, commission] = (response?.["request-id"] as RequestId).split("_")
     
-            // const { data: transaction } = await supabase.from('history')
-            //     .select('*')
-            //     .or(`request_id.eq.${response?.["request-id"]}, meta_data->transId.eq.${response?.["request-id"]}`)
-            //     .eq('user', userId)
-            //     .single()
+            const { data: transaction } = await supabase.from('history')
+                .select('*')
+                .or(`request_id.eq.${response?.["request-id"]}, meta_data->transId.eq.${response?.["request-id"]}`)
+                .eq('user', userId)
+                .single()
+
+            if (transaction) {
+                return NextResponse.json({ message: "Success!" }, { status: 200 })
+            }
+
+            const metadata: AirtimeDataMetadata = {
+                transId: response?.["request-id"],
+                transaction_id: reqId,
+                status: 'success'!,
+                network,
+                dataQty: dataAmt,
+                duration: null,
+                phone,
+                planType: null,
+                unitCashback: null,
+                unitPrice: Number(amount)
+            }
+
+            const { error: historyAlreadyExistsError } = await supabase.from('history')
+                .insert({
+                    amount: parseFloat(amount),
+                    commission: parseFloat(commission),
+                    description: 'Data subscription',
+                    title: 'Data Subscription',
+                    provider: 'n3t',
+                    status: 'success',
+                    type: EVENT_TYPE.data_topup,
+                    request_id: `${reqId}_${userId}_${amount}_${network}_${phone}_${dataAmt}_${commission}`,
+                    transaction_id: reqId,
+                    user: userId,
+                    meta_data: JSON.stringify(metadata)
+                })
+
+            if (historyAlreadyExistsError) {
+                console.error("Failed to insert history:", historyAlreadyExistsError)
+                return NextResponse.json({ message: "Internal server error" })
+            }
+
+            const { data: userWallet } = await supabase.from("wallet")
+                .select('balance')
+                .eq('user', userId)
+                .single()
+
+            const { error: walletError } = await supabase.from('wallet')
+                .update({ balance: Math.max((userWallet?.balance ?? 0) - (parseInt(amount)), 0) })
+                .eq('user', userId)
             
-            console.log("Success: ", response)
+            return NextResponse.json({ message: "Success!" }, { status: 200 })
         }
     
         else if (response?.status === 'pending') {
