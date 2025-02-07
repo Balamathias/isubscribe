@@ -90,7 +90,7 @@ const SignInComponent = () => {
                 Icon={LucideLock} 
               />
 
-              <Button type="submit" disabled={isPending} className='rounded-lg w-full mt-2' size={'lg'}>{isPending ? 'Processing...' : 'Log In'}</Button>
+              <Button type="submit" disabled={isPending} className='rounded-lg w-full mt-2 bg-gradient-to-r from-violet-600 to-pink-600 h-14' size={'lg'}>{isPending ? 'Processing...' : 'Log In'}</Button>
             </form>
             <div className="flex flex-col space-y-2 text-base py-2">
               <p className='text-foreground'>{"Don't"} have an account? <Link href="/sign-up" className="underline dark:text-violet-400">Create account</Link>.</p>

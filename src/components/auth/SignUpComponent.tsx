@@ -17,7 +17,7 @@ import { signUp } from '@/lib/supabase/user.actions'
 import Link from 'next/link'
 import { Card } from '../ui/card'
 import GoogleAuthButton from '../GoogleAuthButton'
-import { LucideLock, LucideMail, LucidePhone, UserCircle2 } from 'lucide-react'
+import { LucideArrowLeft, LucideLock, LucideMail, LucidePhone, UserCircle2 } from 'lucide-react'
 import Logo from '../Logo'
 import AuthSeparator from './AuthSeparator'
 import DynamicModal from '../DynamicModal'
@@ -30,6 +30,8 @@ const SignInComponent = () => {
     const urlParams = new URLSearchParams(searchParams.toString())
     const [status, setStatus] = useState(urlParams.get('status') === 'email-sent')
     const referral = searchParams.get('referral')
+
+    const [preferEmail, setPreferEmail] = useState(false)
 
     const form = useForm<z.infer<typeof SignUpSchema>>({
         resolver: zodResolver(SignUpSchema),
@@ -83,20 +85,41 @@ const SignInComponent = () => {
 
             <Logo />
 
-            <GoogleAuthButton />
+            {!preferEmail ? <GoogleAuthButton /> : (
+              <Button 
+                className='rounded-lg w-full h-14' 
+                variant='outline' 
+                onClick={() => setPreferEmail(false)}
+              >
+                <LucideArrowLeft className='mr-2' />
+                Continue with Google
+              </Button>
+            )}
 
-            <AuthSeparator />
+            {!preferEmail && <AuthSeparator />}
 
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {!preferEmail && <Button 
+              className='rounded-lg w-full h-14' 
+              variant='outline' 
+              onClick={() => setPreferEmail(true)}
+            >
+              <LucideMail className='mr-2' />
+              Continue with Email
+            </Button>}
 
-              <InputField name="email" label="Email" placeholder='youremail@example.com' control={form.control} Icon={LucideMail}/>
-              <InputField name="password" label="Password" control={form.control} placeholder='password...' Icon={LucideLock} />
-              <InputField name="confirm_password" label="Confirm Password" control={form.control} placeholder='Confirm password...' Icon={LucideLock} />
-              <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
-              <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
+            {
+              preferEmail && (
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <InputField name="email" label="Email" placeholder='youremail@example.com' control={form.control} Icon={LucideMail}/>
+                  <InputField name="password" label="Password" control={form.control} placeholder='password...' Icon={LucideLock} />
+                  <InputField name="confirm_password" label="Confirm Password" control={form.control} placeholder='Confirm password...' Icon={LucideLock} />
+                  <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
+                  <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
 
-              <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-lg' size={'lg'}>{isPending ? 'Processing...' : 'Create Account'}</Button>
-            </form>
+                  <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 h-14' size={'lg'}>{isPending ? 'Processing...' : 'Create Account'}</Button>
+                </form>
+              )
+            }
             
             <div className="flex flex-col space-y-2 text-base">
               <p className='text-foreground'>Already have an account? <Link href="/sign-in" className="underline dark:text-violet-400 text-primary">Log In</Link></p>

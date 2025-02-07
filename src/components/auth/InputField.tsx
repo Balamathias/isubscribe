@@ -41,7 +41,7 @@ const InputField = ({
               }
             </FormLabel>
             <FormControl>
-            <div className='flex-row gap-x-2 w-full flex justify-center items-center h-12 rounded-lg bg-secondary/70 border border-muted px-2.5'>
+            <div className='flex-row gap-x-2 w-full flex justify-center items-center h-14 rounded-xl bg-secondary/70 border border-muted px-2.5'>
               {Icon ? <Icon className="text-muted-foreground h-5 w-5 md:h-8 md:w-8" /> : <LucideUser2 className='text-muted-foreground h-5 w-5 md:h-8 md:w-8' />}
               <Input 
                 placeholder={placeholder} 
