@@ -45,7 +45,7 @@ export const airtel_data = [
     {"Plan_ID": 71, "Type": "COOPERATE GIFTING", "Data": "100MB", "Price": "₦45.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦18" , "commission": 15},
     {"Plan_ID": 70, "Type": "COOPERATE GIFTING", "Data": "300MB", "Price": "₦100.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦15" , "commission": 15},
     {"Plan_ID": 83, "Type": "GIFTING", "Data": "300MB", "Price": "₦145.00", "Duration": "2 Days", "CashBack": "₦1.00" , "profit":"₦18" , "commission": 20},
-    {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦147.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 17},
+    // {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦147.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 17},
     {"Plan_ID": 46, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦150.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 13},
     {"Plan_ID": 47, "Type": "COOPERATE GIFTING", "Data": "1GB", "Price": "₦295.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 20},
     {"Plan_ID": 84, "Type": "GIFTING", "Data": "1GB", "Price": "₦245.00", "Duration": "2 Days", "CashBack": "₦1.00" , "profit":"₦18" , "commission": 15},
