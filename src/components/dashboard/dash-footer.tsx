@@ -18,7 +18,7 @@ const DashFooter = () => {
         <Link href={`https://x.com/isubscribe_ng`} target='_blank' className='h-12 w-12 rounded-full bg-secondary flex items-center justify-center'>
           <Image src={`/glass/icons/X.png`} alt='Facebook' width={24} height={24} />
         </Link>
-        <Link href={`https://web.facebook.com/search/top?q=isubscribe_ng`} target='_blank' className='h-12 w-12 rounded-full bg-secondary flex items-center justify-center'>
+        <Link href={`https://facebook.com/search/top?q=isubscribe_ng`} target='_blank' className='h-12 w-12 rounded-full bg-secondary flex items-center justify-center'>
           <Image src={`/glass/icons/Facebook.png`} alt='Facebook' width={24} height={24} />
         </Link>
         <Link href={`https://instagram.com/isubscribe_ng`} target='_blank' className='h-12 w-12 rounded-full bg-secondary flex items-center justify-center'>
