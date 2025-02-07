@@ -26,6 +26,7 @@ export const POST = async (req: Request, res: Response) => {
                 .single()
 
             if (transaction) {
+                console.log("I got the rts")
                 return NextResponse.json({ message: "Success!" }, { status: 200 })
             }
 
