@@ -34,7 +34,7 @@ const GoogleAuthButton = () => {
       pending && <LoadingOverlay isPending={pending} />
     }
       <Button 
-        className='flex items-center border-none shadow-none justify-center space-x-2 w-full my-4 py-4 h-14 rounded-xl'
+        className='flex items-center border-none shadow-none justify-center space-x-2 w-full my-4 py-4 h-14 rounded-xl dark:bg-white dark:text-black'
         variant={'secondary'}
         onClick={handleSignIn}
         size={'lg'}
@@ -51,7 +51,7 @@ const GoogleAuthButton = () => {
             quality={100}
             className='object-cover'
           />
-          <span className="text-muted-foreground">Continue with Google</span>
+          <span className="text-muted-foreground dark:text-inherit">Continue with Google</span>
       </Button>
     </>
   )

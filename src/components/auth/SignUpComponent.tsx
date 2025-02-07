@@ -87,7 +87,7 @@ const SignInComponent = () => {
 
             {!preferEmail ? <GoogleAuthButton /> : (
               <Button 
-                className='rounded-lg w-full h-14' 
+                className='rounded-lg w-full h-14 ring-1' 
                 variant='outline' 
                 onClick={() => setPreferEmail(false)}
               >
@@ -99,7 +99,7 @@ const SignInComponent = () => {
             {!preferEmail && <AuthSeparator />}
 
             {!preferEmail && <Button 
-              className='rounded-lg w-full h-14' 
+              className='rounded-lg w-full h-14 ring-1' 
               variant='outline' 
               onClick={() => setPreferEmail(true)}
             >
