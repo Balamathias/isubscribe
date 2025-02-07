@@ -116,7 +116,7 @@ const SignInComponent = () => {
                   <InputField name="full_name" label="Full Name" placeholder='Your Name' control={form.control} Icon={UserCircle2}/>
                   <InputField name="phone" label="Phone Number" placeholder='09012345678' control={form.control} Icon={LucidePhone}/>
 
-                  <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 h-14' size={'lg'}>{isPending ? 'Processing...' : 'Create Account'}</Button>
+                  <Button type="submit" disabled={isPending} className='mt-2 w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 h-12' size={'lg'}>{isPending ? 'Processing...' : 'Create Account'}</Button>
                 </form>
               )
             }
