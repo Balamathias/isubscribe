@@ -52,7 +52,7 @@ export const POST = async (req: Request, res: Response) => {
                     provider: 'n3t',
                     status: 'success',
                     type: EVENT_TYPE.data_topup,
-                    request_id: `${reqId}_${userId}_${amount}_${network}_${phone}_${dataAmt}_${commission}`,
+                    request_id: `${_}_{reqId}_${userId}_${amount}_${network}_${phone}_${dataAmt}_${commission}`,
                     transaction_id: reqId,
                     user: userId,
                     meta_data: JSON.stringify(metadata)
