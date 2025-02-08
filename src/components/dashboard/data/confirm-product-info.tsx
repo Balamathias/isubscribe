@@ -1,6 +1,7 @@
+import { Switch } from '@/components/ui/switch'
 import { formatNigerianNaira } from '@/funcs/formatCurrency'
 import { DATA_MB_PER_NAIRA, formatDataAmount } from '@/lib/utils'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, LucideAlertTriangle } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -85,12 +86,28 @@ const ConfirmProductInfo = ({
             </div>}
 
             {
+                planType === 'COOPERATE GIFTING' && currentNetwork === 'airtel' && (
+                <div className='flex flex-row justify-between items-center gap-x-2'>
+                    <span className=''>
+                        <LucideAlertTriangle className='text-amber-500/80 w-5 h-5' />
+                    </span>
+                    <span className='text-muted-foreground text-xs'>Cooperate gifting for airtel may not be available.</span>
+                </div>
+                )
+            }
+
+            {
                 (currentNetwork === 'airtel' && planType === 'GIFTING') && (
-                    <div className='p-4 rounded-xl border border-amber-500 flex justify-center text-amber-500 gap-x-1.5'>
+                    <div className='p-4 rounded-xl border border-amber-500/70 flex justify-center text-amber-500/70 gap-x-1.5'>
                         <span className='basis-[20%]'>
                             <AlertTriangle />
                         </span>
-                        <span>Confirm that the receiver of this plan does not owe airtel in anyway as Airtel will not credit the receiver for &#39;{planType}&#39; plan type. This only happens on airtel {planType} plan.</span>
+                        <span className='text-xs'>Confirm that the receiver of this plan does not owe airtel in anyway as Airtel will not credit the receiver for &#39;{planType}&#39; plan type. This only happens on airtel {planType} plan.</span>
+                        <span className='basis-[20%]'>
+                            <Switch 
+                                title={`I confirm!`}
+                            />
+                        </span>
                     </div>
                 )
             }

@@ -66,6 +66,7 @@ const DataNetworkCard = () => {
                 dataDuration={d.Duration}
                 dataPrice={priceToInteger(d.Price)}
                 profile={profile}
+                type={d.Type}
             />
         ))}
 
@@ -132,8 +133,7 @@ const DataNetworkCard = () => {
         {
             <DynamicModal
                 open={proceed}
-                setOpen={setProceed}
-                dismissible
+                setOpen={proceed ? undefined : setProceed}
                 dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
                 drawerClassName="dark:bg-card"
                 hideDrawerCancel
