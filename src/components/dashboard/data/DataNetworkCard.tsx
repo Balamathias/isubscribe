@@ -133,7 +133,7 @@ const DataNetworkCard = () => {
         {
             <DynamicModal
                 open={proceed}
-                setOpen={proceed ? undefined : setProceed}
+                setOpen={setProceed}
                 dialogClassName={'sm:max-w-fit dark:bg-card !p-0'}
                 drawerClassName="dark:bg-card"
                 hideDrawerCancel
