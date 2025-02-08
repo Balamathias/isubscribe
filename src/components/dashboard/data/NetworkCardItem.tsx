@@ -46,7 +46,7 @@ const NetworkCardItem = ({
                         {
                             type === 'COOPERATE GIFTING' && currentNetwork === 'airtel' && (
                                 <span className='absolute left-1 top-2'>
-                                    <LucideAlertTriangle className='text-amber-500/80 w-5 h-5' />
+                                    <LucideAlertTriangle className='text-amber-500/80 w-4 h-4 sm:w-5 sm:h-5' />
                                 </span>
                             )
                         }
