@@ -97,7 +97,7 @@ const NetworkCardItem = ({
                                 </h3>
                                 
                                 <p className="text-center text-sm text-muted-foreground leading-relaxed">
-                                    We're currently working on making this plan available. Please check back later or explore our other available options.
+                                    We&apos;re currently working on making this plan available. Please check back later or explore our other available options.
                                 </p>
 
                                 <SheetClose asChild>
