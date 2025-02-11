@@ -14,6 +14,7 @@ import { useElectricity } from '@/providers/electricity/electricity-provider'
 import { electricServices } from '@/utils/constants/electricity-plans'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 import ComingSoon from '../comig-soon'
+import { useRouter } from 'nextjs-toploader/app'
 
 export const tvProducts = {
     'dstv': {
@@ -58,7 +59,19 @@ const ConfirmPurchaseModal = ({
     setProceed,
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentProvider, smartcardNumber, meterNumber, isPrepaid, providerImage, providerName, purchasing, wallet, fee, totalAmount } = useElectricity()
+    
+    const router = useRouter()
 
+    const insufficientFunds = wallet?.balance! < totalAmount
+
+    const handleProceed = () => {
+        if (insufficientFunds) {
+            router.push('/dashboard/fund-wallet')
+        } else {
+            setProceed(true)
+        }
+    }
+    
   return (
     <DynamicModal
         open={open}
@@ -131,14 +144,14 @@ const ConfirmPurchaseModal = ({
                     disabled={wallet?.cashback_balance! < totalAmount }
                 />
             </div>
+
             <Button 
-                className='w-full rounded-xl' 
+                className='w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 text-white' 
                 size={'lg'}
-                disabled={wallet?.balance! < totalAmount }
-                onClick={() => {
-                    setProceed(true)
-                }}
-            >Proceed</Button>
+                onClick={handleProceed}
+            >
+                {insufficientFunds ? 'Fund Wallet' : 'Proceed'}
+            </Button>
         </div>
     </DynamicModal>
   )

@@ -14,6 +14,8 @@ import LoadingOverlay from '@/components/loaders/LoadingOverlay'
 import { useSearchParams } from 'next/navigation'
 import NetworkCardSkeleton from '@/components/loaders/network-card.skeleton'
 
+import { useRouter } from 'nextjs-toploader/app'
+
 const ConfirmDataPurchaseModal = lazy(() => import('./ConfirmDataPurchaseModal'))
     
 const DailyData = ({type="daily"}: { type?: ('daily' | 'weekly' | 'monthly' | 'night' | 'mega' | 'youtube' | 'special' | 'weekend')}) => {

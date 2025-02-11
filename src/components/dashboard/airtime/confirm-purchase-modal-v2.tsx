@@ -8,16 +8,13 @@ import { Button } from '../../ui/button'
 import { product } from '@/utils/constants/product'
 import { useNetwork } from '@/providers/data/sub-data-provider'
 import { PaymentMethod, VTPassAirtimePayload } from '@/types/networks'
-import LoadingOverlay from '../../loaders/LoadingOverlay'
 import ConfirmProductInfo from '../data/confirm-product-info'
 import LoadingSpinner from '@/components/loaders/LoadingSpinner'
 
 import useBiometricAuth from '@/hooks/use-biometric-auth'
 import { toast } from 'sonner'
-import { useGetWalletBalance } from '@/lib/react-query/funcs/wallet'
-import ComingSoon from '../comig-soon'
-import { useWallet } from '@/hooks/use-wallet'
 import Empty from '@/components/Empty'
+import { useRouter } from 'nextjs-toploader/app'
 
 
 interface ConfirmPurchaseModal {
@@ -42,7 +39,12 @@ const ConfirmPurchaseModal = ({
     func
 }: ConfirmPurchaseModal) => {
     const { mobileNumber, currentNetwork, purchasing, wallet } = useNetwork()
-    const { isEnabled, authenticate } = useBiometricAuth()
+    const { isEnabled, authenticate, error } = useBiometricAuth()
+
+    const router = useRouter()
+
+    const insufficientFunds = wallet?.balance! < selected?.amount && 
+    wallet?.cashback_balance! < selected?.amount
     
     const handleAuth = useCallback(async () => {
         try {
@@ -82,6 +84,14 @@ const ConfirmPurchaseModal = ({
 
         handleAuth()
     }, [paymentMethod, wallet, selected?.amount, handleAuth])
+
+    const handleProceed = () => {
+        if (insufficientFunds) {
+            router.push('/dashboard/fund-wallet')
+        } else {
+            handlePurchase()
+        }
+    }
 
     if (!wallet) {
         return (
@@ -131,15 +141,11 @@ const ConfirmPurchaseModal = ({
                     />
                 </div>
                 <Button 
-                    className='w-full rounded-xl' 
+                    className='w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 text-white' 
                     size={'lg'}
-                    disabled={
-                        wallet?.balance! < selected?.amount && 
-                        wallet?.cashback_balance! < selected?.amount
-                    }
-                    onClick={handlePurchase}
+                    onClick={handleProceed}
                 >
-                    Proceed
+                    {insufficientFunds ? 'Fund Wallet' : 'Proceed'}
                 </Button>
             </div>
         </DynamicModal>

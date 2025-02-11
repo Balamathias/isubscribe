@@ -17,6 +17,7 @@ import Empty from '@/components/Empty'
 import { useSearchParams } from 'next/navigation'
 import useBiometricAuth from '@/hooks/use-biometric-auth'
 import { useInsertBeneficiary } from '@/lib/react-query/funcs/beneficiaries'
+import { useRouter } from 'nextjs-toploader/app'
 
 interface ConfirmDataPurchaseModalProps {
     open: boolean
@@ -44,8 +45,13 @@ const ConfirmDataPurchaseModal = ({
     const { mobileNumber, currentNetwork, purchasing, wallet } = useNetwork()
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim'
-    const { isEnabled, authenticate } = useBiometricAuth()
+    const { isEnabled, authenticate, error } = useBiometricAuth()
     const { mutate: saveBeneficiary } = useInsertBeneficiary()
+
+    const router = useRouter()
+
+    const insufficientFunds = paymentMethod === 'wallet' ? wallet?.balance! < (selected?.amount || 0) : 
+    wallet?.cashback_balance! < (selected?.amount || 0)
 
     const handleAuth = useCallback(async () => {
         try {
@@ -80,6 +86,18 @@ const ConfirmDataPurchaseModal = ({
 
         handleAuth()
     }, [paymentMethod, wallet, selected?.amount, handleAuth])
+
+    const handleProceed = () => {
+        if (insufficientFunds) {
+            router.push('/dashboard/fund-wallet')
+        } else {
+            if (isEnabled && !error) {
+                handleAuth()
+            } else {
+                setProceed(true)
+            }
+        }
+    }
 
     if (!wallet) {
         return (
@@ -132,15 +150,11 @@ const ConfirmDataPurchaseModal = ({
                 </div>
 
                 <Button 
-                    className='w-full rounded-xl' 
+                    className='w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 text-white' 
                     size={'lg'}
-                    disabled={
-                        paymentMethod === 'wallet' ? wallet?.balance! < (selected?.amount || 0) : 
-                        wallet?.cashback_balance! < (selected?.amount || 0)
-                    }
-                    onClick={handlePurchase}
+                    onClick={handleProceed}
                 >
-                    Proceed
+                    {insufficientFunds ? 'Fund Wallet' : 'Proceed'}
                 </Button>
             </div>
         </DynamicModal>
