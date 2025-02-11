@@ -16,6 +16,8 @@ import { useSearchParams } from 'next/navigation';
 import SimpleLoader from '@/components/loaders/simple-loader';
 import useBiometricAuth from '@/hooks/use-biometric-auth';
 
+import { useRouter } from 'nextjs-toploader/app'
+
 const ConfirmProductInfo = lazy(() => import('./confirm-product-info'));
 
 const object = {
@@ -32,10 +34,14 @@ const DataNetworkCard = () => {
     const searchParams = useSearchParams()
     const isClaim = searchParams.get('action') === 'claim'
     const [proceed, setProceed] = React.useState(false)
+    const router = useRouter()
 
     const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>(isClaim ? 'cashback' : 'wallet')
 
     const { isEnabled, authenticate, error } = useBiometricAuth()
+
+    const insufficientFunds = paymentMethod === 'wallet' ? wallet?.balance! < priceToInteger(selected?.Price || '0.00') : 
+    wallet?.cashback_balance! < priceToInteger(selected?.Price || '0.00')
 
     const handleAuth = async () => {
         if (isEnabled) {
@@ -46,6 +52,18 @@ const DataNetworkCard = () => {
             }
         } else {
             setProceed(true)
+        }
+    }
+
+    const handleProceed = () => {
+        if (insufficientFunds) {
+            router.push('/dashboard/fund-wallet')
+        } else {
+            if (isEnabled && !error) {
+                handleAuth()
+            } else {
+                setProceed(true)
+            }
         }
     }
 
@@ -116,16 +134,12 @@ const DataNetworkCard = () => {
                     </div>
 
                     <Button 
-                        className='w-full rounded-xl' 
+                        className='w-full rounded-xl bg-gradient-to-r from-violet-600 to-pink-500 text-white' 
                         size={'lg'}
-                        disabled={
-                            paymentMethod === 'wallet' ? wallet?.balance! < priceToInteger(selected?.Price || '0.00') : 
-                            wallet?.cashback_balance! < priceToInteger(selected?.Price || '0.00')
-                        }
-                        onClick={() => {
-                            isEnabled && !error ? handleAuth() : setProceed(true)
-                        }}
-                    >Proceed</Button>
+                        onClick={handleProceed}
+                    >
+                        {insufficientFunds ? 'Fund Wallet' : 'Proceed'}
+                    </Button>
                 </div>
             </DynamicModal>
         }

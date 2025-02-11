@@ -11,7 +11,7 @@ import SimpleLoader from '@/components/loaders/simple-loader'
 import Empty from '../Empty'
 
 const Reviews = ({ trigger }: { trigger?: React.ReactNode }) => {
-  const { data: reviews, isPending, isError } = useReviews()
+  const { data: reviews, isPending, isError } = useReviews(20)
   return (
     <DynamicSheet
       trigger={trigger || <></>}

@@ -334,8 +334,11 @@ export const processData_VTPass = async ({
                         commission: res?.content?.transactions?.commission || commission,
                         request_id: res?.requestId
                     }),
-            
-                    await saveCashbackHistory({ amount: cashbackPrice })
+                    
+                    async () => {
+                        if (cashbackPrice > 0.05)
+                            await saveCashbackHistory({ amount: cashbackPrice })
+                    }
                 ])
 
                 if (_balanceError) {

@@ -8,9 +8,49 @@ const FTabs = () => {
     <div className='w-full'>
       <Tabs defaultValue="wallet" className=" max-sm:w-[90vw] w-[600px] space-y-4 ">
 
-        <TabsList className="grid w-full grid-cols-2 gap-4 rounded-xl shadow-none border-none py-2 h-fit bg-transparent">
-            <TabsTrigger value="wallet" className={` w-full h-9 rounded-xl ring-1 data-[state=active]:bg-background  data-[state=active]:text-violet-800 dark:data-[state=active]:text-violet-400/80 md:text-lg data-[state=active]:shadow-none peer bg-gray-50/80 dark:bg-card/70 text-sm`}>Wallet</TabsTrigger>
-            <TabsTrigger value="other" className={` w-full h-9 md:text-lg text-sm ring-1 rounded-xl data-[state=active]:bg-background peer-hover:opacity-90  data-[state=active]:text-violet-800 dark:data-[state=active]:text-violet-400/80 data-[state=active]:shadow-none bg-gray-50/80 dark:bg-card/70`}>Others</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 gap-3 p-1.5 rounded-2xl bg-gray-100/50 dark:bg-gray-900/20">
+            <TabsTrigger 
+                value="wallet" 
+                className={`
+                    w-full px-6 py-2.5
+                    text-sm font-medium
+                    rounded-xl
+                    transition-all duration-200 ease-in-out
+                    data-[state=active]:bg-white
+                    data-[state=active]:dark:bg-gray-800
+                    data-[state=active]:shadow-sm
+                    data-[state=active]:text-violet-600
+                    data-[state=active]:dark:text-violet-400
+                    hover:bg-white/50
+                    dark:hover:bg-gray-800/50
+                    dark:text-gray-300
+                    outline-none
+                    focus:ring-2 ring-violet-400/20
+                `}
+            >
+                Wallet
+            </TabsTrigger>
+            <TabsTrigger 
+                value="other" 
+                className={`
+                    w-full px-6 py-2.5
+                    text-sm font-medium
+                    rounded-xl
+                    transition-all duration-200 ease-in-out
+                    data-[state=active]:bg-white
+                    data-[state=active]:dark:bg-gray-800
+                    data-[state=active]:shadow-sm
+                    data-[state=active]:text-violet-600
+                    data-[state=active]:dark:text-violet-400
+                    hover:bg-white/50
+                    dark:hover:bg-gray-800/50
+                    dark:text-gray-300
+                    outline-none
+                    focus:ring-2 ring-violet-400/20
+                `}
+            >
+                Others
+            </TabsTrigger>
         </TabsList>
 
         <TabsContent value="wallet">
