@@ -5,14 +5,26 @@ import { createClient } from "@/utils/supabase/server"
 import { getUser } from "./accounts"
 import { getWallet, updateCashbackBalanceByUser } from "./wallets"
 import { saveCashbackHistory } from "./history"
+import { headers } from "next/headers"
 
 export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
     const supabase = createClient()
 
+    const header = headers()
+
     const { data: user } = await getUser()
+
+    const device = header.get('user-agent') || 'Unknown'
+    const ip = header.get('x-real-ip') || header.get('x-forwarded-for') || 'Unknown'
+
+    const deviceAddress = `${device}-${ip}`
 
     if (!user) {
         return { error: 'User not found' }
+    }
+
+    if (!payload) {
+        return { error: 'Payload is empty.' }
     }
 
     if (payload.referrer === payload.referred) {

@@ -22,15 +22,8 @@ export const computeServerTransaction = async ({
     0
   );
 
-  if (!walletBalance) {
-    return {
-      error: "Insufficient wallet balance, please fund your wallet!",
-      data: null,
-    };
-  }
-
   if (payload?.method === "wallet") {
-    if (walletBalance < price) {
+    if (!walletBalance || (walletBalance < price)) {
       return {
         error: "Insufficient wallet balance, please fund your wallet!",
         data: null,
