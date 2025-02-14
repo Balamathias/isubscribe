@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const DATA_MB_PER_NAIRA = 3
+export const DATA_MB_PER_NAIRA = 3.414
 
 export const formatDataAmount = (amount: number) => {
   if (amount <= 1.024)
