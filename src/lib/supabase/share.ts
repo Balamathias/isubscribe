@@ -31,7 +31,7 @@ export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
     const { data: existingReferral, error: referralError } = await supabase
         .from('referrals')
         .select('id')
-        .eq('referred', payload.referred!)
+        // .eq('referred', payload.referred!)
         .or(`device.eq.${deviceAddress}, ip.eq.${ip}`)
         .single()
 
