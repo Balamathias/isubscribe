@@ -9,14 +9,11 @@ import { headers } from "next/headers"
 
 export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
     const supabase = createClient()
-
     const header = headers()
-
     const { data: user } = await getUser()
 
     const device = header.get('user-agent') || 'Unknown'
     const ip = header.get('x-real-ip') || header.get('x-forwarded-for') || 'Unknown'
-
     const deviceAddress = `${device}-${ip}`
 
     if (!user) {
@@ -31,7 +28,29 @@ export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
         return { error: 'You cannot refer yourself' }
     }
 
-    const { data, error } = await supabase.from('referrals').insert(payload).select().single()
+    const { data: existingReferral, error: referralError } = await supabase
+        .from('referrals')
+        .select('id')
+        .eq('referred', payload.referred!)
+        .or(`device.eq.${deviceAddress}, ip.eq.${ip}`)
+        .single()
+
+    if (referralError && referralError.code !== 'PGRST116') { 
+        return { error: referralError.message }
+    }
+
+    if (existingReferral) {
+        return { error: 'Suspicious referral detected. You cannot refer the same person using different emails or devices.' }
+    }
+
+    payload.device = deviceAddress
+    payload.ip = ip
+
+    const { data, error } = await supabase
+        .from('referrals')
+        .insert(payload)
+        .select()
+        .single()
 
     if (error) {
         return { error: error.message }
@@ -39,6 +58,7 @@ export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
 
     return { data: data || null, error: error || null }
 }
+
 
 export const getReferral = async (payload: { id: string }) => {
     const supabase = createClient()

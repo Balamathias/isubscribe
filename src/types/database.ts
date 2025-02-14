@@ -366,8 +366,10 @@ export type Database = {
       referrals: {
         Row: {
           created_at: string
+          device: string | null
           email: string | null
           id: string
+          ip: string | null
           referred: string | null
           referrer: string | null
           reward: number | null
@@ -376,8 +378,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          device?: string | null
           email?: string | null
           id?: string
+          ip?: string | null
           referred?: string | null
           referrer?: string | null
           reward?: number | null
@@ -386,8 +390,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          device?: string | null
           email?: string | null
           id?: string
+          ip?: string | null
           referred?: string | null
           referrer?: string | null
           reward?: number | null
