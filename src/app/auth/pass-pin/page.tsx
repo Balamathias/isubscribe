@@ -37,10 +37,10 @@ const Page = async ({ searchParams: { referral } }: { searchParams: { referral?:
   
   if (user && !user?.onboarded) {
     if (referral) {
-      const { error } = await createReferral({referrer: referral , referred: user?.id, status: 'pending', reward: REFERRAL_BONUS })
+      const req = await createReferral({referrer: referral , referred: user?.id, status: 'pending', reward: REFERRAL_BONUS })
 
-      if (error)
-        referralErrorMessage = error
+      if (req.error && req?.show )
+        referralErrorMessage = req.error
     }
   }
     
