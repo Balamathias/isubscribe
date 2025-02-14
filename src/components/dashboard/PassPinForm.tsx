@@ -17,7 +17,14 @@ import { QueryKeys } from '@/lib/react-query/query-keys';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import useVibration from '@/hooks/use-vibration';
 
-const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void, className?: string, update?: boolean }) => {
+interface Props {
+    onClose?: () => void
+    className?: string
+    update?: boolean,
+    referralErrorMessage?: string
+}
+
+const PassPinForm = ({ onClose, className, update=false, referralErrorMessage }: Props) => {
 
     const { data: profile, isPending: gettingProfile } = useGetProfile()
     const vibrate = useVibration()
@@ -185,6 +192,15 @@ const PassPinForm = ({onClose, className, update=false}: { onClose?: () => void,
             />
           </div>}
         </Card>
+
+        {referralErrorMessage && (
+          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded flex items-center shadow-lg" role="alert">
+            <svg className="fill-current w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M10 15a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0-9a1.5 1.5 0 00-1.5 1.5v4a1.5 1.5 0 003 0v-4A1.5 1.5 0 0010 6z" />
+            </svg>
+            <span>{referralErrorMessage}</span>
+          </div>
+        )}
       </>
     );
 }

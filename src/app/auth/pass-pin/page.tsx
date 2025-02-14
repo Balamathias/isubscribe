@@ -3,6 +3,7 @@ import PassPinForm from '@/components/dashboard/PassPinForm'
 import { generateReservedAccount, getUser } from '@/lib/supabase/accounts'
 import { createReferral } from '@/lib/supabase/share'
 import { getCurrentUser } from '@/lib/supabase/user.actions'
+import { REFERRAL_BONUS } from '@/types/constants'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -13,6 +14,8 @@ export const metadata: Metadata = {
 }
 
 const Page = async ({ searchParams: { referral } }: { searchParams: { referral?: string }}) => {
+
+  let referralErrorMessage = ''
 
   const [
     { data: user },
@@ -34,13 +37,16 @@ const Page = async ({ searchParams: { referral } }: { searchParams: { referral?:
   
   if (user && !user?.onboarded) {
     if (referral) {
-      await createReferral({referrer: referral , referred: user?.id, status: 'pending', reward: 100 })
+      const { error } = await createReferral({referrer: referral , referred: user?.id, status: 'pending', reward: REFERRAL_BONUS })
+
+      if (error)
+        referralErrorMessage = error
     }
   }
     
   return (
     <WidthWrapper className='min-h-screen flex flex-col items-center justify-center'>
-      <PassPinForm />
+      <PassPinForm referralErrorMessage={referralErrorMessage} />
     </WidthWrapper>
   )
 }

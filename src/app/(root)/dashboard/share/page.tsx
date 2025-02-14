@@ -4,6 +4,7 @@ import ShareModal from '@/components/dashboard/share/share-modal'
 import ShareTerms from '@/components/dashboard/share/share-terms'
 import { Button } from '@/components/ui/button'
 import { getAccount, getUser } from '@/lib/supabase/accounts'
+import { REFERRAL_BONUS_MB } from '@/types/constants'
 import { createClient } from '@/utils/supabase/server'
 import { LucideShare } from 'lucide-react'
 import { Metadata } from 'next'
@@ -47,7 +48,7 @@ const ShareAndEarnPage = async () => {
             )
           }
           <p className='text-sm lg:text-lg font-normal leading-normal text-gray-100'>
-            Share your referral link with your friends and earn rewards when they sign up and make a purchase. You can earn up to <b className='font-bold'>300MB</b> data bonus on every user invited. Read our <ShareTerms /> to understand how it works.
+            Share your referral link with your friends and earn rewards when they sign up and make a purchase. You can earn up to <b className='font-bold'>{REFERRAL_BONUS_MB}</b> data bonus on every user invited. Read our <ShareTerms /> to understand how it works.
           </p>
 
           {

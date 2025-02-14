@@ -1,4 +1,5 @@
 import DynamicModal from '@/components/DynamicModal'
+import { REFERRAL_BONUS_MB } from '@/types/constants'
 import React from 'react'
 
 const ShareTerms = () => {
@@ -11,7 +12,7 @@ const ShareTerms = () => {
                 <ul className="list-disc ml-6 mt-2 space-y-1">
                     <li>Share your unique referral link with friends and family</li>
                     <li>When they sign up using your link, they become your referral</li>
-                    <li>Once they make their first transaction, you earn a 300MB data bonus</li>
+                    <li>Once they make their first transaction, you earn a {REFERRAL_BONUS_MB} data bonus</li>
                     <li>The bonus is automatically credited to your cashback wallet once claimed.</li>
                 </ul>
             </section>

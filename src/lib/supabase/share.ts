@@ -40,7 +40,7 @@ export const createReferral = async (payload: Partial<Tables<'referrals'>>) => {
     }
 
     if (existingReferral) {
-        return { error: 'Suspicious referral detected. You cannot refer the same person using different emails or devices.' }
+        return { error: 'Suspicious referral detected. You cannot refer the same person using different emails.' }
     }
 
     payload.device = deviceAddress
