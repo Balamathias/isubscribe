@@ -195,8 +195,10 @@ const PassPinForm = ({ onClose, className, update=false, referralErrorMessage }:
 
         {referralErrorMessage && (
           <div className="p-4 rounded-lg flex items-center justify-center gap-x-3 mt-4 bg-sky-600/20 text-sky-600" role="alert">
-            <LucideAlertTriangle size={16} />
-            <span>{referralErrorMessage}</span>
+            <div className='basis-[20%]'>
+              <LucideAlertTriangle size={16} />
+            </div>
+            <div>{referralErrorMessage}</div>
           </div>
         )}
       </>
