@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { LucideDelete, LucideX, BadgeCheckIcon, LucideLock } from 'lucide-react';
+import { LucideDelete, LucideX, BadgeCheckIcon, LucideLock, LucideAlertTriangle } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { useRouter } from 'next/navigation';
 
@@ -194,10 +194,8 @@ const PassPinForm = ({ onClose, className, update=false, referralErrorMessage }:
         </Card>
 
         {referralErrorMessage && (
-          <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded flex items-center shadow-lg" role="alert">
-            <svg className="fill-current w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path d="M10 15a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm0-9a1.5 1.5 0 00-1.5 1.5v4a1.5 1.5 0 003 0v-4A1.5 1.5 0 0010 6z" />
-            </svg>
+          <div className="p-4 rounded-lg flex items-center justify-center gap-x-3 mt-4 bg-sky-600/20 text-sky-600" role="alert">
+            <LucideAlertTriangle size={16} />
             <span>{referralErrorMessage}</span>
           </div>
         )}
