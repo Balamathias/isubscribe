@@ -64,7 +64,7 @@ export const airtel_data = [
     {"Plan_ID": 88, "Type": "GIFTING", "Data": "10GB", "Price": "₦2,400.00", "Duration": "30 Days", "CashBack": "₦10.00" , "profit":"₦18" , "commission": 250 , "isActive": true},
     
     {"Plan_ID": 89, "Type": "GIFTING", "Data": "15GB", "Price": "₦3,500.00", "Duration": "30 Days", "CashBack": "₦15.00" , "profit":"₦18" , "commission": 300 , "isActive": true},
-    {"Plan_ID": 100, "Type": "SME", "Data": "20GB", "Price": "₦4,500.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 400 , "isActive": true},
+    {"Plan_ID": 100, "Type": "SME", "Data": "20GB", "Price": "₦4,500.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 400 , "isActive": false},
 ]
 
 export const etisalat_data = [
