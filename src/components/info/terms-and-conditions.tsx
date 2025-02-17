@@ -122,7 +122,7 @@ const TermsAndConditions = () => {
           </motion.ul>
         </Card>
 
-        <motion.div
+        {/* <motion.div
           className="mt-12 text-center"
           {...fadeIn}
           transition={{ delay: 0.8 }}
@@ -136,7 +136,7 @@ const TermsAndConditions = () => {
           >
             Contact Us
           </Link>
-        </motion.div>
+        </motion.div> */}
 
         <motion.div
           className="mt-8 text-center"
