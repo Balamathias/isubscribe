@@ -1,24 +1,24 @@
 export const mtn_data = [
     {"Plan_ID": 1, "Type": "SME", "Data": "500MB", "Price": "₦140.00", "Duration": "30 Days", "CashBack": "₦1.00", "profit":"₦10", "commission": 10, "isActive": true},
     // {"Plan_ID": 69, "Type": "GIFTING", "Data": "500MB", "Price": "₦140.00", "Duration": "30 Days", "CashBack": "₦1.00", "profit":"₦80", "commission": 20 , "isActive": false},
-    {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦145.00", "Duration": "30 Days", "CashBack": "₦1.00","profit":"₦44", "commission": 15 , "isActive": true},
+    {"Plan_ID": 50, "Type": "COOPERATE GIFTING", "Data": "500MB", "Price": "₦145.00", "Duration": "30 Days", "CashBack": "₦1.00","profit":"₦44", "commission": 15 , "isActive": false},
     {"Plan_ID": 2, "Type": "SME", "Data": "1GB", "Price": "₦285.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦24", "commission": 25, "isActive": true},
-    {"Plan_ID": 78, "Type": "GIFTING", "Data": "1GB", "Price": "₦245.00", "Duration": "1 Day", "CashBack": "₦1.00", "profit":"₦80", "commission": 20 , "isActive": true},
+    {"Plan_ID": 78, "Type": "GIFTING", "Data": "1GB", "Price": "₦245.00", "Duration": "1 Day", "CashBack": "₦1.00", "profit":"₦80", "commission": 20 , "isActive": false},
     // {"Plan_ID": 68, "Type": "GIFTING", "Data": "1GB", "Price": "₦270.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30 , "isActive": false},
-    {"Plan_ID": 51, "Type": "COOPERATE GIFTING", "Data": "1GB", "Price": "₦290.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30 , "isActive": true},
+    {"Plan_ID": 51, "Type": "COOPERATE GIFTING", "Data": "1GB", "Price": "₦290.00", "Duration": "30 Days", "CashBack": "₦2.00", "profit":"₦30", "commission": 30 , "isActive": false},
     {"Plan_ID": 3, "Type": "SME", "Data": "2GB", "Price": "₦570.00", "Duration": "30 Days", "CashBack": "₦4.00", "profit":"₦50", "commission": 50, "isActive": true},
     // {"Plan_ID": 67, "Type": "GIFTING", "Data": "2GB", "Price": "₦530.00", "Duration": "30 Days", "CashBack": "₦4.00", "profit":"₦50", "commission": 50 , "isActive": false},
     {"Plan_ID": 52, "Type": "COOPERATE GIFTING", "Data": "2GB", "Price": "₦580.00", "Duration": "30 Days", "CashBack": "₦4.00", "profit":"₦55", "commission": 60 , "isActive": false},
     {"Plan_ID": 4, "Type": "SME", "Data": "3GB", "Price": "₦860.00", "Duration": "30 Days", "CashBack": "₦6.00", "profit":"₦82", "commission": 80, "isActive": true},
-    {"Plan_ID": 53, "Type": "COOPERATE GIFTING", "Data": "3GB", "Price": "₦880.00", "Duration": "30 Days", "CashBack": "₦6.00", "profit":"₦85", "commission": 100 , "isActive": true},
+    {"Plan_ID": 53, "Type": "COOPERATE GIFTING", "Data": "3GB", "Price": "₦880.00", "Duration": "30 Days", "CashBack": "₦6.00", "profit":"₦85", "commission": 100 , "isActive": false},
     {"Plan_ID": 66, "Type": "GIFTING", "Data": "3GB", "Price": "₦810.00", "Duration": "30 Days", "CashBack": "₦6.00", "profit":"₦80", "commission": 90 , "isActive": false},
-    {"Plan_ID": 79, "Type": "GIFTING", "Data": "3.5GB", "Price": "₦620.00", "Duration": "2 Days", "CashBack": "₦3.00", "profit":"₦80", "commission": 70 , "isActive": true},
+    {"Plan_ID": 79, "Type": "GIFTING", "Data": "3.5GB", "Price": "₦620.00", "Duration": "2 Days", "CashBack": "₦3.00", "profit":"₦80", "commission": 70 , "isActive": false},
     {"Plan_ID": 5, "Type": "SME", "Data": "5GB", "Price": "₦1,440.00", "Duration": "30 Days", "CashBack": "₦10.00", "profit":"₦120,", "commission": 140, "isActive": true},
     {"Plan_ID": 65, "Type": "GIFTING", "Data": "5GB", "Price": "₦1,360.00", "Duration": "30 Days", "CashBack": "₦10.00", "profit":"₦80", "commission": 160 , "isActive": false},
-    {"Plan_ID": 54, "Type": "COOPERATE GIFTING", "Data": "5GB", "Price": "₦1,460.00", "Duration": "30 Days", "CashBack": "₦10.00", "profit":"₦140,", "commission": 160 , "isActive": true},
+    {"Plan_ID": 54, "Type": "COOPERATE GIFTING", "Data": "5GB", "Price": "₦1,460.00", "Duration": "30 Days", "CashBack": "₦10.00", "profit":"₦140,", "commission": 160 , "isActive": false},
     {"Plan_ID": 6, "Type": "SME", "Data": "10GB", "Price": "₦2,880.00", "Duration": "30 Days", "CashBack": "₦20.00", "profit":"₦20,","commission": 280, "isActive": true},
-    {"Plan_ID": 55, "Type": "COOPERATE GIFTING", "Data": "10GB", "Price": "₦2,930.00", "Duration": "30 Days", "CashBack": "₦20.00", "profit":"₦250,","commission": 330 , "isActive": true},
-    {"Plan_ID": 80, "Type": "GIFTING", "Data": "15GB", "Price": "₦2,450.00", "Duration": "7 Days", "CashBack": "₦15.00", "profit":"₦80", "commission": 400 , "isActive": true},
+    {"Plan_ID": 55, "Type": "COOPERATE GIFTING", "Data": "10GB", "Price": "₦2,930.00", "Duration": "30 Days", "CashBack": "₦20.00", "profit":"₦250,","commission": 330 , "isActive": false},
+    {"Plan_ID": 80, "Type": "GIFTING", "Data": "15GB", "Price": "₦2,450.00", "Duration": "7 Days", "CashBack": "₦15.00", "profit":"₦80", "commission": 400 , "isActive": false},
 ]
 
 export const glo_data = [
@@ -64,7 +64,7 @@ export const airtel_data = [
     {"Plan_ID": 88, "Type": "GIFTING", "Data": "10GB", "Price": "₦2,400.00", "Duration": "30 Days", "CashBack": "₦10.00" , "profit":"₦18" , "commission": 250 , "isActive": true},
     
     {"Plan_ID": 89, "Type": "GIFTING", "Data": "15GB", "Price": "₦3,500.00", "Duration": "30 Days", "CashBack": "₦15.00" , "profit":"₦18" , "commission": 300 , "isActive": true},
-    {"Plan_ID": 100, "Type": "SME", "Data": "20GB", "Price": "₦4,500.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 400 , "isActive": false},
+    {"Plan_ID": 100, "Type": "SME", "Data": "20GB", "Price": "₦4,500.00", "Duration": "30 Days", "CashBack": "₦1.00" , "profit":"₦13" , "commission": 400 , "isActive": true},
 ]
 
 export const etisalat_data = [
