@@ -1,3 +1,5 @@
+"use server"
+
 import OTPTemplate from '@/components/templates/otp';
 import { Resend } from 'resend';
 

@@ -9,6 +9,7 @@ import { redirect } from "next/navigation"
 
 import { Resend } from 'resend'
 import { getUser } from "./accounts"
+import { error } from "console"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -205,7 +206,17 @@ export const sendResetPinOTP = async () => {
         if (error) throw new Error(`Error storing OTP: ${error.message}`);
     }
 
-    sendOtpEmail(user?.email!, validOTP?.otp!, user?.user_metadata?.full_name || user?.email!)
+    const response = await sendOtpEmail(user?.email!, validOTP?.otp!, user?.user_metadata?.full_name || user?.email!)
+
+    if (response?.error) {
+        return {
+            error: {
+                message: response.error.message
+            }
+        }
+    }
+
+    return { success: true };
 };
 
 export const resetPin = async (newPin: string) => {

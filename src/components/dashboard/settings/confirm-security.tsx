@@ -73,7 +73,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
         const response = await sendResetPinOTP()
 
         if (response?.error) {
-            toast.error(response?.error?.message)
+            toast.error(response?.error?.message, { description: 'Please try again.' })
             setTokenStatus('settled')
             return
         }
@@ -84,7 +84,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
 
     } catch (error: any) {
         console.error(error)
-        toast.error(error?.message)
+        toast.error(error?.message, { description: 'An error occurred while requesting the reset pin.' })
         setTokenStatus('settled')
     } finally {
         setTokenStatus('settled')
@@ -98,7 +98,7 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
         const response = await verifyResetPinOtp(tokenValue)
 
         if (!response) {
-            toast.error('Invalid or expired OTP')
+            toast.error('Invalid or expired OTP', { description: 'Please check the code and try again.' })
             setTokenConfirmStatus('settled')
             return
         }

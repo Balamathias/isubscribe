@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { LucideDelete, LucideLock, LucideX } from 'lucide-react';
 import Link from 'next/link';
 import { Tables } from '@/types/database';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import ConfirmSecurity from './settings/confirm-security';
 import { Button } from '../ui/button';
 import { getUserPin } from '@/lib/supabase/user.actions';
@@ -21,6 +21,7 @@ const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { classNam
     const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const router = useRouter()
+    const path = usePathname()
 
     const vibrate = useVibration()
 
@@ -147,15 +148,23 @@ const ConfirmPin = ({ className, func: closeModal, setShowResetPin }: { classNam
             </button>
           </div>
           
-          <ConfirmSecurity 
-            trigger={
+          {
+            path?.includes('/dashboard/settings') ? (
+              <ConfirmSecurity 
+                  trigger={
+                    <Button asChild variant={'link'} className='flex items-center gap-x-1 !w-full flex-row'>
+                      <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
+                    </Button>
+                  }
+                  setShowResetPin={setShowResetPin}
+                  func={closeModal}
+                />
+            ): (
               <Button asChild variant={'link'} className='flex items-center gap-x-1 !w-full flex-row'>
-                <Link href={'#'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
+                <Link href={'/dashboard/settings'} className={'text-primary/80 dark:text-violet-400 underline text-sm'}>Forgot PIN?</Link>
               </Button>
-            }
-            setShowResetPin={setShowResetPin}
-            func={closeModal}
-          />
+            )
+          }
         </Card>
       </div>
   )
