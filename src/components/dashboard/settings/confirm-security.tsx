@@ -157,9 +157,9 @@ const ConfirmSecurity = ({ trigger, setShowResetPin, func }: ConfirmSecurityProp
                         </div>
 
                         <Button 
-                        className='w-full rounded-full mt-2 border-none' 
-                        size={'lg'}
-                        variant={'default'}
+                            className='w-full rounded-full mt-2 border-none' 
+                            size={'lg'}
+                            variant={'default'}
                         >
                             { status === 'pending' ? 'Confirming...' : 'Confirm'}
                         </Button>
